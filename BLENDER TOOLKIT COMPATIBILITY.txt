@@ -1,0 +1,6 @@
+Library Effects:
+- emission, add alpha
+- diffuse, add alpha
+- specular, add alpha
+
+- "reflective" with color sid and with alpha

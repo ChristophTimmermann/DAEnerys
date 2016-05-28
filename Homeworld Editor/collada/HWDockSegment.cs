@@ -1,0 +1,45 @@
+﻿using OpenTK;
+using System.Collections.Generic;
+
+namespace HomeworldDAEEditor
+{
+    public class HWDockSegment
+    {
+        public HWNode Node;
+        public int ID;
+        public float Tolerance;
+        public float Speed;
+        public List<DockSegmentFlags> Flags;
+        public HWDockpath Dockpath;
+        public EditorIcosphere Icosphere;
+
+        public HWDockSegment(HWNode node, int id, float tolerance, float speed, List<DockSegmentFlags> flags)
+        {
+            Node = node;
+            ID = id;
+            Tolerance = tolerance;
+            Speed = speed;
+            Flags = flags;
+
+            Dockpath = node.Parent.Dockpath;
+            Dockpath.Segments.Add(this);
+
+            Icosphere = new EditorIcosphere(Node);
+            Icosphere.Scale = new Vector3(5, 5, 5);
+
+            HWScene.DockSegments.Add(this);
+        }
+    }
+
+    public enum DockSegmentFlags
+    {
+        USEROT = 1,
+        PLAYER = 2,
+        QUEUE = 3,
+        CLOSE = 4,
+        CLEARRES = 5,
+        CHECK = 6,
+        UNFOCUS = 7,
+        CLIP = 8,
+    }
+}
