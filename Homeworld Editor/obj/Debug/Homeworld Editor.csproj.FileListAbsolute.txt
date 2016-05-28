@@ -27,3 +27,32 @@ D:\HomeworldEditor\Homeworld Editor\obj\Debug\HomeworldDAEEditor.Settings.resour
 D:\HomeworldEditor\Homeworld Editor\obj\Debug\Homeworld Editor.csproj.GenerateResource.Cache
 D:\HomeworldEditor\Homeworld Editor\obj\Debug\Homeworld Editor.exe
 D:\HomeworldEditor\Homeworld Editor\obj\Debug\Homeworld Editor.pdb
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\joint.mtl
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\icosphere.mtl
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\joint.obj
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\icosphere.obj
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\joint.tga
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\red.tga
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\yellow.tga
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\grey.jpg
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\Homeworld Editor.exe.config
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\Homeworld Editor.exe
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\Homeworld Editor.pdb
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\AssimpNet.dll
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\DevILSharp.dll
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\FSharp.Core.dll
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\OpenTK.dll
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\OpenTK.GLControl.dll
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\AssimpNet.xml
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\FSharp.Core.xml
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\OpenTK.pdb
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\OpenTK.xml
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\OpenTK.GLControl.pdb
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\OpenTK.GLControl.xml
+D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.csprojResolveAssemblyReference.cache
+D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\HomeworldDAEEditor.Main.resources
+D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld_Editor.Properties.Resources.resources
+D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\HomeworldDAEEditor.Settings.resources
+D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.csproj.GenerateResource.Cache
+D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.exe
+D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.pdb

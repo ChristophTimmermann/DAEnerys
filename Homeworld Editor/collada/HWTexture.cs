@@ -20,83 +20,36 @@ namespace HomeworldDAEEditor
 
         private static int loadImage(string filename)
         {
-            string convertedPath = filename;
-            string extension = System.IO.Path.GetExtension(filename);
-
-            if (extension != ".png" || extension != ".jpg" || extension != ".bmp" || extension != ".gif" || extension != ".exif" || extension != ".tiff")
-            {
-                convertedPath = System.IO.Path.ChangeExtension(filename, "png");
-
-                int img = IL.GenImage();
-                IL.BindImage(img);
-                IL.LoadImage(filename);
-                IL.Save(ImageType.Png, convertedPath);
-                IL.DeleteImage(img);
-                IL.BindImage(0);
-            }
-
-            Bitmap image = new Bitmap(convertedPath);
-            int texID = GL.GenTexture();
-
-            GL.BindTexture(TextureTarget.Texture2D, texID);
-            BitmapData data = image.LockBits(new System.Drawing.Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            //Anisotropic filtering
-            float maxAniso;
-            GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
-            GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
-
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-
-            image.UnlockBits(data);
-
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-
-            image.Dispose();
-            File.Delete(convertedPath);
-            return texID;
-        }
-
-        /*private static int loadImage(string filename)
-        {
             int img = IL.GenImage();
             IL.BindImage(img);
             IL.LoadImage(filename);
 
-            IntPtr data = IL.GetData();
-            if(data == IntPtr.Zero)
-            {
-                IL.BindImage(0);
-                IL.DeleteImage(1);
-                return 0;
-            }
+            ILU.Info info = new ILU.Info();
+            ILU.GetImageInfo(ref info);
+            if (info.Origin == OriginMode.LowerLeft)
+                ILU.FlipImage();
 
-            int width = IL.GetInteger(IntName.ImageWidth);
-            int height = IL.GetInteger(IntName.ImageHeight);
-            int type = IL.GetInteger(IntName.ImageType);
-            int format = IL.GetInteger(IntName.ImageFormat);
+            IL.ConvertImage(ChannelFormat.RGBA, ChannelType.UnsignedByte);
 
             int texID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, texID);
-
-            GL.PixelStore(PixelStoreParameter.UnpackSwapBytes, 0);
-            GL.PixelStore(PixelStoreParameter.UnpackRowLength, 0);
-            GL.PixelStore(PixelStoreParameter.UnpackSkipPixels, 0);
-            GL.PixelStore(PixelStoreParameter.UnpackSkipRows, 0);
-            GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 
             //Anisotropic filtering
             float maxAniso;
             GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
             GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
 
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0, (OpenTK.Graphics.OpenGL.PixelFormat)format, (PixelType)type, data);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, (OpenTK.Graphics.OpenGL.PixelInternalFormat)IL.GetInteger(IntName.ImageFormat), IL.GetInteger(IntName.ImageWidth), IL.GetInteger(IntName.ImageHeight), 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
+
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            IL.DeleteImage(img);
             IL.BindImage(0);
+
             return texID;
-        }*/
+        }
 
         public static void Init()
         {
