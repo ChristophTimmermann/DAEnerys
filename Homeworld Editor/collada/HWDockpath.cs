@@ -9,7 +9,7 @@ namespace HomeworldDAEEditor
         public string Name;
         public string[] Families;
         public string[] Links;
-        public List<DockpathFlags> Flags;
+        public List<DockpathFlag> Flags;
         public List<HWDockSegment> Segments = new List<HWDockSegment>();
         public List<EditorLine> Lines = new List<EditorLine>();
 
@@ -32,7 +32,7 @@ namespace HomeworldDAEEditor
             }
         }
 
-        public HWDockpath(HWNode node, string name, string[] families, string[] links, List<DockpathFlags> flags)
+        public HWDockpath(HWNode node, string name, string[] families, string[] links, List<DockpathFlag> flags)
         {
             Node = node;
             Name = name;
@@ -54,7 +54,7 @@ namespace HomeworldDAEEditor
         }
     }
 
-    public enum DockpathFlags
+    public enum DockpathFlag
     {
         EXIT = 1,
         LATCH = 2,

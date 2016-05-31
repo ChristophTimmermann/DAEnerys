@@ -10,7 +10,7 @@ namespace HomeworldDAEEditor
     {
         public HWJoint Parent;
         public string Name;
-        public List<ShipMeshTags> Tags = new List<ShipMeshTags>();
+        public List<ShipMeshTag> Tags = new List<ShipMeshTag>();
 
         public List<HWShipMeshLOD> LOD0Meshes = new List<HWShipMeshLOD>();
         public List<HWShipMeshLOD> LOD1Meshes = new List<HWShipMeshLOD>();
@@ -18,7 +18,7 @@ namespace HomeworldDAEEditor
 
         public object ShipMeshListItem;
 
-        public HWShipMesh(HWJoint parent, string name, List<ShipMeshTags> tags)
+        public HWShipMesh(HWJoint parent, string name, List<ShipMeshTag> tags)
         {
             Parent = parent;
             Name = name;
@@ -45,7 +45,7 @@ namespace HomeworldDAEEditor
         }
     }
 
-    public enum ShipMeshTags
+    public enum ShipMeshTag
     {
         DOSCAR = 1,
     }

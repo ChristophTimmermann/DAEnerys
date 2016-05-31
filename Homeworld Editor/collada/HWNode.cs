@@ -56,7 +56,7 @@ namespace HomeworldDAEEditor
                 string pathName = "";
                 string[] families = new string[0];
                 string[] links = new string[0];
-                List<DockpathFlags> flags = new List<DockpathFlags>();
+                List<DockpathFlag> flags = new List<DockpathFlag>();
 
                 string[] splitted = Name.Split('[');
                 int end = -1;
@@ -88,7 +88,7 @@ namespace HomeworldDAEEditor
                             foreach (string flag in flagsStrings)
                             {
                                 if(flag.Length > 0) //If FLAGS is not empty
-                                    flags.Add((DockpathFlags)Enum.Parse(typeof(DockpathFlags), flag.ToUpper()));
+                                    flags.Add((DockpathFlag)Enum.Parse(typeof(DockpathFlag), flag.ToUpper()));
                             }
                         }
                     }
@@ -103,7 +103,7 @@ namespace HomeworldDAEEditor
                 int id = -1;
                 float tolerance = 0;
                 float speed = 0;
-                List<DockSegmentFlags> flags = new List<DockSegmentFlags>();
+                List<DockSegmentFlag> flags = new List<DockSegmentFlag>();
 
                 string[] splitted = Name.Split('_');
                 int start = -1;
@@ -137,7 +137,7 @@ namespace HomeworldDAEEditor
 
                         foreach (string flag in flagsStrings)
                         {
-                            flags.Add((DockSegmentFlags)Enum.Parse(typeof(DockSegmentFlags), flag.ToUpper()));
+                            flags.Add((DockSegmentFlag)Enum.Parse(typeof(DockSegmentFlag), flag.ToUpper()));
                         }
                     }
                 }

@@ -9,11 +9,11 @@ namespace HomeworldDAEEditor
         public int ID;
         public float Tolerance;
         public float Speed;
-        public List<DockSegmentFlags> Flags;
+        public List<DockSegmentFlag> Flags;
         public HWDockpath Dockpath;
         public EditorIcosphere Icosphere;
 
-        public HWDockSegment(HWNode node, int id, float tolerance, float speed, List<DockSegmentFlags> flags)
+        public HWDockSegment(HWNode node, int id, float tolerance, float speed, List<DockSegmentFlag> flags)
         {
             Node = node;
             ID = id;
@@ -31,7 +31,7 @@ namespace HomeworldDAEEditor
         }
     }
 
-    public enum DockSegmentFlags
+    public enum DockSegmentFlag
     {
         USEROT = 1,
         PLAYER = 2,

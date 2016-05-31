@@ -11,11 +11,11 @@ namespace HomeworldDAEEditor
         public List<HWMesh> Meshes = new List<HWMesh>();
         public HWJoint Parent;
         public string Name;
-        public List<GoblinMeshTags> Tags = new List<GoblinMeshTags>();
+        public List<GoblinMeshTag> Tags = new List<GoblinMeshTag>();
 
         public int GoblinMeshListItemIndex;
 
-        public HWGoblinMesh(HWJoint parent, string name, List<GoblinMeshTags> tags)
+        public HWGoblinMesh(HWJoint parent, string name, List<GoblinMeshTag> tags)
         {
             Parent = parent;
             Name = name;
@@ -40,7 +40,7 @@ namespace HomeworldDAEEditor
         }
     }
 
-    public enum GoblinMeshTags
+    public enum GoblinMeshTag
     {
         DOSCAR = 1,
     }

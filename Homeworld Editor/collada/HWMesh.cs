@@ -37,7 +37,7 @@ namespace HomeworldDAEEditor
             {
                 string name = "";
                 int lod = 0;
-                List<ShipMeshTags> tags = new List<ShipMeshTags>();
+                List<ShipMeshTag> tags = new List<ShipMeshTag>();
 
                 string[] splitted = Parent.Name.Split('[');
                 int end = -1;
@@ -61,7 +61,7 @@ namespace HomeworldDAEEditor
 
                             foreach (string tag in tagsStrings)
                             {
-                                tags.Add((ShipMeshTags)Enum.Parse(typeof(ShipMeshTags), tag.ToUpper()));
+                                tags.Add((ShipMeshTag)Enum.Parse(typeof(ShipMeshTag), tag.ToUpper()));
                             }
                         }
                     }
@@ -99,7 +99,7 @@ namespace HomeworldDAEEditor
             else if (Parent.Name.StartsWith("GOBG")) //If goblin mesh
             {
                 string name = "";
-                List<GoblinMeshTags> tags = new List<GoblinMeshTags>();
+                List<GoblinMeshTag> tags = new List<GoblinMeshTag>();
 
                 string[] splitted = Parent.Name.Split('[');
                 int end = -1;
@@ -119,7 +119,7 @@ namespace HomeworldDAEEditor
 
                             foreach (string tag in tagsStrings)
                             {
-                                tags.Add((GoblinMeshTags)Enum.Parse(typeof(GoblinMeshTags), tag.ToUpper()));
+                                tags.Add((GoblinMeshTag)Enum.Parse(typeof(GoblinMeshTag), tag.ToUpper()));
                             }
                         }
                     }

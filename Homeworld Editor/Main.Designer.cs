@@ -34,6 +34,7 @@ namespace HomeworldDAEEditor
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
             this.buttonSettings = new System.Windows.Forms.ToolStripButton();
+            this.buttonAbout = new System.Windows.Forms.ToolStripButton();
             this.openColladaDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveColladaDialog = new System.Windows.Forms.SaveFileDialog();
             this.glControl = new OpenTK.GLControl();
@@ -46,6 +47,15 @@ namespace HomeworldDAEEditor
             this.listShipMeshes = new System.Windows.Forms.ListBox();
             this.labelShipMeshParent = new System.Windows.Forms.Label();
             this.comboShipMeshParent = new System.Windows.Forms.ComboBox();
+            this.tabMaterials = new System.Windows.Forms.TabPage();
+            this.groupMaterialTextures = new System.Windows.Forms.GroupBox();
+            this.listMaterialTextures = new System.Windows.Forms.ListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboMaterialFormat = new System.Windows.Forms.ComboBox();
+            this.boxMaterialShader = new System.Windows.Forms.TextBox();
+            this.listMaterials = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.tabGoblins = new System.Windows.Forms.TabPage();
             this.panelGoblins = new System.Windows.Forms.Panel();
             this.listGoblinMeshes = new System.Windows.Forms.CheckedListBox();
@@ -91,12 +101,14 @@ namespace HomeworldDAEEditor
             this.panelDockpathList = new System.Windows.Forms.Panel();
             this.dockpathList = new System.Windows.Forms.CheckedListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.buttonAbout = new System.Windows.Forms.ToolStripButton();
             this.toolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabShipMeshes.SuspendLayout();
             this.groupShipMeshLODs.SuspendLayout();
             this.panelShipMesh.SuspendLayout();
+            this.tabMaterials.SuspendLayout();
+            this.groupMaterialTextures.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.tabGoblins.SuspendLayout();
             this.panelGoblins.SuspendLayout();
             this.tabCollisionMeshes.SuspendLayout();
@@ -154,6 +166,16 @@ namespace HomeworldDAEEditor
             this.buttonSettings.Text = "Settings";
             this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
             // 
+            // buttonAbout
+            // 
+            this.buttonAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.buttonAbout.Image = ((System.Drawing.Image)(resources.GetObject("buttonAbout.Image")));
+            this.buttonAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonAbout.Name = "buttonAbout";
+            this.buttonAbout.Size = new System.Drawing.Size(23, 22);
+            this.buttonAbout.Text = "About";
+            this.buttonAbout.Click += new System.EventHandler(this.buttonAbout_Click);
+            // 
             // openColladaDialog
             // 
             this.openColladaDialog.Filter = "COLLADA-Files|*.dae|All files|*.*";
@@ -171,7 +193,7 @@ namespace HomeworldDAEEditor
             this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.glControl.Location = new System.Drawing.Point(0, 0);
             this.glControl.Name = "glControl";
-            this.glControl.Size = new System.Drawing.Size(869, 758);
+            this.glControl.Size = new System.Drawing.Size(865, 758);
             this.glControl.TabIndex = 3;
             this.glControl.VSync = true;
             this.glControl.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl_Render);
@@ -184,6 +206,7 @@ namespace HomeworldDAEEditor
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabShipMeshes);
+            this.tabControl.Controls.Add(this.tabMaterials);
             this.tabControl.Controls.Add(this.tabGoblins);
             this.tabControl.Controls.Add(this.tabCollisionMeshes);
             this.tabControl.Controls.Add(this.tabJoints);
@@ -194,7 +217,7 @@ namespace HomeworldDAEEditor
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(250, 758);
+            this.tabControl.Size = new System.Drawing.Size(254, 758);
             this.tabControl.TabIndex = 0;
             // 
             // tabShipMeshes
@@ -204,7 +227,7 @@ namespace HomeworldDAEEditor
             this.tabShipMeshes.Location = new System.Drawing.Point(4, 40);
             this.tabShipMeshes.Name = "tabShipMeshes";
             this.tabShipMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabShipMeshes.Size = new System.Drawing.Size(242, 714);
+            this.tabShipMeshes.Size = new System.Drawing.Size(246, 714);
             this.tabShipMeshes.TabIndex = 0;
             this.tabShipMeshes.Text = "Ship Meshes";
             this.tabShipMeshes.UseVisualStyleBackColor = true;
@@ -216,7 +239,7 @@ namespace HomeworldDAEEditor
             this.groupShipMeshLODs.Controls.Add(this.listShipMeshLODs);
             this.groupShipMeshLODs.Location = new System.Drawing.Point(8, 471);
             this.groupShipMeshLODs.Name = "groupShipMeshLODs";
-            this.groupShipMeshLODs.Size = new System.Drawing.Size(228, 240);
+            this.groupShipMeshLODs.Size = new System.Drawing.Size(232, 240);
             this.groupShipMeshLODs.TabIndex = 1;
             this.groupShipMeshLODs.TabStop = false;
             this.groupShipMeshLODs.Text = "Level of detail(s)";
@@ -228,7 +251,7 @@ namespace HomeworldDAEEditor
             this.listShipMeshLODs.FormattingEnabled = true;
             this.listShipMeshLODs.Location = new System.Drawing.Point(3, 16);
             this.listShipMeshLODs.Name = "listShipMeshLODs";
-            this.listShipMeshLODs.Size = new System.Drawing.Size(222, 221);
+            this.listShipMeshLODs.Size = new System.Drawing.Size(226, 221);
             this.listShipMeshLODs.TabIndex = 0;
             this.listShipMeshLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listShipMeshLODs_ItemCheck);
             // 
@@ -241,7 +264,7 @@ namespace HomeworldDAEEditor
             this.panelShipMesh.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelShipMesh.Location = new System.Drawing.Point(3, 3);
             this.panelShipMesh.Name = "panelShipMesh";
-            this.panelShipMesh.Size = new System.Drawing.Size(236, 462);
+            this.panelShipMesh.Size = new System.Drawing.Size(240, 462);
             this.panelShipMesh.TabIndex = 0;
             // 
             // checkShipMeshDoScar
@@ -262,7 +285,7 @@ namespace HomeworldDAEEditor
             this.listShipMeshes.FormattingEnabled = true;
             this.listShipMeshes.Location = new System.Drawing.Point(3, 3);
             this.listShipMeshes.Name = "listShipMeshes";
-            this.listShipMeshes.Size = new System.Drawing.Size(230, 407);
+            this.listShipMeshes.Size = new System.Drawing.Size(234, 407);
             this.listShipMeshes.TabIndex = 10;
             this.listShipMeshes.SelectedIndexChanged += new System.EventHandler(this.listShipMeshes_SelectedIndexChanged);
             // 
@@ -281,10 +304,106 @@ namespace HomeworldDAEEditor
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboShipMeshParent.Enabled = false;
             this.comboShipMeshParent.FormattingEnabled = true;
-            this.comboShipMeshParent.Location = new System.Drawing.Point(56, 412);
+            this.comboShipMeshParent.Location = new System.Drawing.Point(53, 412);
             this.comboShipMeshParent.Name = "comboShipMeshParent";
-            this.comboShipMeshParent.Size = new System.Drawing.Size(174, 21);
+            this.comboShipMeshParent.Size = new System.Drawing.Size(184, 21);
             this.comboShipMeshParent.TabIndex = 8;
+            // 
+            // tabMaterials
+            // 
+            this.tabMaterials.Controls.Add(this.groupMaterialTextures);
+            this.tabMaterials.Controls.Add(this.panel2);
+            this.tabMaterials.Location = new System.Drawing.Point(4, 40);
+            this.tabMaterials.Name = "tabMaterials";
+            this.tabMaterials.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMaterials.Size = new System.Drawing.Size(246, 714);
+            this.tabMaterials.TabIndex = 6;
+            this.tabMaterials.Text = "Materials";
+            this.tabMaterials.UseVisualStyleBackColor = true;
+            // 
+            // groupMaterialTextures
+            // 
+            this.groupMaterialTextures.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupMaterialTextures.Controls.Add(this.listMaterialTextures);
+            this.groupMaterialTextures.Location = new System.Drawing.Point(8, 471);
+            this.groupMaterialTextures.Name = "groupMaterialTextures";
+            this.groupMaterialTextures.Size = new System.Drawing.Size(232, 240);
+            this.groupMaterialTextures.TabIndex = 1;
+            this.groupMaterialTextures.TabStop = false;
+            this.groupMaterialTextures.Text = "Textures";
+            // 
+            // listMaterialTextures
+            // 
+            this.listMaterialTextures.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listMaterialTextures.FormattingEnabled = true;
+            this.listMaterialTextures.Location = new System.Drawing.Point(3, 16);
+            this.listMaterialTextures.Name = "listMaterialTextures";
+            this.listMaterialTextures.Size = new System.Drawing.Size(226, 221);
+            this.listMaterialTextures.TabIndex = 0;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Controls.Add(this.comboMaterialFormat);
+            this.panel2.Controls.Add(this.boxMaterialShader);
+            this.panel2.Controls.Add(this.listMaterials);
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(240, 462);
+            this.panel2.TabIndex = 0;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 441);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(42, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Format:";
+            // 
+            // comboMaterialFormat
+            // 
+            this.comboMaterialFormat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboMaterialFormat.Enabled = false;
+            this.comboMaterialFormat.FormattingEnabled = true;
+            this.comboMaterialFormat.Location = new System.Drawing.Point(53, 438);
+            this.comboMaterialFormat.Name = "comboMaterialFormat";
+            this.comboMaterialFormat.Size = new System.Drawing.Size(184, 21);
+            this.comboMaterialFormat.TabIndex = 12;
+            // 
+            // boxMaterialShader
+            // 
+            this.boxMaterialShader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.boxMaterialShader.Location = new System.Drawing.Point(53, 412);
+            this.boxMaterialShader.Name = "boxMaterialShader";
+            this.boxMaterialShader.ReadOnly = true;
+            this.boxMaterialShader.Size = new System.Drawing.Size(185, 20);
+            this.boxMaterialShader.TabIndex = 11;
+            // 
+            // listMaterials
+            // 
+            this.listMaterials.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listMaterials.FormattingEnabled = true;
+            this.listMaterials.Location = new System.Drawing.Point(3, 3);
+            this.listMaterials.Name = "listMaterials";
+            this.listMaterials.Size = new System.Drawing.Size(234, 407);
+            this.listMaterials.TabIndex = 10;
+            this.listMaterials.SelectedIndexChanged += new System.EventHandler(this.listMaterials_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 415);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(44, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Shader:";
             // 
             // tabGoblins
             // 
@@ -292,7 +411,7 @@ namespace HomeworldDAEEditor
             this.tabGoblins.Location = new System.Drawing.Point(4, 40);
             this.tabGoblins.Name = "tabGoblins";
             this.tabGoblins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGoblins.Size = new System.Drawing.Size(272, 714);
+            this.tabGoblins.Size = new System.Drawing.Size(246, 714);
             this.tabGoblins.TabIndex = 4;
             this.tabGoblins.Text = "Goblins";
             this.tabGoblins.UseVisualStyleBackColor = true;
@@ -307,7 +426,7 @@ namespace HomeworldDAEEditor
             this.panelGoblins.Controls.Add(this.comboGoblinMeshParent);
             this.panelGoblins.Location = new System.Drawing.Point(3, 3);
             this.panelGoblins.Name = "panelGoblins";
-            this.panelGoblins.Size = new System.Drawing.Size(266, 462);
+            this.panelGoblins.Size = new System.Drawing.Size(240, 462);
             this.panelGoblins.TabIndex = 0;
             // 
             // listGoblinMeshes
@@ -317,7 +436,7 @@ namespace HomeworldDAEEditor
             this.listGoblinMeshes.FormattingEnabled = true;
             this.listGoblinMeshes.Location = new System.Drawing.Point(3, 3);
             this.listGoblinMeshes.Name = "listGoblinMeshes";
-            this.listGoblinMeshes.Size = new System.Drawing.Size(260, 394);
+            this.listGoblinMeshes.Size = new System.Drawing.Size(234, 394);
             this.listGoblinMeshes.TabIndex = 12;
             this.listGoblinMeshes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listGoblinMeshes_ItemCheck);
             this.listGoblinMeshes.SelectedIndexChanged += new System.EventHandler(this.listGoblinMeshes_SelectedIndexChanged);
@@ -350,7 +469,7 @@ namespace HomeworldDAEEditor
             this.comboGoblinMeshParent.FormattingEnabled = true;
             this.comboGoblinMeshParent.Location = new System.Drawing.Point(56, 412);
             this.comboGoblinMeshParent.Name = "comboGoblinMeshParent";
-            this.comboGoblinMeshParent.Size = new System.Drawing.Size(210, 21);
+            this.comboGoblinMeshParent.Size = new System.Drawing.Size(184, 21);
             this.comboGoblinMeshParent.TabIndex = 8;
             // 
             // tabCollisionMeshes
@@ -359,7 +478,7 @@ namespace HomeworldDAEEditor
             this.tabCollisionMeshes.Location = new System.Drawing.Point(4, 40);
             this.tabCollisionMeshes.Name = "tabCollisionMeshes";
             this.tabCollisionMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCollisionMeshes.Size = new System.Drawing.Size(272, 714);
+            this.tabCollisionMeshes.Size = new System.Drawing.Size(246, 714);
             this.tabCollisionMeshes.TabIndex = 5;
             this.tabCollisionMeshes.Text = "Collision Meshes";
             this.tabCollisionMeshes.UseVisualStyleBackColor = true;
@@ -373,7 +492,7 @@ namespace HomeworldDAEEditor
             this.panel1.Controls.Add(this.comboCollisionMeshParent);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(266, 443);
+            this.panel1.Size = new System.Drawing.Size(240, 443);
             this.panel1.TabIndex = 0;
             // 
             // listCollisionMeshes
@@ -383,7 +502,7 @@ namespace HomeworldDAEEditor
             this.listCollisionMeshes.FormattingEnabled = true;
             this.listCollisionMeshes.Location = new System.Drawing.Point(3, 3);
             this.listCollisionMeshes.Name = "listCollisionMeshes";
-            this.listCollisionMeshes.Size = new System.Drawing.Size(260, 394);
+            this.listCollisionMeshes.Size = new System.Drawing.Size(234, 394);
             this.listCollisionMeshes.TabIndex = 12;
             this.listCollisionMeshes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listCollisionMeshes_ItemCheck);
             this.listCollisionMeshes.SelectedIndexChanged += new System.EventHandler(this.listCollisionMeshes_SelectedIndexChanged);
@@ -405,7 +524,7 @@ namespace HomeworldDAEEditor
             this.comboCollisionMeshParent.FormattingEnabled = true;
             this.comboCollisionMeshParent.Location = new System.Drawing.Point(56, 412);
             this.comboCollisionMeshParent.Name = "comboCollisionMeshParent";
-            this.comboCollisionMeshParent.Size = new System.Drawing.Size(210, 21);
+            this.comboCollisionMeshParent.Size = new System.Drawing.Size(184, 21);
             this.comboCollisionMeshParent.TabIndex = 8;
             // 
             // tabJoints
@@ -414,7 +533,7 @@ namespace HomeworldDAEEditor
             this.tabJoints.Location = new System.Drawing.Point(4, 40);
             this.tabJoints.Name = "tabJoints";
             this.tabJoints.Padding = new System.Windows.Forms.Padding(3);
-            this.tabJoints.Size = new System.Drawing.Size(272, 714);
+            this.tabJoints.Size = new System.Drawing.Size(246, 714);
             this.tabJoints.TabIndex = 1;
             this.tabJoints.Text = "Joints";
             this.tabJoints.UseVisualStyleBackColor = true;
@@ -425,7 +544,7 @@ namespace HomeworldDAEEditor
             this.jointsTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.jointsTree.Location = new System.Drawing.Point(3, 3);
             this.jointsTree.Name = "jointsTree";
-            this.jointsTree.Size = new System.Drawing.Size(266, 708);
+            this.jointsTree.Size = new System.Drawing.Size(240, 708);
             this.jointsTree.TabIndex = 0;
             this.jointsTree.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.jointsTree_AfterCheck);
             // 
@@ -434,7 +553,7 @@ namespace HomeworldDAEEditor
             this.tabMarkers.Controls.Add(this.splitTabMarkers);
             this.tabMarkers.Location = new System.Drawing.Point(4, 40);
             this.tabMarkers.Name = "tabMarkers";
-            this.tabMarkers.Size = new System.Drawing.Size(242, 714);
+            this.tabMarkers.Size = new System.Drawing.Size(246, 714);
             this.tabMarkers.TabIndex = 2;
             this.tabMarkers.Text = "Markers";
             this.tabMarkers.UseVisualStyleBackColor = true;
@@ -453,7 +572,7 @@ namespace HomeworldDAEEditor
             // splitTabMarkers.Panel2
             // 
             this.splitTabMarkers.Panel2.Controls.Add(this.checkboxDrawMarkers);
-            this.splitTabMarkers.Size = new System.Drawing.Size(242, 714);
+            this.splitTabMarkers.Size = new System.Drawing.Size(246, 714);
             this.splitTabMarkers.SplitterDistance = 672;
             this.splitTabMarkers.TabIndex = 0;
             // 
@@ -463,7 +582,7 @@ namespace HomeworldDAEEditor
             this.listBoxMarkers.FormattingEnabled = true;
             this.listBoxMarkers.Location = new System.Drawing.Point(0, 0);
             this.listBoxMarkers.Name = "listBoxMarkers";
-            this.listBoxMarkers.Size = new System.Drawing.Size(242, 672);
+            this.listBoxMarkers.Size = new System.Drawing.Size(246, 672);
             this.listBoxMarkers.TabIndex = 2;
             // 
             // checkboxDrawMarkers
@@ -487,7 +606,7 @@ namespace HomeworldDAEEditor
             this.tabDockpaths.Controls.Add(this.panelDockpathList);
             this.tabDockpaths.Location = new System.Drawing.Point(4, 40);
             this.tabDockpaths.Name = "tabDockpaths";
-            this.tabDockpaths.Size = new System.Drawing.Size(242, 714);
+            this.tabDockpaths.Size = new System.Drawing.Size(246, 714);
             this.tabDockpaths.TabIndex = 3;
             this.tabDockpaths.Text = "Dockpaths";
             this.tabDockpaths.UseVisualStyleBackColor = true;
@@ -502,7 +621,7 @@ namespace HomeworldDAEEditor
             this.groupDockpathFlags.Controls.Add(this.checkDockpathExit);
             this.groupDockpathFlags.Location = new System.Drawing.Point(4, 190);
             this.groupDockpathFlags.Name = "groupDockpathFlags";
-            this.groupDockpathFlags.Size = new System.Drawing.Size(235, 64);
+            this.groupDockpathFlags.Size = new System.Drawing.Size(239, 64);
             this.groupDockpathFlags.TabIndex = 12;
             this.groupDockpathFlags.TabStop = false;
             this.groupDockpathFlags.Text = "Flags";
@@ -512,7 +631,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathAjar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathAjar.AutoSize = true;
             this.checkDockpathAjar.Enabled = false;
-            this.checkDockpathAjar.Location = new System.Drawing.Point(176, 42);
+            this.checkDockpathAjar.Location = new System.Drawing.Point(180, 42);
             this.checkDockpathAjar.Name = "checkDockpathAjar";
             this.checkDockpathAjar.Size = new System.Drawing.Size(44, 17);
             this.checkDockpathAjar.TabIndex = 11;
@@ -525,7 +644,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathLatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathLatch.AutoSize = true;
             this.checkDockpathLatch.Enabled = false;
-            this.checkDockpathLatch.Location = new System.Drawing.Point(176, 19);
+            this.checkDockpathLatch.Location = new System.Drawing.Point(180, 19);
             this.checkDockpathLatch.Name = "checkDockpathLatch";
             this.checkDockpathLatch.Size = new System.Drawing.Size(53, 17);
             this.checkDockpathLatch.TabIndex = 10;
@@ -569,7 +688,7 @@ namespace HomeworldDAEEditor
             this.groupDockpathSegments.Controls.Add(this.trackBarDockpathSegments);
             this.groupDockpathSegments.Location = new System.Drawing.Point(4, 474);
             this.groupDockpathSegments.Name = "groupDockpathSegments";
-            this.groupDockpathSegments.Size = new System.Drawing.Size(235, 237);
+            this.groupDockpathSegments.Size = new System.Drawing.Size(239, 237);
             this.groupDockpathSegments.TabIndex = 3;
             this.groupDockpathSegments.TabStop = false;
             this.groupDockpathSegments.Text = "Segments";
@@ -588,7 +707,7 @@ namespace HomeworldDAEEditor
             this.groupDockpathSegmentFlags.Controls.Add(this.checkDockpathSegmentFlagQueue);
             this.groupDockpathSegmentFlags.Location = new System.Drawing.Point(3, 122);
             this.groupDockpathSegmentFlags.Name = "groupDockpathSegmentFlags";
-            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(226, 111);
+            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(230, 111);
             this.groupDockpathSegmentFlags.TabIndex = 11;
             this.groupDockpathSegmentFlags.TabStop = false;
             this.groupDockpathSegmentFlags.Text = "Flags";
@@ -598,7 +717,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathSegmentFlagClip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClip.AutoSize = true;
             this.checkDockpathSegmentFlagClip.Enabled = false;
-            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(119, 89);
+            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(123, 89);
             this.checkDockpathSegmentFlagClip.Name = "checkDockpathSegmentFlagClip";
             this.checkDockpathSegmentFlagClip.Size = new System.Drawing.Size(72, 17);
             this.checkDockpathSegmentFlagClip.TabIndex = 27;
@@ -623,7 +742,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathSegmentFlagCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagCheck.AutoSize = true;
             this.checkDockpathSegmentFlagCheck.Enabled = false;
-            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(119, 66);
+            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(123, 66);
             this.checkDockpathSegmentFlagCheck.Name = "checkDockpathSegmentFlagCheck";
             this.checkDockpathSegmentFlagCheck.Size = new System.Drawing.Size(95, 17);
             this.checkDockpathSegmentFlagCheck.TabIndex = 25;
@@ -648,7 +767,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathSegmentFlagClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClose.AutoSize = true;
             this.checkDockpathSegmentFlagClose.Enabled = false;
-            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(119, 42);
+            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(123, 42);
             this.checkDockpathSegmentFlagClose.Name = "checkDockpathSegmentFlagClose";
             this.checkDockpathSegmentFlagClose.Size = new System.Drawing.Size(102, 17);
             this.checkDockpathSegmentFlagClose.TabIndex = 23;
@@ -673,7 +792,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathSegmentFlagPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagPlayer.AutoSize = true;
             this.checkDockpathSegmentFlagPlayer.Enabled = false;
-            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(119, 19);
+            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(123, 19);
             this.checkDockpathSegmentFlagPlayer.Name = "checkDockpathSegmentFlagPlayer";
             this.checkDockpathSegmentFlagPlayer.Size = new System.Drawing.Size(101, 17);
             this.checkDockpathSegmentFlagPlayer.TabIndex = 22;
@@ -718,7 +837,7 @@ namespace HomeworldDAEEditor
             this.boxDockpathSegmentSpeed.Location = new System.Drawing.Point(77, 96);
             this.boxDockpathSegmentSpeed.Name = "boxDockpathSegmentSpeed";
             this.boxDockpathSegmentSpeed.ReadOnly = true;
-            this.boxDockpathSegmentSpeed.Size = new System.Drawing.Size(155, 20);
+            this.boxDockpathSegmentSpeed.Size = new System.Drawing.Size(159, 20);
             this.boxDockpathSegmentSpeed.TabIndex = 8;
             // 
             // boxDockpathSegmentTolerance
@@ -728,7 +847,7 @@ namespace HomeworldDAEEditor
             this.boxDockpathSegmentTolerance.Location = new System.Drawing.Point(77, 70);
             this.boxDockpathSegmentTolerance.Name = "boxDockpathSegmentTolerance";
             this.boxDockpathSegmentTolerance.ReadOnly = true;
-            this.boxDockpathSegmentTolerance.Size = new System.Drawing.Size(155, 20);
+            this.boxDockpathSegmentTolerance.Size = new System.Drawing.Size(159, 20);
             this.boxDockpathSegmentTolerance.TabIndex = 7;
             // 
             // trackBarDockpathSegments
@@ -738,7 +857,7 @@ namespace HomeworldDAEEditor
             this.trackBarDockpathSegments.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarDockpathSegments.Location = new System.Drawing.Point(9, 19);
             this.trackBarDockpathSegments.Name = "trackBarDockpathSegments";
-            this.trackBarDockpathSegments.Size = new System.Drawing.Size(229, 45);
+            this.trackBarDockpathSegments.Size = new System.Drawing.Size(233, 45);
             this.trackBarDockpathSegments.TabIndex = 3;
             this.trackBarDockpathSegments.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBarDockpathSegments.Scroll += new System.EventHandler(this.trackBarDockpathSegments_Scroll);
@@ -750,7 +869,7 @@ namespace HomeworldDAEEditor
             this.groupDockpathLinks.Controls.Add(this.listDockpathLinks);
             this.groupDockpathLinks.Location = new System.Drawing.Point(4, 367);
             this.groupDockpathLinks.Name = "groupDockpathLinks";
-            this.groupDockpathLinks.Size = new System.Drawing.Size(235, 101);
+            this.groupDockpathLinks.Size = new System.Drawing.Size(239, 101);
             this.groupDockpathLinks.TabIndex = 2;
             this.groupDockpathLinks.TabStop = false;
             this.groupDockpathLinks.Text = "Links";
@@ -762,7 +881,7 @@ namespace HomeworldDAEEditor
             this.listDockpathLinks.FormattingEnabled = true;
             this.listDockpathLinks.Location = new System.Drawing.Point(3, 16);
             this.listDockpathLinks.Name = "listDockpathLinks";
-            this.listDockpathLinks.Size = new System.Drawing.Size(229, 82);
+            this.listDockpathLinks.Size = new System.Drawing.Size(233, 82);
             this.listDockpathLinks.TabIndex = 11;
             // 
             // groupDockpathFamilies
@@ -772,7 +891,7 @@ namespace HomeworldDAEEditor
             this.groupDockpathFamilies.Controls.Add(this.listDockpathFamilies);
             this.groupDockpathFamilies.Location = new System.Drawing.Point(4, 260);
             this.groupDockpathFamilies.Name = "groupDockpathFamilies";
-            this.groupDockpathFamilies.Size = new System.Drawing.Size(235, 101);
+            this.groupDockpathFamilies.Size = new System.Drawing.Size(239, 101);
             this.groupDockpathFamilies.TabIndex = 1;
             this.groupDockpathFamilies.TabStop = false;
             this.groupDockpathFamilies.Text = "Families";
@@ -784,7 +903,7 @@ namespace HomeworldDAEEditor
             this.listDockpathFamilies.FormattingEnabled = true;
             this.listDockpathFamilies.Location = new System.Drawing.Point(3, 16);
             this.listDockpathFamilies.Name = "listDockpathFamilies";
-            this.listDockpathFamilies.Size = new System.Drawing.Size(229, 82);
+            this.listDockpathFamilies.Size = new System.Drawing.Size(233, 82);
             this.listDockpathFamilies.TabIndex = 11;
             // 
             // panelDockpathList
@@ -795,7 +914,7 @@ namespace HomeworldDAEEditor
             this.panelDockpathList.Controls.Add(this.dockpathList);
             this.panelDockpathList.Location = new System.Drawing.Point(4, 4);
             this.panelDockpathList.Name = "panelDockpathList";
-            this.panelDockpathList.Size = new System.Drawing.Size(235, 180);
+            this.panelDockpathList.Size = new System.Drawing.Size(239, 180);
             this.panelDockpathList.TabIndex = 0;
             // 
             // dockpathList
@@ -805,7 +924,7 @@ namespace HomeworldDAEEditor
             this.dockpathList.FormattingEnabled = true;
             this.dockpathList.Location = new System.Drawing.Point(0, 0);
             this.dockpathList.Name = "dockpathList";
-            this.dockpathList.Size = new System.Drawing.Size(235, 180);
+            this.dockpathList.Size = new System.Drawing.Size(239, 180);
             this.dockpathList.TabIndex = 7;
             this.dockpathList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.dockpathList_ItemCheck);
             this.dockpathList.SelectedIndexChanged += new System.EventHandler(this.dockpathList_SelectedIndexChanged);
@@ -825,18 +944,8 @@ namespace HomeworldDAEEditor
             // 
             this.splitContainer1.Panel2.Controls.Add(this.glControl);
             this.splitContainer1.Size = new System.Drawing.Size(1123, 758);
-            this.splitContainer1.SplitterDistance = 250;
+            this.splitContainer1.SplitterDistance = 254;
             this.splitContainer1.TabIndex = 4;
-            // 
-            // buttonAbout
-            // 
-            this.buttonAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonAbout.Image = ((System.Drawing.Image)(resources.GetObject("buttonAbout.Image")));
-            this.buttonAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.buttonAbout.Name = "buttonAbout";
-            this.buttonAbout.Size = new System.Drawing.Size(23, 22);
-            this.buttonAbout.Text = "About";
-            this.buttonAbout.Click += new System.EventHandler(this.buttonAbout_Click);
             // 
             // Main
             // 
@@ -856,6 +965,10 @@ namespace HomeworldDAEEditor
             this.groupShipMeshLODs.ResumeLayout(false);
             this.panelShipMesh.ResumeLayout(false);
             this.panelShipMesh.PerformLayout();
+            this.tabMaterials.ResumeLayout(false);
+            this.groupMaterialTextures.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.tabGoblins.ResumeLayout(false);
             this.panelGoblins.ResumeLayout(false);
             this.panelGoblins.PerformLayout();
@@ -952,6 +1065,15 @@ namespace HomeworldDAEEditor
         private System.Windows.Forms.CheckBox checkDockpathSegmentFlagPlayer;
         private System.Windows.Forms.CheckBox checkDockpathSegmentFlagQueue;
         private System.Windows.Forms.ToolStripButton buttonAbout;
+        private System.Windows.Forms.TabPage tabMaterials;
+        private System.Windows.Forms.GroupBox groupMaterialTextures;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.ComboBox comboMaterialFormat;
+        private System.Windows.Forms.TextBox boxMaterialShader;
+        private System.Windows.Forms.ListBox listMaterials;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox listMaterialTextures;
     }
 }
 

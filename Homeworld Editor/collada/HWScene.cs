@@ -3,12 +3,9 @@ using Assimp.Configs;
 using OpenTK;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Reflection;
-using OpenTK.Graphics.OpenGL;
-using System.Drawing.Imaging;
-using Utilities;
+using System.Xml;
 
 namespace HomeworldDAEEditor
 {
@@ -28,13 +25,14 @@ namespace HomeworldDAEEditor
         public static List<HWGoblinMesh> GoblinMeshes = new List<HWGoblinMesh>();
         public static List<HWCollisionMesh> CollisionMeshes = new List<HWCollisionMesh>();
         public static List<HWMaterial> Materials = new List<HWMaterial>();
+        public static List<HWImage> Images = new List<HWImage>();
         public static List<HWNode> Nodes = new List<HWNode>();
         public static List<HWJoint> Joints = new List<HWJoint>();
         public static List<HWMarker> Markers = new List<HWMarker>();
         public static List<HWDockpath> Dockpaths = new List<HWDockpath>();
         public static List<HWDockSegment> DockSegments = new List<HWDockSegment>();
 
-        public static Dictionary<string, int> Textures = new Dictionary<string, int>();
+        public static Dictionary<string, int> RenderTextures = new Dictionary<string, int>();
 
         public static void LoadCollada(string path)
         {
@@ -55,8 +53,11 @@ namespace HomeworldDAEEditor
             //Blender Homeworld Toolkit fix
             string fixedColladaPath = FixCollada(fileName);
 
-            Collada = importer.ImportFile(fixedColladaPath, PostProcessPreset.TargetRealTimeMaximumQuality);
+            Collada = importer.ImportFile(fixedColladaPath, PostProcessPreset.TargetRealTimeFast);
             importer.Dispose();
+
+            //Manual parsing
+            LoadTextures(fixedColladaPath);
 
             File.Delete(fixedColladaPath);
             #endregion
@@ -65,6 +66,7 @@ namespace HomeworldDAEEditor
 
             LoadMaterials();
             LoadMeshes();
+
             RootNode = new HWNode(Collada.RootNode, null);
 
             foreach(HWMesh mesh in Meshes) //Parse meshes (add them as ship meshes etc.)
@@ -136,8 +138,43 @@ namespace HomeworldDAEEditor
                     }
                 }
 
+                newMaterial.Parse();
                 Console.WriteLine("Material '" + material.Name + "' added.");
             }
+        }
+
+        private static void LoadTextures(string file)
+        {
+            XmlReader reader = XmlReader.Create(file);
+
+            while(reader.Read())
+            {
+                if(reader.Name == "image")
+                {
+                    string name = reader.GetAttribute("name");
+                    string path = null;
+                    if (name != null)
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader.Name == "init_from")
+                            {
+                                reader.MoveToElement();
+                                path = reader.ReadElementContentAsString();
+                                break;
+                            }
+                        }
+                    }
+
+                    if(name != null && path != null)
+                    {
+                        new HWImage(name, path);
+                    }
+                }
+            }
+
+            reader.Close();
+            reader.Dispose();
         }
 
         private static string FixCollada(string path)
@@ -292,8 +329,9 @@ namespace HomeworldDAEEditor
             GoblinMeshes.Clear();
             CollisionMeshes.Clear();
             Materials.Clear();
+            Images.Clear();
             Nodes.Clear();
-            Textures.Clear();
+            RenderTextures.Clear();
             Joints.Clear();
             Markers.Clear();
             Dockpaths.Clear();

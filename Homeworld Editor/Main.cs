@@ -25,8 +25,9 @@ namespace HomeworldDAEEditor
         public Dictionary<object, HWGoblinMesh> GoblinMeshListItems = new Dictionary<object, HWGoblinMesh>();
         public Dictionary<HWJoint, object> GoblinParentComboItems = new Dictionary<HWJoint, object>();
 
-        public Dictionary<object, HWCollisionMesh> CollisionMeshListItems = new Dictionary<object, HWCollisionMesh>();
         public Dictionary<HWJoint, object> CollisionMeshParentComboItems = new Dictionary<HWJoint, object>();
+
+        public Dictionary<object, HWMaterial> MaterialListItems = new Dictionary<object, HWMaterial>();
 
         public Main()
         {
@@ -90,7 +91,12 @@ namespace HomeworldDAEEditor
 
             listCollisionMeshes.Items.Clear();
             comboCollisionMeshParent.Items.Clear();
-            CollisionMeshListItems.Clear();
+
+            listMaterials.Items.Clear();
+            MaterialListItems.Clear();
+            boxMaterialShader.Clear();
+            listMaterialTextures.Items.Clear();
+            comboMaterialFormat.Items.Clear();
 
             jointsTree.Nodes.Clear();
 
@@ -130,6 +136,10 @@ namespace HomeworldDAEEditor
             comboShipMeshParent.Items.Add("Root"); //Add root joint to possible ship mesh parents
             comboGoblinMeshParent.Items.Add("Root"); //Add root joint to possible goblin parents
             comboCollisionMeshParent.Items.Add("Root"); //Add root joint to possible collision mesh parents
+
+            comboMaterialFormat.Items.Add("DXT1");
+            comboMaterialFormat.Items.Add("DXT5");
+            comboMaterialFormat.Items.Add("8888");
 
             comboShipMeshParent.SelectedItem = 0;
             comboGoblinMeshParent.SelectedItem = 0;
@@ -334,20 +344,20 @@ namespace HomeworldDAEEditor
                     listDockpathLinks.Items.Add(link);
                 }
 
-                foreach (DockpathFlags flag in dockpath.Flags)
+                foreach (DockpathFlag flag in dockpath.Flags)
                 {
                     switch(flag)
                     {
-                        case DockpathFlags.EXIT:
+                        case DockpathFlag.EXIT:
                             checkDockpathExit.Checked = true;
                             break;
-                        case DockpathFlags.LATCH:
+                        case DockpathFlag.LATCH:
                             checkDockpathLatch.Checked = true;
                             break;
-                        case DockpathFlags.ANIM:
+                        case DockpathFlag.ANIM:
                             checkDockpathAnim.Checked = true;
                             break;
-                        case DockpathFlags.AJAR:
+                        case DockpathFlag.AJAR:
                             checkDockpathAjar.Checked = true;
                             break;
                     }
@@ -383,32 +393,32 @@ namespace HomeworldDAEEditor
             checkDockpathSegmentFlagUnfocus.Checked = false;
             checkDockpathSegmentFlagClip.Checked = false;
 
-            foreach (DockSegmentFlags flag in selectedSegment.Flags)
+            foreach (DockSegmentFlag flag in selectedSegment.Flags)
             {
                 switch (flag)
                 {
-                    case DockSegmentFlags.USEROT:
+                    case DockSegmentFlag.USEROT:
                         checkDockpathSegmentFlagUseRot.Checked = true;
                         break;
-                    case DockSegmentFlags.PLAYER:
+                    case DockSegmentFlag.PLAYER:
                         checkDockpathSegmentFlagPlayer.Checked = true;
                         break;
-                    case DockSegmentFlags.QUEUE:
+                    case DockSegmentFlag.QUEUE:
                         checkDockpathSegmentFlagQueue.Checked = true;
                         break;
-                    case DockSegmentFlags.CLOSE:
+                    case DockSegmentFlag.CLOSE:
                         checkDockpathSegmentFlagClose.Checked = true;
                         break;
-                    case DockSegmentFlags.CLEARRES:
+                    case DockSegmentFlag.CLEARRES:
                         checkDockpathSegmentFlagClearRes.Checked = true;
                         break;
-                    case DockSegmentFlags.CHECK:
+                    case DockSegmentFlag.CHECK:
                         checkDockpathSegmentFlagCheck.Checked = true;
                         break;
-                    case DockSegmentFlags.UNFOCUS:
+                    case DockSegmentFlag.UNFOCUS:
                         checkDockpathSegmentFlagUnfocus.Checked = true;
                         break;
-                    case DockSegmentFlags.CLIP:
+                    case DockSegmentFlag.CLIP:
                         checkDockpathSegmentFlagClip.Checked = true;
                         break;
                 }
@@ -442,7 +452,7 @@ namespace HomeworldDAEEditor
             if (selectedShipMesh != null)
             {
                 //Check do scar checkbox
-                if (selectedShipMesh.Tags.Contains(ShipMeshTags.DOSCAR))
+                if (selectedShipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
                     checkShipMeshDoScar.Checked = true;
 
                 //Select parent joint in combo box
@@ -536,7 +546,7 @@ namespace HomeworldDAEEditor
             HWGoblinMesh selectedGoblinMesh = GoblinMeshListItems[listGoblinMeshes.SelectedItem];
 
             //Check do scar checkbox
-            if (selectedGoblinMesh.Tags.Contains(GoblinMeshTags.DOSCAR))
+            if (selectedGoblinMesh.Tags.Contains(GoblinMeshTag.DOSCAR))
                 checkGoblinDoScar.Checked = true;
 
             //Select parent joint in combo box
@@ -583,7 +593,16 @@ namespace HomeworldDAEEditor
         //--------------------------------- COLLISION MESHES ---------------------------------//
         private void listCollisionMeshes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            HWCollisionMesh selectedCollisionMesh = CollisionMeshListItems[listCollisionMeshes.SelectedItem];
+            HWCollisionMesh selectedCollisionMesh = null;
+            //Has to be done with a loop, because of multiple collision meshes with the same name
+            foreach (HWCollisionMesh collisionMesh in HWScene.CollisionMeshes)
+            {
+                if(collisionMesh.CollisionMeshListItemIndex == listCollisionMeshes.SelectedIndex)
+                {
+                    selectedCollisionMesh = collisionMesh;
+                    break;
+                }
+            }
 
             //Select parent joint in combo box
             if (selectedCollisionMesh.Parent != null) //If collision mesh has a parent joint
@@ -599,13 +618,21 @@ namespace HomeworldDAEEditor
             object item = mesh.Name;
             listCollisionMeshes.Items.Add(item);
             mesh.CollisionMeshListItemIndex = listCollisionMeshes.Items.Count - 1;
-            CollisionMeshListItems.Add(item, mesh);
         }
         private void listCollisionMeshes_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (listCollisionMeshes.SelectedItem != null)
             {
-                HWCollisionMesh selectedCollisionMesh = CollisionMeshListItems[listCollisionMeshes.SelectedItem];
+                HWCollisionMesh selectedCollisionMesh = null;
+                //Has to be done with a loop, because of multiple collision meshes with the same name
+                foreach (HWCollisionMesh collisionMesh in HWScene.CollisionMeshes)
+                {
+                    if (collisionMesh.CollisionMeshListItemIndex == listCollisionMeshes.SelectedIndex)
+                    {
+                        selectedCollisionMesh = collisionMesh;
+                        break;
+                    }
+                }
 
                 bool visible = false;
                 if (e.NewValue == CheckState.Checked)
@@ -616,6 +643,40 @@ namespace HomeworldDAEEditor
                 Renderer.UpdateMeshData();
                 Renderer.UpdateView();
                 glControl.Invalidate();
+            }
+        }
+
+        //----------------------------------- MATERIALS ----------------------------------//
+        private void listMaterials_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            listMaterialTextures.Items.Clear();
+
+            HWMaterial selectedMaterial = MaterialListItems[listMaterials.SelectedItem];
+
+            //Set shader name
+            boxMaterialShader.Text = selectedMaterial.Shader;
+
+            //Fill texture list
+            foreach (HWImage image in selectedMaterial.Images)
+            {
+                listMaterialTextures.Items.Add(image.Name);
+            }
+
+            //Set texture format
+            if(selectedMaterial.Images[0] != null)
+            {
+                comboMaterialFormat.SelectedIndex = (int)selectedMaterial.Format;
+            }
+        }
+        public void AddMaterial(HWMaterial material)
+        {
+            if (!listMaterials.Items.Contains(material.Name)) //If material not already in list
+            {
+                object item = material.Name;
+                listMaterials.Items.Add(item);
+
+                material.MaterialListItem = item;
+                MaterialListItems.Add(item, material);
             }
         }
 
