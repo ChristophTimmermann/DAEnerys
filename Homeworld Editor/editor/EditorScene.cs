@@ -10,6 +10,7 @@ namespace HomeworldDAEEditor
     {
         public static List<EditorMesh> meshes = new List<EditorMesh>();
         public static List<EditorMaterial> materials = new List<EditorMaterial>();
+        public static List<EditorIcon> icons = new List<EditorIcon>();
 
         public static void Init()
         {
@@ -35,7 +36,10 @@ namespace HomeworldDAEEditor
 
             Scene icosphere = importer.ImportFile("icosphere.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorIcosphere.Mesh = icosphere.Meshes[0];
-            
+
+            Scene icon = importer.ImportFile("icon.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
+            EditorIcon.Mesh = icon.Meshes[0];
+            EditorIcon.IconMaterial = jointMaterial;
 
             EditorMaterial redMaterial = new EditorMaterial();
             redMaterial.Name = "RedMaterial";
@@ -59,6 +63,7 @@ namespace HomeworldDAEEditor
         {
             meshes.Clear();
             materials.Clear();
+            icons.Clear();
         }
     }
 }

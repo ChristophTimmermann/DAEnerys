@@ -56,3 +56,5 @@ D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\HomeworldDAEEditor.Settings.res
 D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.csproj.GenerateResource.Cache
 D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.exe
 D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.pdb
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\icon.obj
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\iconJoint.png

@@ -31,6 +31,7 @@ namespace HomeworldDAEEditor
 
             //Visualization
             EditorJoint = new EditorJoint(this);
+            //new EditorIcon(this);
         }
     }
 }

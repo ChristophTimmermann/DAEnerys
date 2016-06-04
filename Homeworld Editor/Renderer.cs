@@ -36,8 +36,10 @@ namespace HomeworldDAEEditor
             GL.ClearColor(Color.CornflowerBlue);
 
             GL.Enable(EnableCap.DepthTest);
-
             GL.EnableClientState(ArrayCap.VertexArray);
+
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             activeLight = new Light(new Vector3(100, 0, 0), new Vector3(0.9f, 0.80f, 0.8f));
             activeShader = "default";

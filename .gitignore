@@ -4,3 +4,33 @@
 
 /Homeworld Editor/bin/Debug
 /packages
+/Homeworld Editor/bin/Release/yellow.tga
+/Homeworld Editor/bin/Release/red.tga
+/Homeworld Editor/bin/Release/Assimp32.dll
+/Homeworld Editor/bin/Release/Assimp64.dll
+/Homeworld Editor/bin/Release/AssimpNet.dll
+/Homeworld Editor/bin/Release/AssimpNet.xml
+/Homeworld Editor/bin/Release/DevIL.dll
+/Homeworld Editor/bin/Release/DevILSharp.dll
+/Homeworld Editor/bin/Release/DevILSharp.dll.config
+/Homeworld Editor/bin/Release/FSharp.Core.dll
+/Homeworld Editor/bin/Release/FSharp.Core.xml
+/Homeworld Editor/bin/Release/grey.jpg
+/Homeworld Editor/bin/Release/Homeworld Editor.exe.config
+/Homeworld Editor/bin/Release/Homeworld Editor.vshost.exe
+/Homeworld Editor/bin/Release/Homeworld Editor.vshost.exe.config
+/Homeworld Editor/bin/Release/Homeworld Editor.vshost.exe.manifest
+/Homeworld Editor/bin/Release/icosphere.obj
+/Homeworld Editor/bin/Release/icosphere.mtl
+/Homeworld Editor/bin/Release/ILU.dll
+/Homeworld Editor/bin/Release/ILUT.dll
+/Homeworld Editor/bin/Release/joint.mtl
+/Homeworld Editor/bin/Release/joint.obj
+/Homeworld Editor/bin/Release/joint.tga
+/Homeworld Editor/bin/Release/OpenTK.dll
+/Homeworld Editor/bin/Release/OpenTK.GLControl.dll
+/Homeworld Editor/bin/Release/OpenTK.GLControl.pdb
+/Homeworld Editor/bin/Release/OpenTK.GLControl.xml
+/Homeworld Editor/bin/Release/OpenTK.pdb
+/Homeworld Editor/bin/Release/OpenTK.xml
+/Homeworld Editor/bin/Release/Homeworld Editor.pdb

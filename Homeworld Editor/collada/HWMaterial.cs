@@ -92,7 +92,7 @@ namespace HomeworldDAEEditor
                         //string diffusePath = Path.GetFullPath(image.Path);
                         //diffusePath = diffusePath.Remove(0, 2);
 
-                        string absolutePath = Path.Combine(HWScene.ColladaPath, image.Path);
+                        string absolutePath = Path.Combine(HWScene.ColladaPath, image.Path.Replace("file://", ""));
                         absolutePath = Path.GetDirectoryName(absolutePath);
                         string[] files = Directory.GetFiles(absolutePath);
                         foreach(string file in files)
