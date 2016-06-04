@@ -14,6 +14,7 @@ namespace HomeworldDAEEditor
 
         public Vector3 Scale = Vector3.One;
         public bool Visible = false;
+        public bool Shaded = false;
 
         public Matrix4 ModelMatrix = Matrix4.Identity;
         public Matrix4 ViewProjectionMatrix = Matrix4.Identity;

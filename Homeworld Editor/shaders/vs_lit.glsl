@@ -2,8 +2,10 @@
 
 in vec3 vPosition;
 in vec3 vNormal;
-in vec2 texcoord;
+in vec3 vColor;
+in vec2 vTexture;
 
+out vec4 color;
 out vec3 v_norm;
 out vec3 v_pos;
 out vec2 f_texcoord;
@@ -15,10 +17,12 @@ uniform mat4 view;
 void
 main()
 {
- gl_Position = modelview * vec4(vPosition, 1.0);
- f_texcoord = texcoord;
-
- mat3 normMatrix = transpose(inverse(mat3(model)));
- v_norm = normMatrix * vNormal;
- v_pos = (model * vec4(vPosition, 1.0)).xyz;
+    gl_Position = modelview * vec4(vPosition, 1.0);
+	
+    f_texcoord = vTexture;
+	color = vec4( vColor, 1.0);
+	
+	mat3 normMatrix = transpose(inverse(mat3(model)));
+	v_norm = normMatrix * vNormal;
+	v_pos = (model * vec4(vPosition, 1.0)).xyz;
 }

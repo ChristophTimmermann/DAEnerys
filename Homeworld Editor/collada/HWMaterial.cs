@@ -13,10 +13,10 @@ namespace HomeworldDAEEditor
         public string Shader = "default";
         public ImageFormat Format = ImageFormat.DXT1;
 
-        public Vector3 AmbientColor = new Vector3();
-        public Vector3 DiffuseColor = new Vector3();
-        public Vector3 SpecularColor = new Vector3();
-        public float SpecularExponent = 1;
+        public Vector3 AmbientColor = new Vector3(0.6f);
+        public Vector3 DiffuseColor = new Vector3(1, 1, 1);
+        public Vector3 SpecularColor = new Vector3(0.1f, 0.1f, 0.1f);
+        public float SpecularExponent = 0.3f;
         public float Opacity = 1.0f;
 
         public string AmbientMap = "";

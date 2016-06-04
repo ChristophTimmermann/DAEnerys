@@ -11,14 +11,14 @@ namespace HomeworldDAEEditor
     {
         public string Name;
 
-        public Vector3 AmbientColor = new Vector3();
-        public Vector3 DiffuseColor = new Vector3();
-        public Vector3 SpecularColor = new Vector3();
-        public float SpecularExponent = 1;
+        public Vector3 AmbientColor = new Vector3(0.4f);
+        public Vector3 DiffuseColor = new Vector3(1, 1, 1);
+        public Vector3 SpecularColor = new Vector3(0.1f, 0.1f, 0.1f);
+        public float SpecularExponent = 0.3f;
         public float Opacity = 1.0f;
 
         public string AmbientMap = "";
-        public string DiffuseMap = "grey.jpg";
+        public string DiffuseMap = "";
         public string SpecularMap = "";
         public string OpacityMap = "";
         public string NormalMap = "";

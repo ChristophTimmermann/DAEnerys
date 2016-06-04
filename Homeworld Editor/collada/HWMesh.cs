@@ -12,6 +12,7 @@ namespace HomeworldDAEEditor
 
         public string Name;
         public bool Visible = false;
+        public bool Shaded = true;
 
         public Matrix4 ModelMatrix = Matrix4.Identity;
         public Matrix4 ViewProjectionMatrix = Matrix4.Identity;

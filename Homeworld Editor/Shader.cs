@@ -97,7 +97,7 @@ namespace HomeworldDAEEditor
                 AttributeInfo info = new AttributeInfo();
                 int length = 0;
 
-                StringBuilder name = new StringBuilder();
+                StringBuilder name = new StringBuilder(32);
 
                 GL.GetActiveAttrib(ProgramID, i, 256, out length, out info.size, out info.type, name);
 
@@ -111,13 +111,13 @@ namespace HomeworldDAEEditor
                 UniformInfo info = new UniformInfo();
                 int length = 0;
 
-                StringBuilder name = new StringBuilder();
+                StringBuilder name = new StringBuilder(32);
 
                 GL.GetActiveUniform(ProgramID, i, 256, out length, out info.size, out info.type, name);
 
                 info.name = name.ToString();
-                Uniforms.Add(name.ToString(), info);
                 info.address = GL.GetUniformLocation(ProgramID, info.name);
+                Uniforms.Add(name.ToString(), info);
             }
         }
 

@@ -21,7 +21,8 @@ namespace HomeworldDAEEditor
 
         private static int loadImage(string filename)
         {
-            if(!File.Exists(filename))
+            bool exists = File.Exists(filename);
+            if(!exists)
             {
                 MessageBox.Show("Failed to load texture \"" + filename + "\".", "Texture loading error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return Renderer.defaultTexture.ID;
