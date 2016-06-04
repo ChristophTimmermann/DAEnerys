@@ -14,7 +14,8 @@ namespace HomeworldDAEEditor
 
         public static EditorMaterial IconMaterial;
 
-        public static HWTexture JointIcon = new HWTexture("iconJoint.png");
+        //public static HWTexture JointIcon = new HWTexture("iconJoint.png");
+        public static HWTexture JointIcon;
 
         public override int VertexCount { get { return Mesh.VertexCount; } }
         public override int IndiceCount { get { return Mesh.GetIndices().Length; } }
@@ -62,9 +63,9 @@ namespace HomeworldDAEEditor
             return indices;
         }
 
-        public override Vector3[] GetColorData(int offset = 0)
+        public override Vector3[] GetColorData()
         {
-            return new Vector3[0];
+            return new Vector3[VertexCount];
         }
 
         public override Vector2[] GetTextureCoords()

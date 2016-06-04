@@ -1,7 +1,7 @@
 ﻿#version 330
  
 in vec3 vPosition;
-in  vec3 vColor;
+in vec3 vColor;
 out vec4 color;
 uniform mat4 modelview;
  

@@ -127,7 +127,7 @@ namespace HomeworldDAEEditor
 
             foreach(HWDockSegment segment in HWScene.DockSegments)
             {
-                segment.Icosphere.Material = EditorIcosphere.RedMaterial;
+                segment.Icosphere.Color = Color.Red;
             }
 
             HWScene.Clear();
@@ -372,14 +372,28 @@ namespace HomeworldDAEEditor
 
         private void trackBarDockpathSegments_Scroll(object sender, EventArgs e)
         {
+            //Reset segment colors
             foreach (HWDockSegment segment in HWScene.DockSegments)
             {
-                segment.Icosphere.Material = EditorIcosphere.RedMaterial;
+                segment.Icosphere.Color = Color.Red;
+            }
+
+            //Reset line colors
+            foreach(EditorLine line in selectedDockpath.Lines)
+            {
+                line.StartColor = Color.Red;
+                line.EndColor = Color.Red;
             }
 
             HWDockSegment selectedSegment = selectedDockpath.Segments[trackBarDockpathSegments.Value];
 
-            selectedSegment.Icosphere.Material = EditorIcosphere.YellowMaterial;
+            selectedSegment.Icosphere.Color = Color.Yellow;
+
+           /* if(selectedSegment.ID < selectedDockpath.Lines.Count)
+            selectedDockpath.Lines[selectedSegment.ID].StartColor = Color.Yellow;
+
+            if(selectedSegment.ID > 0)
+                selectedDockpath.Lines[selectedSegment.ID - 1].EndColor = Color.Yellow;*/
 
             boxDockpathSegmentTolerance.Text = selectedSegment.Tolerance.ToString();
             boxDockpathSegmentSpeed.Text = selectedSegment.Speed.ToString();
@@ -424,6 +438,7 @@ namespace HomeworldDAEEditor
                 }
             }
 
+            Renderer.UpdateMeshData();
             glControl.Invalidate();
         }
 

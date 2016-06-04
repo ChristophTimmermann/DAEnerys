@@ -2,6 +2,7 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace HomeworldDAEEditor
 {
@@ -219,9 +220,15 @@ namespace HomeworldDAEEditor
             return indices;
         }
 
-        public Vector3[] GetColorData(int offset = 0)
+        public Vector3[] GetColorData()
         {
-            return new Vector3[0];
+            Vector3[] colorData = new Vector3[VertexCount];
+            for(int i = 0; i < VertexCount; i++)
+            {
+                colorData[i] = new Vector3(Color.Purple.R, Color.Purple.G, Color.Purple.B);
+            }
+
+            return colorData;
         }
 
         public Vector2[] GetTextureCoords()

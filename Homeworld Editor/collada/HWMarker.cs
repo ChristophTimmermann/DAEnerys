@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,9 +29,9 @@ namespace HomeworldDAEEditor
             Program.main.AddMarker(this);
             float realSize = markerSize;
 
-            Lines[0] = new EditorLine(Node.AbsolutePosition + new Vector3(0, -realSize, 0), Node.AbsolutePosition + new Vector3(0, realSize, 0));
-            Lines[1] = new EditorLine(Node.AbsolutePosition + new Vector3(-realSize, 0, 0), Node.AbsolutePosition + new Vector3(realSize, 0, 0));
-            Lines[2] = new EditorLine(Node.AbsolutePosition + new Vector3(0, 0, -realSize), Node.AbsolutePosition + new Vector3(0, 0, realSize));
+            Lines[0] = new EditorLine(Node.AbsolutePosition + new Vector3(0, -realSize, 0), Node.AbsolutePosition + new Vector3(0, realSize, 0), Color.Red, Color.Red);
+            Lines[1] = new EditorLine(Node.AbsolutePosition + new Vector3(-realSize, 0, 0), Node.AbsolutePosition + new Vector3(realSize, 0, 0), Color.Red, Color.Red);
+            Lines[2] = new EditorLine(Node.AbsolutePosition + new Vector3(0, 0, -realSize), Node.AbsolutePosition + new Vector3(0, 0, realSize), Color.Red, Color.Red);
         }
 
         public static void SetMarkerSize()

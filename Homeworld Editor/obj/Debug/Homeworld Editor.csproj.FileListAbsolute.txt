@@ -27,14 +27,6 @@ D:\HomeworldEditor\Homeworld Editor\obj\Debug\HomeworldDAEEditor.Settings.resour
 D:\HomeworldEditor\Homeworld Editor\obj\Debug\Homeworld Editor.csproj.GenerateResource.Cache
 D:\HomeworldEditor\Homeworld Editor\obj\Debug\Homeworld Editor.exe
 D:\HomeworldEditor\Homeworld Editor\obj\Debug\Homeworld Editor.pdb
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\joint.mtl
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\icosphere.mtl
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\joint.obj
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\icosphere.obj
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\joint.tga
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\red.tga
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\yellow.tga
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\grey.jpg
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\Homeworld Editor.exe.config
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\Homeworld Editor.exe
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\Homeworld Editor.pdb
@@ -56,5 +48,7 @@ D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\HomeworldDAEEditor.Settings.res
 D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.csproj.GenerateResource.Cache
 D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.exe
 D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.pdb
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\icon.obj
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\iconJoint.png
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\resources\icosphere.mtl
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\resources\icosphere.obj
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\resources\missing.tga
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\resources\joint.ply

@@ -15,7 +15,7 @@ namespace HomeworldDAEEditor
         public static float NearClipDistance = 0.01f;
         public static float ClipDistance = 1000;
 
-        public static HWTexture defaultTexture = new HWTexture("grey.jpg");
+        public static HWTexture defaultTexture = new HWTexture(@"resources/missing.tga");
 
         static Light activeLight;
 
@@ -41,6 +41,8 @@ namespace HomeworldDAEEditor
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
+            GL.LineWidth(2);
+
             activeLight = new Light(new Vector3(100, 0, 0), new Vector3(0.9f, 0.80f, 0.8f));
             activeShader = "default";
 
@@ -49,7 +51,7 @@ namespace HomeworldDAEEditor
             // Load shaders from file
             shaders.Add("default", new Shader("vs.glsl", "fs.glsl", true));
             shaders.Add("textured", new Shader("vs_tex.glsl", "fs_tex.glsl", true));
-            shaders.Add("normal", new Shader("vs_norm.glsl", "fs_norm.glsl", true));
+            //shaders.Add("normal", new Shader("vs_norm.glsl", "fs_norm.glsl", true));
             //shaders.Add("lit", new Shader("vs_lit.glsl", "fs_lit.glsl", true));
 
             activeShader = "textured";
@@ -110,6 +112,14 @@ namespace HomeworldDAEEditor
                 GL.VertexAttribPointer(shaders[activeShader].GetAttribute("texcoord"), 2, VertexAttribPointerType.Float, true, 0, 0);
             }
 
+            // Buffer vertex colors if shader supports it
+            if (shaders[activeShader].GetAttribute("vColor") != -1)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vColor"));
+                GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(coldata.Length * Vector3.SizeInBytes), coldata, BufferUsageHint.StaticDraw);
+                GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vColor"), 3, VertexAttribPointerType.Float, false, 0, 0);
+            }
+
             if (shaders[activeShader].GetAttribute("vNormal") != -1)
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vNormal"));
@@ -164,8 +174,19 @@ namespace HomeworldDAEEditor
             {
                 if (mesh.Visible)
                 {
-                    if (mesh.Material.DiffuseTexture != null)
+                    HWTexture texture = null;
+                    if (mesh.Material != null)
+                        texture = mesh.Material.DiffuseTexture;
+
+                    if (texture != null)
+                    {
                         GL.BindTexture(TextureTarget.Texture2D, mesh.Material.DiffuseTexture.ID);
+                        GL.Uniform1(shaders[activeShader].GetUniform("textured"), 1); //Tell shader to use texture colors
+                    }
+                    else
+                    {
+                        GL.Uniform1(shaders[activeShader].GetUniform("textured"), 0); //Tell shader to use vertex colors
+                    }
 
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
 
@@ -175,14 +196,24 @@ namespace HomeworldDAEEditor
             }
 
             GL.Clear(ClearBufferMask.DepthBufferBit);
-            GL.LineWidth(2);
 
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.Visible)
                 {
-                    if (mesh.Material.DiffuseTexture != null)
+                    HWTexture texture = null;
+                    if(mesh.Material != null)
+                        texture = mesh.Material.DiffuseTexture;
+
+                    if(texture != null)
+                    {
                         GL.BindTexture(TextureTarget.Texture2D, mesh.Material.DiffuseTexture.ID);
+                        GL.Uniform1(shaders[activeShader].GetUniform("textured"), 1); //Tell shader to use texture colors
+                    }
+                    else
+                    {
+                        GL.Uniform1(shaders[activeShader].GetUniform("textured"), 0); //Tell shader to use vertex colors
+                    }
 
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
 

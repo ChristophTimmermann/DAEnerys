@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace HomeworldDAEEditor
 {
@@ -24,7 +25,7 @@ namespace HomeworldDAEEditor
             Dockpath = node.Parent.Dockpath;
             Dockpath.Segments.Add(this);
 
-            Icosphere = new EditorIcosphere(Node);
+            Icosphere = new EditorIcosphere(Node, Color.Red);
             Icosphere.Scale = new Vector3(5, 5, 5);
 
             HWScene.DockSegments.Add(this);

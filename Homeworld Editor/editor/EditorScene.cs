@@ -25,35 +25,15 @@ namespace HomeworldDAEEditor
             });
             logStream.Attach();
 
-            Scene joint = importer.ImportFile("joint.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
+            Scene joint = importer.ImportFile(@"resources/joint.ply", PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorJoint.Mesh = joint.Meshes[0];
 
-            EditorMaterial jointMaterial = new EditorMaterial();
-            jointMaterial.Name = joint.Materials[0].Name;
-            jointMaterial.DiffuseMap = joint.Materials[0].TextureDiffuse.FilePath;
-            jointMaterial.DiffuseTexture = new HWTexture(joint.Materials[0].TextureDiffuse.FilePath);
-            EditorJoint.JointMaterial = jointMaterial;
-
-            Scene icosphere = importer.ImportFile("icosphere.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
+            Scene icosphere = importer.ImportFile(@"resources/icosphere.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorIcosphere.Mesh = icosphere.Meshes[0];
 
-            Scene icon = importer.ImportFile("icon.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
+            /*Scene icon = importer.ImportFile("icon.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorIcon.Mesh = icon.Meshes[0];
-            EditorIcon.IconMaterial = jointMaterial;
-
-            EditorMaterial redMaterial = new EditorMaterial();
-            redMaterial.Name = "RedMaterial";
-            redMaterial.DiffuseMap = "red.tga";
-            redMaterial.DiffuseTexture = new HWTexture("red.tga");
-            EditorLine.RedMaterial = redMaterial;
-            EditorIcosphere.RedMaterial = redMaterial;
-
-            EditorMaterial yellowMaterial = new EditorMaterial();
-            yellowMaterial.Name = "YellowMaterial";
-            yellowMaterial.DiffuseMap = "yellow.tga";
-            yellowMaterial.DiffuseTexture = new HWTexture("yellow.tga");
-            EditorLine.YellowMaterial = yellowMaterial;
-            EditorIcosphere.YellowMaterial = yellowMaterial;
+            EditorIcon.IconMaterial = jointMaterial;*/
 
             importer.Dispose();
             #endregion

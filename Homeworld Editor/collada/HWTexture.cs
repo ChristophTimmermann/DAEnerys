@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using DevILSharp;
 using System.IO;
 using System;
+using System.Windows.Forms;
 
 namespace HomeworldDAEEditor
 {
@@ -20,6 +21,12 @@ namespace HomeworldDAEEditor
 
         private static int loadImage(string filename)
         {
+            if(!File.Exists(filename))
+            {
+                MessageBox.Show("Failed to load texture \"" + filename + "\".", "Texture loading error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return Renderer.defaultTexture.ID;
+            }
+
             int img = IL.GenImage();
             IL.BindImage(img);
             IL.LoadImage(filename);

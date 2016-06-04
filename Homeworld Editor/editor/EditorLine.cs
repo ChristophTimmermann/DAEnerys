@@ -2,6 +2,7 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,9 @@ namespace HomeworldDAEEditor
     public class EditorLine : EditorMesh
     {
         public static new Vector3 Scale = Vector3.One;
-        public static EditorMaterial RedMaterial;
-        public static EditorMaterial YellowMaterial;
+
+        public Color StartColor;
+        public Color EndColor;
 
         public Vector3 Start;
         public Vector3 End;
@@ -20,9 +22,11 @@ namespace HomeworldDAEEditor
         public override int VertexCount { get { return 2; } }
         public override int IndiceCount { get { return 2; } }
 
-        public EditorLine(Vector3 start, Vector3 end) : base()
+        public EditorLine(Vector3 start, Vector3 end, Color startColor, Color endColor) : base()
         {
-            this.Material = RedMaterial;
+            this.StartColor = startColor;
+            this.EndColor = endColor;
+
             this.Start = start;
             this.End = end;
         }
@@ -52,9 +56,10 @@ namespace HomeworldDAEEditor
             return indices;
         }
 
-        public override Vector3[] GetColorData(int offset = 0)
+        public override Vector3[] GetColorData()
         {
-            return new Vector3[0];
+            Vector3[] colorData = { new Vector3(StartColor.R, StartColor.G, StartColor.B), new Vector3(EndColor.R, EndColor.G, EndColor.B) };
+            return colorData;
         }
 
         public override Vector2[] GetTextureCoords()

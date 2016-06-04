@@ -20,14 +20,14 @@ namespace HomeworldDAEEditor
         public float Opacity = 1.0f;
 
         public string AmbientMap = "";
-        public string DiffuseMap = "grey.jpg";
+        public string DiffuseMap = "";
         public string SpecularMap = "";
         public string OpacityMap = "";
         public string NormalMap = "";
 
         public object MaterialListItem;
 
-        public HWTexture DiffuseTexture = Renderer.defaultTexture;
+        public HWTexture DiffuseTexture;
 
         public List<HWImage> Images = new List<HWImage>();
 

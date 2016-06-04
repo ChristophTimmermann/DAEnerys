@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OpenTK;
+using System.Drawing;
 
 namespace HomeworldDAEEditor
 {
@@ -48,7 +49,7 @@ namespace HomeworldDAEEditor
         {
             for(int i = 0; i < Segments.Count - 1; i++) //1 line less than segments
             {
-                EditorLine line = new EditorLine(Segments[i].Node.AbsolutePosition, Segments[i + 1].Node.AbsolutePosition);
+                EditorLine line = new EditorLine(Segments[i].Node.AbsolutePosition, Segments[i + 1].Node.AbsolutePosition, Color.Red, Color.Red);
                 Lines.Add(line);
             }
         }

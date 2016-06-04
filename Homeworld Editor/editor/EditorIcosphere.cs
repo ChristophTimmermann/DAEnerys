@@ -2,6 +2,7 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace HomeworldDAEEditor
 {
@@ -11,16 +12,15 @@ namespace HomeworldDAEEditor
         public new Vector3 Scale = Vector3.One;
         public HWNode HWNode;
 
-        public static EditorMaterial RedMaterial;
-        public static EditorMaterial YellowMaterial;
+        public Color Color;
 
         public override int VertexCount { get { return Mesh.VertexCount; } }
         public override int IndiceCount { get { return Mesh.GetIndices().Length; } }
 
-        public EditorIcosphere(HWNode node) : base()
+        public EditorIcosphere(HWNode node, Color color) : base()
         {
             this.HWNode = node;
-            this.Material = RedMaterial;
+            this.Color = color;
         }
 
         public override Vector3[] GetVertices()
@@ -58,9 +58,15 @@ namespace HomeworldDAEEditor
             return indices;
         }
 
-        public override Vector3[] GetColorData(int offset = 0)
+        public override Vector3[] GetColorData()
         {
-            return new Vector3[0];
+            Vector3[] colorData = new Vector3[VertexCount];
+            for(int i = 0;i < VertexCount; i++)
+            {
+                colorData[i] = new Vector3(Color.R, Color.G, Color.B);
+            }
+
+            return colorData;
         }
 
         public override Vector2[] GetTextureCoords()
