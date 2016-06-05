@@ -1,28 +1,26 @@
-﻿#version 330
+﻿#version 150
 
-in vec3 vPosition;
-in vec3 vNormal;
-in vec3 vColor;
-in vec2 vTexture;
-
-out vec4 color;
-out vec3 v_norm;
-out vec3 v_pos;
-out vec2 f_texcoord;
-
-uniform mat4 modelview;
+uniform mat4 camera;
 uniform mat4 model;
-uniform mat4 view;
+uniform mat4 modelview;
 
-void
-main()
-{
-    gl_Position = modelview * vec4(vPosition, 1.0);
+in vec3 vert;
+in vec2 vertTexCoord;
+in vec3 vertNormal;
+in vec3 vertColor;
+
+out vec3 fragVert;
+out vec3 fragColor;
+out vec2 fragTexCoord;
+out vec3 fragNormal;
+
+void main() {
+    gl_Position = modelview * vec4(vert, 1.0);
 	
-    f_texcoord = vTexture;
-	color = vec4( vColor, 1.0);
+    fragTexCoord = vertTexCoord;
+	fragColor = vertColor;
 	
 	mat3 normMatrix = transpose(inverse(mat3(model)));
-	v_norm = normMatrix * vNormal;
-	v_pos = (model * vec4(vPosition, 1.0)).xyz;
+	fragNormal = normMatrix * vertNormal;
+	fragVert = (model * vec4(vert, 1.0)).xyz;
 }

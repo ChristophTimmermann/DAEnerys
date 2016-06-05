@@ -13,10 +13,9 @@ namespace HomeworldDAEEditor
         public string Shader = "default";
         public ImageFormat Format = ImageFormat.DXT1;
 
-        public Vector3 AmbientColor = new Vector3(0.6f);
         public Vector3 DiffuseColor = new Vector3(1, 1, 1);
-        public Vector3 SpecularColor = new Vector3(0.1f, 0.1f, 0.1f);
-        public float SpecularExponent = 0.3f;
+        public Vector3 SpecularColor = new Vector3(1, 1, 1);
+        public float SpecularExponent = 50f;
         public float Opacity = 1.0f;
 
         public string AmbientMap = "";
@@ -36,10 +35,9 @@ namespace HomeworldDAEEditor
             HWScene.Materials.Add(this);
         }
 
-        public HWMaterial(string name, Vector3 ambient, Vector3 diffuse, Vector3 specular, float specexponent = 1.0f, float opacity = 1.0f)
+        public HWMaterial(string name, Vector3 diffuse, Vector3 specular, float specexponent = 1.0f, float opacity = 1.0f)
         {
             Name = name;
-            AmbientColor = ambient;
             DiffuseColor = diffuse;
             SpecularColor = specular;
             SpecularExponent = specexponent;

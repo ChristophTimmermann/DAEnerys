@@ -17,7 +17,7 @@ namespace HomeworldDAEEditor
 
         public static HWTexture defaultTexture = new HWTexture(@"resources/missing.tga");
 
-        public static Light ActiveLight;
+        public static List<Light> Lights = new List<Light>();
 
         static string activeShader;
 
@@ -42,7 +42,7 @@ namespace HomeworldDAEEditor
 
             GL.LineWidth(2);
 
-            ActiveLight = new Light(new Vector3(), new Vector3(1));
+            Lights.Add(new Light(new Vector4(0, 0, 0, 0), new Vector3(0.5f, 0.5f, 0.5f), 1, 0.000005f));
 
             GL.GenBuffers(1, out ibo_elements);
 
@@ -96,33 +96,32 @@ namespace HomeworldDAEEditor
             texcoorddata = texcoords.ToArray();
             normdata = normals.ToArray();
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vPosition"));
-
+            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vert"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(vertdata.Length * Vector3.SizeInBytes), vertdata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vPosition"), 3, VertexAttribPointerType.Float, false, 0, 0);
+            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vert"), 3, VertexAttribPointerType.Float, false, 0, 0);
 
             // Buffer texture coordinates if shader supports it
-            if (shaders[activeShader].GetAttribute("vTexture") != -1)
+            if (shaders[activeShader].GetAttribute("vertTexCoord") != -1)
             {
-                GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vTexture"));
+                GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertTexCoord"));
                 GL.BufferData<Vector2>(BufferTarget.ArrayBuffer, (IntPtr)(texcoorddata.Length * Vector2.SizeInBytes), texcoorddata, BufferUsageHint.StaticDraw);
-                GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vTexture"), 2, VertexAttribPointerType.Float, true, 0, 0);
+                GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertTexCoord"), 2, VertexAttribPointerType.Float, true, 0, 0);
             }
 
             // Buffer vertex colors if shader supports it
-            if (shaders[activeShader].GetAttribute("vColor") != -1)
+            if (shaders[activeShader].GetAttribute("vertColor") != -1)
             {
-                GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vColor"));
+                GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertColor"));
                 GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(coldata.Length * Vector3.SizeInBytes), coldata, BufferUsageHint.StaticDraw);
-                GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vColor"), 3, VertexAttribPointerType.Float, false, 0, 0);
+                GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertColor"), 3, VertexAttribPointerType.Float, false, 0, 0);
             }
 
             // Buffer normals if shader supports it
-            if (shaders[activeShader].GetAttribute("vNormal") != -1)
+            if (shaders[activeShader].GetAttribute("vertNormal") != -1)
             {
-                GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vNormal"));
+                GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertNormal"));
                 GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(normdata.Length * Vector3.SizeInBytes), normdata, BufferUsageHint.StaticDraw);
-                GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vNormal"), 3, VertexAttribPointerType.Float, true, 0, 0);
+                GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertNormal"), 3, VertexAttribPointerType.Float, true, 0, 0);
             }
 
             GL.UseProgram(shaders[activeShader].ProgramID);
@@ -138,7 +137,7 @@ namespace HomeworldDAEEditor
         public static void UpdateView()
         {
             View = Program.Camera.GetViewMatrix();
-            ActiveLight.Position = Program.Camera.Position;
+            Lights[0].Position = new Vector4(Program.Camera.Position, 0);
 
             // Update model view matrices
             foreach (HWMesh mesh in HWScene.Meshes)
@@ -181,7 +180,6 @@ namespace HomeworldDAEEditor
                     if (texture != null)
                     {
                         GL.BindTexture(TextureTarget.Texture2D, texture.ID);
-                        //GL.Uniform1(shaders[activeShader].GetUniform("maintexture"), texture.ID);
                         GL.Uniform1(shaders[activeShader].GetUniform("textured"), 1); //Tell shader to use texture colors
                     }
                     else
@@ -194,18 +192,25 @@ namespace HomeworldDAEEditor
                     else
                         GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 0); //Tell shader not to calculate lighting
 
-                    GL.UniformMatrix4(shaders[activeShader].GetUniform("view"), false, ref View);
+                    GL.UniformMatrix4(shaders[activeShader].GetUniform("camera"), false, ref View);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
 
-                    GL.Uniform3(shaders[activeShader].GetUniform("material_ambient"), ref mesh.Material.AmbientColor);
-                    GL.Uniform3(shaders[activeShader].GetUniform("material_diffuse"), ref mesh.Material.DiffuseColor);
-                    GL.Uniform3(shaders[activeShader].GetUniform("material_specular"), ref mesh.Material.SpecularColor);
-                    GL.Uniform1(shaders[activeShader].GetUniform("material_specExponent"), mesh.Material.SpecularExponent);
-                    GL.Uniform3(shaders[activeShader].GetUniform("light_position"), ref ActiveLight.Position);
-                    GL.Uniform3(shaders[activeShader].GetUniform("light_color"), ref ActiveLight.Color);
-                    GL.Uniform1(shaders[activeShader].GetUniform("light_diffuseIntensity"), ActiveLight.DiffuseIntensity);
-                    GL.Uniform1(shaders[activeShader].GetUniform("light_ambientIntensity"), ActiveLight.AmbientIntensity);
+                    GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
+                    //GL.Uniform3(shaders[activeShader].GetUniform("material_ambient"), ref mesh.Material.AmbientColor);
+                    //GL.Uniform3(shaders[activeShader].GetUniform("material_diffuse"), ref mesh.Material.DiffuseColor);
+                    GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
+                    GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
+                    GL.Uniform3(shaders[activeShader].GetUniform("cameraPosition"), ref Program.Camera.Position);
+
+                    GL.Uniform1(shaders[activeShader].GetUniform("numLights"), Lights.Count);
+                    for (int i = 0; i < Lights.Count; i++)
+                    {
+                        GL.Uniform4(shaders[activeShader].GetUniform("allLights[" + i + "]." + "position"), ref Lights[i].Position);
+                        GL.Uniform3(shaders[activeShader].GetUniform("allLights[" + i + "]." + "intensities"), ref Lights[i].Color);
+                        GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "attenuation"), Lights[i].Attenuation);
+                        GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "ambientCoefficient"), Lights[i].AmbientCoefficient);
+                    }
 
                     GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, indiceat * sizeof(uint));
                     indiceat += mesh.IndiceCount;
@@ -224,8 +229,7 @@ namespace HomeworldDAEEditor
 
                     if (texture != null)
                     {
-                        GL.BindTexture(TextureTarget.Texture2D, mesh.Material.DiffuseTexture.ID);
-                        GL.Uniform1(shaders[activeShader].GetUniform("maintexture"), mesh.Material.DiffuseTexture.ID);
+                        GL.BindTexture(TextureTarget.Texture2D, texture.ID);
                         GL.Uniform1(shaders[activeShader].GetUniform("textured"), 1); //Tell shader to use texture colors
                     }
                     else
@@ -238,20 +242,26 @@ namespace HomeworldDAEEditor
                     else
                         GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 0); //Tell shader not to calculate lighting
 
-                    GL.UniformMatrix4(shaders[activeShader].GetUniform("view"), false, ref View);
+                    GL.UniformMatrix4(shaders[activeShader].GetUniform("camera"), false, ref View);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
 
                     if (mesh.Material != null)
                     {
-                        GL.Uniform3(shaders[activeShader].GetUniform("material_ambient"), ref mesh.Material.AmbientColor);
-                        GL.Uniform3(shaders[activeShader].GetUniform("material_diffuse"), ref mesh.Material.DiffuseColor);
-                        GL.Uniform3(shaders[activeShader].GetUniform("material_specular"), ref mesh.Material.SpecularColor);
-                        GL.Uniform1(shaders[activeShader].GetUniform("material_specExponent"), mesh.Material.SpecularExponent);
-                        GL.Uniform3(shaders[activeShader].GetUniform("light_position"), ref ActiveLight.Position);
-                        GL.Uniform3(shaders[activeShader].GetUniform("light_color"), ref ActiveLight.Color);
-                        GL.Uniform1(shaders[activeShader].GetUniform("light_diffuseIntensity"), ActiveLight.DiffuseIntensity);
-                        GL.Uniform1(shaders[activeShader].GetUniform("light_ambientIntensity"), ActiveLight.AmbientIntensity);
+                        GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
+                        //GL.Uniform3(shaders[activeShader].GetUniform("material_ambient"), ref mesh.Material.AmbientColor);
+                        //GL.Uniform3(shaders[activeShader].GetUniform("material_diffuse"), ref mesh.Material.DiffuseColor);
+                        GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
+                        GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
+                        GL.Uniform3(shaders[activeShader].GetUniform("cameraPosition"), ref Program.Camera.Position);
+
+                        for(int i = 0;i < Lights.Count - 1; i++)
+                        {
+                            GL.Uniform4(shaders[activeShader].GetUniform("allLights[" + i + "]." + "position"), ref Lights[i].Position);
+                            GL.Uniform3(shaders[activeShader].GetUniform("allLights[" + i + "]." + "intensities"), ref Lights[i].Color);
+                            GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "attenuation"), Lights[i].Attenuation);
+                            GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "ambientCoefficient"), Lights[i].AmbientCoefficient);
+                        }
                     }
 
                     if (mesh.GetType() == typeof(EditorLine))

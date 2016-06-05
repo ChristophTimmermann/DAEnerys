@@ -1,12 +1,4 @@
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\Homeworld Editor.exe.config
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\joint.mtl
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\icosphere.mtl
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\joint.obj
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\icosphere.obj
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\joint.tga
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\red.tga
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\yellow.tga
-D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\grey.jpg
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\Homeworld Editor.exe
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\Homeworld Editor.pdb
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\AssimpNet.dll
@@ -27,3 +19,6 @@ D:\HomeworldDAEEditor\Homeworld Editor\obj\Release\Homeworld Editor.csproj.Gener
 D:\HomeworldDAEEditor\Homeworld Editor\obj\Release\Homeworld Editor.exe
 D:\HomeworldDAEEditor\Homeworld Editor\obj\Release\Homeworld Editor.pdb
 D:\HomeworldDAEEditor\Homeworld Editor\obj\Release\Homeworld Editor.csprojResolveAssemblyReference.cache
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\resources\icosphere.obj
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\resources\joint.ply
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\resources\missing.tga

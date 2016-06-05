@@ -4,18 +4,18 @@ namespace HomeworldDAEEditor
 {
     class Light
     {
-        public Light(Vector3 position, Vector3 color, float diffuseintensity = 1.0f, float ambientintensity = 1.0f)
+        public Light(Vector4 position, Vector3 color, float attenuation = 0, float ambientCoefficient = 0.001f)
         {
             Position = position;
             Color = color;
 
-            DiffuseIntensity = diffuseintensity;
-            AmbientIntensity = ambientintensity;
+            Attenuation = attenuation;
+            AmbientCoefficient = ambientCoefficient;
         }
 
-        public Vector3 Position;
+        public Vector4 Position;
         public Vector3 Color = new Vector3();
-        public float DiffuseIntensity = 1.0f;
-        public float AmbientIntensity = 0.1f;
+        public float Attenuation;
+        public float AmbientCoefficient;
     }
 }

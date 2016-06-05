@@ -34,8 +34,8 @@ namespace HomeworldDAEEditor
 
             ILU.Info info = new ILU.Info();
             ILU.GetImageInfo(ref info);
-            if (info.Origin == OriginMode.LowerLeft)
-                ILU.FlipImage();
+            //if (info.Origin == OriginMode.LowerLeft)
+                //ILU.FlipImage();
 
             IL.ConvertImage(ChannelFormat.RGBA, ChannelType.UnsignedByte);
 
@@ -47,7 +47,9 @@ namespace HomeworldDAEEditor
             GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
             GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
 
-            GL.TexImage2D(TextureTarget.Texture2D, 0, (OpenTK.Graphics.OpenGL.PixelInternalFormat)IL.GetInteger(IntName.ImageFormat), IL.GetInteger(IntName.ImageWidth), IL.GetInteger(IntName.ImageHeight), 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
+            //GL.TexImage2D(TextureTarget.Texture2D, 0, (OpenTK.Graphics.OpenGL.PixelInternalFormat)IL.GetInteger(IntName.ImageFormat), IL.GetInteger(IntName.ImageWidth), IL.GetInteger(IntName.ImageHeight), 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
+
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Srgb, IL.GetInteger(IntName.ImageWidth), IL.GetInteger(IntName.ImageHeight), 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
 
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 

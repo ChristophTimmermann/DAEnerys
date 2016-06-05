@@ -37,7 +37,6 @@ namespace HomeworldDAEEditor
             this.buttonAbout = new System.Windows.Forms.ToolStripButton();
             this.openColladaDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveColladaDialog = new System.Windows.Forms.SaveFileDialog();
-            this.glControl = new OpenTK.GLControl();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabShipMeshes = new System.Windows.Forms.TabPage();
             this.groupShipMeshLODs = new System.Windows.Forms.GroupBox();
@@ -101,6 +100,7 @@ namespace HomeworldDAEEditor
             this.panelDockpathList = new System.Windows.Forms.Panel();
             this.dockpathList = new System.Windows.Forms.CheckedListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.glControl = new OpenTK.GLControl(new GraphicsMode(32, 24, 8, 4));
             this.toolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabShipMeshes.SuspendLayout();
@@ -184,24 +184,6 @@ namespace HomeworldDAEEditor
             // 
             this.saveColladaDialog.DefaultExt = "dae";
             this.saveColladaDialog.Filter = "COLLADA-Files|*.dae|All files|*.*";
-            // 
-            // glControl
-            // 
-            this.glControl.AutoSize = true;
-            this.glControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.glControl.BackColor = System.Drawing.Color.Black;
-            this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.glControl.Location = new System.Drawing.Point(0, 0);
-            this.glControl.Name = "glControl";
-            this.glControl.Size = new System.Drawing.Size(865, 758);
-            this.glControl.TabIndex = 3;
-            this.glControl.VSync = true;
-            this.glControl.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl_Render);
-            this.glControl.Enter += new System.EventHandler(this.glControl_Enter);
-            this.glControl.Leave += new System.EventHandler(this.glControl_Leave);
-            this.glControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseDown);
-            this.glControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseUp);
-            this.glControl.Resize += new System.EventHandler(this.glControl_Resize);
             // 
             // tabControl
             // 
@@ -947,6 +929,24 @@ namespace HomeworldDAEEditor
             this.splitContainer1.SplitterDistance = 254;
             this.splitContainer1.TabIndex = 4;
             // 
+            // glControl
+            // 
+            this.glControl.AutoSize = true;
+            this.glControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.glControl.BackColor = System.Drawing.Color.Black;
+            this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.glControl.Location = new System.Drawing.Point(0, 0);
+            this.glControl.Name = "glControl";
+            this.glControl.Size = new System.Drawing.Size(865, 758);
+            this.glControl.TabIndex = 3;
+            this.glControl.VSync = true;
+            this.glControl.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl_Render);
+            this.glControl.Enter += new System.EventHandler(this.glControl_Enter);
+            this.glControl.Leave += new System.EventHandler(this.glControl_Leave);
+            this.glControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseDown);
+            this.glControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseUp);
+            this.glControl.Resize += new System.EventHandler(this.glControl_Resize);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1009,7 +1009,6 @@ namespace HomeworldDAEEditor
         private System.Windows.Forms.OpenFileDialog openColladaDialog;
         private System.Windows.Forms.SaveFileDialog saveColladaDialog;
         private System.Windows.Forms.ToolStripButton buttonSettings;
-        private OpenTK.GLControl glControl;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabShipMeshes;
         private System.Windows.Forms.GroupBox groupShipMeshLODs;
@@ -1074,6 +1073,7 @@ namespace HomeworldDAEEditor
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox listMaterialTextures;
+        private OpenTK.GLControl glControl;
     }
 }
 

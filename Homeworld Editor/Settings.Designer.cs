@@ -95,7 +95,7 @@
             0});
             this.numericFarClip.Location = new System.Drawing.Point(80, 45);
             this.numericFarClip.Maximum = new decimal(new int[] {
-            500000,
+            50000000,
             0,
             0,
             0});
@@ -119,7 +119,7 @@
             this.numericZoomSpeed.DecimalPlaces = 1;
             this.numericZoomSpeed.Location = new System.Drawing.Point(80, 19);
             this.numericZoomSpeed.Maximum = new decimal(new int[] {
-            5000,
+            50000000,
             0,
             0,
             0});
@@ -173,6 +173,11 @@
             0,
             131072});
             this.numericNearClip.Location = new System.Drawing.Point(80, 71);
+            this.numericNearClip.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
             this.numericNearClip.Minimum = new decimal(new int[] {
             1,
             0,
@@ -206,8 +211,8 @@
             this.numericMarkerSize.DecimalPlaces = 3;
             this.numericMarkerSize.Location = new System.Drawing.Point(80, 45);
             this.numericMarkerSize.Maximum = new decimal(new int[] {
-            5000,
-            0,
+            705032704,
+            1,
             0,
             0});
             this.numericMarkerSize.Minimum = new decimal(new int[] {
@@ -230,7 +235,7 @@
             this.numericJointSize.DecimalPlaces = 1;
             this.numericJointSize.Location = new System.Drawing.Point(80, 19);
             this.numericJointSize.Maximum = new decimal(new int[] {
-            5000,
+            50000000,
             0,
             0,
             0});

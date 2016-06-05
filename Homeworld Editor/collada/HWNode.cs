@@ -177,6 +177,8 @@ namespace HomeworldDAEEditor
             {
                 WorldMatrix = WorldMatrix.ClearTranslation();
             }
+
+            WorldMatrix = WorldMatrix.ClearScale(); //Ignore scale
         }
     }
 }
