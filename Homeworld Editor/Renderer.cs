@@ -17,7 +17,9 @@ namespace HomeworldDAEEditor
 
         public static HWTexture defaultTexture = new HWTexture(@"resources/missing.tga");
 
-        public static List<Light> Lights = new List<Light>();
+        public static Light AmbientLight = new Light(new Vector4(0, 0, 0, 0), new Vector3(0.5f), 1, 0.000005f);
+
+        public static float ThrusterInterpolation = 0;
 
         static string activeShader;
 
@@ -41,8 +43,6 @@ namespace HomeworldDAEEditor
             //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             GL.LineWidth(2);
-
-            Lights.Add(new Light(new Vector4(0, 0, 0, 0), new Vector3(0.5f, 0.5f, 0.5f), 1, 0.000005f));
 
             GL.GenBuffers(1, out ibo_elements);
 
@@ -137,7 +137,7 @@ namespace HomeworldDAEEditor
         public static void UpdateView()
         {
             View = Program.Camera.GetViewMatrix();
-            Lights[0].Position = new Vector4(Program.Camera.Position, 0);
+            AmbientLight.Position = new Vector4(Program.Camera.Position, 0);
 
             // Update model view matrices
             foreach (HWMesh mesh in HWScene.Meshes)
@@ -168,6 +168,9 @@ namespace HomeworldDAEEditor
             GL.UseProgram(shaders[activeShader].ProgramID);
             shaders[activeShader].EnableVertexAttribArrays();
 
+            //These uniforms are the same for every mesh
+            GL.Uniform1(shaders[activeShader].GetUniform("thrusterInterpolation"), ThrusterInterpolation); //Send thruster interpolation value
+
             int indiceat = 0;
             foreach (HWMesh mesh in HWScene.Meshes)
             {
@@ -179,6 +182,44 @@ namespace HomeworldDAEEditor
 
                     if (texture != null)
                     {
+                        if (mesh.Material.GlowTexture != null) //Check if the material has a GLOW-Map
+                        {
+                            GL.ActiveTexture(TextureUnit.Texture1);
+                            GL.BindTexture(TextureTarget.Texture2D, mesh.Material.GlowTexture.ID);
+                            GL.Uniform1(shaders[activeShader].GetUniform("glowTex"), 1);
+                            GL.Uniform1(shaders[activeShader].GetUniform("emissive"), 1); //Tell shader to use a GLOW map
+
+                            if (mesh.Material.Shader == "shipglow" || mesh.Material.Shader == "shipglow_ns") //If shader with discrete GLOW map
+                                GL.Uniform1(shaders[activeShader].GetUniform("discreteGlow"), 1); //Tell shader that it is a discrete GLOW map
+                            else
+                                GL.Uniform1(shaders[activeShader].GetUniform("discreteGlow"), 0); //Tell shader that it is not a discrete GLOW map
+                        }
+                        else
+                        {
+                            GL.Uniform1(shaders[activeShader].GetUniform("glowTex"), 0); //Tell shader that it is not a discrete GLOW map
+                            GL.Uniform1(shaders[activeShader].GetUniform("emissive"), 0); //Tell shader to not use a GLOW map
+                        }
+
+                        if(mesh.Material.Shader == "thruster") //If the mesh material is a thruster
+                        {
+                            GL.ActiveTexture(TextureUnit.Texture2);
+                            GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffDiffuseTexture.ID);
+                            GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffDiff"), 2);
+
+                            GL.ActiveTexture(TextureUnit.Texture3);
+                            GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffGlowTexture.ID);
+                            GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffGlow"), 3);
+
+                            GL.Uniform1(shaders[activeShader].GetUniform("thruster"), 1); //Tell shader to interpolate between thruster textures
+                        }
+                        else
+                        {
+                            GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffDiff"), 0);
+                            GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffGlow"), 0);
+                            GL.Uniform1(shaders[activeShader].GetUniform("thruster"), 0); //Tell shader not to interpolate between thruster textures
+                        }
+
+                        GL.ActiveTexture(TextureUnit.Texture0);
                         GL.BindTexture(TextureTarget.Texture2D, texture.ID);
                         GL.Uniform1(shaders[activeShader].GetUniform("textured"), 1); //Tell shader to use texture colors
                     }
@@ -188,29 +229,30 @@ namespace HomeworldDAEEditor
                     }
 
                     if (mesh.Shaded)
+                    {
                         GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 1); //Tell shader to calculate lighting
+
+                        GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
+
+                        GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
+                        GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
+                        GL.Uniform3(shaders[activeShader].GetUniform("cameraPosition"), ref Program.Camera.Position);
+
+                        GL.Uniform1(shaders[activeShader].GetUniform("numLights"), Light.Lights.Count);
+                        for (int i = 0; i < Light.Lights.Count; i++)
+                        {
+                            GL.Uniform4(shaders[activeShader].GetUniform("allLights[" + i + "]." + "position"), ref Light.Lights[i].Position);
+                            GL.Uniform3(shaders[activeShader].GetUniform("allLights[" + i + "]." + "intensities"), ref Light.Lights[i].Color);
+                            GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "attenuation"), Light.Lights[i].Attenuation);
+                            GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "ambientCoefficient"), Light.Lights[i].AmbientCoefficient);
+                        }
+                    }
                     else
                         GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 0); //Tell shader not to calculate lighting
 
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("camera"), false, ref View);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
-
-                    GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
-                    //GL.Uniform3(shaders[activeShader].GetUniform("material_ambient"), ref mesh.Material.AmbientColor);
-                    //GL.Uniform3(shaders[activeShader].GetUniform("material_diffuse"), ref mesh.Material.DiffuseColor);
-                    GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
-                    GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
-                    GL.Uniform3(shaders[activeShader].GetUniform("cameraPosition"), ref Program.Camera.Position);
-
-                    GL.Uniform1(shaders[activeShader].GetUniform("numLights"), Lights.Count);
-                    for (int i = 0; i < Lights.Count; i++)
-                    {
-                        GL.Uniform4(shaders[activeShader].GetUniform("allLights[" + i + "]." + "position"), ref Lights[i].Position);
-                        GL.Uniform3(shaders[activeShader].GetUniform("allLights[" + i + "]." + "intensities"), ref Lights[i].Color);
-                        GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "attenuation"), Lights[i].Attenuation);
-                        GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "ambientCoefficient"), Lights[i].AmbientCoefficient);
-                    }
 
                     GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, indiceat * sizeof(uint));
                     indiceat += mesh.IndiceCount;
@@ -238,31 +280,32 @@ namespace HomeworldDAEEditor
                     }
 
                     if (mesh.Shaded)
+                    {
                         GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 1); //Tell shader to calculate lighting
+
+                        if (mesh.Material != null)
+                        {
+                            GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
+                            GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
+                            GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
+                            GL.Uniform3(shaders[activeShader].GetUniform("cameraPosition"), ref Program.Camera.Position);
+
+                            GL.Uniform1(shaders[activeShader].GetUniform("numLights"), Light.Lights.Count);
+                            for (int i = 0; i < Light.Lights.Count; i++)
+                            {
+                                GL.Uniform4(shaders[activeShader].GetUniform("allLights[" + i + "]." + "position"), ref Light.Lights[i].Position);
+                                GL.Uniform3(shaders[activeShader].GetUniform("allLights[" + i + "]." + "intensities"), ref Light.Lights[i].Color);
+                                GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "attenuation"), Light.Lights[i].Attenuation);
+                                GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "ambientCoefficient"), Light.Lights[i].AmbientCoefficient);
+                            }
+                        }
+                    }
                     else
                         GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 0); //Tell shader not to calculate lighting
 
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("camera"), false, ref View);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
-
-                    if (mesh.Material != null)
-                    {
-                        GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
-                        //GL.Uniform3(shaders[activeShader].GetUniform("material_ambient"), ref mesh.Material.AmbientColor);
-                        //GL.Uniform3(shaders[activeShader].GetUniform("material_diffuse"), ref mesh.Material.DiffuseColor);
-                        GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
-                        GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
-                        GL.Uniform3(shaders[activeShader].GetUniform("cameraPosition"), ref Program.Camera.Position);
-
-                        for(int i = 0;i < Lights.Count - 1; i++)
-                        {
-                            GL.Uniform4(shaders[activeShader].GetUniform("allLights[" + i + "]." + "position"), ref Lights[i].Position);
-                            GL.Uniform3(shaders[activeShader].GetUniform("allLights[" + i + "]." + "intensities"), ref Lights[i].Color);
-                            GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "attenuation"), Lights[i].Attenuation);
-                            GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "ambientCoefficient"), Lights[i].AmbientCoefficient);
-                        }
-                    }
 
                     if (mesh.GetType() == typeof(EditorLine))
                         GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, indiceat * sizeof(uint));

@@ -619,6 +619,11 @@ namespace HomeworldDAEEditor
                 }
             }
 
+            if(selectedCollisionMesh == null)
+            {
+                return;
+            }
+
             //Select parent joint in combo box
             if (selectedCollisionMesh.Parent != null) //If collision mesh has a parent joint
             {
@@ -693,6 +698,13 @@ namespace HomeworldDAEEditor
                 material.MaterialListItem = item;
                 MaterialListItems.Add(item, material);
             }
+        }
+
+        private void trackBarThrusterStrength_Scroll(object sender, EventArgs e)
+        {
+            Renderer.ThrusterInterpolation = (float)trackBarThrusterStrength.Value / 100;
+
+            glControl.Invalidate();
         }
 
         private void buttonAbout_Click(object sender, EventArgs e)

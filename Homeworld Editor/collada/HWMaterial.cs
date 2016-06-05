@@ -14,19 +14,21 @@ namespace HomeworldDAEEditor
         public ImageFormat Format = ImageFormat.DXT1;
 
         public Vector3 DiffuseColor = new Vector3(1, 1, 1);
-        public Vector3 SpecularColor = new Vector3(1, 1, 1);
-        public float SpecularExponent = 50f;
+        public Vector3 SpecularColor = new Vector3(0.3f);
+        public float SpecularExponent = 20;
         public float Opacity = 1.0f;
 
-        public string AmbientMap = "";
         public string DiffuseMap = "";
-        public string SpecularMap = "";
-        public string OpacityMap = "";
-        public string NormalMap = "";
+        public string GlowMap = "";
+        public string ThrusterOffDiffuseMap = "";
+        public string ThrusterOffGlowMap = "";
 
         public object MaterialListItem;
 
         public HWTexture DiffuseTexture;
+        public HWTexture GlowTexture;
+        public HWTexture ThrusterOffDiffuseTexture;
+        public HWTexture ThrusterOffGlowTexture;
 
         public List<HWImage> Images = new List<HWImage>();
 
@@ -105,6 +107,22 @@ namespace HomeworldDAEEditor
                                 {
                                     if (suffix != "DIFF") //If image is not an diffuse map
                                     {
+                                        switch(suffix)
+                                        {
+                                           case "GLOW":
+                                                GlowTexture = new HWTexture(file);
+                                                GlowMap = Path.GetFileName(file);
+                                                break;
+                                            case "GLOX":
+                                                ThrusterOffGlowTexture = new HWTexture(file);
+                                                ThrusterOffGlowMap = Path.GetFileName(file);
+                                                break;
+                                            case "DIFX":
+                                                ThrusterOffDiffuseTexture = new HWTexture(file);
+                                                ThrusterOffDiffuseMap = Path.GetFileName(file);
+                                                break;
+                                        }
+
                                         HWImage newImage = new HWImage(fileName, file);
                                         newImage.Material = this;
                                         Images.Add(newImage);

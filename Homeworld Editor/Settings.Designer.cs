@@ -40,6 +40,10 @@
             this.groupEditor = new System.Windows.Forms.GroupBox();
             this.numericMarkerSize = new System.Windows.Forms.NumericUpDown();
             this.numericJointSize = new System.Windows.Forms.NumericUpDown();
+            this.groupLighting = new System.Windows.Forms.GroupBox();
+            this.buttonAmbientColor = new System.Windows.Forms.Button();
+            this.labelAmbientColor = new System.Windows.Forms.Label();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -47,6 +51,7 @@
             this.groupEditor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarkerSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).BeginInit();
+            this.groupLighting.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelJointSize
@@ -93,7 +98,7 @@
             0,
             0,
             0});
-            this.numericFarClip.Location = new System.Drawing.Point(80, 45);
+            this.numericFarClip.Location = new System.Drawing.Point(85, 45);
             this.numericFarClip.Maximum = new decimal(new int[] {
             50000000,
             0,
@@ -105,7 +110,7 @@
             0,
             262144});
             this.numericFarClip.Name = "numericFarClip";
-            this.numericFarClip.Size = new System.Drawing.Size(217, 20);
+            this.numericFarClip.Size = new System.Drawing.Size(218, 20);
             this.numericFarClip.TabIndex = 11;
             this.numericFarClip.Value = new decimal(new int[] {
             100,
@@ -117,7 +122,7 @@
             // numericZoomSpeed
             // 
             this.numericZoomSpeed.DecimalPlaces = 1;
-            this.numericZoomSpeed.Location = new System.Drawing.Point(80, 19);
+            this.numericZoomSpeed.Location = new System.Drawing.Point(85, 19);
             this.numericZoomSpeed.Maximum = new decimal(new int[] {
             50000000,
             0,
@@ -129,7 +134,7 @@
             0,
             524288});
             this.numericZoomSpeed.Name = "numericZoomSpeed";
-            this.numericZoomSpeed.Size = new System.Drawing.Size(217, 20);
+            this.numericZoomSpeed.Size = new System.Drawing.Size(218, 20);
             this.numericZoomSpeed.TabIndex = 12;
             this.numericZoomSpeed.Value = new decimal(new int[] {
             100,
@@ -150,7 +155,7 @@
             this.groupCamera.Controls.Add(this.numericFarClip);
             this.groupCamera.Location = new System.Drawing.Point(13, 13);
             this.groupCamera.Name = "groupCamera";
-            this.groupCamera.Size = new System.Drawing.Size(303, 110);
+            this.groupCamera.Size = new System.Drawing.Size(309, 110);
             this.groupCamera.TabIndex = 15;
             this.groupCamera.TabStop = false;
             this.groupCamera.Text = "Camera";
@@ -172,7 +177,7 @@
             0,
             0,
             131072});
-            this.numericNearClip.Location = new System.Drawing.Point(80, 71);
+            this.numericNearClip.Location = new System.Drawing.Point(85, 71);
             this.numericNearClip.Maximum = new decimal(new int[] {
             100000000,
             0,
@@ -184,7 +189,7 @@
             0,
             262144});
             this.numericNearClip.Name = "numericNearClip";
-            this.numericNearClip.Size = new System.Drawing.Size(217, 20);
+            this.numericNearClip.Size = new System.Drawing.Size(218, 20);
             this.numericNearClip.TabIndex = 13;
             this.numericNearClip.Value = new decimal(new int[] {
             1,
@@ -195,13 +200,15 @@
             // 
             // groupEditor
             // 
+            this.groupEditor.AutoSize = true;
+            this.groupEditor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupEditor.Controls.Add(this.numericMarkerSize);
             this.groupEditor.Controls.Add(this.numericJointSize);
             this.groupEditor.Controls.Add(this.labelMarkerSize);
             this.groupEditor.Controls.Add(this.labelJointSize);
             this.groupEditor.Location = new System.Drawing.Point(13, 129);
             this.groupEditor.Name = "groupEditor";
-            this.groupEditor.Size = new System.Drawing.Size(303, 77);
+            this.groupEditor.Size = new System.Drawing.Size(309, 84);
             this.groupEditor.TabIndex = 16;
             this.groupEditor.TabStop = false;
             this.groupEditor.Text = "Editor";
@@ -209,7 +216,7 @@
             // numericMarkerSize
             // 
             this.numericMarkerSize.DecimalPlaces = 3;
-            this.numericMarkerSize.Location = new System.Drawing.Point(80, 45);
+            this.numericMarkerSize.Location = new System.Drawing.Point(85, 45);
             this.numericMarkerSize.Maximum = new decimal(new int[] {
             705032704,
             1,
@@ -221,7 +228,7 @@
             0,
             524288});
             this.numericMarkerSize.Name = "numericMarkerSize";
-            this.numericMarkerSize.Size = new System.Drawing.Size(217, 20);
+            this.numericMarkerSize.Size = new System.Drawing.Size(218, 20);
             this.numericMarkerSize.TabIndex = 16;
             this.numericMarkerSize.Value = new decimal(new int[] {
             100,
@@ -233,7 +240,7 @@
             // numericJointSize
             // 
             this.numericJointSize.DecimalPlaces = 1;
-            this.numericJointSize.Location = new System.Drawing.Point(80, 19);
+            this.numericJointSize.Location = new System.Drawing.Point(85, 19);
             this.numericJointSize.Maximum = new decimal(new int[] {
             50000000,
             0,
@@ -245,7 +252,7 @@
             0,
             524288});
             this.numericJointSize.Name = "numericJointSize";
-            this.numericJointSize.Size = new System.Drawing.Size(217, 20);
+            this.numericJointSize.Size = new System.Drawing.Size(218, 20);
             this.numericJointSize.TabIndex = 15;
             this.numericJointSize.Value = new decimal(new int[] {
             100,
@@ -254,13 +261,53 @@
             0});
             this.numericJointSize.ValueChanged += new System.EventHandler(this.numericJointSize_ValueChanged);
             // 
+            // groupLighting
+            // 
+            this.groupLighting.AutoSize = true;
+            this.groupLighting.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupLighting.Controls.Add(this.buttonAmbientColor);
+            this.groupLighting.Controls.Add(this.labelAmbientColor);
+            this.groupLighting.Location = new System.Drawing.Point(13, 219);
+            this.groupLighting.Name = "groupLighting";
+            this.groupLighting.Size = new System.Drawing.Size(309, 58);
+            this.groupLighting.TabIndex = 17;
+            this.groupLighting.TabStop = false;
+            this.groupLighting.Text = "Lighting";
+            // 
+            // buttonAmbientColor
+            // 
+            this.buttonAmbientColor.BackColor = System.Drawing.Color.Red;
+            this.buttonAmbientColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonAmbientColor.Location = new System.Drawing.Point(85, 19);
+            this.buttonAmbientColor.Name = "buttonAmbientColor";
+            this.buttonAmbientColor.Size = new System.Drawing.Size(218, 20);
+            this.buttonAmbientColor.TabIndex = 2;
+            this.buttonAmbientColor.UseVisualStyleBackColor = false;
+            this.buttonAmbientColor.Click += new System.EventHandler(this.buttonAmbientColor_Click);
+            // 
+            // labelAmbientColor
+            // 
+            this.labelAmbientColor.AutoSize = true;
+            this.labelAmbientColor.Location = new System.Drawing.Point(8, 23);
+            this.labelAmbientColor.Name = "labelAmbientColor";
+            this.labelAmbientColor.Size = new System.Drawing.Size(71, 13);
+            this.labelAmbientColor.TabIndex = 0;
+            this.labelAmbientColor.Text = "Ambient color";
+            // 
+            // colorDialog
+            // 
+            this.colorDialog.AnyColor = true;
+            this.colorDialog.Color = System.Drawing.Color.Gray;
+            this.colorDialog.SolidColorOnly = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(395, 229);
+            this.ClientSize = new System.Drawing.Size(395, 335);
+            this.Controls.Add(this.groupLighting);
             this.Controls.Add(this.groupEditor);
             this.Controls.Add(this.groupCamera);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -268,6 +315,7 @@
             this.MinimizeBox = false;
             this.Name = "Settings";
             this.Text = "Settings";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).EndInit();
             this.groupCamera.ResumeLayout(false);
@@ -277,6 +325,8 @@
             this.groupEditor.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarkerSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).EndInit();
+            this.groupLighting.ResumeLayout(false);
+            this.groupLighting.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -296,5 +346,9 @@
         private System.Windows.Forms.NumericUpDown numericJointSize;
         private System.Windows.Forms.Label labelNearClip;
         private System.Windows.Forms.NumericUpDown numericNearClip;
+        private System.Windows.Forms.GroupBox groupLighting;
+        private System.Windows.Forms.Label labelAmbientColor;
+        private System.Windows.Forms.Button buttonAmbientColor;
+        private System.Windows.Forms.ColorDialog colorDialog;
     }
 }

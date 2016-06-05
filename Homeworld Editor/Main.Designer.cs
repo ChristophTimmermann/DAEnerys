@@ -101,6 +101,8 @@ namespace HomeworldDAEEditor
             this.dockpathList = new System.Windows.Forms.CheckedListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.glControl = new OpenTK.GLControl(new GraphicsMode(32, 24, 8, 4));
+            this.groupThrusterStrength = new System.Windows.Forms.GroupBox();
+            this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
             this.toolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabShipMeshes.SuspendLayout();
@@ -131,6 +133,8 @@ namespace HomeworldDAEEditor
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupThrusterStrength.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -293,6 +297,7 @@ namespace HomeworldDAEEditor
             // 
             // tabMaterials
             // 
+            this.tabMaterials.Controls.Add(this.groupThrusterStrength);
             this.tabMaterials.Controls.Add(this.groupMaterialTextures);
             this.tabMaterials.Controls.Add(this.panel2);
             this.tabMaterials.Location = new System.Drawing.Point(4, 40);
@@ -308,9 +313,9 @@ namespace HomeworldDAEEditor
             this.groupMaterialTextures.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupMaterialTextures.Controls.Add(this.listMaterialTextures);
-            this.groupMaterialTextures.Location = new System.Drawing.Point(8, 471);
+            this.groupMaterialTextures.Location = new System.Drawing.Point(8, 384);
             this.groupMaterialTextures.Name = "groupMaterialTextures";
-            this.groupMaterialTextures.Size = new System.Drawing.Size(232, 240);
+            this.groupMaterialTextures.Size = new System.Drawing.Size(232, 271);
             this.groupMaterialTextures.TabIndex = 1;
             this.groupMaterialTextures.TabStop = false;
             this.groupMaterialTextures.Text = "Textures";
@@ -321,11 +326,13 @@ namespace HomeworldDAEEditor
             this.listMaterialTextures.FormattingEnabled = true;
             this.listMaterialTextures.Location = new System.Drawing.Point(3, 16);
             this.listMaterialTextures.Name = "listMaterialTextures";
-            this.listMaterialTextures.Size = new System.Drawing.Size(226, 221);
+            this.listMaterialTextures.Size = new System.Drawing.Size(226, 252);
             this.listMaterialTextures.TabIndex = 0;
             // 
             // panel2
             // 
+            this.panel2.AutoSize = true;
+            this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.comboMaterialFormat);
             this.panel2.Controls.Add(this.boxMaterialShader);
@@ -334,13 +341,13 @@ namespace HomeworldDAEEditor
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(240, 462);
+            this.panel2.Size = new System.Drawing.Size(240, 375);
             this.panel2.TabIndex = 0;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 441);
+            this.label3.Location = new System.Drawing.Point(5, 354);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 13);
             this.label3.TabIndex = 13;
@@ -352,7 +359,7 @@ namespace HomeworldDAEEditor
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboMaterialFormat.Enabled = false;
             this.comboMaterialFormat.FormattingEnabled = true;
-            this.comboMaterialFormat.Location = new System.Drawing.Point(53, 438);
+            this.comboMaterialFormat.Location = new System.Drawing.Point(55, 351);
             this.comboMaterialFormat.Name = "comboMaterialFormat";
             this.comboMaterialFormat.Size = new System.Drawing.Size(184, 21);
             this.comboMaterialFormat.TabIndex = 12;
@@ -361,7 +368,7 @@ namespace HomeworldDAEEditor
             // 
             this.boxMaterialShader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.boxMaterialShader.Location = new System.Drawing.Point(53, 412);
+            this.boxMaterialShader.Location = new System.Drawing.Point(55, 325);
             this.boxMaterialShader.Name = "boxMaterialShader";
             this.boxMaterialShader.ReadOnly = true;
             this.boxMaterialShader.Size = new System.Drawing.Size(185, 20);
@@ -374,14 +381,14 @@ namespace HomeworldDAEEditor
             this.listMaterials.FormattingEnabled = true;
             this.listMaterials.Location = new System.Drawing.Point(3, 3);
             this.listMaterials.Name = "listMaterials";
-            this.listMaterials.Size = new System.Drawing.Size(234, 407);
+            this.listMaterials.Size = new System.Drawing.Size(234, 316);
             this.listMaterials.TabIndex = 10;
             this.listMaterials.SelectedIndexChanged += new System.EventHandler(this.listMaterials_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 415);
+            this.label2.Location = new System.Drawing.Point(5, 328);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(44, 13);
             this.label2.TabIndex = 9;
@@ -947,6 +954,30 @@ namespace HomeworldDAEEditor
             this.glControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseUp);
             this.glControl.Resize += new System.EventHandler(this.glControl_Resize);
             // 
+            // groupThrusterStrength
+            // 
+            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
+            this.groupThrusterStrength.Location = new System.Drawing.Point(8, 661);
+            this.groupThrusterStrength.Name = "groupThrusterStrength";
+            this.groupThrusterStrength.Size = new System.Drawing.Size(232, 47);
+            this.groupThrusterStrength.TabIndex = 2;
+            this.groupThrusterStrength.TabStop = false;
+            this.groupThrusterStrength.Text = "Thruster strength";
+            // 
+            // trackBarThrusterStrength
+            // 
+            this.trackBarThrusterStrength.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarThrusterStrength.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
+            this.trackBarThrusterStrength.Maximum = 100;
+            this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
+            this.trackBarThrusterStrength.Size = new System.Drawing.Size(226, 28);
+            this.trackBarThrusterStrength.TabIndex = 0;
+            this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarThrusterStrength.Scroll += new System.EventHandler(this.trackBarThrusterStrength_Scroll);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -966,6 +997,7 @@ namespace HomeworldDAEEditor
             this.panelShipMesh.ResumeLayout(false);
             this.panelShipMesh.PerformLayout();
             this.tabMaterials.ResumeLayout(false);
+            this.tabMaterials.PerformLayout();
             this.groupMaterialTextures.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -998,6 +1030,9 @@ namespace HomeworldDAEEditor
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupThrusterStrength.ResumeLayout(false);
+            this.groupThrusterStrength.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1074,6 +1109,8 @@ namespace HomeworldDAEEditor
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox listMaterialTextures;
         private OpenTK.GLControl glControl;
+        private System.Windows.Forms.GroupBox groupThrusterStrength;
+        private System.Windows.Forms.TrackBar trackBarThrusterStrength;
     }
 }
 

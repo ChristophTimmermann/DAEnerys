@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,6 +25,7 @@ namespace HomeworldDAEEditor
             numericZoomSpeed.Value = (decimal)Program.Camera.ZoomSpeed;
             numericFarClip.Value = (decimal)Renderer.ClipDistance;
             numericNearClip.Value = (decimal)Renderer.NearClipDistance;
+            buttonAmbientColor.BackColor = Color.FromArgb((int)Math.Round(Renderer.AmbientLight.Color.X * 255), (int)Math.Round(Renderer.AmbientLight.Color.Y * 255), (int)Math.Round(Renderer.AmbientLight.Color.Z * 255));
         }
 
         private void numericJointSize_ValueChanged(object sender, EventArgs e)
@@ -65,6 +67,18 @@ namespace HomeworldDAEEditor
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
             Program.GLControl.Invalidate();
+        }
+
+        private void buttonAmbientColor_Click(object sender, EventArgs e)
+        {
+            DialogResult result = colorDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Renderer.AmbientLight.Color = new Vector3((float)colorDialog.Color.R / 255, (float)colorDialog.Color.G / 255, (float)colorDialog.Color.B / 255);
+                buttonAmbientColor.BackColor = Color.FromArgb((int)Math.Round(Renderer.AmbientLight.Color.X * 255), (int)Math.Round(Renderer.AmbientLight.Color.Y * 255), (int)Math.Round(Renderer.AmbientLight.Color.Z * 255));
+
+                Program.GLControl.Invalidate();
+            }
         }
     }
 }

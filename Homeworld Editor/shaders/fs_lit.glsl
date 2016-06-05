@@ -5,10 +5,20 @@ uniform vec3 cameraPosition;
 
 // material settings
 uniform sampler2D materialTex;
+uniform sampler2D glowTex;
+uniform sampler2D thrusterOffDiff;
+uniform sampler2D thrusterOffGlow;
+
+uniform float thrusterInterpolation;
+
 uniform float materialShininess;
 uniform vec3 materialSpecularColor;
+
 uniform bool textured;
 uniform bool shaded;
+uniform bool emissive;
+uniform bool discreteGlow;
+uniform bool thruster;
 
 //array of lights
 #define MAX_LIGHTS 10
@@ -70,6 +80,12 @@ void main()
 	if(textured)
 	{
 		surfaceColor = texture(materialTex, fragTexCoord);
+		
+		if(thruster)
+		{
+			vec4 thrusterOffColor = texture(thrusterOffDiff, fragTexCoord);
+			surfaceColor = (1.0 - thrusterInterpolation) * thrusterOffColor + thrusterInterpolation * surfaceColor;
+		}
 	}
 	
 	if(shaded)
@@ -84,6 +100,27 @@ void main()
 		for(int i = 0; i < numLights; ++i)
 		{
 			linearColor += ApplyLight(allLights[i], surfaceColor.rgb, normal, surfacePos, surfaceToCamera);
+		}
+	
+		//GLOW
+		if(emissive)
+		{
+			vec4 glowMap = texture(glowTex, fragTexCoord);
+			if(thruster)
+			{
+				vec4 thrusterOffColor = texture(thrusterOffGlow, fragTexCoord);
+				glowMap = (1.0 - thrusterInterpolation) * thrusterOffColor + thrusterInterpolation * glowMap;
+			}
+			
+			if(!discreteGlow)
+			{
+				float glowValue = glowMap.x;
+				linearColor += vec3(surfaceColor.r, surfaceColor.g, surfaceColor.b) * glowValue * 2;
+			}
+			else
+			{
+				linearColor += glowMap.xyz;
+			}
 		}
 		
 		//final color (after gamma correction)
