@@ -202,13 +202,19 @@ namespace HomeworldDAEEditor
 
                         if(mesh.Material.Shader == "thruster") //If the mesh material is a thruster
                         {
-                            GL.ActiveTexture(TextureUnit.Texture2);
-                            GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffDiffuseTexture.ID);
-                            GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffDiff"), 2);
+                            if (mesh.Material.ThrusterOffDiffuseTexture != null)
+                            {
+                                GL.ActiveTexture(TextureUnit.Texture2);
+                                GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffDiffuseTexture.ID);
+                                GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffDiff"), 2);
+                            }
 
-                            GL.ActiveTexture(TextureUnit.Texture3);
-                            GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffGlowTexture.ID);
-                            GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffGlow"), 3);
+                            if (mesh.Material.ThrusterOffGlowTexture != null)
+                            {
+                                GL.ActiveTexture(TextureUnit.Texture3);
+                                GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffGlowTexture.ID);
+                                GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffGlow"), 3);
+                            }
 
                             GL.Uniform1(shaders[activeShader].GetUniform("thruster"), 1); //Tell shader to interpolate between thruster textures
                         }

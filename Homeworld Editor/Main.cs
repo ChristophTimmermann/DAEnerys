@@ -671,6 +671,9 @@ namespace HomeworldDAEEditor
         {
             listMaterialTextures.Items.Clear();
 
+            if (listMaterials.SelectedItem == null)
+                return;
+
             HWMaterial selectedMaterial = MaterialListItems[listMaterials.SelectedItem];
 
             //Set shader name
@@ -683,9 +686,12 @@ namespace HomeworldDAEEditor
             }
 
             //Set texture format
-            if(selectedMaterial.Images[0] != null)
+            if (selectedMaterial.Images.Count > 0)
             {
-                comboMaterialFormat.SelectedIndex = (int)selectedMaterial.Format;
+                if (selectedMaterial.Images[0] != null)
+                {
+                    comboMaterialFormat.SelectedIndex = (int)selectedMaterial.Format;
+                }
             }
         }
         public void AddMaterial(HWMaterial material)
