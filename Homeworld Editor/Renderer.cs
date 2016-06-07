@@ -12,11 +12,26 @@ namespace HomeworldDAEEditor
     {
         static Dictionary<string, Shader> shaders = new Dictionary<string, Shader>();
 
-        public static HWTexture defaultTexture = new HWTexture(@"resources/missing.tga");
+        public static HWTexture DefaultTexture;
 
         public static Light AmbientLight = new Light(new Vector4(0, 0, 0, 0), new Vector3(0.5f), 1, 0.000005f);
 
-        public static float ThrusterInterpolation = 0;
+        private static Color backgroundColor = Color.CornflowerBlue;
+        public static Color BackgroundColor
+        {
+            get { return backgroundColor; }
+            set
+            {
+                backgroundColor = value;
+                if (Program.main.Loaded)
+                {
+                    GL.ClearColor(value);
+                    Program.GLControl.Invalidate();
+                }
+            }
+        }
+
+        public static float ThrusterInterpolation = 1;
 
         static string activeShader;
 
@@ -32,7 +47,7 @@ namespace HomeworldDAEEditor
 
         public static void Init()
         {
-            GL.ClearColor(Color.CornflowerBlue);
+            GL.ClearColor(BackgroundColor);
 
             GL.Enable(EnableCap.DepthTest);
 
@@ -49,6 +64,8 @@ namespace HomeworldDAEEditor
             shaders.Add("lit", new Shader("vs_lit.glsl", "fs_lit.glsl", true));
 
             activeShader = "lit";
+
+            DefaultTexture = new HWTexture(@"resources/missing.tga");
         }
 
         public static void UpdateMeshData()

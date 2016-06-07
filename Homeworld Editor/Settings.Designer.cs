@@ -35,26 +35,30 @@
             this.numericFarClip = new System.Windows.Forms.NumericUpDown();
             this.numericZoomSpeed = new System.Windows.Forms.NumericUpDown();
             this.groupCamera = new System.Windows.Forms.GroupBox();
+            this.labelFOV = new System.Windows.Forms.Label();
+            this.numericFOV = new System.Windows.Forms.NumericUpDown();
             this.labelNearClip = new System.Windows.Forms.Label();
             this.numericNearClip = new System.Windows.Forms.NumericUpDown();
             this.groupEditor = new System.Windows.Forms.GroupBox();
             this.numericMarkerSize = new System.Windows.Forms.NumericUpDown();
             this.numericJointSize = new System.Windows.Forms.NumericUpDown();
             this.groupLighting = new System.Windows.Forms.GroupBox();
+            this.buttonBackgroundColor = new System.Windows.Forms.Button();
+            this.labelBackgroundColor = new System.Windows.Forms.Label();
             this.buttonAmbientColor = new System.Windows.Forms.Button();
             this.labelAmbientColor = new System.Windows.Forms.Label();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.labelFOV = new System.Windows.Forms.Label();
-            this.numericFOV = new System.Windows.Forms.NumericUpDown();
+            this.comboFSAASamples = new System.Windows.Forms.ComboBox();
+            this.labelFSAASamples = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericFOV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericNearClip)).BeginInit();
             this.groupEditor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarkerSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).BeginInit();
             this.groupLighting.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericFOV)).BeginInit();
             this.SuspendLayout();
             // 
             // labelJointSize
@@ -101,7 +105,7 @@
             0,
             0,
             0});
-            this.numericFarClip.Location = new System.Drawing.Point(85, 45);
+            this.numericFarClip.Location = new System.Drawing.Point(105, 45);
             this.numericFarClip.Maximum = new decimal(new int[] {
             50000000,
             0,
@@ -125,7 +129,7 @@
             // numericZoomSpeed
             // 
             this.numericZoomSpeed.DecimalPlaces = 1;
-            this.numericZoomSpeed.Location = new System.Drawing.Point(85, 19);
+            this.numericZoomSpeed.Location = new System.Drawing.Point(105, 19);
             this.numericZoomSpeed.Maximum = new decimal(new int[] {
             50000000,
             0,
@@ -150,6 +154,8 @@
             // 
             this.groupCamera.AutoSize = true;
             this.groupCamera.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupCamera.Controls.Add(this.labelFSAASamples);
+            this.groupCamera.Controls.Add(this.comboFSAASamples);
             this.groupCamera.Controls.Add(this.labelFOV);
             this.groupCamera.Controls.Add(this.numericFOV);
             this.groupCamera.Controls.Add(this.labelNearClip);
@@ -160,10 +166,42 @@
             this.groupCamera.Controls.Add(this.numericFarClip);
             this.groupCamera.Location = new System.Drawing.Point(13, 13);
             this.groupCamera.Name = "groupCamera";
-            this.groupCamera.Size = new System.Drawing.Size(309, 136);
+            this.groupCamera.Size = new System.Drawing.Size(329, 163);
             this.groupCamera.TabIndex = 15;
             this.groupCamera.TabStop = false;
             this.groupCamera.Text = "Camera";
+            // 
+            // labelFOV
+            // 
+            this.labelFOV.AutoSize = true;
+            this.labelFOV.Location = new System.Drawing.Point(8, 99);
+            this.labelFOV.Name = "labelFOV";
+            this.labelFOV.Size = new System.Drawing.Size(66, 13);
+            this.labelFOV.TabIndex = 16;
+            this.labelFOV.Text = "Field of view";
+            // 
+            // numericFOV
+            // 
+            this.numericFOV.Location = new System.Drawing.Point(105, 97);
+            this.numericFOV.Maximum = new decimal(new int[] {
+            179,
+            0,
+            0,
+            0});
+            this.numericFOV.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericFOV.Name = "numericFOV";
+            this.numericFOV.Size = new System.Drawing.Size(218, 20);
+            this.numericFOV.TabIndex = 15;
+            this.numericFOV.Value = new decimal(new int[] {
+            15,
+            0,
+            0,
+            0});
+            this.numericFOV.ValueChanged += new System.EventHandler(this.numericFOV_ValueChanged);
             // 
             // labelNearClip
             // 
@@ -182,7 +220,7 @@
             0,
             0,
             131072});
-            this.numericNearClip.Location = new System.Drawing.Point(85, 71);
+            this.numericNearClip.Location = new System.Drawing.Point(105, 71);
             this.numericNearClip.Maximum = new decimal(new int[] {
             100000000,
             0,
@@ -211,9 +249,9 @@
             this.groupEditor.Controls.Add(this.numericJointSize);
             this.groupEditor.Controls.Add(this.labelMarkerSize);
             this.groupEditor.Controls.Add(this.labelJointSize);
-            this.groupEditor.Location = new System.Drawing.Point(13, 155);
+            this.groupEditor.Location = new System.Drawing.Point(13, 182);
             this.groupEditor.Name = "groupEditor";
-            this.groupEditor.Size = new System.Drawing.Size(309, 84);
+            this.groupEditor.Size = new System.Drawing.Size(329, 84);
             this.groupEditor.TabIndex = 16;
             this.groupEditor.TabStop = false;
             this.groupEditor.Text = "Editor";
@@ -221,7 +259,7 @@
             // numericMarkerSize
             // 
             this.numericMarkerSize.DecimalPlaces = 3;
-            this.numericMarkerSize.Location = new System.Drawing.Point(85, 45);
+            this.numericMarkerSize.Location = new System.Drawing.Point(75, 45);
             this.numericMarkerSize.Maximum = new decimal(new int[] {
             705032704,
             1,
@@ -233,7 +271,7 @@
             0,
             524288});
             this.numericMarkerSize.Name = "numericMarkerSize";
-            this.numericMarkerSize.Size = new System.Drawing.Size(218, 20);
+            this.numericMarkerSize.Size = new System.Drawing.Size(248, 20);
             this.numericMarkerSize.TabIndex = 16;
             this.numericMarkerSize.Value = new decimal(new int[] {
             100,
@@ -245,7 +283,7 @@
             // numericJointSize
             // 
             this.numericJointSize.DecimalPlaces = 1;
-            this.numericJointSize.Location = new System.Drawing.Point(85, 19);
+            this.numericJointSize.Location = new System.Drawing.Point(75, 19);
             this.numericJointSize.Maximum = new decimal(new int[] {
             50000000,
             0,
@@ -257,7 +295,7 @@
             0,
             524288});
             this.numericJointSize.Name = "numericJointSize";
-            this.numericJointSize.Size = new System.Drawing.Size(218, 20);
+            this.numericJointSize.Size = new System.Drawing.Size(248, 20);
             this.numericJointSize.TabIndex = 15;
             this.numericJointSize.Value = new decimal(new int[] {
             100,
@@ -270,20 +308,42 @@
             // 
             this.groupLighting.AutoSize = true;
             this.groupLighting.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupLighting.Controls.Add(this.buttonBackgroundColor);
+            this.groupLighting.Controls.Add(this.labelBackgroundColor);
             this.groupLighting.Controls.Add(this.buttonAmbientColor);
             this.groupLighting.Controls.Add(this.labelAmbientColor);
-            this.groupLighting.Location = new System.Drawing.Point(13, 245);
+            this.groupLighting.Location = new System.Drawing.Point(13, 272);
             this.groupLighting.Name = "groupLighting";
-            this.groupLighting.Size = new System.Drawing.Size(309, 58);
+            this.groupLighting.Size = new System.Drawing.Size(329, 84);
             this.groupLighting.TabIndex = 17;
             this.groupLighting.TabStop = false;
             this.groupLighting.Text = "Lighting";
+            // 
+            // buttonBackgroundColor
+            // 
+            this.buttonBackgroundColor.BackColor = System.Drawing.Color.Red;
+            this.buttonBackgroundColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonBackgroundColor.Location = new System.Drawing.Point(105, 45);
+            this.buttonBackgroundColor.Name = "buttonBackgroundColor";
+            this.buttonBackgroundColor.Size = new System.Drawing.Size(218, 20);
+            this.buttonBackgroundColor.TabIndex = 4;
+            this.buttonBackgroundColor.UseVisualStyleBackColor = false;
+            this.buttonBackgroundColor.Click += new System.EventHandler(this.buttonBackgroundColor_Click);
+            // 
+            // labelBackgroundColor
+            // 
+            this.labelBackgroundColor.AutoSize = true;
+            this.labelBackgroundColor.Location = new System.Drawing.Point(8, 49);
+            this.labelBackgroundColor.Name = "labelBackgroundColor";
+            this.labelBackgroundColor.Size = new System.Drawing.Size(91, 13);
+            this.labelBackgroundColor.TabIndex = 3;
+            this.labelBackgroundColor.Text = "Background color";
             // 
             // buttonAmbientColor
             // 
             this.buttonAmbientColor.BackColor = System.Drawing.Color.Red;
             this.buttonAmbientColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonAmbientColor.Location = new System.Drawing.Point(85, 19);
+            this.buttonAmbientColor.Location = new System.Drawing.Point(105, 19);
             this.buttonAmbientColor.Name = "buttonAmbientColor";
             this.buttonAmbientColor.Size = new System.Drawing.Size(218, 20);
             this.buttonAmbientColor.TabIndex = 2;
@@ -305,37 +365,28 @@
             this.colorDialog.Color = System.Drawing.Color.Gray;
             this.colorDialog.SolidColorOnly = true;
             // 
-            // labelFOV
+            // comboFSAASamples
             // 
-            this.labelFOV.AutoSize = true;
-            this.labelFOV.Location = new System.Drawing.Point(8, 99);
-            this.labelFOV.Name = "labelFOV";
-            this.labelFOV.Size = new System.Drawing.Size(66, 13);
-            this.labelFOV.TabIndex = 16;
-            this.labelFOV.Text = "Field of view";
+            this.comboFSAASamples.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboFSAASamples.FormattingEnabled = true;
+            this.comboFSAASamples.Items.AddRange(new object[] {
+            "0 samples",
+            "2 samples",
+            "4 samples"});
+            this.comboFSAASamples.Location = new System.Drawing.Point(105, 123);
+            this.comboFSAASamples.Name = "comboFSAASamples";
+            this.comboFSAASamples.Size = new System.Drawing.Size(218, 21);
+            this.comboFSAASamples.TabIndex = 17;
+            this.comboFSAASamples.SelectedIndexChanged += new System.EventHandler(this.comboFSAASamples_SelectedIndexChanged);
             // 
-            // numericFOV
+            // labelFSAASamples
             // 
-            this.numericFOV.Location = new System.Drawing.Point(85, 97);
-            this.numericFOV.Maximum = new decimal(new int[] {
-            179,
-            0,
-            0,
-            0});
-            this.numericFOV.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericFOV.Name = "numericFOV";
-            this.numericFOV.Size = new System.Drawing.Size(218, 20);
-            this.numericFOV.TabIndex = 15;
-            this.numericFOV.Value = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
-            this.numericFOV.ValueChanged += new System.EventHandler(this.numericFOV_ValueChanged);
+            this.labelFSAASamples.AutoSize = true;
+            this.labelFSAASamples.Location = new System.Drawing.Point(8, 126);
+            this.labelFSAASamples.Name = "labelFSAASamples";
+            this.labelFSAASamples.Size = new System.Drawing.Size(92, 13);
+            this.labelFSAASamples.TabIndex = 18;
+            this.labelFSAASamples.Text = "FSAA anti-aliasing";
             // 
             // Settings
             // 
@@ -357,6 +408,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).EndInit();
             this.groupCamera.ResumeLayout(false);
             this.groupCamera.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericFOV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericNearClip)).EndInit();
             this.groupEditor.ResumeLayout(false);
             this.groupEditor.PerformLayout();
@@ -364,7 +416,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).EndInit();
             this.groupLighting.ResumeLayout(false);
             this.groupLighting.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericFOV)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -390,5 +441,9 @@
         private System.Windows.Forms.ColorDialog colorDialog;
         private System.Windows.Forms.Label labelFOV;
         private System.Windows.Forms.NumericUpDown numericFOV;
+        private System.Windows.Forms.Button buttonBackgroundColor;
+        private System.Windows.Forms.Label labelBackgroundColor;
+        private System.Windows.Forms.Label labelFSAASamples;
+        private System.Windows.Forms.ComboBox comboFSAASamples;
     }
 }

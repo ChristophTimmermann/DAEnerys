@@ -41,6 +41,9 @@ namespace HomeworldDAEEditor
                                 case "DXT1":
                                     Format = ImageFormat.DXT1;
                                     break;
+                                case "DXT3":
+                                    Format = ImageFormat.DXT3;
+                                    break;
                                 case "DXT5":
                                     Format = ImageFormat.DXT5;
                                     break;
@@ -60,7 +63,8 @@ namespace HomeworldDAEEditor
     public enum ImageFormat
     {
         DXT1 = 0,
-        DXT5 = 1,
-        UNCOMPRESSED = 2,
+        DXT3 = 1,
+        DXT5 = 2,
+        UNCOMPRESSED = 3,
     }
 }

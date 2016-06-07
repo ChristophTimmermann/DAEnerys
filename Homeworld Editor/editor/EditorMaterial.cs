@@ -21,7 +21,7 @@ namespace HomeworldDAEEditor
         public string OpacityMap = "";
         public string NormalMap = "";
 
-        public HWTexture DiffuseTexture = Renderer.defaultTexture;
+        public HWTexture DiffuseTexture = Renderer.DefaultTexture;
 
         public EditorMaterial()
         {

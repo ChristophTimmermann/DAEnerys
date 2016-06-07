@@ -16,7 +16,7 @@ namespace HomeworldDAEEditor
     {
         int BUILD = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build;
 
-        bool loaded = false;
+        public bool Loaded = false;
         HWDockpath selectedDockpath;
 
         public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
@@ -36,7 +36,6 @@ namespace HomeworldDAEEditor
 
         private void Main_Load(object sender, EventArgs e)
         {
-            Program.GLControl = glControl;
             HWTexture.Init();
             Renderer.Init();
             EditorScene.Init();
@@ -45,35 +44,34 @@ namespace HomeworldDAEEditor
             GraphicsContext.CurrentContext.SwapInterval = 1;
             comboPerspectiveOrtho.SelectedIndex = 0;
 
-            loaded = true;
-
+            Loaded = true;
             Clear();
         }
 
-        void glControl_Update(object sender, EventArgs e)
+        public void glControl_Update(object sender, EventArgs e)
         {
-            if (!loaded)
+            if (!Loaded)
                 return;
 
             Program.Camera.Update();
         }
 
-        private void glControl_Render(object sender, PaintEventArgs e)
+        public void glControl_Render(object sender, PaintEventArgs e)
         {
-            if (!loaded)
+            if (!Loaded)
                 return;
 
             Renderer.Render();
         }
 
-        private void glControl_Resize(object sender, EventArgs e)
+        public void glControl_Resize(object sender, EventArgs e)
         {
-            if (!loaded)
+            if (!Loaded)
                 return;
 
             Renderer.Resize();
             Renderer.UpdateView();
-            glControl.Invalidate();
+            Program.GLControl.Invalidate();
         }
 
         private void Clear()
@@ -139,6 +137,7 @@ namespace HomeworldDAEEditor
             comboCollisionMeshParent.Items.Add("Root"); //Add root joint to possible collision mesh parents
 
             comboMaterialFormat.Items.Add("DXT1");
+            comboMaterialFormat.Items.Add("DXT3");
             comboMaterialFormat.Items.Add("DXT5");
             comboMaterialFormat.Items.Add("8888");
 
@@ -148,7 +147,7 @@ namespace HomeworldDAEEditor
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
-            glControl.Invalidate();
+            Program.GLControl.Invalidate();
         }
 
         //--------------------------------------------------------------------------------------------------------------//
@@ -164,7 +163,7 @@ namespace HomeworldDAEEditor
 
                 Renderer.UpdateMeshData();
                 Renderer.UpdateView();
-                glControl.Invalidate();
+                Program.GLControl.Invalidate();
             }
         }
 
@@ -182,6 +181,7 @@ namespace HomeworldDAEEditor
             Application.Idle -= glControl_Update;
             HWTexture.Close();
             GraphicsContext.CurrentContext.Dispose();
+            Settings.SaveSettings();
         }
 
         public void AddMarker(HWMarker marker)
@@ -246,20 +246,20 @@ namespace HomeworldDAEEditor
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
-            glControl.Invalidate();
+            Program.GLControl.Invalidate();
         }
 
-        private void glControl_MouseDown(object sender, MouseEventArgs e)
+        public void glControl_MouseDown(object sender, MouseEventArgs e)
         {
             Program.Camera.MouseDown(e);
         }
 
-        private void glControl_MouseUp(object sender, MouseEventArgs e)
+        public void glControl_MouseUp(object sender, MouseEventArgs e)
         {
             Program.Camera.MouseUp(e);
         }
 
-        private void glControl_KeyDown(object sender, KeyEventArgs e)
+        public void glControl_KeyDown(object sender, KeyEventArgs e)
         {
             Program.Camera.KeyDown(e);
         }
@@ -280,7 +280,7 @@ namespace HomeworldDAEEditor
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
-            glControl.Invalidate();
+            Program.GLControl.Invalidate();
         }
 
         private void buttonSettings_Click(object sender, EventArgs e)
@@ -302,7 +302,7 @@ namespace HomeworldDAEEditor
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
-            glControl.Invalidate();
+            Program.GLControl.Invalidate();
         }
 
         private void dockpathList_SelectedIndexChanged(object sender, EventArgs e)
@@ -445,15 +445,15 @@ namespace HomeworldDAEEditor
             }
 
             Renderer.UpdateMeshData();
-            glControl.Invalidate();
+            Program.GLControl.Invalidate();
         }
 
-        private void glControl_Enter(object sender, EventArgs e)
+        public void glControl_Enter(object sender, EventArgs e)
         {
-            glControl.Focus();
+            Program.GLControl.Focus();
         }
 
-        private void glControl_Leave(object sender, EventArgs e)
+        public void glControl_Leave(object sender, EventArgs e)
         {
             this.Focus();
         }
@@ -556,7 +556,7 @@ namespace HomeworldDAEEditor
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
-            glControl.Invalidate();
+            Program.GLControl.Invalidate();
         }
 
         //--------------------------------- GOBLIN MESHES ---------------------------------//
@@ -603,7 +603,7 @@ namespace HomeworldDAEEditor
 
                 Renderer.UpdateMeshData();
                 Renderer.UpdateView();
-                glControl.Invalidate();
+                Program.GLControl.Invalidate();
             }
         }
         public void CheckGoblinVisible(HWGoblinMesh goblin, bool visible)
@@ -668,7 +668,7 @@ namespace HomeworldDAEEditor
 
                 Renderer.UpdateMeshData();
                 Renderer.UpdateView();
-                glControl.Invalidate();
+                Program.GLControl.Invalidate();
             }
         }
 
@@ -716,7 +716,7 @@ namespace HomeworldDAEEditor
         {
             Renderer.ThrusterInterpolation = (float)trackBarThrusterStrength.Value / 100;
 
-            glControl.Invalidate();
+            Program.GLControl.Invalidate();
         }
 
         private void buttonAbout_Click(object sender, EventArgs e)

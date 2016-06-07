@@ -74,7 +74,7 @@ namespace HomeworldDAEEditor
                 //Set diffuse image
                 foreach(HWImage image in HWScene.Images)
                 {
-                    if(Path.GetFileName(image.Path) == DiffuseMap)
+                    if(image.Path.Replace("file://", "") == DiffuseMap)
                     {
                         string realDiffuseName = Path.GetFileNameWithoutExtension(image.Path);
                         image.Name = realDiffuseName;

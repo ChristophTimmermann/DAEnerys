@@ -14,7 +14,7 @@ namespace HomeworldDAEEditor
 
         public float NearClipDistance = 0.01f;
         public float ClipDistance = 1000;
-        public float FieldOfView = 1.35f;
+        public float FieldOfView = 1.22f;
 
         private bool orthographic;
         public bool Orthographic { get { return orthographic; } set { orthographic = value; Update(true); } }
@@ -145,6 +145,9 @@ namespace HomeworldDAEEditor
 
         public void Update(bool forceUpdate = false)
         {
+            if (Program.GLControl == null)
+                return;
+
             MouseState mouse = Mouse.GetState();
             Point position = Cursor.Position;
 
@@ -174,7 +177,7 @@ namespace HomeworldDAEEditor
                 else
                 {
                     orthographicSize += zoomDelta * (orthographicSize / 30);
-                    orthographicSize = Utilities.Utilities.Clamp(orthographicSize, 0.0001f, 100);
+                    orthographicSize = Utilities.Utilities.Clamp(orthographicSize, 0.0001f, 500);
                     Console.WriteLine(orthographicSize);
                 }
             }

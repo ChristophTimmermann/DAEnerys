@@ -102,7 +102,6 @@ namespace HomeworldDAEEditor
             this.panelDockpathList = new System.Windows.Forms.Panel();
             this.dockpathList = new System.Windows.Forms.CheckedListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.glControl = new OpenTK.GLControl();
             this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
             this.toolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -134,7 +133,6 @@ namespace HomeworldDAEEditor
             this.panelDockpathList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -332,6 +330,7 @@ namespace HomeworldDAEEditor
             this.trackBarThrusterStrength.Size = new System.Drawing.Size(226, 28);
             this.trackBarThrusterStrength.TabIndex = 0;
             this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarThrusterStrength.Value = 100;
             this.trackBarThrusterStrength.Scroll += new System.EventHandler(this.trackBarThrusterStrength_Scroll);
             // 
             // groupMaterialTextures
@@ -957,32 +956,9 @@ namespace HomeworldDAEEditor
             // 
             this.splitContainer1.Panel1.Controls.Add(this.tabControl);
             this.splitContainer1.Panel1MinSize = 250;
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.glControl);
             this.splitContainer1.Size = new System.Drawing.Size(1123, 758);
             this.splitContainer1.SplitterDistance = 254;
             this.splitContainer1.TabIndex = 4;
-            // 
-            // glControl
-            // 
-            this.glControl.AutoSize = true;
-            this.glControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.glControl.BackColor = System.Drawing.Color.Black;
-            this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.glControl.Location = new System.Drawing.Point(0, 0);
-            this.glControl.Name = "glControl";
-            this.glControl.Size = new System.Drawing.Size(865, 758);
-            this.glControl.TabIndex = 3;
-            this.glControl.VSync = true;
-            this.glControl.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl_Render);
-            this.glControl.Enter += new System.EventHandler(this.glControl_Enter);
-            this.glControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.glControl_KeyDown);
-            this.glControl.Leave += new System.EventHandler(this.glControl_Leave);
-            this.glControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseDown);
-            this.glControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseUp);
-            this.glControl.Resize += new System.EventHandler(this.glControl_Resize);
             // 
             // comboPerspectiveOrtho
             // 
@@ -1052,8 +1028,6 @@ namespace HomeworldDAEEditor
             this.groupDockpathFamilies.ResumeLayout(false);
             this.panelDockpathList.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -1096,7 +1070,7 @@ namespace HomeworldDAEEditor
         private System.Windows.Forms.TabPage tabDockpaths;
         private System.Windows.Forms.Panel panelDockpathList;
         private System.Windows.Forms.CheckedListBox dockpathList;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        public System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.GroupBox groupDockpathSegments;
         private System.Windows.Forms.GroupBox groupDockpathLinks;
         private System.Windows.Forms.ListBox listDockpathLinks;
@@ -1131,7 +1105,6 @@ namespace HomeworldDAEEditor
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox listMaterialTextures;
-        private OpenTK.GLControl glControl;
         private System.Windows.Forms.GroupBox groupThrusterStrength;
         private System.Windows.Forms.TrackBar trackBarThrusterStrength;
         private System.Windows.Forms.ComboBox comboPerspectiveOrtho;

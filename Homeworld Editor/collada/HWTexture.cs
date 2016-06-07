@@ -25,7 +25,7 @@ namespace HomeworldDAEEditor
             if(!exists)
             {
                 MessageBox.Show("Failed to load texture \"" + filename + "\".", "Texture loading error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return Renderer.defaultTexture.ID;
+                return Renderer.DefaultTexture.ID;
             }
 
             int img = IL.GenImage();
