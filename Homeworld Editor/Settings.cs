@@ -16,6 +16,9 @@ namespace HomeworldDAEEditor
 {
     public partial class Settings : Form
     {
+        private int oldComboFSAAIndex;
+        private bool hideFSAAMessage;
+
         public Settings()
         {
             InitializeComponent();
@@ -34,6 +37,7 @@ namespace HomeworldDAEEditor
 
             numericFOV.Value = (int)Math.Round(MathHelper.RadiansToDegrees(Program.Camera.FieldOfView));
 
+            hideFSAAMessage = true;
             switch(Program.FSAASamples)
             {
                 case 0:
@@ -46,6 +50,9 @@ namespace HomeworldDAEEditor
                     comboFSAASamples.SelectedIndex = 2;
                     break;
             }
+            hideFSAAMessage = false;
+
+            checkRenderOnTop.Checked = Renderer.DrawVisualizationsInFront;
         }
 
         private void numericJointSize_ValueChanged(object sender, EventArgs e)
@@ -133,6 +140,18 @@ namespace HomeworldDAEEditor
                     Program.FSAASamples = 4;
                     break;
             }
+
+            if(comboFSAASamples.SelectedIndex != oldComboFSAAIndex && !hideFSAAMessage)
+                MessageBox.Show("This action will come into effect after the program has been restarted.", "Restart needed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            oldComboFSAAIndex = comboFSAASamples.SelectedIndex;
+        }
+
+        private void checkRenderOnTop_CheckedChanged(object sender, EventArgs e)
+        {
+            Renderer.DrawVisualizationsInFront = checkRenderOnTop.Checked;
+
+            Program.GLControl.Invalidate();
         }
 
         //------------------------------------------ SETTINGS SAVING ----------------------------------------//
@@ -145,7 +164,8 @@ namespace HomeworldDAEEditor
                 new XElement("backgroundColor", Renderer.BackgroundColor.ToArgb()),
                 new XElement("ambientColor", ambientColor.ToArgb()),
                 new XElement("fieldOfView", MathHelper.RadiansToDegrees(Program.Camera.FieldOfView)),
-                new XElement("fsaaSamples", Program.FSAASamples));
+                new XElement("fsaaSamples", Program.FSAASamples),
+                new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront));
             File.WriteAllText("settings.xml", settings.ToString());
         }
 
@@ -183,9 +203,14 @@ namespace HomeworldDAEEditor
                             Program.Camera.FieldOfView = (float)MathHelper.DegreesToRadians(fov);
                             break;
                         case "fsaaSamples":
-                            int fsaaSamples;
+                            int fsaaSamples = 4;
                             int.TryParse(element.Value, out fsaaSamples);
                             Program.FSAASamples = fsaaSamples;
+                            break;
+                        case "drawVisualizationsInFront":
+                            bool drawInFront = true;
+                            bool.TryParse(element.Value, out drawInFront);
+                            Renderer.DrawVisualizationsInFront = drawInFront;
                             break;
                     }
                 }

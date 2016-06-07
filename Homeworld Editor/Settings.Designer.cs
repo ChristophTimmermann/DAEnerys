@@ -35,6 +35,8 @@
             this.numericFarClip = new System.Windows.Forms.NumericUpDown();
             this.numericZoomSpeed = new System.Windows.Forms.NumericUpDown();
             this.groupCamera = new System.Windows.Forms.GroupBox();
+            this.labelFSAASamples = new System.Windows.Forms.Label();
+            this.comboFSAASamples = new System.Windows.Forms.ComboBox();
             this.labelFOV = new System.Windows.Forms.Label();
             this.numericFOV = new System.Windows.Forms.NumericUpDown();
             this.labelNearClip = new System.Windows.Forms.Label();
@@ -48,8 +50,7 @@
             this.buttonAmbientColor = new System.Windows.Forms.Button();
             this.labelAmbientColor = new System.Windows.Forms.Label();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.comboFSAASamples = new System.Windows.Forms.ComboBox();
-            this.labelFSAASamples = new System.Windows.Forms.Label();
+            this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -171,6 +172,29 @@
             this.groupCamera.TabStop = false;
             this.groupCamera.Text = "Camera";
             // 
+            // labelFSAASamples
+            // 
+            this.labelFSAASamples.AutoSize = true;
+            this.labelFSAASamples.Location = new System.Drawing.Point(8, 126);
+            this.labelFSAASamples.Name = "labelFSAASamples";
+            this.labelFSAASamples.Size = new System.Drawing.Size(92, 13);
+            this.labelFSAASamples.TabIndex = 18;
+            this.labelFSAASamples.Text = "FSAA anti-aliasing";
+            // 
+            // comboFSAASamples
+            // 
+            this.comboFSAASamples.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboFSAASamples.FormattingEnabled = true;
+            this.comboFSAASamples.Items.AddRange(new object[] {
+            "0 samples",
+            "2 samples",
+            "4 samples"});
+            this.comboFSAASamples.Location = new System.Drawing.Point(105, 123);
+            this.comboFSAASamples.Name = "comboFSAASamples";
+            this.comboFSAASamples.Size = new System.Drawing.Size(218, 21);
+            this.comboFSAASamples.TabIndex = 17;
+            this.comboFSAASamples.SelectedIndexChanged += new System.EventHandler(this.comboFSAASamples_SelectedIndexChanged);
+            // 
             // labelFOV
             // 
             this.labelFOV.AutoSize = true;
@@ -245,13 +269,14 @@
             // 
             this.groupEditor.AutoSize = true;
             this.groupEditor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupEditor.Controls.Add(this.checkRenderOnTop);
             this.groupEditor.Controls.Add(this.numericMarkerSize);
             this.groupEditor.Controls.Add(this.numericJointSize);
             this.groupEditor.Controls.Add(this.labelMarkerSize);
             this.groupEditor.Controls.Add(this.labelJointSize);
             this.groupEditor.Location = new System.Drawing.Point(13, 182);
             this.groupEditor.Name = "groupEditor";
-            this.groupEditor.Size = new System.Drawing.Size(329, 84);
+            this.groupEditor.Size = new System.Drawing.Size(329, 107);
             this.groupEditor.TabIndex = 16;
             this.groupEditor.TabStop = false;
             this.groupEditor.Text = "Editor";
@@ -312,7 +337,7 @@
             this.groupLighting.Controls.Add(this.labelBackgroundColor);
             this.groupLighting.Controls.Add(this.buttonAmbientColor);
             this.groupLighting.Controls.Add(this.labelAmbientColor);
-            this.groupLighting.Location = new System.Drawing.Point(13, 272);
+            this.groupLighting.Location = new System.Drawing.Point(13, 295);
             this.groupLighting.Name = "groupLighting";
             this.groupLighting.Size = new System.Drawing.Size(329, 84);
             this.groupLighting.TabIndex = 17;
@@ -365,28 +390,18 @@
             this.colorDialog.Color = System.Drawing.Color.Gray;
             this.colorDialog.SolidColorOnly = true;
             // 
-            // comboFSAASamples
+            // checkRenderOnTop
             // 
-            this.comboFSAASamples.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboFSAASamples.FormattingEnabled = true;
-            this.comboFSAASamples.Items.AddRange(new object[] {
-            "0 samples",
-            "2 samples",
-            "4 samples"});
-            this.comboFSAASamples.Location = new System.Drawing.Point(105, 123);
-            this.comboFSAASamples.Name = "comboFSAASamples";
-            this.comboFSAASamples.Size = new System.Drawing.Size(218, 21);
-            this.comboFSAASamples.TabIndex = 17;
-            this.comboFSAASamples.SelectedIndexChanged += new System.EventHandler(this.comboFSAASamples_SelectedIndexChanged);
-            // 
-            // labelFSAASamples
-            // 
-            this.labelFSAASamples.AutoSize = true;
-            this.labelFSAASamples.Location = new System.Drawing.Point(8, 126);
-            this.labelFSAASamples.Name = "labelFSAASamples";
-            this.labelFSAASamples.Size = new System.Drawing.Size(92, 13);
-            this.labelFSAASamples.TabIndex = 18;
-            this.labelFSAASamples.Text = "FSAA anti-aliasing";
+            this.checkRenderOnTop.AutoSize = true;
+            this.checkRenderOnTop.Checked = true;
+            this.checkRenderOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkRenderOnTop.Location = new System.Drawing.Point(11, 71);
+            this.checkRenderOnTop.Name = "checkRenderOnTop";
+            this.checkRenderOnTop.Size = new System.Drawing.Size(151, 17);
+            this.checkRenderOnTop.TabIndex = 17;
+            this.checkRenderOnTop.Text = "Draw visualizations in front";
+            this.checkRenderOnTop.UseVisualStyleBackColor = true;
+            this.checkRenderOnTop.CheckedChanged += new System.EventHandler(this.checkRenderOnTop_CheckedChanged);
             // 
             // Settings
             // 
@@ -394,7 +409,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(551, 528);
+            this.ClientSize = new System.Drawing.Size(407, 455);
             this.Controls.Add(this.groupLighting);
             this.Controls.Add(this.groupEditor);
             this.Controls.Add(this.groupCamera);
@@ -445,5 +460,6 @@
         private System.Windows.Forms.Label labelBackgroundColor;
         private System.Windows.Forms.Label labelFSAASamples;
         private System.Windows.Forms.ComboBox comboFSAASamples;
+        private System.Windows.Forms.CheckBox checkRenderOnTop;
     }
 }

@@ -151,6 +151,8 @@ namespace HomeworldDAEEditor
             MouseState mouse = Mouse.GetState();
             Point position = Cursor.Position;
 
+            float zoomDelta = mouse.WheelPrecise - lastWheelPrecise;
+
             if (Program.GLControl.Focused || forceUpdate)
             {
                 if (mouse.RightButton == OpenTK.Input.ButtonState.Pressed || forceUpdate)
@@ -166,8 +168,6 @@ namespace HomeworldDAEEditor
                     Renderer.UpdateView();
                     Program.GLControl.Invalidate();
                 }
-
-                float zoomDelta = mouse.WheelPrecise - lastWheelPrecise;
 
                 if (!this.Orthographic)
                 {

@@ -31,6 +31,8 @@ namespace HomeworldDAEEditor
             }
         }
 
+        public static bool DrawVisualizationsInFront = true;
+
         public static float ThrusterInterpolation = 1;
 
         static string activeShader;
@@ -289,7 +291,8 @@ namespace HomeworldDAEEditor
                 }
             }
 
-            GL.Clear(ClearBufferMask.DepthBufferBit);
+            if(DrawVisualizationsInFront)
+                GL.Clear(ClearBufferMask.DepthBufferBit);
 
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
