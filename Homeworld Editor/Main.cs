@@ -43,6 +43,7 @@ namespace HomeworldDAEEditor
             Application.Idle += glControl_Update;
             Console.WriteLine("OpenTK initialized.");
             GraphicsContext.CurrentContext.SwapInterval = 1;
+            comboPerspectiveOrtho.SelectedIndex = 0;
 
             loaded = true;
 
@@ -256,6 +257,11 @@ namespace HomeworldDAEEditor
         private void glControl_MouseUp(object sender, MouseEventArgs e)
         {
             Program.Camera.MouseUp(e);
+        }
+
+        private void glControl_KeyDown(object sender, KeyEventArgs e)
+        {
+            Program.Camera.KeyDown(e);
         }
 
         private void jointsTree_AfterCheck(object sender, TreeViewEventArgs e)
@@ -716,6 +722,23 @@ namespace HomeworldDAEEditor
         private void buttonAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show(this, "Homeworld DAE Editor b" + BUILD + "\n\nDeveloped by Christoph (PayDay) Timmermann\nwith help from the Gearbox forums.\n\nUses\n - OpenTK\n - Assimp\n - Assimp.NET\n - FSharp\n - DevIL\n - DevILSharp", "Homeworld DAE Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        //Perspective-Orthographic combobox
+        private void comboPerspectiveOrtho_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboPerspectiveOrtho.SelectedIndex == 0)
+                Program.Camera.Orthographic = false;
+            else
+                Program.Camera.Orthographic = true;
+        }
+
+        public void UpdatePerspectiveOrthoCombo()
+        {
+            if (!Program.Camera.Orthographic)
+                comboPerspectiveOrtho.SelectedIndex = 0;
+            else
+                comboPerspectiveOrtho.SelectedIndex = 1;
         }
     }
 }

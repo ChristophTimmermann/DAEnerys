@@ -23,9 +23,10 @@ namespace HomeworldDAEEditor
             numericJointSize.Value = (decimal)EditorJoint.Size;
             numericMarkerSize.Value = (decimal)HWMarker.MarkerSize;
             numericZoomSpeed.Value = (decimal)Program.Camera.ZoomSpeed;
-            numericFarClip.Value = (decimal)Renderer.ClipDistance;
-            numericNearClip.Value = (decimal)Renderer.NearClipDistance;
+            numericFarClip.Value = (decimal)Program.Camera.ClipDistance;
+            numericNearClip.Value = (decimal)Program.Camera.NearClipDistance;
             buttonAmbientColor.BackColor = Color.FromArgb((int)Math.Round(Renderer.AmbientLight.Color.X * 255), (int)Math.Round(Renderer.AmbientLight.Color.Y * 255), (int)Math.Round(Renderer.AmbientLight.Color.Z * 255));
+            numericFOV.Value = (int)Math.Round(MathHelper.RadiansToDegrees(Program.Camera.FieldOfView));
         }
 
         private void numericJointSize_ValueChanged(object sender, EventArgs e)
@@ -53,7 +54,7 @@ namespace HomeworldDAEEditor
 
         private void numericClipDistance_ValueChanged(object sender, EventArgs e)
         {
-            Renderer.ClipDistance = (float)numericFarClip.Value;
+            Program.Camera.ClipDistance = (float)numericFarClip.Value;
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
@@ -62,7 +63,7 @@ namespace HomeworldDAEEditor
 
         private void numericNearClip_ValueChanged(object sender, EventArgs e)
         {
-            Renderer.NearClipDistance = (float)numericNearClip.Value;
+            Program.Camera.NearClipDistance = (float)numericNearClip.Value;
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
@@ -79,6 +80,14 @@ namespace HomeworldDAEEditor
 
                 Program.GLControl.Invalidate();
             }
+        }
+
+        private void numericFOV_ValueChanged(object sender, EventArgs e)
+        {
+            Program.Camera.FieldOfView = MathHelper.DegreesToRadians((float)numericFOV.Value);
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
         }
     }
 }

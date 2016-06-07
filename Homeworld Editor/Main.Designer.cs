@@ -47,6 +47,8 @@ namespace HomeworldDAEEditor
             this.labelShipMeshParent = new System.Windows.Forms.Label();
             this.comboShipMeshParent = new System.Windows.Forms.ComboBox();
             this.tabMaterials = new System.Windows.Forms.TabPage();
+            this.groupThrusterStrength = new System.Windows.Forms.GroupBox();
+            this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
             this.groupMaterialTextures = new System.Windows.Forms.GroupBox();
             this.listMaterialTextures = new System.Windows.Forms.ListBox();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -100,15 +102,16 @@ namespace HomeworldDAEEditor
             this.panelDockpathList = new System.Windows.Forms.Panel();
             this.dockpathList = new System.Windows.Forms.CheckedListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.glControl = new OpenTK.GLControl(new GraphicsMode(32, 24, 8, 4));
-            this.groupThrusterStrength = new System.Windows.Forms.GroupBox();
-            this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
+            this.glControl = new OpenTK.GLControl();
+            this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
             this.toolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabShipMeshes.SuspendLayout();
             this.groupShipMeshLODs.SuspendLayout();
             this.panelShipMesh.SuspendLayout();
             this.tabMaterials.SuspendLayout();
+            this.groupThrusterStrength.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
             this.groupMaterialTextures.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tabGoblins.SuspendLayout();
@@ -133,8 +136,6 @@ namespace HomeworldDAEEditor
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.groupThrusterStrength.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -288,6 +289,7 @@ namespace HomeworldDAEEditor
             // 
             this.comboShipMeshParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboShipMeshParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboShipMeshParent.Enabled = false;
             this.comboShipMeshParent.FormattingEnabled = true;
             this.comboShipMeshParent.Location = new System.Drawing.Point(53, 412);
@@ -307,6 +309,30 @@ namespace HomeworldDAEEditor
             this.tabMaterials.TabIndex = 6;
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
+            // 
+            // groupThrusterStrength
+            // 
+            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
+            this.groupThrusterStrength.Location = new System.Drawing.Point(8, 661);
+            this.groupThrusterStrength.Name = "groupThrusterStrength";
+            this.groupThrusterStrength.Size = new System.Drawing.Size(232, 47);
+            this.groupThrusterStrength.TabIndex = 2;
+            this.groupThrusterStrength.TabStop = false;
+            this.groupThrusterStrength.Text = "Thruster strength";
+            // 
+            // trackBarThrusterStrength
+            // 
+            this.trackBarThrusterStrength.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarThrusterStrength.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
+            this.trackBarThrusterStrength.Maximum = 100;
+            this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
+            this.trackBarThrusterStrength.Size = new System.Drawing.Size(226, 28);
+            this.trackBarThrusterStrength.TabIndex = 0;
+            this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarThrusterStrength.Scroll += new System.EventHandler(this.trackBarThrusterStrength_Scroll);
             // 
             // groupMaterialTextures
             // 
@@ -357,11 +383,12 @@ namespace HomeworldDAEEditor
             // 
             this.comboMaterialFormat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboMaterialFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.comboMaterialFormat.Enabled = false;
             this.comboMaterialFormat.FormattingEnabled = true;
             this.comboMaterialFormat.Location = new System.Drawing.Point(55, 351);
             this.comboMaterialFormat.Name = "comboMaterialFormat";
-            this.comboMaterialFormat.Size = new System.Drawing.Size(184, 21);
+            this.comboMaterialFormat.Size = new System.Drawing.Size(182, 21);
             this.comboMaterialFormat.TabIndex = 12;
             // 
             // boxMaterialShader
@@ -371,7 +398,7 @@ namespace HomeworldDAEEditor
             this.boxMaterialShader.Location = new System.Drawing.Point(55, 325);
             this.boxMaterialShader.Name = "boxMaterialShader";
             this.boxMaterialShader.ReadOnly = true;
-            this.boxMaterialShader.Size = new System.Drawing.Size(185, 20);
+            this.boxMaterialShader.Size = new System.Drawing.Size(182, 20);
             this.boxMaterialShader.TabIndex = 11;
             // 
             // listMaterials
@@ -454,6 +481,7 @@ namespace HomeworldDAEEditor
             // 
             this.comboGoblinMeshParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboGoblinMeshParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.comboGoblinMeshParent.Enabled = false;
             this.comboGoblinMeshParent.FormattingEnabled = true;
             this.comboGoblinMeshParent.Location = new System.Drawing.Point(56, 412);
@@ -509,6 +537,7 @@ namespace HomeworldDAEEditor
             // 
             this.comboCollisionMeshParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboCollisionMeshParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.comboCollisionMeshParent.Enabled = false;
             this.comboCollisionMeshParent.FormattingEnabled = true;
             this.comboCollisionMeshParent.Location = new System.Drawing.Point(56, 412);
@@ -949,40 +978,34 @@ namespace HomeworldDAEEditor
             this.glControl.VSync = true;
             this.glControl.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl_Render);
             this.glControl.Enter += new System.EventHandler(this.glControl_Enter);
+            this.glControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.glControl_KeyDown);
             this.glControl.Leave += new System.EventHandler(this.glControl_Leave);
             this.glControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseDown);
             this.glControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseUp);
             this.glControl.Resize += new System.EventHandler(this.glControl_Resize);
             // 
-            // groupThrusterStrength
+            // comboPerspectiveOrtho
             // 
-            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
-            this.groupThrusterStrength.Location = new System.Drawing.Point(8, 661);
-            this.groupThrusterStrength.Name = "groupThrusterStrength";
-            this.groupThrusterStrength.Size = new System.Drawing.Size(232, 47);
-            this.groupThrusterStrength.TabIndex = 2;
-            this.groupThrusterStrength.TabStop = false;
-            this.groupThrusterStrength.Text = "Thruster strength";
-            // 
-            // trackBarThrusterStrength
-            // 
-            this.trackBarThrusterStrength.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarThrusterStrength.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
-            this.trackBarThrusterStrength.Maximum = 100;
-            this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
-            this.trackBarThrusterStrength.Size = new System.Drawing.Size(226, 28);
-            this.trackBarThrusterStrength.TabIndex = 0;
-            this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarThrusterStrength.Scroll += new System.EventHandler(this.trackBarThrusterStrength_Scroll);
+            this.comboPerspectiveOrtho.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboPerspectiveOrtho.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboPerspectiveOrtho.FormattingEnabled = true;
+            this.comboPerspectiveOrtho.ItemHeight = 13;
+            this.comboPerspectiveOrtho.Items.AddRange(new object[] {
+            "Perspective",
+            "Orthographic"});
+            this.comboPerspectiveOrtho.Location = new System.Drawing.Point(1015, 2);
+            this.comboPerspectiveOrtho.MaxDropDownItems = 1;
+            this.comboPerspectiveOrtho.Name = "comboPerspectiveOrtho";
+            this.comboPerspectiveOrtho.Size = new System.Drawing.Size(105, 21);
+            this.comboPerspectiveOrtho.TabIndex = 5;
+            this.comboPerspectiveOrtho.SelectedIndexChanged += new System.EventHandler(this.comboPerspectiveOrtho_SelectedIndexChanged);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1123, 783);
+            this.Controls.Add(this.comboPerspectiveOrtho);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip);
             this.Name = "Main";
@@ -998,6 +1021,9 @@ namespace HomeworldDAEEditor
             this.panelShipMesh.PerformLayout();
             this.tabMaterials.ResumeLayout(false);
             this.tabMaterials.PerformLayout();
+            this.groupThrusterStrength.ResumeLayout(false);
+            this.groupThrusterStrength.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).EndInit();
             this.groupMaterialTextures.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -1030,9 +1056,6 @@ namespace HomeworldDAEEditor
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.groupThrusterStrength.ResumeLayout(false);
-            this.groupThrusterStrength.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1111,6 +1134,7 @@ namespace HomeworldDAEEditor
         private OpenTK.GLControl glControl;
         private System.Windows.Forms.GroupBox groupThrusterStrength;
         private System.Windows.Forms.TrackBar trackBarThrusterStrength;
+        private System.Windows.Forms.ComboBox comboPerspectiveOrtho;
     }
 }
 

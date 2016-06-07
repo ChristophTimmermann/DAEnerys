@@ -12,12 +12,27 @@ namespace HomeworldDAEEditor
         public Vector3 Position = new Vector3(0, 0, 15);
         public Vector3 Orientation = new Vector3((float)Math.PI, 0f, 0f);
 
+        public float NearClipDistance = 0.01f;
+        public float ClipDistance = 1000;
+        public float FieldOfView = 1.35f;
+
+        private bool orthographic;
+        public bool Orthographic { get { return orthographic; } set { orthographic = value; Update(true); } }
+
+        private float orthographicSize = 12;
+        public float OrthographicSize { get { return orthographicSize; } set { orthographicSize = value; Update(); } }
+        private float perspectiveZoom = 1;
+
+        private float lastOrthographicSize;
+
+        public float CalculatedZoom = 1;
         public float ZoomSpeed = 5;
 
         private Vector3 orbitPoint = Vector3.Zero;
 
         private float zoom = 1;
         public float Zoom { get { return zoom; } set { zoom = value; Update(); } }
+        
 
         private float lastZoom;
         private Vector2 angles = new Vector2((float)Math.PI, (float)Math.PI);
@@ -56,14 +71,86 @@ namespace HomeworldDAEEditor
             }
         }
 
-        public void Update()
+        public void KeyDown(System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.NumPad5) //Toggle orthographic view
+            {
+                this.Orthographic = !this.Orthographic;
+                if (this.Orthographic)
+                {
+                    this.perspectiveZoom = this.Zoom;
+                    this.Zoom = CalculatedZoom;
+                }
+                else
+                    this.Zoom = perspectiveZoom;
+
+                Program.main.UpdatePerspectiveOrthoCombo();
+                Renderer.UpdateView();
+                Program.GLControl.Invalidate();
+            }
+            else if (e.KeyCode == Keys.NumPad1) 
+            {
+                if (!e.Control) //Front view
+                {
+                    angles.X = (float)Math.PI;
+                    angles.Y = (float)Math.PI;
+                }
+                else //Back view
+                {
+                    angles.X = (float)Math.PI;
+                    angles.Y = 0;
+                }
+
+                UpdatePosition();
+                Renderer.UpdateView();
+                Program.GLControl.Invalidate();
+            }
+            else if (e.KeyCode == Keys.NumPad3) 
+            {
+                if (!e.Control) //Left side view
+                {
+                    angles.X = (float)Math.PI;
+                    angles.Y = (float)-Math.PI / 2;
+                }
+                else //Right side view
+                {
+                    angles.X = (float)Math.PI;
+                    angles.Y = (float)Math.PI / 2;
+                }
+
+                UpdatePosition();
+                Renderer.UpdateView();
+                Program.GLControl.Invalidate();
+            }
+            else if (e.KeyCode == Keys.NumPad7) 
+            {
+                if (!e.Control) //Top view
+                {
+                    angles.X = (float)Math.PI * 1.5f;
+                    angles.Y = (float)Math.PI;
+                }
+                else //Bottom view
+                {
+                    angles.X = 0;
+                    angles.Y = (float)Math.PI;
+                }
+
+                angles.X = (float)Utilities.Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
+
+                UpdatePosition();
+                Renderer.UpdateView();
+                Program.GLControl.Invalidate();
+            }
+        }
+
+        public void Update(bool forceUpdate = false)
         {
             MouseState mouse = Mouse.GetState();
             Point position = Cursor.Position;
 
-            if (Program.GLControl.Focused)
+            if (Program.GLControl.Focused || forceUpdate)
             {
-                if (mouse.RightButton == OpenTK.Input.ButtonState.Pressed)
+                if (mouse.RightButton == OpenTK.Input.ButtonState.Pressed || forceUpdate)
                 {
                     float deltaX = position.X - lastPos.X;
                     float deltaY = position.Y - lastPos.Y;
@@ -78,8 +165,18 @@ namespace HomeworldDAEEditor
                 }
 
                 float zoomDelta = mouse.WheelPrecise - lastWheelPrecise;
-                zoom -= zoomDelta * ZoomSpeed * 0.01f;
-                zoom = Utilities.Utilities.Clamp(zoom, 0.001f, 50000);
+
+                if (!this.Orthographic)
+                {
+                    zoom -= zoomDelta * ZoomSpeed * 0.01f;
+                    zoom = Utilities.Utilities.Clamp(zoom, 0.001f, 500000);
+                }
+                else
+                {
+                    orthographicSize += zoomDelta * (orthographicSize / 30);
+                    orthographicSize = Utilities.Utilities.Clamp(orthographicSize, 0.0001f, 100);
+                    Console.WriteLine(orthographicSize);
+                }
             }
 
             if (lastZoom != zoom)
@@ -88,10 +185,26 @@ namespace HomeworldDAEEditor
                 Program.GLControl.Invalidate();
             }
 
+            if (lastOrthographicSize != orthographicSize)
+            {
+                Renderer.UpdateView();
+                Program.GLControl.Invalidate();
+            }
+
             lastPos = position;
             lastZoom = zoom;
+            lastOrthographicSize = orthographicSize;
             lastWheelPrecise = mouse.WheelPrecise;
-            Position = orbitPoint + Vector3.Transform(new Vector3(0, 0, zoom), Matrix3.CreateRotationX(angles.X) * Matrix3.CreateRotationY(angles.Y));
+
+            UpdatePosition();
+        }
+
+        private void UpdatePosition()
+        {
+            if (!this.Orthographic)
+                Position = orbitPoint + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix3.CreateRotationX(angles.X) * Matrix3.CreateRotationY(angles.Y));
+            else
+                Position = orbitPoint + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix3.CreateRotationX(angles.X) * Matrix3.CreateRotationY(angles.Y));
         }
 
         public Matrix4 GetViewMatrix()

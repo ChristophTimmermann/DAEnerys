@@ -12,9 +12,6 @@ namespace HomeworldDAEEditor
     {
         static Dictionary<string, Shader> shaders = new Dictionary<string, Shader>();
 
-        public static float NearClipDistance = 0.01f;
-        public static float ClipDistance = 1000;
-
         public static HWTexture defaultTexture = new HWTexture(@"resources/missing.tga");
 
         public static Light AmbientLight = new Light(new Vector4(0, 0, 0, 0), new Vector3(0.5f), 1, 0.000005f);
@@ -145,7 +142,12 @@ namespace HomeworldDAEEditor
                 if (mesh.Visible)
                 {
                     mesh.CalculateModelMatrix();
-                    mesh.ViewProjectionMatrix = View * Matrix4.CreatePerspectiveFieldOfView(1.3f, (float)Program.GLControl.Width / (float)Program.GLControl.Height, NearClipDistance, ClipDistance);
+
+                    if(!Program.Camera.Orthographic)
+                        mesh.ViewProjectionMatrix = View * Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+                    else
+                        mesh.ViewProjectionMatrix = View * Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+
                     mesh.ModelViewProjectionMatrix = mesh.ModelMatrix * mesh.ViewProjectionMatrix;
                 }
             }
@@ -155,7 +157,12 @@ namespace HomeworldDAEEditor
                 if (mesh.Visible)
                 {
                     mesh.CalculateModelMatrix();
-                    mesh.ViewProjectionMatrix = View * Matrix4.CreatePerspectiveFieldOfView(1.3f, (float)Program.GLControl.Width / (float)Program.GLControl.Height, NearClipDistance, ClipDistance);
+
+                    if (!Program.Camera.Orthographic)
+                        mesh.ViewProjectionMatrix = View * Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+                    else
+                        mesh.ViewProjectionMatrix = View * Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+
                     mesh.ModelViewProjectionMatrix = mesh.ModelMatrix * mesh.ViewProjectionMatrix;
                 }
             }
@@ -331,7 +338,13 @@ namespace HomeworldDAEEditor
         public static void Resize()
         {
             GL.Viewport(Program.GLControl.ClientRectangle.X, Program.GLControl.ClientRectangle.Y, Program.GLControl.ClientRectangle.Width, Program.GLControl.ClientRectangle.Height);
-            Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, (float)Program.GLControl.Width / (float)Program.GLControl.Height, NearClipDistance, ClipDistance);
+
+            Matrix4 projection = Matrix4.Identity;
+            if(!Program.Camera.Orthographic)
+                projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+            else
+                projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projection);
         }

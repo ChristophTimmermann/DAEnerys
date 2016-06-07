@@ -20,6 +20,7 @@ namespace HomeworldDAEEditor
         public static Vector3 Max = Vector3.Zero;
         public static HWShipMeshLOD BiggestMesh = null;
 
+
         public static List<HWMesh> Meshes = new List<HWMesh>();
         public static List<HWShipMesh> ShipMeshes = new List<HWShipMesh>();
         public static List<HWGoblinMesh> GoblinMeshes = new List<HWGoblinMesh>();
@@ -285,11 +286,12 @@ namespace HomeworldDAEEditor
             float nearClip = farthest / 16;
 
             Program.Camera.Zoom = farthest * 1.2f;
+            Program.Camera.CalculatedZoom = Program.Camera.Zoom;
             Program.Camera.ZoomSpeed = zoomSpeed;
             EditorJoint.Size = jointSize;
             HWMarker.MarkerSize = markerSize;
-            Renderer.ClipDistance = farClip;
-            Renderer.NearClipDistance = nearClip;
+            Program.Camera.ClipDistance = farClip;
+            Program.Camera.NearClipDistance = nearClip;
         }
 
         public static void SaveCollada(string path)
