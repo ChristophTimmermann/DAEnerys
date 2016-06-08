@@ -14,14 +14,11 @@ namespace HomeworldDAEEditor
         public ImageFormat Format = ImageFormat.DXT1;
 
         public Vector3 DiffuseColor = new Vector3(1, 1, 1);
-        public Vector3 SpecularColor = new Vector3(0.3f);
+        public Vector3 SpecularColor = new Vector3(1);
         public float SpecularExponent = 20;
         public float Opacity = 1.0f;
 
         public string DiffuseMap = "";
-        public string GlowMap = "";
-        public string ThrusterOffDiffuseMap = "";
-        public string ThrusterOffGlowMap = "";
 
         public object MaterialListItem;
 
@@ -29,6 +26,8 @@ namespace HomeworldDAEEditor
         public HWTexture GlowTexture;
         public HWTexture ThrusterOffDiffuseTexture;
         public HWTexture ThrusterOffGlowTexture;
+        public HWTexture NormalTexture;
+        public HWTexture SpecularTexture;
 
         public List<HWImage> Images = new List<HWImage>();
 
@@ -109,17 +108,20 @@ namespace HomeworldDAEEditor
                                     {
                                         switch(suffix)
                                         {
-                                           case "GLOW":
+                                            case "GLOW":
                                                 GlowTexture = new HWTexture(file);
-                                                GlowMap = Path.GetFileName(file);
                                                 break;
                                             case "GLOX":
                                                 ThrusterOffGlowTexture = new HWTexture(file);
-                                                ThrusterOffGlowMap = Path.GetFileName(file);
                                                 break;
                                             case "DIFX":
                                                 ThrusterOffDiffuseTexture = new HWTexture(file);
-                                                ThrusterOffDiffuseMap = Path.GetFileName(file);
+                                                break;
+                                            case "NORM":
+                                                NormalTexture = new HWTexture(file);
+                                                break;
+                                            case "SPEC":
+                                                SpecularTexture = new HWTexture(file);
                                                 break;
                                         }
 

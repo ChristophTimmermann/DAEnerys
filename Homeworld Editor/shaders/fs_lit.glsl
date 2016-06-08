@@ -8,6 +8,7 @@ uniform sampler2D materialTex;
 uniform sampler2D glowTex;
 uniform sampler2D thrusterOffDiff;
 uniform sampler2D thrusterOffGlow;
+uniform sampler2D specularTex;
 
 uniform float thrusterInterpolation;
 
@@ -19,6 +20,7 @@ uniform bool shaded;
 uniform bool emissive;
 uniform bool discreteGlow;
 uniform bool thruster;
+uniform bool specular;
 
 //array of lights
 #define MAX_LIGHTS 10
@@ -39,7 +41,7 @@ in vec3 fragVert;
 
 out vec4 finalColor;
 
-vec3 ApplyLight(Light light, vec3 surfaceColor, vec3 normal, vec3 surfacePos, vec3 surfaceToCamera) 
+vec3 ApplyLight(Light light, vec3 surfaceColor, vec3 normal, vec3 surfacePos, vec3 surfaceToCamera, float specularIntensity) 
 {
     vec3 surfaceToLight;
     float attenuation = 1.0;
@@ -63,12 +65,13 @@ vec3 ApplyLight(Light light, vec3 surfaceColor, vec3 normal, vec3 surfacePos, ve
     //diffuse
     float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));
     vec3 diffuse = diffuseCoefficient * surfaceColor.rgb * light.intensities;
-    
+	
     //specular
     float specularCoefficient = 0.0;
+	
     if(diffuseCoefficient > 0.0)
         specularCoefficient = pow(max(0.0, dot(surfaceToCamera, reflect(-surfaceToLight, normal))), materialShininess);
-    vec3 specular = specularCoefficient * materialSpecularColor * light.intensities;
+    vec3 specular = specularCoefficient * materialSpecularColor * light.intensities * specularIntensity * 2;
 
     //linear color (color before gamma correction)
     return ambient + attenuation*(diffuse + specular);
@@ -96,10 +99,17 @@ void main()
 		
 		vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
 		
+		float specularIntensity = 1;
+		if(specular)
+		{
+			vec4 specularMap = texture(specularTex, fragTexCoord);
+			specularIntensity = specularMap.x;
+		}
+		
 		vec3 linearColor = vec3(0);
 		for(int i = 0; i < numLights; ++i)
 		{
-			linearColor += ApplyLight(allLights[i], surfaceColor.rgb, normal, surfacePos, surfaceToCamera);
+			linearColor += ApplyLight(allLights[i], surfaceColor.rgb, normal, surfacePos, surfaceToCamera, specularIntensity);
 		}
 	
 		//GLOW

@@ -206,6 +206,26 @@ namespace HomeworldDAEEditor
             return normalsList.ToArray();
         }
 
+        public Vector3[] GetTangents()
+        {
+            List<Vector3> tangentsList = new List<Vector3>();
+            foreach (Vector3D tangent in mesh.Tangents)
+            {
+                tangentsList.Add(new Vector3(tangent.X, tangent.Y, tangent.Z));
+            }
+            return tangentsList.ToArray();
+        }
+
+        public Vector3[] GetBiTangents()
+        {
+            List<Vector3> biTangentsList = new List<Vector3>();
+            foreach (Vector3D biTangent in mesh.BiTangents)
+            {
+                biTangentsList.Add(new Vector3(biTangent.X, biTangent.Y, biTangent.Z));
+            }
+            return biTangentsList.ToArray();
+        }
+
         public int[] GetIndices(int offset = 0)
         {
             int[] indices = mesh.GetIndices();

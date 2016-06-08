@@ -162,7 +162,7 @@ namespace HomeworldDAEEditor
                 {
                     mesh.CalculateModelMatrix();
 
-                    if(!Program.Camera.Orthographic)
+                    if (!Program.Camera.Orthographic)
                         mesh.ViewProjectionMatrix = View * Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
                     else
                         mesh.ViewProjectionMatrix = View * Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
@@ -222,11 +222,11 @@ namespace HomeworldDAEEditor
                         }
                         else
                         {
-                            GL.Uniform1(shaders[activeShader].GetUniform("glowTex"), 0); //Tell shader that it is not a discrete GLOW map
+                            GL.Uniform1(shaders[activeShader].GetUniform("glowTex"), 0);
                             GL.Uniform1(shaders[activeShader].GetUniform("emissive"), 0); //Tell shader to not use a GLOW map
                         }
 
-                        if(mesh.Material.Shader == "thruster") //If the mesh material is a thruster
+                        if (mesh.Material.Shader == "thruster") //If the mesh material is a thruster
                         {
                             if (mesh.Material.ThrusterOffDiffuseTexture != null)
                             {
@@ -249,6 +249,20 @@ namespace HomeworldDAEEditor
                             GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffDiff"), 0);
                             GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffGlow"), 0);
                             GL.Uniform1(shaders[activeShader].GetUniform("thruster"), 0); //Tell shader not to interpolate between thruster textures
+                        }
+
+                        //--------------------------------------------------------- SPECULAR MAPPING -------------------------------------------------------------//
+                        if (mesh.Material.SpecularTexture != null) //Check if the material has a SPEC-Map
+                        {
+                            GL.ActiveTexture(TextureUnit.Texture4);
+                            GL.BindTexture(TextureTarget.Texture2D, mesh.Material.SpecularTexture.ID);
+                            GL.Uniform1(shaders[activeShader].GetUniform("specularTex"), 4);
+                            GL.Uniform1(shaders[activeShader].GetUniform("specular"), 1); //Tell shader to use a SPEC map
+                        }
+                        else
+                        {
+                            GL.Uniform1(shaders[activeShader].GetUniform("specularTex"), 0);
+                            GL.Uniform1(shaders[activeShader].GetUniform("specular"), 0); //Tell shader to not use a SPEC map
                         }
 
                         GL.ActiveTexture(TextureUnit.Texture0);
@@ -291,7 +305,7 @@ namespace HomeworldDAEEditor
                 }
             }
 
-            if(DrawVisualizationsInFront)
+            if (DrawVisualizationsInFront)
                 GL.Clear(ClearBufferMask.DepthBufferBit);
 
             foreach (EditorMesh mesh in EditorScene.meshes)
@@ -360,7 +374,7 @@ namespace HomeworldDAEEditor
             GL.Viewport(Program.GLControl.ClientRectangle.X, Program.GLControl.ClientRectangle.Y, Program.GLControl.ClientRectangle.Width, Program.GLControl.ClientRectangle.Height);
 
             Matrix4 projection = Matrix4.Identity;
-            if(!Program.Camera.Orthographic)
+            if (!Program.Camera.Orthographic)
                 projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
             else
                 projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
