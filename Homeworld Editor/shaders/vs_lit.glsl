@@ -14,7 +14,8 @@ out vec3 fragColor;
 out vec2 fragTexCoord;
 out vec3 fragNormal;
 
-void main() {
+void main() 
+{
     gl_Position = modelview * vec4(vert, 1.0);
 	
     fragTexCoord = vertTexCoord;

@@ -22,5 +22,6 @@ namespace HomeworldDAEEditor
         public Vector3 Color = new Vector3();
         public float Attenuation;
         public float AmbientCoefficient;
+        public bool Enabled = true;
     }
 }

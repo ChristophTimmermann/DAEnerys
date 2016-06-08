@@ -27,10 +27,11 @@ uniform bool specular;
 uniform int numLights;
 uniform struct Light
 {
-   vec4 position;
-   vec3 intensities; //a.k.a the color of the light
-   float attenuation;
-   float ambientCoefficient;
+	bool enabled;
+    vec4 position;
+    vec3 intensities; //a.k.a the color of the light
+    float attenuation;
+    float ambientCoefficient;
 } 
 allLights[MAX_LIGHTS];
 
@@ -74,7 +75,7 @@ vec3 ApplyLight(Light light, vec3 surfaceColor, vec3 normal, vec3 surfacePos, ve
     vec3 specular = specularCoefficient * materialSpecularColor * light.intensities * specularIntensity * 2;
 
     //linear color (color before gamma correction)
-    return ambient + attenuation*(diffuse + specular);
+    return ambient + attenuation *(diffuse + specular);
 }
 
 void main() 
@@ -109,7 +110,8 @@ void main()
 		vec3 linearColor = vec3(0);
 		for(int i = 0; i < numLights; ++i)
 		{
-			linearColor += ApplyLight(allLights[i], surfaceColor.rgb, normal, surfacePos, surfaceToCamera, specularIntensity);
+			if(allLights[i].enabled)
+				linearColor += ApplyLight(allLights[i], surfaceColor.rgb, normal, surfacePos, surfaceToCamera, specularIntensity);
 		}
 	
 		//GLOW
@@ -125,7 +127,7 @@ void main()
 			if(!discreteGlow)
 			{
 				float glowValue = glowMap.x;
-				linearColor += vec3(surfaceColor.r, surfaceColor.g, surfaceColor.b) * glowValue * 2;
+				linearColor += vec3(surfaceColor.r, surfaceColor.g, surfaceColor.b) * glowValue;
 			}
 			else
 			{
