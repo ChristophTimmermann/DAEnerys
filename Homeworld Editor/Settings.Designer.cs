@@ -42,6 +42,7 @@
             this.labelNearClip = new System.Windows.Forms.Label();
             this.numericNearClip = new System.Windows.Forms.NumericUpDown();
             this.groupEditor = new System.Windows.Forms.GroupBox();
+            this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
             this.numericMarkerSize = new System.Windows.Forms.NumericUpDown();
             this.numericJointSize = new System.Windows.Forms.NumericUpDown();
             this.groupLighting = new System.Windows.Forms.GroupBox();
@@ -50,7 +51,12 @@
             this.buttonAmbientColor = new System.Windows.Forms.Button();
             this.labelAmbientColor = new System.Windows.Forms.Label();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
+            this.groupDataPaths = new System.Windows.Forms.GroupBox();
+            this.buttonRemoveDataPath = new System.Windows.Forms.Button();
+            this.buttonAddDataPath = new System.Windows.Forms.Button();
+            this.listDataPaths = new System.Windows.Forms.ListBox();
+            this.addDataPathDialog = new System.Windows.Forms.OpenFileDialog();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -60,6 +66,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericMarkerSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).BeginInit();
             this.groupLighting.SuspendLayout();
+            this.groupDataPaths.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelJointSize
@@ -281,6 +288,19 @@
             this.groupEditor.TabStop = false;
             this.groupEditor.Text = "Editor";
             // 
+            // checkRenderOnTop
+            // 
+            this.checkRenderOnTop.AutoSize = true;
+            this.checkRenderOnTop.Checked = true;
+            this.checkRenderOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkRenderOnTop.Location = new System.Drawing.Point(11, 71);
+            this.checkRenderOnTop.Name = "checkRenderOnTop";
+            this.checkRenderOnTop.Size = new System.Drawing.Size(151, 17);
+            this.checkRenderOnTop.TabIndex = 17;
+            this.checkRenderOnTop.Text = "Draw visualizations in front";
+            this.checkRenderOnTop.UseVisualStyleBackColor = true;
+            this.checkRenderOnTop.CheckedChanged += new System.EventHandler(this.checkRenderOnTop_CheckedChanged);
+            // 
             // numericMarkerSize
             // 
             this.numericMarkerSize.DecimalPlaces = 3;
@@ -390,18 +410,64 @@
             this.colorDialog.Color = System.Drawing.Color.Gray;
             this.colorDialog.SolidColorOnly = true;
             // 
-            // checkRenderOnTop
+            // groupDataPaths
             // 
-            this.checkRenderOnTop.AutoSize = true;
-            this.checkRenderOnTop.Checked = true;
-            this.checkRenderOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkRenderOnTop.Location = new System.Drawing.Point(11, 71);
-            this.checkRenderOnTop.Name = "checkRenderOnTop";
-            this.checkRenderOnTop.Size = new System.Drawing.Size(151, 17);
-            this.checkRenderOnTop.TabIndex = 17;
-            this.checkRenderOnTop.Text = "Draw visualizations in front";
-            this.checkRenderOnTop.UseVisualStyleBackColor = true;
-            this.checkRenderOnTop.CheckedChanged += new System.EventHandler(this.checkRenderOnTop_CheckedChanged);
+            this.groupDataPaths.AutoSize = true;
+            this.groupDataPaths.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupDataPaths.Controls.Add(this.label1);
+            this.groupDataPaths.Controls.Add(this.buttonRemoveDataPath);
+            this.groupDataPaths.Controls.Add(this.buttonAddDataPath);
+            this.groupDataPaths.Controls.Add(this.listDataPaths);
+            this.groupDataPaths.Location = new System.Drawing.Point(13, 385);
+            this.groupDataPaths.Name = "groupDataPaths";
+            this.groupDataPaths.Size = new System.Drawing.Size(329, 188);
+            this.groupDataPaths.TabIndex = 19;
+            this.groupDataPaths.TabStop = false;
+            this.groupDataPaths.Text = "Data paths";
+            // 
+            // buttonRemoveDataPath
+            // 
+            this.buttonRemoveDataPath.Location = new System.Drawing.Point(168, 120);
+            this.buttonRemoveDataPath.Name = "buttonRemoveDataPath";
+            this.buttonRemoveDataPath.Size = new System.Drawing.Size(155, 23);
+            this.buttonRemoveDataPath.TabIndex = 24;
+            this.buttonRemoveDataPath.Text = "Remove";
+            this.buttonRemoveDataPath.UseVisualStyleBackColor = true;
+            this.buttonRemoveDataPath.Click += new System.EventHandler(this.buttonRemoveDataPath_Click);
+            // 
+            // buttonAddDataPath
+            // 
+            this.buttonAddDataPath.Location = new System.Drawing.Point(6, 120);
+            this.buttonAddDataPath.Name = "buttonAddDataPath";
+            this.buttonAddDataPath.Size = new System.Drawing.Size(156, 23);
+            this.buttonAddDataPath.TabIndex = 23;
+            this.buttonAddDataPath.Text = "Add";
+            this.buttonAddDataPath.UseVisualStyleBackColor = true;
+            this.buttonAddDataPath.Click += new System.EventHandler(this.buttonAddDataPath_Click);
+            // 
+            // listDataPaths
+            // 
+            this.listDataPaths.FormattingEnabled = true;
+            this.listDataPaths.HorizontalScrollbar = true;
+            this.listDataPaths.Location = new System.Drawing.Point(6, 19);
+            this.listDataPaths.Name = "listDataPaths";
+            this.listDataPaths.Size = new System.Drawing.Size(317, 95);
+            this.listDataPaths.TabIndex = 22;
+            // 
+            // addDataPathDialog
+            // 
+            this.addDataPathDialog.FileName = "keeper.txt";
+            this.addDataPathDialog.Filter = "Data roots|keeper.txt";
+            this.addDataPathDialog.Title = "Select keeper.txt in data root folder";
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(6, 146);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(317, 26);
+            this.label1.TabIndex = 25;
+            this.label1.Text = "The order of the paths matter. Files in lower paths will overwrite files in the p" +
+    "aths above them.";
             // 
             // Settings
             // 
@@ -409,7 +475,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(407, 455);
+            this.ClientSize = new System.Drawing.Size(374, 628);
+            this.Controls.Add(this.groupDataPaths);
             this.Controls.Add(this.groupLighting);
             this.Controls.Add(this.groupEditor);
             this.Controls.Add(this.groupCamera);
@@ -431,6 +498,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).EndInit();
             this.groupLighting.ResumeLayout(false);
             this.groupLighting.PerformLayout();
+            this.groupDataPaths.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -461,5 +529,11 @@
         private System.Windows.Forms.Label labelFSAASamples;
         private System.Windows.Forms.ComboBox comboFSAASamples;
         private System.Windows.Forms.CheckBox checkRenderOnTop;
+        private System.Windows.Forms.GroupBox groupDataPaths;
+        private System.Windows.Forms.Button buttonRemoveDataPath;
+        private System.Windows.Forms.Button buttonAddDataPath;
+        private System.Windows.Forms.ListBox listDataPaths;
+        private System.Windows.Forms.OpenFileDialog addDataPathDialog;
+        private System.Windows.Forms.Label label1;
     }
 }

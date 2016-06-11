@@ -51,7 +51,7 @@ namespace HomeworldDAEEditor
             this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
             this.groupMaterialTextures = new System.Windows.Forms.GroupBox();
             this.listMaterialTextures = new System.Windows.Forms.ListBox();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.panelMaterialsList = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.comboMaterialFormat = new System.Windows.Forms.ComboBox();
             this.boxMaterialShader = new System.Windows.Forms.TextBox();
@@ -101,8 +101,29 @@ namespace HomeworldDAEEditor
             this.listDockpathFamilies = new System.Windows.Forms.ListBox();
             this.panelDockpathList = new System.Windows.Forms.Panel();
             this.dockpathList = new System.Windows.Forms.CheckedListBox();
+            this.tabNavLights = new System.Windows.Forms.TabPage();
+            this.groupNavLightParameters = new System.Windows.Forms.GroupBox();
+            this.comboNavLightType = new System.Windows.Forms.ComboBox();
+            this.labelNavLightDistance = new System.Windows.Forms.Label();
+            this.numericNavLightDistance = new System.Windows.Forms.NumericUpDown();
+            this.labelNavLightColor = new System.Windows.Forms.Label();
+            this.buttonNavLightColor = new System.Windows.Forms.Button();
+            this.labelNavLightFrequency = new System.Windows.Forms.Label();
+            this.numericNavLightFrequency = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.numericNavLightPhase = new System.Windows.Forms.NumericUpDown();
+            this.labelNavLightSize = new System.Windows.Forms.Label();
+            this.numericNavLightSize = new System.Windows.Forms.NumericUpDown();
+            this.labelNavLightType = new System.Windows.Forms.Label();
+            this.groupNavLightFlags = new System.Windows.Forms.GroupBox();
+            this.checkNavLightFlagHighEnd = new System.Windows.Forms.CheckBox();
+            this.checkNavLightFlagSprite = new System.Windows.Forms.CheckBox();
+            this.panelNavLightList = new System.Windows.Forms.Panel();
+            this.navLightList = new System.Windows.Forms.CheckedListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
+            this.groupNavLightPreview = new System.Windows.Forms.GroupBox();
+            this.checkNavLightDrawRadius = new System.Windows.Forms.CheckBox();
             this.toolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabShipMeshes.SuspendLayout();
@@ -112,7 +133,7 @@ namespace HomeworldDAEEditor
             this.groupThrusterStrength.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
             this.groupMaterialTextures.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.panelMaterialsList.SuspendLayout();
             this.tabGoblins.SuspendLayout();
             this.panelGoblins.SuspendLayout();
             this.tabCollisionMeshes.SuspendLayout();
@@ -131,9 +152,18 @@ namespace HomeworldDAEEditor
             this.groupDockpathLinks.SuspendLayout();
             this.groupDockpathFamilies.SuspendLayout();
             this.panelDockpathList.SuspendLayout();
+            this.tabNavLights.SuspendLayout();
+            this.groupNavLightParameters.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightDistance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightFrequency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightPhase)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightSize)).BeginInit();
+            this.groupNavLightFlags.SuspendLayout();
+            this.panelNavLightList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupNavLightPreview.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -197,22 +227,23 @@ namespace HomeworldDAEEditor
             this.tabControl.Controls.Add(this.tabJoints);
             this.tabControl.Controls.Add(this.tabMarkers);
             this.tabControl.Controls.Add(this.tabDockpaths);
+            this.tabControl.Controls.Add(this.tabNavLights);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(254, 758);
+            this.tabControl.Size = new System.Drawing.Size(250, 758);
             this.tabControl.TabIndex = 0;
             // 
             // tabShipMeshes
             // 
             this.tabShipMeshes.Controls.Add(this.groupShipMeshLODs);
             this.tabShipMeshes.Controls.Add(this.panelShipMesh);
-            this.tabShipMeshes.Location = new System.Drawing.Point(4, 40);
+            this.tabShipMeshes.Location = new System.Drawing.Point(4, 58);
             this.tabShipMeshes.Name = "tabShipMeshes";
             this.tabShipMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabShipMeshes.Size = new System.Drawing.Size(246, 714);
+            this.tabShipMeshes.Size = new System.Drawing.Size(242, 696);
             this.tabShipMeshes.TabIndex = 0;
             this.tabShipMeshes.Text = "Ship Meshes";
             this.tabShipMeshes.UseVisualStyleBackColor = true;
@@ -224,7 +255,7 @@ namespace HomeworldDAEEditor
             this.groupShipMeshLODs.Controls.Add(this.listShipMeshLODs);
             this.groupShipMeshLODs.Location = new System.Drawing.Point(8, 471);
             this.groupShipMeshLODs.Name = "groupShipMeshLODs";
-            this.groupShipMeshLODs.Size = new System.Drawing.Size(232, 240);
+            this.groupShipMeshLODs.Size = new System.Drawing.Size(228, 240);
             this.groupShipMeshLODs.TabIndex = 1;
             this.groupShipMeshLODs.TabStop = false;
             this.groupShipMeshLODs.Text = "Level of detail(s)";
@@ -236,7 +267,7 @@ namespace HomeworldDAEEditor
             this.listShipMeshLODs.FormattingEnabled = true;
             this.listShipMeshLODs.Location = new System.Drawing.Point(3, 16);
             this.listShipMeshLODs.Name = "listShipMeshLODs";
-            this.listShipMeshLODs.Size = new System.Drawing.Size(226, 221);
+            this.listShipMeshLODs.Size = new System.Drawing.Size(222, 221);
             this.listShipMeshLODs.TabIndex = 0;
             this.listShipMeshLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listShipMeshLODs_ItemCheck);
             // 
@@ -249,7 +280,7 @@ namespace HomeworldDAEEditor
             this.panelShipMesh.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelShipMesh.Location = new System.Drawing.Point(3, 3);
             this.panelShipMesh.Name = "panelShipMesh";
-            this.panelShipMesh.Size = new System.Drawing.Size(240, 462);
+            this.panelShipMesh.Size = new System.Drawing.Size(236, 462);
             this.panelShipMesh.TabIndex = 0;
             // 
             // checkShipMeshDoScar
@@ -270,7 +301,7 @@ namespace HomeworldDAEEditor
             this.listShipMeshes.FormattingEnabled = true;
             this.listShipMeshes.Location = new System.Drawing.Point(3, 3);
             this.listShipMeshes.Name = "listShipMeshes";
-            this.listShipMeshes.Size = new System.Drawing.Size(234, 407);
+            this.listShipMeshes.Size = new System.Drawing.Size(230, 407);
             this.listShipMeshes.TabIndex = 10;
             this.listShipMeshes.SelectedIndexChanged += new System.EventHandler(this.listShipMeshes_SelectedIndexChanged);
             // 
@@ -292,18 +323,18 @@ namespace HomeworldDAEEditor
             this.comboShipMeshParent.FormattingEnabled = true;
             this.comboShipMeshParent.Location = new System.Drawing.Point(53, 412);
             this.comboShipMeshParent.Name = "comboShipMeshParent";
-            this.comboShipMeshParent.Size = new System.Drawing.Size(184, 21);
+            this.comboShipMeshParent.Size = new System.Drawing.Size(180, 21);
             this.comboShipMeshParent.TabIndex = 8;
             // 
             // tabMaterials
             // 
             this.tabMaterials.Controls.Add(this.groupThrusterStrength);
             this.tabMaterials.Controls.Add(this.groupMaterialTextures);
-            this.tabMaterials.Controls.Add(this.panel2);
-            this.tabMaterials.Location = new System.Drawing.Point(4, 40);
+            this.tabMaterials.Controls.Add(this.panelMaterialsList);
+            this.tabMaterials.Location = new System.Drawing.Point(4, 58);
             this.tabMaterials.Name = "tabMaterials";
             this.tabMaterials.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMaterials.Size = new System.Drawing.Size(246, 714);
+            this.tabMaterials.Size = new System.Drawing.Size(242, 696);
             this.tabMaterials.TabIndex = 6;
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
@@ -315,7 +346,7 @@ namespace HomeworldDAEEditor
             this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
             this.groupThrusterStrength.Location = new System.Drawing.Point(8, 661);
             this.groupThrusterStrength.Name = "groupThrusterStrength";
-            this.groupThrusterStrength.Size = new System.Drawing.Size(232, 47);
+            this.groupThrusterStrength.Size = new System.Drawing.Size(228, 47);
             this.groupThrusterStrength.TabIndex = 2;
             this.groupThrusterStrength.TabStop = false;
             this.groupThrusterStrength.Text = "Thruster strength";
@@ -327,7 +358,7 @@ namespace HomeworldDAEEditor
             this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
             this.trackBarThrusterStrength.Maximum = 100;
             this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
-            this.trackBarThrusterStrength.Size = new System.Drawing.Size(226, 28);
+            this.trackBarThrusterStrength.Size = new System.Drawing.Size(222, 28);
             this.trackBarThrusterStrength.TabIndex = 0;
             this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarThrusterStrength.Value = 100;
@@ -340,7 +371,7 @@ namespace HomeworldDAEEditor
             this.groupMaterialTextures.Controls.Add(this.listMaterialTextures);
             this.groupMaterialTextures.Location = new System.Drawing.Point(8, 384);
             this.groupMaterialTextures.Name = "groupMaterialTextures";
-            this.groupMaterialTextures.Size = new System.Drawing.Size(232, 271);
+            this.groupMaterialTextures.Size = new System.Drawing.Size(228, 271);
             this.groupMaterialTextures.TabIndex = 1;
             this.groupMaterialTextures.TabStop = false;
             this.groupMaterialTextures.Text = "Textures";
@@ -351,23 +382,23 @@ namespace HomeworldDAEEditor
             this.listMaterialTextures.FormattingEnabled = true;
             this.listMaterialTextures.Location = new System.Drawing.Point(3, 16);
             this.listMaterialTextures.Name = "listMaterialTextures";
-            this.listMaterialTextures.Size = new System.Drawing.Size(226, 252);
+            this.listMaterialTextures.Size = new System.Drawing.Size(222, 252);
             this.listMaterialTextures.TabIndex = 0;
             // 
-            // panel2
+            // panelMaterialsList
             // 
-            this.panel2.AutoSize = true;
-            this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.comboMaterialFormat);
-            this.panel2.Controls.Add(this.boxMaterialShader);
-            this.panel2.Controls.Add(this.listMaterials);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(3, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(240, 375);
-            this.panel2.TabIndex = 0;
+            this.panelMaterialsList.AutoSize = true;
+            this.panelMaterialsList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panelMaterialsList.Controls.Add(this.label3);
+            this.panelMaterialsList.Controls.Add(this.comboMaterialFormat);
+            this.panelMaterialsList.Controls.Add(this.boxMaterialShader);
+            this.panelMaterialsList.Controls.Add(this.listMaterials);
+            this.panelMaterialsList.Controls.Add(this.label2);
+            this.panelMaterialsList.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelMaterialsList.Location = new System.Drawing.Point(3, 3);
+            this.panelMaterialsList.Name = "panelMaterialsList";
+            this.panelMaterialsList.Size = new System.Drawing.Size(236, 375);
+            this.panelMaterialsList.TabIndex = 0;
             // 
             // label3
             // 
@@ -387,7 +418,7 @@ namespace HomeworldDAEEditor
             this.comboMaterialFormat.FormattingEnabled = true;
             this.comboMaterialFormat.Location = new System.Drawing.Point(55, 351);
             this.comboMaterialFormat.Name = "comboMaterialFormat";
-            this.comboMaterialFormat.Size = new System.Drawing.Size(182, 21);
+            this.comboMaterialFormat.Size = new System.Drawing.Size(178, 21);
             this.comboMaterialFormat.TabIndex = 12;
             // 
             // boxMaterialShader
@@ -397,7 +428,7 @@ namespace HomeworldDAEEditor
             this.boxMaterialShader.Location = new System.Drawing.Point(55, 325);
             this.boxMaterialShader.Name = "boxMaterialShader";
             this.boxMaterialShader.ReadOnly = true;
-            this.boxMaterialShader.Size = new System.Drawing.Size(182, 20);
+            this.boxMaterialShader.Size = new System.Drawing.Size(178, 20);
             this.boxMaterialShader.TabIndex = 11;
             // 
             // listMaterials
@@ -407,7 +438,7 @@ namespace HomeworldDAEEditor
             this.listMaterials.FormattingEnabled = true;
             this.listMaterials.Location = new System.Drawing.Point(3, 3);
             this.listMaterials.Name = "listMaterials";
-            this.listMaterials.Size = new System.Drawing.Size(234, 316);
+            this.listMaterials.Size = new System.Drawing.Size(230, 316);
             this.listMaterials.TabIndex = 10;
             this.listMaterials.SelectedIndexChanged += new System.EventHandler(this.listMaterials_SelectedIndexChanged);
             // 
@@ -423,10 +454,10 @@ namespace HomeworldDAEEditor
             // tabGoblins
             // 
             this.tabGoblins.Controls.Add(this.panelGoblins);
-            this.tabGoblins.Location = new System.Drawing.Point(4, 40);
+            this.tabGoblins.Location = new System.Drawing.Point(4, 58);
             this.tabGoblins.Name = "tabGoblins";
             this.tabGoblins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGoblins.Size = new System.Drawing.Size(246, 714);
+            this.tabGoblins.Size = new System.Drawing.Size(242, 696);
             this.tabGoblins.TabIndex = 4;
             this.tabGoblins.Text = "Goblins";
             this.tabGoblins.UseVisualStyleBackColor = true;
@@ -441,7 +472,7 @@ namespace HomeworldDAEEditor
             this.panelGoblins.Controls.Add(this.comboGoblinMeshParent);
             this.panelGoblins.Location = new System.Drawing.Point(3, 3);
             this.panelGoblins.Name = "panelGoblins";
-            this.panelGoblins.Size = new System.Drawing.Size(240, 462);
+            this.panelGoblins.Size = new System.Drawing.Size(236, 462);
             this.panelGoblins.TabIndex = 0;
             // 
             // listGoblinMeshes
@@ -451,7 +482,7 @@ namespace HomeworldDAEEditor
             this.listGoblinMeshes.FormattingEnabled = true;
             this.listGoblinMeshes.Location = new System.Drawing.Point(3, 3);
             this.listGoblinMeshes.Name = "listGoblinMeshes";
-            this.listGoblinMeshes.Size = new System.Drawing.Size(234, 394);
+            this.listGoblinMeshes.Size = new System.Drawing.Size(230, 394);
             this.listGoblinMeshes.TabIndex = 12;
             this.listGoblinMeshes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listGoblinMeshes_ItemCheck);
             this.listGoblinMeshes.SelectedIndexChanged += new System.EventHandler(this.listGoblinMeshes_SelectedIndexChanged);
@@ -485,16 +516,16 @@ namespace HomeworldDAEEditor
             this.comboGoblinMeshParent.FormattingEnabled = true;
             this.comboGoblinMeshParent.Location = new System.Drawing.Point(56, 412);
             this.comboGoblinMeshParent.Name = "comboGoblinMeshParent";
-            this.comboGoblinMeshParent.Size = new System.Drawing.Size(184, 21);
+            this.comboGoblinMeshParent.Size = new System.Drawing.Size(180, 21);
             this.comboGoblinMeshParent.TabIndex = 8;
             // 
             // tabCollisionMeshes
             // 
             this.tabCollisionMeshes.Controls.Add(this.panel1);
-            this.tabCollisionMeshes.Location = new System.Drawing.Point(4, 40);
+            this.tabCollisionMeshes.Location = new System.Drawing.Point(4, 58);
             this.tabCollisionMeshes.Name = "tabCollisionMeshes";
             this.tabCollisionMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCollisionMeshes.Size = new System.Drawing.Size(246, 714);
+            this.tabCollisionMeshes.Size = new System.Drawing.Size(242, 696);
             this.tabCollisionMeshes.TabIndex = 5;
             this.tabCollisionMeshes.Text = "Collision Meshes";
             this.tabCollisionMeshes.UseVisualStyleBackColor = true;
@@ -508,7 +539,7 @@ namespace HomeworldDAEEditor
             this.panel1.Controls.Add(this.comboCollisionMeshParent);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(240, 443);
+            this.panel1.Size = new System.Drawing.Size(236, 443);
             this.panel1.TabIndex = 0;
             // 
             // listCollisionMeshes
@@ -518,7 +549,7 @@ namespace HomeworldDAEEditor
             this.listCollisionMeshes.FormattingEnabled = true;
             this.listCollisionMeshes.Location = new System.Drawing.Point(3, 3);
             this.listCollisionMeshes.Name = "listCollisionMeshes";
-            this.listCollisionMeshes.Size = new System.Drawing.Size(234, 394);
+            this.listCollisionMeshes.Size = new System.Drawing.Size(230, 394);
             this.listCollisionMeshes.TabIndex = 12;
             this.listCollisionMeshes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listCollisionMeshes_ItemCheck);
             this.listCollisionMeshes.SelectedIndexChanged += new System.EventHandler(this.listCollisionMeshes_SelectedIndexChanged);
@@ -541,16 +572,16 @@ namespace HomeworldDAEEditor
             this.comboCollisionMeshParent.FormattingEnabled = true;
             this.comboCollisionMeshParent.Location = new System.Drawing.Point(56, 412);
             this.comboCollisionMeshParent.Name = "comboCollisionMeshParent";
-            this.comboCollisionMeshParent.Size = new System.Drawing.Size(184, 21);
+            this.comboCollisionMeshParent.Size = new System.Drawing.Size(180, 21);
             this.comboCollisionMeshParent.TabIndex = 8;
             // 
             // tabJoints
             // 
             this.tabJoints.Controls.Add(this.jointsTree);
-            this.tabJoints.Location = new System.Drawing.Point(4, 40);
+            this.tabJoints.Location = new System.Drawing.Point(4, 58);
             this.tabJoints.Name = "tabJoints";
             this.tabJoints.Padding = new System.Windows.Forms.Padding(3);
-            this.tabJoints.Size = new System.Drawing.Size(246, 714);
+            this.tabJoints.Size = new System.Drawing.Size(242, 696);
             this.tabJoints.TabIndex = 1;
             this.tabJoints.Text = "Joints";
             this.tabJoints.UseVisualStyleBackColor = true;
@@ -561,16 +592,16 @@ namespace HomeworldDAEEditor
             this.jointsTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.jointsTree.Location = new System.Drawing.Point(3, 3);
             this.jointsTree.Name = "jointsTree";
-            this.jointsTree.Size = new System.Drawing.Size(240, 708);
+            this.jointsTree.Size = new System.Drawing.Size(236, 690);
             this.jointsTree.TabIndex = 0;
             this.jointsTree.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.jointsTree_AfterCheck);
             // 
             // tabMarkers
             // 
             this.tabMarkers.Controls.Add(this.splitTabMarkers);
-            this.tabMarkers.Location = new System.Drawing.Point(4, 40);
+            this.tabMarkers.Location = new System.Drawing.Point(4, 58);
             this.tabMarkers.Name = "tabMarkers";
-            this.tabMarkers.Size = new System.Drawing.Size(246, 714);
+            this.tabMarkers.Size = new System.Drawing.Size(242, 696);
             this.tabMarkers.TabIndex = 2;
             this.tabMarkers.Text = "Markers";
             this.tabMarkers.UseVisualStyleBackColor = true;
@@ -589,8 +620,8 @@ namespace HomeworldDAEEditor
             // splitTabMarkers.Panel2
             // 
             this.splitTabMarkers.Panel2.Controls.Add(this.checkboxDrawMarkers);
-            this.splitTabMarkers.Size = new System.Drawing.Size(246, 714);
-            this.splitTabMarkers.SplitterDistance = 672;
+            this.splitTabMarkers.Size = new System.Drawing.Size(242, 696);
+            this.splitTabMarkers.SplitterDistance = 655;
             this.splitTabMarkers.TabIndex = 0;
             // 
             // listBoxMarkers
@@ -599,7 +630,7 @@ namespace HomeworldDAEEditor
             this.listBoxMarkers.FormattingEnabled = true;
             this.listBoxMarkers.Location = new System.Drawing.Point(0, 0);
             this.listBoxMarkers.Name = "listBoxMarkers";
-            this.listBoxMarkers.Size = new System.Drawing.Size(246, 672);
+            this.listBoxMarkers.Size = new System.Drawing.Size(242, 655);
             this.listBoxMarkers.TabIndex = 2;
             // 
             // checkboxDrawMarkers
@@ -621,9 +652,9 @@ namespace HomeworldDAEEditor
             this.tabDockpaths.Controls.Add(this.groupDockpathLinks);
             this.tabDockpaths.Controls.Add(this.groupDockpathFamilies);
             this.tabDockpaths.Controls.Add(this.panelDockpathList);
-            this.tabDockpaths.Location = new System.Drawing.Point(4, 40);
+            this.tabDockpaths.Location = new System.Drawing.Point(4, 58);
             this.tabDockpaths.Name = "tabDockpaths";
-            this.tabDockpaths.Size = new System.Drawing.Size(246, 714);
+            this.tabDockpaths.Size = new System.Drawing.Size(242, 696);
             this.tabDockpaths.TabIndex = 3;
             this.tabDockpaths.Text = "Dockpaths";
             this.tabDockpaths.UseVisualStyleBackColor = true;
@@ -636,9 +667,9 @@ namespace HomeworldDAEEditor
             this.groupDockpathFlags.Controls.Add(this.checkDockpathLatch);
             this.groupDockpathFlags.Controls.Add(this.checkDockpathAnim);
             this.groupDockpathFlags.Controls.Add(this.checkDockpathExit);
-            this.groupDockpathFlags.Location = new System.Drawing.Point(4, 190);
+            this.groupDockpathFlags.Location = new System.Drawing.Point(4, 172);
             this.groupDockpathFlags.Name = "groupDockpathFlags";
-            this.groupDockpathFlags.Size = new System.Drawing.Size(239, 64);
+            this.groupDockpathFlags.Size = new System.Drawing.Size(235, 64);
             this.groupDockpathFlags.TabIndex = 12;
             this.groupDockpathFlags.TabStop = false;
             this.groupDockpathFlags.Text = "Flags";
@@ -648,7 +679,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathAjar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathAjar.AutoSize = true;
             this.checkDockpathAjar.Enabled = false;
-            this.checkDockpathAjar.Location = new System.Drawing.Point(180, 42);
+            this.checkDockpathAjar.Location = new System.Drawing.Point(176, 42);
             this.checkDockpathAjar.Name = "checkDockpathAjar";
             this.checkDockpathAjar.Size = new System.Drawing.Size(44, 17);
             this.checkDockpathAjar.TabIndex = 11;
@@ -661,7 +692,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathLatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathLatch.AutoSize = true;
             this.checkDockpathLatch.Enabled = false;
-            this.checkDockpathLatch.Location = new System.Drawing.Point(180, 19);
+            this.checkDockpathLatch.Location = new System.Drawing.Point(176, 19);
             this.checkDockpathLatch.Name = "checkDockpathLatch";
             this.checkDockpathLatch.Size = new System.Drawing.Size(53, 17);
             this.checkDockpathLatch.TabIndex = 10;
@@ -703,9 +734,9 @@ namespace HomeworldDAEEditor
             this.groupDockpathSegments.Controls.Add(this.boxDockpathSegmentSpeed);
             this.groupDockpathSegments.Controls.Add(this.boxDockpathSegmentTolerance);
             this.groupDockpathSegments.Controls.Add(this.trackBarDockpathSegments);
-            this.groupDockpathSegments.Location = new System.Drawing.Point(4, 474);
+            this.groupDockpathSegments.Location = new System.Drawing.Point(4, 456);
             this.groupDockpathSegments.Name = "groupDockpathSegments";
-            this.groupDockpathSegments.Size = new System.Drawing.Size(239, 237);
+            this.groupDockpathSegments.Size = new System.Drawing.Size(235, 237);
             this.groupDockpathSegments.TabIndex = 3;
             this.groupDockpathSegments.TabStop = false;
             this.groupDockpathSegments.Text = "Segments";
@@ -724,7 +755,7 @@ namespace HomeworldDAEEditor
             this.groupDockpathSegmentFlags.Controls.Add(this.checkDockpathSegmentFlagQueue);
             this.groupDockpathSegmentFlags.Location = new System.Drawing.Point(3, 122);
             this.groupDockpathSegmentFlags.Name = "groupDockpathSegmentFlags";
-            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(230, 111);
+            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(226, 111);
             this.groupDockpathSegmentFlags.TabIndex = 11;
             this.groupDockpathSegmentFlags.TabStop = false;
             this.groupDockpathSegmentFlags.Text = "Flags";
@@ -734,7 +765,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathSegmentFlagClip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClip.AutoSize = true;
             this.checkDockpathSegmentFlagClip.Enabled = false;
-            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(123, 89);
+            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(119, 89);
             this.checkDockpathSegmentFlagClip.Name = "checkDockpathSegmentFlagClip";
             this.checkDockpathSegmentFlagClip.Size = new System.Drawing.Size(72, 17);
             this.checkDockpathSegmentFlagClip.TabIndex = 27;
@@ -759,7 +790,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathSegmentFlagCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagCheck.AutoSize = true;
             this.checkDockpathSegmentFlagCheck.Enabled = false;
-            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(123, 66);
+            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(119, 66);
             this.checkDockpathSegmentFlagCheck.Name = "checkDockpathSegmentFlagCheck";
             this.checkDockpathSegmentFlagCheck.Size = new System.Drawing.Size(95, 17);
             this.checkDockpathSegmentFlagCheck.TabIndex = 25;
@@ -784,7 +815,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathSegmentFlagClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClose.AutoSize = true;
             this.checkDockpathSegmentFlagClose.Enabled = false;
-            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(123, 42);
+            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(119, 42);
             this.checkDockpathSegmentFlagClose.Name = "checkDockpathSegmentFlagClose";
             this.checkDockpathSegmentFlagClose.Size = new System.Drawing.Size(102, 17);
             this.checkDockpathSegmentFlagClose.TabIndex = 23;
@@ -809,7 +840,7 @@ namespace HomeworldDAEEditor
             this.checkDockpathSegmentFlagPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagPlayer.AutoSize = true;
             this.checkDockpathSegmentFlagPlayer.Enabled = false;
-            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(123, 19);
+            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(119, 19);
             this.checkDockpathSegmentFlagPlayer.Name = "checkDockpathSegmentFlagPlayer";
             this.checkDockpathSegmentFlagPlayer.Size = new System.Drawing.Size(101, 17);
             this.checkDockpathSegmentFlagPlayer.TabIndex = 22;
@@ -854,7 +885,7 @@ namespace HomeworldDAEEditor
             this.boxDockpathSegmentSpeed.Location = new System.Drawing.Point(77, 96);
             this.boxDockpathSegmentSpeed.Name = "boxDockpathSegmentSpeed";
             this.boxDockpathSegmentSpeed.ReadOnly = true;
-            this.boxDockpathSegmentSpeed.Size = new System.Drawing.Size(159, 20);
+            this.boxDockpathSegmentSpeed.Size = new System.Drawing.Size(155, 20);
             this.boxDockpathSegmentSpeed.TabIndex = 8;
             // 
             // boxDockpathSegmentTolerance
@@ -864,7 +895,7 @@ namespace HomeworldDAEEditor
             this.boxDockpathSegmentTolerance.Location = new System.Drawing.Point(77, 70);
             this.boxDockpathSegmentTolerance.Name = "boxDockpathSegmentTolerance";
             this.boxDockpathSegmentTolerance.ReadOnly = true;
-            this.boxDockpathSegmentTolerance.Size = new System.Drawing.Size(159, 20);
+            this.boxDockpathSegmentTolerance.Size = new System.Drawing.Size(155, 20);
             this.boxDockpathSegmentTolerance.TabIndex = 7;
             // 
             // trackBarDockpathSegments
@@ -874,7 +905,7 @@ namespace HomeworldDAEEditor
             this.trackBarDockpathSegments.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarDockpathSegments.Location = new System.Drawing.Point(9, 19);
             this.trackBarDockpathSegments.Name = "trackBarDockpathSegments";
-            this.trackBarDockpathSegments.Size = new System.Drawing.Size(233, 45);
+            this.trackBarDockpathSegments.Size = new System.Drawing.Size(229, 45);
             this.trackBarDockpathSegments.TabIndex = 3;
             this.trackBarDockpathSegments.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBarDockpathSegments.Scroll += new System.EventHandler(this.trackBarDockpathSegments_Scroll);
@@ -884,9 +915,9 @@ namespace HomeworldDAEEditor
             this.groupDockpathLinks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupDockpathLinks.Controls.Add(this.listDockpathLinks);
-            this.groupDockpathLinks.Location = new System.Drawing.Point(4, 367);
+            this.groupDockpathLinks.Location = new System.Drawing.Point(4, 349);
             this.groupDockpathLinks.Name = "groupDockpathLinks";
-            this.groupDockpathLinks.Size = new System.Drawing.Size(239, 101);
+            this.groupDockpathLinks.Size = new System.Drawing.Size(235, 101);
             this.groupDockpathLinks.TabIndex = 2;
             this.groupDockpathLinks.TabStop = false;
             this.groupDockpathLinks.Text = "Links";
@@ -898,7 +929,7 @@ namespace HomeworldDAEEditor
             this.listDockpathLinks.FormattingEnabled = true;
             this.listDockpathLinks.Location = new System.Drawing.Point(3, 16);
             this.listDockpathLinks.Name = "listDockpathLinks";
-            this.listDockpathLinks.Size = new System.Drawing.Size(233, 82);
+            this.listDockpathLinks.Size = new System.Drawing.Size(229, 82);
             this.listDockpathLinks.TabIndex = 11;
             // 
             // groupDockpathFamilies
@@ -906,9 +937,9 @@ namespace HomeworldDAEEditor
             this.groupDockpathFamilies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupDockpathFamilies.Controls.Add(this.listDockpathFamilies);
-            this.groupDockpathFamilies.Location = new System.Drawing.Point(4, 260);
+            this.groupDockpathFamilies.Location = new System.Drawing.Point(4, 242);
             this.groupDockpathFamilies.Name = "groupDockpathFamilies";
-            this.groupDockpathFamilies.Size = new System.Drawing.Size(239, 101);
+            this.groupDockpathFamilies.Size = new System.Drawing.Size(235, 101);
             this.groupDockpathFamilies.TabIndex = 1;
             this.groupDockpathFamilies.TabStop = false;
             this.groupDockpathFamilies.Text = "Families";
@@ -920,7 +951,7 @@ namespace HomeworldDAEEditor
             this.listDockpathFamilies.FormattingEnabled = true;
             this.listDockpathFamilies.Location = new System.Drawing.Point(3, 16);
             this.listDockpathFamilies.Name = "listDockpathFamilies";
-            this.listDockpathFamilies.Size = new System.Drawing.Size(233, 82);
+            this.listDockpathFamilies.Size = new System.Drawing.Size(229, 82);
             this.listDockpathFamilies.TabIndex = 11;
             // 
             // panelDockpathList
@@ -931,7 +962,7 @@ namespace HomeworldDAEEditor
             this.panelDockpathList.Controls.Add(this.dockpathList);
             this.panelDockpathList.Location = new System.Drawing.Point(4, 4);
             this.panelDockpathList.Name = "panelDockpathList";
-            this.panelDockpathList.Size = new System.Drawing.Size(239, 180);
+            this.panelDockpathList.Size = new System.Drawing.Size(235, 162);
             this.panelDockpathList.TabIndex = 0;
             // 
             // dockpathList
@@ -941,10 +972,258 @@ namespace HomeworldDAEEditor
             this.dockpathList.FormattingEnabled = true;
             this.dockpathList.Location = new System.Drawing.Point(0, 0);
             this.dockpathList.Name = "dockpathList";
-            this.dockpathList.Size = new System.Drawing.Size(239, 180);
+            this.dockpathList.Size = new System.Drawing.Size(235, 162);
             this.dockpathList.TabIndex = 7;
             this.dockpathList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.dockpathList_ItemCheck);
             this.dockpathList.SelectedIndexChanged += new System.EventHandler(this.dockpathList_SelectedIndexChanged);
+            // 
+            // tabNavLights
+            // 
+            this.tabNavLights.AutoScroll = true;
+            this.tabNavLights.Controls.Add(this.groupNavLightPreview);
+            this.tabNavLights.Controls.Add(this.groupNavLightParameters);
+            this.tabNavLights.Controls.Add(this.groupNavLightFlags);
+            this.tabNavLights.Controls.Add(this.panelNavLightList);
+            this.tabNavLights.Location = new System.Drawing.Point(4, 58);
+            this.tabNavLights.Name = "tabNavLights";
+            this.tabNavLights.Size = new System.Drawing.Size(242, 696);
+            this.tabNavLights.TabIndex = 7;
+            this.tabNavLights.Text = "NavLights";
+            this.tabNavLights.UseVisualStyleBackColor = true;
+            // 
+            // groupNavLightParameters
+            // 
+            this.groupNavLightParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupNavLightParameters.Controls.Add(this.comboNavLightType);
+            this.groupNavLightParameters.Controls.Add(this.labelNavLightDistance);
+            this.groupNavLightParameters.Controls.Add(this.numericNavLightDistance);
+            this.groupNavLightParameters.Controls.Add(this.labelNavLightColor);
+            this.groupNavLightParameters.Controls.Add(this.buttonNavLightColor);
+            this.groupNavLightParameters.Controls.Add(this.labelNavLightFrequency);
+            this.groupNavLightParameters.Controls.Add(this.numericNavLightFrequency);
+            this.groupNavLightParameters.Controls.Add(this.label4);
+            this.groupNavLightParameters.Controls.Add(this.numericNavLightPhase);
+            this.groupNavLightParameters.Controls.Add(this.labelNavLightSize);
+            this.groupNavLightParameters.Controls.Add(this.numericNavLightSize);
+            this.groupNavLightParameters.Controls.Add(this.labelNavLightType);
+            this.groupNavLightParameters.Location = new System.Drawing.Point(8, 402);
+            this.groupNavLightParameters.Name = "groupNavLightParameters";
+            this.groupNavLightParameters.Size = new System.Drawing.Size(227, 185);
+            this.groupNavLightParameters.TabIndex = 13;
+            this.groupNavLightParameters.TabStop = false;
+            this.groupNavLightParameters.Text = "Parameters";
+            // 
+            // comboNavLightType
+            // 
+            this.comboNavLightType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboNavLightType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboNavLightType.Enabled = false;
+            this.comboNavLightType.FormattingEnabled = true;
+            this.comboNavLightType.Location = new System.Drawing.Point(72, 19);
+            this.comboNavLightType.Name = "comboNavLightType";
+            this.comboNavLightType.Size = new System.Drawing.Size(149, 21);
+            this.comboNavLightType.TabIndex = 24;
+            // 
+            // labelNavLightDistance
+            // 
+            this.labelNavLightDistance.AutoSize = true;
+            this.labelNavLightDistance.Location = new System.Drawing.Point(6, 153);
+            this.labelNavLightDistance.Name = "labelNavLightDistance";
+            this.labelNavLightDistance.Size = new System.Drawing.Size(52, 13);
+            this.labelNavLightDistance.TabIndex = 23;
+            this.labelNavLightDistance.Text = "Distance:";
+            // 
+            // numericNavLightDistance
+            // 
+            this.numericNavLightDistance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericNavLightDistance.DecimalPlaces = 2;
+            this.numericNavLightDistance.Enabled = false;
+            this.numericNavLightDistance.Location = new System.Drawing.Point(72, 149);
+            this.numericNavLightDistance.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericNavLightDistance.Name = "numericNavLightDistance";
+            this.numericNavLightDistance.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericNavLightDistance.Size = new System.Drawing.Size(149, 20);
+            this.numericNavLightDistance.TabIndex = 22;
+            this.numericNavLightDistance.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // labelNavLightColor
+            // 
+            this.labelNavLightColor.AutoSize = true;
+            this.labelNavLightColor.Location = new System.Drawing.Point(6, 127);
+            this.labelNavLightColor.Name = "labelNavLightColor";
+            this.labelNavLightColor.Size = new System.Drawing.Size(34, 13);
+            this.labelNavLightColor.TabIndex = 21;
+            this.labelNavLightColor.Text = "Color:";
+            // 
+            // buttonNavLightColor
+            // 
+            this.buttonNavLightColor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonNavLightColor.BackColor = System.Drawing.Color.White;
+            this.buttonNavLightColor.Enabled = false;
+            this.buttonNavLightColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonNavLightColor.Location = new System.Drawing.Point(72, 123);
+            this.buttonNavLightColor.Name = "buttonNavLightColor";
+            this.buttonNavLightColor.Size = new System.Drawing.Size(149, 20);
+            this.buttonNavLightColor.TabIndex = 20;
+            this.buttonNavLightColor.UseVisualStyleBackColor = false;
+            // 
+            // labelNavLightFrequency
+            // 
+            this.labelNavLightFrequency.AutoSize = true;
+            this.labelNavLightFrequency.Location = new System.Drawing.Point(6, 99);
+            this.labelNavLightFrequency.Name = "labelNavLightFrequency";
+            this.labelNavLightFrequency.Size = new System.Drawing.Size(60, 13);
+            this.labelNavLightFrequency.TabIndex = 19;
+            this.labelNavLightFrequency.Text = "Frequency:";
+            // 
+            // numericNavLightFrequency
+            // 
+            this.numericNavLightFrequency.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericNavLightFrequency.DecimalPlaces = 2;
+            this.numericNavLightFrequency.Enabled = false;
+            this.numericNavLightFrequency.Location = new System.Drawing.Point(72, 97);
+            this.numericNavLightFrequency.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericNavLightFrequency.Name = "numericNavLightFrequency";
+            this.numericNavLightFrequency.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericNavLightFrequency.Size = new System.Drawing.Size(149, 20);
+            this.numericNavLightFrequency.TabIndex = 18;
+            this.numericNavLightFrequency.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 73);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(40, 13);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Phase:";
+            // 
+            // numericNavLightPhase
+            // 
+            this.numericNavLightPhase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericNavLightPhase.DecimalPlaces = 2;
+            this.numericNavLightPhase.Enabled = false;
+            this.numericNavLightPhase.Location = new System.Drawing.Point(72, 71);
+            this.numericNavLightPhase.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericNavLightPhase.Name = "numericNavLightPhase";
+            this.numericNavLightPhase.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericNavLightPhase.Size = new System.Drawing.Size(149, 20);
+            this.numericNavLightPhase.TabIndex = 16;
+            this.numericNavLightPhase.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // labelNavLightSize
+            // 
+            this.labelNavLightSize.AutoSize = true;
+            this.labelNavLightSize.Location = new System.Drawing.Point(6, 47);
+            this.labelNavLightSize.Name = "labelNavLightSize";
+            this.labelNavLightSize.Size = new System.Drawing.Size(30, 13);
+            this.labelNavLightSize.TabIndex = 15;
+            this.labelNavLightSize.Text = "Size:";
+            // 
+            // numericNavLightSize
+            // 
+            this.numericNavLightSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericNavLightSize.DecimalPlaces = 2;
+            this.numericNavLightSize.Enabled = false;
+            this.numericNavLightSize.Location = new System.Drawing.Point(72, 45);
+            this.numericNavLightSize.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericNavLightSize.Name = "numericNavLightSize";
+            this.numericNavLightSize.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericNavLightSize.Size = new System.Drawing.Size(149, 20);
+            this.numericNavLightSize.TabIndex = 14;
+            this.numericNavLightSize.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // labelNavLightType
+            // 
+            this.labelNavLightType.AutoSize = true;
+            this.labelNavLightType.Location = new System.Drawing.Point(6, 22);
+            this.labelNavLightType.Name = "labelNavLightType";
+            this.labelNavLightType.Size = new System.Drawing.Size(34, 13);
+            this.labelNavLightType.TabIndex = 12;
+            this.labelNavLightType.Text = "Type:";
+            // 
+            // groupNavLightFlags
+            // 
+            this.groupNavLightFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupNavLightFlags.Controls.Add(this.checkNavLightFlagHighEnd);
+            this.groupNavLightFlags.Controls.Add(this.checkNavLightFlagSprite);
+            this.groupNavLightFlags.Location = new System.Drawing.Point(8, 593);
+            this.groupNavLightFlags.Name = "groupNavLightFlags";
+            this.groupNavLightFlags.Size = new System.Drawing.Size(227, 43);
+            this.groupNavLightFlags.TabIndex = 12;
+            this.groupNavLightFlags.TabStop = false;
+            this.groupNavLightFlags.Text = "Flags";
+            // 
+            // checkNavLightFlagHighEnd
+            // 
+            this.checkNavLightFlagHighEnd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkNavLightFlagHighEnd.AutoSize = true;
+            this.checkNavLightFlagHighEnd.Enabled = false;
+            this.checkNavLightFlagHighEnd.Location = new System.Drawing.Point(152, 19);
+            this.checkNavLightFlagHighEnd.Name = "checkNavLightFlagHighEnd";
+            this.checkNavLightFlagHighEnd.Size = new System.Drawing.Size(69, 17);
+            this.checkNavLightFlagHighEnd.TabIndex = 10;
+            this.checkNavLightFlagHighEnd.Text = "High-end";
+            this.checkNavLightFlagHighEnd.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.checkNavLightFlagHighEnd.UseVisualStyleBackColor = true;
+            // 
+            // checkNavLightFlagSprite
+            // 
+            this.checkNavLightFlagSprite.AutoSize = true;
+            this.checkNavLightFlagSprite.Enabled = false;
+            this.checkNavLightFlagSprite.Location = new System.Drawing.Point(6, 19);
+            this.checkNavLightFlagSprite.Name = "checkNavLightFlagSprite";
+            this.checkNavLightFlagSprite.Size = new System.Drawing.Size(53, 17);
+            this.checkNavLightFlagSprite.TabIndex = 8;
+            this.checkNavLightFlagSprite.Text = "Sprite";
+            this.checkNavLightFlagSprite.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.checkNavLightFlagSprite.UseVisualStyleBackColor = true;
+            // 
+            // panelNavLightList
+            // 
+            this.panelNavLightList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelNavLightList.Controls.Add(this.navLightList);
+            this.panelNavLightList.Location = new System.Drawing.Point(4, 4);
+            this.panelNavLightList.Name = "panelNavLightList";
+            this.panelNavLightList.Size = new System.Drawing.Size(235, 392);
+            this.panelNavLightList.TabIndex = 0;
+            // 
+            // navLightList
+            // 
+            this.navLightList.CheckOnClick = true;
+            this.navLightList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.navLightList.FormattingEnabled = true;
+            this.navLightList.Location = new System.Drawing.Point(0, 0);
+            this.navLightList.Name = "navLightList";
+            this.navLightList.Size = new System.Drawing.Size(235, 392);
+            this.navLightList.TabIndex = 7;
+            this.navLightList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.navLightList_ItemCheck);
+            this.navLightList.SelectedIndexChanged += new System.EventHandler(this.navLightList_SelectedIndexChanged);
             // 
             // splitContainer1
             // 
@@ -957,7 +1236,7 @@ namespace HomeworldDAEEditor
             this.splitContainer1.Panel1.Controls.Add(this.tabControl);
             this.splitContainer1.Panel1MinSize = 250;
             this.splitContainer1.Size = new System.Drawing.Size(1123, 758);
-            this.splitContainer1.SplitterDistance = 254;
+            this.splitContainer1.SplitterDistance = 250;
             this.splitContainer1.TabIndex = 4;
             // 
             // comboPerspectiveOrtho
@@ -975,6 +1254,30 @@ namespace HomeworldDAEEditor
             this.comboPerspectiveOrtho.Size = new System.Drawing.Size(105, 21);
             this.comboPerspectiveOrtho.TabIndex = 5;
             this.comboPerspectiveOrtho.SelectedIndexChanged += new System.EventHandler(this.comboPerspectiveOrtho_SelectedIndexChanged);
+            // 
+            // groupNavLightPreview
+            // 
+            this.groupNavLightPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupNavLightPreview.Controls.Add(this.checkNavLightDrawRadius);
+            this.groupNavLightPreview.Location = new System.Drawing.Point(8, 642);
+            this.groupNavLightPreview.Name = "groupNavLightPreview";
+            this.groupNavLightPreview.Size = new System.Drawing.Size(226, 46);
+            this.groupNavLightPreview.TabIndex = 14;
+            this.groupNavLightPreview.TabStop = false;
+            this.groupNavLightPreview.Text = "Preview";
+            // 
+            // checkNavLightDrawRadius
+            // 
+            this.checkNavLightDrawRadius.AutoSize = true;
+            this.checkNavLightDrawRadius.Location = new System.Drawing.Point(7, 20);
+            this.checkNavLightDrawRadius.Name = "checkNavLightDrawRadius";
+            this.checkNavLightDrawRadius.Size = new System.Drawing.Size(136, 17);
+            this.checkNavLightDrawRadius.TabIndex = 0;
+            this.checkNavLightDrawRadius.Text = "Draw illumination radius";
+            this.checkNavLightDrawRadius.UseVisualStyleBackColor = true;
+            this.checkNavLightDrawRadius.CheckedChanged += new System.EventHandler(this.checkNavLightDrawRadius_CheckedChanged);
             // 
             // Main
             // 
@@ -1001,8 +1304,8 @@ namespace HomeworldDAEEditor
             this.groupThrusterStrength.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).EndInit();
             this.groupMaterialTextures.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.panelMaterialsList.ResumeLayout(false);
+            this.panelMaterialsList.PerformLayout();
             this.tabGoblins.ResumeLayout(false);
             this.panelGoblins.ResumeLayout(false);
             this.panelGoblins.PerformLayout();
@@ -1027,9 +1330,21 @@ namespace HomeworldDAEEditor
             this.groupDockpathLinks.ResumeLayout(false);
             this.groupDockpathFamilies.ResumeLayout(false);
             this.panelDockpathList.ResumeLayout(false);
+            this.tabNavLights.ResumeLayout(false);
+            this.groupNavLightParameters.ResumeLayout(false);
+            this.groupNavLightParameters.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightDistance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightFrequency)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightPhase)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightSize)).EndInit();
+            this.groupNavLightFlags.ResumeLayout(false);
+            this.groupNavLightFlags.PerformLayout();
+            this.panelNavLightList.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.groupNavLightPreview.ResumeLayout(false);
+            this.groupNavLightPreview.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1098,7 +1413,7 @@ namespace HomeworldDAEEditor
         private System.Windows.Forms.ToolStripButton buttonAbout;
         private System.Windows.Forms.TabPage tabMaterials;
         private System.Windows.Forms.GroupBox groupMaterialTextures;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panelMaterialsList;
         private System.Windows.Forms.ComboBox comboMaterialFormat;
         private System.Windows.Forms.TextBox boxMaterialShader;
         private System.Windows.Forms.ListBox listMaterials;
@@ -1108,6 +1423,27 @@ namespace HomeworldDAEEditor
         private System.Windows.Forms.GroupBox groupThrusterStrength;
         private System.Windows.Forms.TrackBar trackBarThrusterStrength;
         private System.Windows.Forms.ComboBox comboPerspectiveOrtho;
+        private System.Windows.Forms.TabPage tabNavLights;
+        private System.Windows.Forms.GroupBox groupNavLightParameters;
+        private System.Windows.Forms.Label labelNavLightType;
+        private System.Windows.Forms.GroupBox groupNavLightFlags;
+        private System.Windows.Forms.CheckBox checkNavLightFlagHighEnd;
+        private System.Windows.Forms.CheckBox checkNavLightFlagSprite;
+        private System.Windows.Forms.Panel panelNavLightList;
+        private System.Windows.Forms.CheckedListBox navLightList;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericNavLightPhase;
+        private System.Windows.Forms.Label labelNavLightSize;
+        private System.Windows.Forms.NumericUpDown numericNavLightSize;
+        private System.Windows.Forms.Label labelNavLightFrequency;
+        private System.Windows.Forms.NumericUpDown numericNavLightFrequency;
+        private System.Windows.Forms.Label labelNavLightColor;
+        private System.Windows.Forms.Button buttonNavLightColor;
+        private System.Windows.Forms.Label labelNavLightDistance;
+        private System.Windows.Forms.NumericUpDown numericNavLightDistance;
+        private System.Windows.Forms.ComboBox comboNavLightType;
+        private System.Windows.Forms.GroupBox groupNavLightPreview;
+        private System.Windows.Forms.CheckBox checkNavLightDrawRadius;
     }
 }
 

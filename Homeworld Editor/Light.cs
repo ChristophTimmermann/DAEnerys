@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HomeworldDAEEditor
 {
-    class Light
+    public class Light
     {
         public static List<Light> Lights = new List<Light>();
 

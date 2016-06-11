@@ -23,6 +23,7 @@ namespace HomeworldDAEEditor
         public HWMarker Marker;
         public HWDockpath Dockpath;
         public HWDockSegment DockSegment;
+        public HWNavLight NavLight;
 
         private Node node;
 
@@ -94,8 +95,8 @@ namespace HomeworldDAEEditor
                     }
                 }
                 Dockpath = new HWDockpath(this, pathName, families, links, flags);
-                #endregion
             }
+            #endregion
 
             #region DockSegment
             else if (Name.StartsWith("SEG")) //If node is a docksegment
@@ -142,8 +143,92 @@ namespace HomeworldDAEEditor
                     }
                 }
                 DockSegment = new HWDockSegment(this, id, tolerance, speed, flags);
-                #endregion
             }
+            #endregion
+
+            #region NavLight
+            else if (Name.StartsWith("NAVL")) //If node is a navlight
+            {
+                string lightName = "";
+                string type = "default";
+                float size = 0;
+                float phase = 0;
+                float frequency = 0;
+                Vector3 color = Vector3.One;
+                float distance = 0;
+                List<NavLightFlag> flags = new List<NavLightFlag>();
+
+                string[] splitted = Name.Split('[');
+                int end = -1;
+
+                for (int i = 0; i < splitted.Length; i++)
+                {
+                    if (i != 0)
+                    {
+                        end = splitted[i].IndexOf(']');
+                        if (splitted[i - 1].EndsWith("NAVL")) //Name
+                        {
+                            lightName = splitted[i].Substring(0, end);
+                        }
+                        else if (splitted[i - 1].EndsWith("Type")) //Type
+                        {
+                            type = splitted[i].Substring(0, end);
+                        }
+                        else if (splitted[i - 1].EndsWith("Sz")) //Size
+                        {
+                            size = float.Parse(splitted[i].Substring(0, end), System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (splitted[i - 1].EndsWith("Ph")) //Phase
+                        {
+                            phase = float.Parse(splitted[i].Substring(0, end), System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (splitted[i - 1].EndsWith("Fr")) //Frequency
+                        {
+                            frequency = float.Parse(splitted[i].Substring(0, end), System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (splitted[i - 1].EndsWith("Col")) //Color
+                        {
+                            string[] channels = splitted[i].Substring(0, end).Split(',');
+                            float red = float.Parse(channels[0], System.Globalization.CultureInfo.InvariantCulture);
+                            float green = float.Parse(channels[1], System.Globalization.CultureInfo.InvariantCulture);
+                            float blue = float.Parse(channels[2], System.Globalization.CultureInfo.InvariantCulture);
+                            color = new Vector3(red, green, blue);
+                        }
+                        else if (splitted[i - 1].EndsWith("Dist")) //Distance
+                        {
+                            distance = float.Parse(splitted[i].Substring(0, end), System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (splitted[i - 1].EndsWith("Flags")) //Flags
+                        {
+                            string flagsString = splitted[i].Substring(0, end);
+                            string[] flagsStrings = flagsString.Split(' ');
+
+                            foreach (string flag in flagsStrings)
+                            {
+                                if (flag.Length > 0) //If FLAGS is not empty
+                                    flags.Add((NavLightFlag)Enum.Parse(typeof(NavLightFlag), flag.ToUpper()));
+                            }
+                        }
+                    }
+                }
+
+                HWNavLightStyle navLightStyle = null;
+                //Check if navlight style is valid
+                foreach(HWNavLightStyle style in HWData.NavLightStyles)
+                {
+                    if(style.Name == type)
+                    {
+                        navLightStyle = style;
+                        break;
+                    }
+                }
+
+                if(navLightStyle != null)
+                    NavLight = new HWNavLight(this, lightName, navLightStyle, size, phase, frequency, color, distance, flags);
+                else
+                    MessageBox.Show("Navlight style \"" + type + "\" not found. Skipping navlight \"" + lightName + "\".", "Invalid navlight style", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            #endregion
 
             //Add meshes
             foreach (int mesh in node.MeshIndices)

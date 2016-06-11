@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 using System.Linq;
 using Assimp;
+using OpenTK.Graphics;
 
 namespace HomeworldDAEEditor
 {
@@ -14,9 +15,9 @@ namespace HomeworldDAEEditor
 
         public static HWTexture DefaultTexture;
 
-        public static Light AmbientLight = new Light(new Vector4(0), new Vector3(0.5f), 0, 0.01f);
+        public static Light AmbientLight = new Light(new Vector4(0), new Vector3(0.4f), 0, 0.05f);
 
-        private static Color backgroundColor = Color.CornflowerBlue;
+        private static Color backgroundColor = Color.FromArgb(255, 10, 10, 10);
         public static Color BackgroundColor
         {
             get { return backgroundColor; }
@@ -55,8 +56,11 @@ namespace HomeworldDAEEditor
 
             GL.Enable(EnableCap.DepthTest);
 
+            GL.Enable(EnableCap.AlphaTest);
+            GL.AlphaFunc(AlphaFunction.Greater, 0.05f);
+
             GL.Enable(EnableCap.Blend);
-            //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             GL.LineWidth(2);
 
@@ -71,6 +75,8 @@ namespace HomeworldDAEEditor
 
             //AmbientLight.Enabled = false;
             DefaultTexture = new HWTexture(@"resources/missing.tga");
+            GL.UseProgram(shaders[activeShader].ProgramID);
+            GraphicsContext.CurrentContext.SwapInterval = 1;
 
             //new Light(new Vector4(3, 0, 0, 1), new Vector3(1, 0, 0), 0.01f);
         }
@@ -82,8 +88,8 @@ namespace HomeworldDAEEditor
             List<Vector3> colors = new List<Vector3>();
             List<Vector2> texcoords = new List<Vector2>();
             List<Vector3> normals = new List<Vector3>();
-            List<Vector3> tangents = new List<Vector3>();
-            List<Vector3> bitangents = new List<Vector3>();
+            //List<Vector3> tangents = new List<Vector3>();
+            //List<Vector3> bitangents = new List<Vector3>();
 
             // Assemble vertex and indice data for all volumes
             int vertcount = 0;
@@ -96,11 +102,25 @@ namespace HomeworldDAEEditor
                     colors.AddRange(mesh.GetColorData().ToList());
                     texcoords.AddRange(mesh.GetTextureCoords());
                     normals.AddRange(mesh.GetNormals().ToList());
-                    tangents.AddRange(mesh.GetTangents().ToList());
-                    bitangents.AddRange(mesh.GetBiTangents().ToList());
+                    //tangents.AddRange(mesh.GetTangents().ToList());
+                    //bitangents.AddRange(mesh.GetBiTangents().ToList());
                     vertcount += mesh.VertexCount;
                 }
             }
+
+            //SORT EDITOR MESHES
+            List<EditorMesh> newList = new List<EditorMesh>();
+            foreach(EditorMesh mesh in EditorScene.meshes)
+            {
+                if (mesh.NeverDrawInFront)
+                    newList.Add(mesh);
+            }
+            foreach (EditorMesh mesh in EditorScene.meshes)
+            {
+                if (!mesh.NeverDrawInFront)
+                    newList.Add(mesh);
+            }
+            EditorScene.meshes = newList;
 
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
@@ -121,8 +141,8 @@ namespace HomeworldDAEEditor
             coldata = colors.ToArray();
             texcoorddata = texcoords.ToArray();
             normdata = normals.ToArray();
-            tangentdata = tangents.ToArray();
-            bitangentdata = bitangents.ToArray();
+            //tangentdata = tangents.ToArray();
+            //bitangentdata = bitangents.ToArray();
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vert"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(vertdata.Length * Vector3.SizeInBytes), vertdata, BufferUsageHint.StaticDraw);
@@ -148,14 +168,9 @@ namespace HomeworldDAEEditor
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(bitangentdata.Length * Vector3.SizeInBytes), bitangentdata, BufferUsageHint.StaticDraw);
             GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertBitangent"), 3, VertexAttribPointerType.Float, true, 0, 0);*/
 
-            GL.UseProgram(shaders[activeShader].ProgramID);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-
             // Buffer index data
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(int)), indicedata, BufferUsageHint.StaticDraw);
-
-            GL.Flush();
         }
 
         public static void UpdateView()
@@ -199,7 +214,6 @@ namespace HomeworldDAEEditor
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.UseProgram(shaders[activeShader].ProgramID);
             shaders[activeShader].EnableVertexAttribArrays();
 
             //These uniforms are the same for every mesh
@@ -222,6 +236,7 @@ namespace HomeworldDAEEditor
             }
 
             int indiceat = 0;
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             foreach (HWMesh mesh in HWScene.Meshes)
             {
                 if (mesh.Visible)
@@ -290,7 +305,7 @@ namespace HomeworldDAEEditor
                         }
 
                         //--------------------------------------------------------- NORMAL MAPPING -------------------------------------------------------------//
-                        if (mesh.Material.NormalTexture != null) //Check if the material has a NORM-Map
+                        /*if (mesh.Material.NormalTexture != null) //Check if the material has a NORM-Map
                         {
                             GL.ActiveTexture(TextureUnit.Texture5);
                             GL.BindTexture(TextureTarget.Texture2D, mesh.Material.NormalTexture.ID);
@@ -301,7 +316,7 @@ namespace HomeworldDAEEditor
                         {
                             GL.Uniform1(shaders[activeShader].GetUniform("normalTex"), 0);
                             GL.Uniform1(shaders[activeShader].GetUniform("normalMapped"), 0); //Tell shader to not use a NORM map
-                        }
+                        }*/
 
                         GL.ActiveTexture(TextureUnit.Texture0);
                         GL.BindTexture(TextureTarget.Texture2D, texture.ID);
@@ -310,6 +325,9 @@ namespace HomeworldDAEEditor
                     else
                     {
                         GL.Uniform1(shaders[activeShader].GetUniform("textured"), 0); //Tell shader to use vertex colors
+                        GL.Uniform1(shaders[activeShader].GetUniform("specular"), 0); //Tell shader to not use a SPEC map
+                        GL.Uniform1(shaders[activeShader].GetUniform("thruster"), 0); //Tell shader not to interpolate between thruster textures
+                        GL.Uniform1(shaders[activeShader].GetUniform("emissive"), 0); //Tell shader to not use a GLOW map
                     }
 
                     if (mesh.Shaded)
@@ -318,12 +336,15 @@ namespace HomeworldDAEEditor
 
                         GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
 
+                        GL.Uniform3(shaders[activeShader].GetUniform("materialDiffuseColor"), ref mesh.Material.DiffuseColor);
                         GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
                         GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
                     }
                     else
                         GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 0); //Tell shader not to calculate lighting
 
+                    GL.Uniform1(shaders[activeShader].GetUniform("blackIsTransparent"), 0);
+                    GL.Uniform1(shaders[activeShader].GetUniform("materialOpacity"), 1.0f);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
                     GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
 
@@ -332,51 +353,21 @@ namespace HomeworldDAEEditor
                 }
             }
 
+            foreach (EditorMesh mesh in EditorScene.meshes)
+            {
+                if (mesh.Visible)
+                    if (mesh.NeverDrawInFront)
+                        indiceat += DrawEditorMesh(mesh, indiceat);
+            }
+
             if (DrawVisualizationsInFront)
                 GL.Clear(ClearBufferMask.DepthBufferBit);
 
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.Visible)
-                {
-                    HWTexture texture = null;
-                    if (mesh.Material != null)
-                        texture = mesh.Material.DiffuseTexture;
-
-                    if (texture != null)
-                    {
-                        GL.BindTexture(TextureTarget.Texture2D, texture.ID);
-                        GL.Uniform1(shaders[activeShader].GetUniform("textured"), 1); //Tell shader to use texture colors
-                    }
-                    else
-                    {
-                        GL.Uniform1(shaders[activeShader].GetUniform("textured"), 0); //Tell shader to use vertex colors
-                    }
-
-                    if (mesh.Shaded)
-                    {
-                        GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 1); //Tell shader to calculate lighting
-
-                        if (mesh.Material != null)
-                        {
-                            GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
-                            GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
-                            GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
-                        }
-                    }
-                    else
-                        GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 0); //Tell shader not to calculate lighting
-
-                    GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
-                    GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
-
-                    if (mesh.GetType() == typeof(EditorLine))
-                        GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, indiceat * sizeof(uint));
-                    else
-                        GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, indiceat * sizeof(uint));
-
-                    indiceat += mesh.IndiceCount;
-                }
+                    if(!mesh.NeverDrawInFront)
+                        indiceat += DrawEditorMesh(mesh, indiceat);
             }
 
             shaders[activeShader].DisableVertexAttribArrays();
@@ -399,8 +390,69 @@ namespace HomeworldDAEEditor
             }
             GL.End();*/
 
-            GL.Flush();
+            //GL.Flush();
             Program.GLControl.SwapBuffers();
+        }
+
+        private static int DrawEditorMesh(EditorMesh mesh, int index)
+        {
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
+            if (mesh.Wireframe)
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+
+            HWTexture texture = null;
+            if (mesh.Material != null)
+            {
+                texture = mesh.Material.DiffuseTexture;
+                GL.Uniform3(shaders[activeShader].GetUniform("materialDiffuseColor"), ref mesh.Material.DiffuseColor);
+                GL.Uniform1(shaders[activeShader].GetUniform("materialOpacity"), mesh.Material.Opacity);
+            }
+            else
+            {
+                GL.Uniform3(shaders[activeShader].GetUniform("materialDiffuseColor"), Vector3.One);
+                GL.Uniform1(shaders[activeShader].GetUniform("materialOpacity"), 1.0f);
+            }
+
+            if (texture != null)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, texture.ID);
+                GL.Uniform1(shaders[activeShader].GetUniform("textured"), 1); //Tell shader to use texture colors
+            }
+            else
+            {
+                GL.Uniform1(shaders[activeShader].GetUniform("textured"), 0); //Tell shader to use vertex colors
+            }
+
+            if (mesh.Shaded)
+            {
+                GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 1); //Tell shader to calculate lighting
+
+                if (mesh.Material != null)
+                {
+                    GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
+                    GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
+                    GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
+                }
+            }
+            else
+                GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 0); //Tell shader not to calculate lighting
+
+            if(mesh.BlackIsTransparent)
+                GL.Uniform1(shaders[activeShader].GetUniform("blackIsTransparent"), 1);
+            else
+                GL.Uniform1(shaders[activeShader].GetUniform("blackIsTransparent"), 0);
+
+            GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
+            GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
+
+            if (mesh.GetType() == typeof(EditorLine))
+                GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
+            else
+                GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
+                
+
+            return mesh.IndiceCount;
         }
 
         public static void Resize()

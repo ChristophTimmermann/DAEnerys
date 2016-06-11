@@ -32,6 +32,7 @@ namespace HomeworldDAEEditor
         public static List<HWMarker> Markers = new List<HWMarker>();
         public static List<HWDockpath> Dockpaths = new List<HWDockpath>();
         public static List<HWDockSegment> DockSegments = new List<HWDockSegment>();
+        public static List<HWNavLight> NavLights = new List<HWNavLight>();
 
         public static Dictionary<string, int> RenderTextures = new Dictionary<string, int>();
 
@@ -91,6 +92,11 @@ namespace HomeworldDAEEditor
             foreach(HWGoblinMesh goblin in GoblinMeshes) //Set all goblin meshes visible by default
             {
                 goblin.SetVisible(true);
+            }
+
+            foreach(HWNavLight navLight in NavLights)
+            {
+                Program.main.CheckNavLightVisible(navLight, true); //Set all navlights visible by default
             }
 
             CalibrateSettings();
@@ -334,6 +340,7 @@ namespace HomeworldDAEEditor
             Markers.Clear();
             Dockpaths.Clear();
             DockSegments.Clear();
+            NavLights.Clear();
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using OpenTK;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -20,6 +22,9 @@ namespace HomeworldDAEEditor
 
         public static OpenTK.NativeWindow NativeWindow = new OpenTK.NativeWindow();
 
+        public static Stopwatch DeltaCounter = new Stopwatch();
+        public static double ElapsedTime;
+
         [STAThread]
         static void Main()
         {
@@ -32,6 +37,7 @@ namespace HomeworldDAEEditor
             Application.Run(main);
 
             Camera.Init();
+            DeltaCounter.Start();
         }
 
         public static void CreateGLControl()

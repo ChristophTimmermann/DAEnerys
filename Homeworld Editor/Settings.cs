@@ -53,6 +53,9 @@ namespace HomeworldDAEEditor
             hideFSAAMessage = false;
 
             checkRenderOnTop.Checked = Renderer.DrawVisualizationsInFront;
+
+            listDataPaths.Items.Clear();
+            listDataPaths.Items.AddRange(HWData.DataPaths.ToArray());
         }
 
         private void numericJointSize_ValueChanged(object sender, EventArgs e)
@@ -166,6 +169,12 @@ namespace HomeworldDAEEditor
                 new XElement("fieldOfView", MathHelper.RadiansToDegrees(Program.Camera.FieldOfView)),
                 new XElement("fsaaSamples", Program.FSAASamples),
                 new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront));
+            
+            foreach(string dataPath in HWData.DataPaths)
+            {
+                settings.Add(new XElement("dataPath", dataPath));
+            }
+
             File.WriteAllText("settings.xml", settings.ToString());
         }
 
@@ -212,12 +221,45 @@ namespace HomeworldDAEEditor
                             bool.TryParse(element.Value, out drawInFront);
                             Renderer.DrawVisualizationsInFront = drawInFront;
                             break;
+                        case "dataPath":
+                            HWData.DataPaths.Add(element.Value);
+                            break;
                     }
                 }
             }
             catch
             {
                 Console.WriteLine("Failed to load \"settings.xml\".");
+            }
+        }
+
+        //------------------------------------------ DATA PATHS ----------------------------------------//
+        private void buttonAddDataPath_Click(object sender, EventArgs e)
+        {
+            DialogResult result = addDataPathDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string path = Path.GetDirectoryName(addDataPathDialog.FileName);
+
+                if (HWData.DataPaths.Contains(path))
+                {
+                    MessageBox.Show("This data path has already been added to the list.", "Data path already added", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                HWData.DataPaths.Add(path);
+                listDataPaths.Items.Add(path);
+                MessageBox.Show("This action will come into effect after the program has been restarted.", "Restart needed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void buttonRemoveDataPath_Click(object sender, EventArgs e)
+        {
+            if(listDataPaths.SelectedItem != null)
+            {
+                string path = (string)listDataPaths.SelectedItem;
+                HWData.DataPaths.Remove(path);
+                listDataPaths.Items.Remove(path);
             }
         }
     }

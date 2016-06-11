@@ -111,7 +111,7 @@ namespace HomeworldDAEEditor
                 UniformInfo info = new UniformInfo();
                 int length = 0;
 
-                StringBuilder name = new StringBuilder(32);
+                StringBuilder name = new StringBuilder(128);
 
                 GL.GetActiveUniform(ProgramID, i, 256, out length, out info.size, out info.type, name);
 

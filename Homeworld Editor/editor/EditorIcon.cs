@@ -1,5 +1,4 @@
-﻿using Assimp;
-using OpenTK;
+﻿using OpenTK;
 using System;
 using System.Collections.Generic;
 
@@ -7,33 +6,29 @@ namespace HomeworldDAEEditor
 {
     public class EditorIcon : EditorMesh
     {
-        public static Mesh Mesh;
-        public HWNode HWNode;
+        public static Assimp.Mesh Mesh;
+        public Vector3 Position;
 
-        public static float Size = 10;
-
-        public static EditorMaterial IconMaterial;
-
-        //public static HWTexture JointIcon = new HWTexture("iconJoint.png");
-        public static HWTexture JointIcon;
+        public float Size = 10;
 
         public override int VertexCount { get { return Mesh.VertexCount; } }
         public override int IndiceCount { get { return Mesh.GetIndices().Length; } }
 
-        public EditorIcon(HWJoint joint) : base()
+        public EditorIcon(Vector3 position, HWTexture texture) : base()
         {
-            this.HWNode = joint.Node;
-            this.Material = new EditorMaterial();
-            this.Material.DiffuseTexture = JointIcon;
-            Visible = true;
+            this.Position = position;
+
+            this.Material = new EditorMaterial("iconMaterial", new Vector3(1), new Vector3(1));
+            this.Material.DiffuseTexture = texture;
+            Visible = false;
         }
 
         public override Vector3[] GetVertices()
         {
             List<Vector3> verticesList = new List<Vector3>();
-            foreach (Vector3D vertex in Mesh.Vertices)
+            foreach (Assimp.Vector3D vertex in Mesh.Vertices)
             {
-                verticesList.Add(new Vector3(vertex.X, vertex.Y, vertex.Z));
+                verticesList.Add(new Vector3(vertex.X * Size, vertex.Y * Size, vertex.Z * Size));
             }
             return verticesList.ToArray();
         }
@@ -41,7 +36,7 @@ namespace HomeworldDAEEditor
         public override Vector3[] GetNormals()
         {
             List<Vector3> normalsList = new List<Vector3>();
-            foreach (Vector3D normal in Mesh.Normals)
+            foreach (Assimp.Vector3D normal in Mesh.Normals)
             {
                 normalsList.Add(new Vector3(normal.X, normal.Y, normal.Z));
             }
@@ -74,7 +69,7 @@ namespace HomeworldDAEEditor
             {
                 List<Vector2> coords = new List<Vector2>();
 
-                foreach (Vector3D coord in Mesh.TextureCoordinateChannels[0])
+                foreach (Assimp.Vector3D coord in Mesh.TextureCoordinateChannels[0])
                 {
                     coords.Add(new Vector2(coord.X, coord.Y));
                 }
@@ -92,12 +87,7 @@ namespace HomeworldDAEEditor
         /// </summary>
         public override void CalculateModelMatrix()
         {
-            float realSize = Size;
-
-            Matrix4 lookAt = Matrix4.LookAt(HWNode.WorldMatrix.ExtractTranslation(), Program.Camera.Position, new Vector3(0, 1, 0));
-
-            Scale = new Vector3(realSize, realSize, realSize);
-            ModelMatrix = lookAt;
+            ModelMatrix = Renderer.View.Inverted().ClearTranslation() * Matrix4.CreateTranslation(Position);
         }
     }
 }

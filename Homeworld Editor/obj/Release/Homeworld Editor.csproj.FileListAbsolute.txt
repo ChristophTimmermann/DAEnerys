@@ -22,3 +22,4 @@ D:\HomeworldDAEEditor\Homeworld Editor\obj\Release\Homeworld Editor.csprojResolv
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\resources\icosphere.obj
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\resources\joint.ply
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\resources\missing.tga
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Release\resources\icon.obj

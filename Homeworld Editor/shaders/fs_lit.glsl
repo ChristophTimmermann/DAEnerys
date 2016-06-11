@@ -12,6 +12,8 @@ uniform sampler2D specularTex;
 
 uniform float thrusterInterpolation;
 
+uniform vec3 materialDiffuseColor;
+uniform float materialOpacity;
 uniform float materialShininess;
 uniform vec3 materialSpecularColor;
 
@@ -22,8 +24,10 @@ uniform bool discreteGlow;
 uniform bool thruster;
 uniform bool specular;
 
+uniform bool blackIsTransparent;
+
 //array of lights
-#define MAX_LIGHTS 10
+#define MAX_LIGHTS 64
 uniform int numLights;
 uniform struct Light
 {
@@ -72,7 +76,7 @@ vec3 ApplyLight(Light light, vec3 surfaceColor, vec3 normal, vec3 surfacePos, ve
 	
     if(diffuseCoefficient > 0.0)
         specularCoefficient = pow(max(0.0, dot(surfaceToCamera, reflect(-surfaceToLight, normal))), materialShininess);
-    vec3 specular = specularCoefficient * materialSpecularColor * light.intensities * specularIntensity * 2;
+    vec3 specular = specularCoefficient * materialSpecularColor * light.intensities * specularIntensity * 3;
 
     //linear color (color before gamma correction)
     return ambient + attenuation *(diffuse + specular);
@@ -81,9 +85,18 @@ vec3 ApplyLight(Light light, vec3 surfaceColor, vec3 normal, vec3 surfacePos, ve
 void main() 
 {
 	vec4 surfaceColor = vec4(fragColor, 1.0);
+	float blackness = 1.0;
+	
 	if(textured)
 	{
 		surfaceColor = texture(materialTex, fragTexCoord);
+		
+		//For navlights (billboards)
+		if(blackIsTransparent)
+		{
+			blackness = (surfaceColor.x + surfaceColor.y + surfaceColor.z) / 3.0;
+			surfaceColor = vec4(surfaceColor.xyz * 2, blackness * 2);
+		}
 		
 		if(thruster)
 		{
@@ -91,6 +104,8 @@ void main()
 			surfaceColor = (1.0 - thrusterInterpolation) * thrusterOffColor + thrusterInterpolation * surfaceColor;
 		}
 	}
+	
+	surfaceColor = surfaceColor * vec4(materialDiffuseColor.xyz, materialOpacity);
 	
 	if(shaded)
 	{

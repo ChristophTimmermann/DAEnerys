@@ -18,6 +18,7 @@ namespace HomeworldDAEEditor
 
         public bool Loaded = false;
         HWDockpath selectedDockpath;
+        HWNavLight selectedNavLight;
 
         public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
         public Dictionary<HWJoint, object> ShipMeshParentComboItems = new Dictionary<HWJoint, object>();
@@ -28,6 +29,8 @@ namespace HomeworldDAEEditor
         public Dictionary<HWJoint, object> CollisionMeshParentComboItems = new Dictionary<HWJoint, object>();
 
         public Dictionary<object, HWMaterial> MaterialListItems = new Dictionary<object, HWMaterial>();
+
+        public bool DrawNavLightRadius;
 
         public Main()
         {
@@ -41,19 +44,37 @@ namespace HomeworldDAEEditor
             EditorScene.Init();
             Application.Idle += glControl_Update;
             Console.WriteLine("OpenTK initialized.");
-            GraphicsContext.CurrentContext.SwapInterval = 1;
             comboPerspectiveOrtho.SelectedIndex = 0;
 
             Loaded = true;
+
+            HWData.ParseDataPaths();
+
             Clear();
         }
 
         public void glControl_Update(object sender, EventArgs e)
         {
-            if (!Loaded)
-                return;
+            //For frame-independent stuff
+            Program.DeltaCounter.Stop();
+            Program.ElapsedTime = Program.DeltaCounter.Elapsed.TotalSeconds;
+            Program.DeltaCounter.Reset();
+            Program.DeltaCounter.Start();
 
             Program.Camera.Update();
+
+            int visibleNavLights = 0;
+            foreach(HWNavLight navLight in HWScene.NavLights)
+            {
+                if (navLight.Visible)
+                    visibleNavLights++;
+
+                navLight.Update();
+            }
+
+            //Only update render if it is needed
+            if(visibleNavLights > 0)
+                Program.GLControl.Invalidate();
         }
 
         public void glControl_Render(object sender, PaintEventArgs e)
@@ -102,6 +123,7 @@ namespace HomeworldDAEEditor
             listBoxMarkers.Items.Clear();
             checkboxDrawMarkers.Checked = false;
 
+            //Dockpaths
             dockpathList.Items.Clear();
             listDockpathFamilies.Items.Clear();
             listDockpathLinks.Items.Clear();
@@ -109,7 +131,6 @@ namespace HomeworldDAEEditor
             checkDockpathLatch.Checked = false;
             checkDockpathAnim.Checked = false;
             checkDockpathAjar.Checked = false;
-
             trackBarDockpathSegments.Enabled = false;
             trackBarDockpathSegments.Value = 0;
             trackBarDockpathSegments.Maximum = 1;
@@ -123,10 +144,23 @@ namespace HomeworldDAEEditor
             checkDockpathSegmentFlagCheck.Checked = false;
             checkDockpathSegmentFlagUnfocus.Checked = false;
             checkDockpathSegmentFlagClip.Checked = false;
+            selectedDockpath = null;
+
+            //Navlights
+            comboNavLightType.SelectedItem = null;
+            navLightList.Items.Clear();
+            numericNavLightSize.Value = 0;
+            numericNavLightPhase.Value = 0;
+            numericNavLightFrequency.Value = 0;
+            buttonNavLightColor.BackColor = Color.White;
+            numericNavLightDistance.Value = 0;
+            checkNavLightFlagSprite.Checked = false;
+            checkNavLightFlagHighEnd.Checked = false;
+            selectedNavLight = null;
 
             foreach(HWDockSegment segment in HWScene.DockSegments)
             {
-                segment.Icosphere.Color = Color.Red;
+                segment.Icosphere.Color = new Vector3(1, 0, 0);
             }
 
             HWScene.Clear();
@@ -188,7 +222,6 @@ namespace HomeworldDAEEditor
         {
             listBoxMarkers.Items.Add(marker.Name);
         }
-
         public void AddJoint(HWJoint joint, HWJoint parent)
         {
             TreeNode newNode = new TreeNode(joint.Name);
@@ -224,11 +257,11 @@ namespace HomeworldDAEEditor
             GoblinParentComboItems.Add(joint, item);
         }
 
+        //--------------------------------- DOCKPATHS ---------------------------------//
         public void AddDockpath(HWDockpath dockpath)
         {
             dockpathList.Items.Add(dockpath.Name);
         }
-
         private void dockpathList_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             bool newValue = false;
@@ -248,63 +281,6 @@ namespace HomeworldDAEEditor
             Renderer.UpdateView();
             Program.GLControl.Invalidate();
         }
-
-        public void glControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            Program.Camera.MouseDown(e);
-        }
-
-        public void glControl_MouseUp(object sender, MouseEventArgs e)
-        {
-            Program.Camera.MouseUp(e);
-        }
-
-        public void glControl_KeyDown(object sender, KeyEventArgs e)
-        {
-            Program.Camera.KeyDown(e);
-        }
-
-        private void jointsTree_AfterCheck(object sender, TreeViewEventArgs e)
-        {
-            bool newValue = e.Node.Checked;
-
-            //TODO: Optimize
-            foreach(HWJoint joint in HWScene.Joints)
-            {
-                if(joint.TreeNode == e.Node)
-                {
-                    joint.EditorJoint.Visible = newValue;
-                    break;
-                }
-            }
-
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
-        }
-
-        private void buttonSettings_Click(object sender, EventArgs e)
-        {
-            Program.settings = new Settings();
-            Program.settings.Visible = true;
-            Program.settings.Init();
-        }
-
-        private void checkboxDrawMarkers_CheckedChanged(object sender, EventArgs e)
-        {
-            foreach(HWMarker marker in HWScene.Markers)
-            {
-                foreach(EditorLine line in marker.Lines)
-                {
-                    line.Visible = checkboxDrawMarkers.Checked;
-                }
-            }
-
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
-        }
-
         private void dockpathList_SelectedIndexChanged(object sender, EventArgs e)
         {
             listDockpathFamilies.Items.Clear();
@@ -329,18 +305,18 @@ namespace HomeworldDAEEditor
             checkDockpathSegmentFlagClip.Checked = false;
 
             HWDockpath dockpath = null;
-            foreach(HWDockpath path in HWScene.Dockpaths)
+            foreach (HWDockpath path in HWScene.Dockpaths)
             {
-                if(path.Name == dockpathList.SelectedItem.ToString())
+                if (path.Name == dockpathList.SelectedItem.ToString())
                 {
                     dockpath = path;
                     break;
                 }
             }
 
-            if(dockpath != null)
+            if (dockpath != null)
             {
-                foreach(string family in dockpath.Families)
+                foreach (string family in dockpath.Families)
                 {
                     listDockpathFamilies.Items.Add(family);
                 }
@@ -352,7 +328,7 @@ namespace HomeworldDAEEditor
 
                 foreach (DockpathFlag flag in dockpath.Flags)
                 {
-                    switch(flag)
+                    switch (flag)
                     {
                         case DockpathFlag.EXIT:
                             checkDockpathExit.Checked = true;
@@ -375,17 +351,16 @@ namespace HomeworldDAEEditor
             trackBarDockpathSegments.Maximum = dockpath.Segments.Count - 1;
             trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
         }
-
         private void trackBarDockpathSegments_Scroll(object sender, EventArgs e)
         {
             //Reset segment colors
             foreach (HWDockSegment segment in HWScene.DockSegments)
             {
-                segment.Icosphere.Color = Color.Red;
+                segment.Icosphere.Color = new Vector3(1, 0, 0);
             }
 
             //Reset line colors
-            foreach(EditorLine line in selectedDockpath.Lines)
+            foreach (EditorLine line in selectedDockpath.Lines)
             {
                 line.StartColor = Color.Red;
                 line.EndColor = Color.Red;
@@ -393,13 +368,13 @@ namespace HomeworldDAEEditor
 
             HWDockSegment selectedSegment = selectedDockpath.Segments[trackBarDockpathSegments.Value];
 
-            selectedSegment.Icosphere.Color = Color.Yellow;
+            selectedSegment.Icosphere.Color = new Vector3(1, 1, 0);
 
-           /* if(selectedSegment.ID < selectedDockpath.Lines.Count)
-            selectedDockpath.Lines[selectedSegment.ID].StartColor = Color.Yellow;
+            /* if(selectedSegment.ID < selectedDockpath.Lines.Count)
+             selectedDockpath.Lines[selectedSegment.ID].StartColor = Color.Yellow;
 
-            if(selectedSegment.ID > 0)
-                selectedDockpath.Lines[selectedSegment.ID - 1].EndColor = Color.Yellow;*/
+             if(selectedSegment.ID > 0)
+                 selectedDockpath.Lines[selectedSegment.ID - 1].EndColor = Color.Yellow;*/
 
             boxDockpathSegmentTolerance.Text = selectedSegment.Tolerance.ToString();
             boxDockpathSegmentSpeed.Text = selectedSegment.Speed.ToString();
@@ -446,6 +421,182 @@ namespace HomeworldDAEEditor
 
             Renderer.UpdateMeshData();
             Program.GLControl.Invalidate();
+        }
+
+        //--------------------------------- NAVLIGHTS ---------------------------------//
+        public void AddNavLight(HWNavLight navLight)
+        {
+            navLightList.Items.Add(navLight.Name);
+            navLight.NavLightListItemIndex = navLightList.Items.Count - 1;
+        }
+        private void navLightList_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            bool newValue = false;
+
+            if (e.NewValue == CheckState.Checked)
+                newValue = true;
+
+            foreach (HWNavLight navLight in HWScene.NavLights)
+            {
+                if (navLight.Name == navLightList.Items[e.Index].ToString())
+                {
+                    navLight.Visible = newValue;
+                }
+            }
+
+            Renderer.UpdateMeshData();
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+        private void navLightList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboNavLightType.SelectedIndex = 0;
+            numericNavLightSize.Value = 0;
+            numericNavLightPhase.Value = 0;
+            numericNavLightFrequency.Value = 0;
+            buttonNavLightColor.BackColor = Color.White;
+            numericNavLightDistance.Value = 0;
+
+            checkNavLightFlagSprite.Checked = false;
+            checkNavLightFlagHighEnd.Checked = false;
+
+            HWNavLight navLight = null;
+
+            if (navLightList.SelectedItem != null)
+            {
+                foreach (HWNavLight light in HWScene.NavLights)
+                {
+                    if (light.Name == navLightList.SelectedItem.ToString())
+                    {
+                        navLight = light;
+                        break;
+                    }
+                }
+            }
+
+            if (navLight != null)
+            {
+                comboNavLightType.SelectedItem = navLight.Style.Name;
+                numericNavLightSize.Value = (decimal)navLight.Size;
+                numericNavLightPhase.Value = (decimal)navLight.Phase;
+                numericNavLightFrequency.Value = (decimal)navLight.Frequency;
+
+                int red = (int)Math.Round((float)(navLight.Color.X * 255));
+                int green = (int)Math.Round((float)(navLight.Color.Y * 255));
+                int blue = (int)Math.Round((float)(navLight.Color.Z * 255));
+                red = Math.Min(red, 255);
+                green = Math.Min(green, 255);
+                blue = Math.Min(blue, 255);
+                buttonNavLightColor.BackColor = Color.FromArgb(255, red, green, blue);
+
+                numericNavLightDistance.Value = (decimal)navLight.Distance;
+
+                foreach (NavLightFlag flag in navLight.Flags)
+                {
+                    switch (flag)
+                    {
+                        case NavLightFlag.SPRITE:
+                            checkNavLightFlagSprite.Checked = true;
+                            break;
+                        case NavLightFlag.HIGHEND:
+                            checkNavLightFlagHighEnd.Checked = true;
+                            break;
+                    }
+                }
+
+                selectedNavLight = navLight;
+            }
+        }
+        public void AddNavLightStyle(HWNavLightStyle navLightStyle)
+        {
+            comboNavLightType.Items.Add(navLightStyle.Name);
+        }
+        public void CheckNavLightVisible(HWNavLight navLight, bool visible)
+        {
+            navLightList.SetItemChecked(navLight.NavLightListItemIndex, visible);
+        }
+        private void checkNavLightDrawRadius_CheckedChanged(object sender, EventArgs e)
+        {
+            DrawNavLightRadius = checkNavLightDrawRadius.Checked;
+
+            if (DrawNavLightRadius)
+            {
+                foreach (HWNavLight navLight in HWScene.NavLights)
+                {
+                    if (navLight.Visible)
+                        if(navLight.RenderIcosphere != null)
+                            navLight.RenderIcosphere.Visible = true;
+                }
+            }
+            else
+            {
+                foreach (HWNavLight navLight in HWScene.NavLights)
+                {
+                    if (navLight.RenderIcosphere != null)
+                        navLight.RenderIcosphere.Visible = false;
+                }
+            }
+
+            Renderer.UpdateMeshData();
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void checkboxDrawMarkers_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (HWMarker marker in HWScene.Markers)
+            {
+                foreach (EditorLine line in marker.Lines)
+                {
+                    line.Visible = checkboxDrawMarkers.Checked;
+                }
+            }
+
+            Renderer.UpdateMeshData();
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        
+        public void glControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            Program.Camera.MouseDown(e);
+        }
+
+        public void glControl_MouseUp(object sender, MouseEventArgs e)
+        {
+            Program.Camera.MouseUp(e);
+        }
+
+        public void glControl_KeyDown(object sender, KeyEventArgs e)
+        {
+            Program.Camera.KeyDown(e);
+        }
+
+        private void jointsTree_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            bool newValue = e.Node.Checked;
+
+            //TODO: Optimize
+            foreach(HWJoint joint in HWScene.Joints)
+            {
+                if(joint.TreeNode == e.Node)
+                {
+                    joint.EditorJoint.Visible = newValue;
+                    break;
+                }
+            }
+
+            Renderer.UpdateMeshData();
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void buttonSettings_Click(object sender, EventArgs e)
+        {
+            Program.settings = new Settings();
+            Program.settings.Visible = true;
+            Program.settings.Init();
         }
 
         public void glControl_Enter(object sender, EventArgs e)

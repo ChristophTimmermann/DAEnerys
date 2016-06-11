@@ -51,3 +51,4 @@ D:\HomeworldDAEEditor\Homeworld Editor\obj\Debug\Homeworld Editor.pdb
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\resources\icosphere.obj
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\resources\missing.tga
 D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\resources\joint.ply
+D:\HomeworldDAEEditor\Homeworld Editor\bin\Debug\resources\icon.obj

@@ -1,5 +1,6 @@
 ﻿using Assimp;
 using Assimp.Configs;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,9 +32,8 @@ namespace HomeworldDAEEditor
             Scene icosphere = importer.ImportFile(@"resources/icosphere.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorIcosphere.Mesh = icosphere.Meshes[0];
 
-            /*Scene icon = importer.ImportFile("icon.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
+            Scene icon = importer.ImportFile(@"resources/icon.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorIcon.Mesh = icon.Meshes[0];
-            EditorIcon.IconMaterial = jointMaterial;*/
 
             importer.Dispose();
             #endregion

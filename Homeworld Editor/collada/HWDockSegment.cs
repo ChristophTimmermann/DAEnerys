@@ -25,7 +25,7 @@ namespace HomeworldDAEEditor
             Dockpath = node.Parent.Dockpath;
             Dockpath.Segments.Add(this);
 
-            Icosphere = new EditorIcosphere(Node, Color.Red);
+            Icosphere = new EditorIcosphere(Node, new Vector3(1, 0, 0));
             Icosphere.Scale = new Vector3(5, 5, 5);
 
             HWScene.DockSegments.Add(this);

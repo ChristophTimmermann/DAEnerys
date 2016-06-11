@@ -12,12 +12,12 @@ namespace HomeworldDAEEditor
         public new Vector3 Scale = Vector3.One;
         public HWNode HWNode;
 
-        public Color Color;
+        public Vector3 Color;
 
         public override int VertexCount { get { return Mesh.VertexCount; } }
         public override int IndiceCount { get { return Mesh.GetIndices().Length; } }
 
-        public EditorIcosphere(HWNode node, Color color) : base()
+        public EditorIcosphere(HWNode node, Vector3 color) : base()
         {
             this.HWNode = node;
             this.Color = color;
@@ -63,7 +63,7 @@ namespace HomeworldDAEEditor
             Vector3[] colorData = new Vector3[VertexCount];
             for(int i = 0;i < VertexCount; i++)
             {
-                colorData[i] = new Vector3(Color.R, Color.G, Color.B);
+                colorData[i] = Color;
             }
 
             return colorData;

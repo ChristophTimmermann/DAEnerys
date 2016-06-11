@@ -72,11 +72,13 @@
     <Compile Include="collada\HWJoint.cs" />
     <Compile Include="collada\HWMarker.cs" />
     <Compile Include="collada\HWGoblinMesh.cs" />
+    <Compile Include="collada\HWNavLight.cs" />
     <Compile Include="collada\HWShipMesh.cs" />
     <Compile Include="collada\HWShipMeshLOD.cs" />
     <Compile Include="CustomGLControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="data\HWNavLightStyle.cs" />
     <Compile Include="editor\EditorIcon.cs" />
     <Compile Include="editor\EditorIcosphere.cs" />
     <Compile Include="editor\EditorJoint.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="collada\HWNode.cs" />
     <Compile Include="editor\EditorMaterial.cs" />
     <Compile Include="editor\EditorLine.cs" />
+    <Compile Include="data\HWData.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +143,9 @@
     <EmbeddedResource Include="shaders\vs_lit.glsl" />
     <EmbeddedResource Include="shaders\vs_norm.glsl" />
     <EmbeddedResource Include="shaders\vs_tex.glsl" />
+    <None Include="resources\icon.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="resources\icosphere.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

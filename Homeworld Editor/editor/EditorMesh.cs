@@ -10,11 +10,14 @@ namespace HomeworldDAEEditor
 {
     public abstract class EditorMesh
     {
-        public EditorMaterial Material;
+        public EditorMaterial Material = new EditorMaterial();
 
         public Vector3 Scale = Vector3.One;
         public bool Visible = false;
         public bool Shaded = false;
+        public bool NeverDrawInFront = false;
+        public bool BlackIsTransparent = false;
+        public bool Wireframe = false;
 
         public Matrix4 ModelMatrix = Matrix4.Identity;
         public Matrix4 ViewProjectionMatrix = Matrix4.Identity;

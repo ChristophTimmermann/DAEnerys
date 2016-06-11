@@ -204,10 +204,7 @@ namespace HomeworldDAEEditor
 
         private void UpdatePosition()
         {
-            if (!this.Orthographic)
-                Position = orbitPoint + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix3.CreateRotationX(angles.X) * Matrix3.CreateRotationY(angles.Y));
-            else
-                Position = orbitPoint + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix3.CreateRotationX(angles.X) * Matrix3.CreateRotationY(angles.Y));
+            Position = orbitPoint + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix3.CreateRotationX(angles.X) * Matrix3.CreateRotationY(angles.Y));
         }
 
         public Matrix4 GetViewMatrix()
