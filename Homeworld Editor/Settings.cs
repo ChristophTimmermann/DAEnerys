@@ -175,12 +175,12 @@ namespace HomeworldDAEEditor
                 settings.Add(new XElement("dataPath", dataPath));
             }
 
-            File.WriteAllText("settings.xml", settings.ToString());
+            File.WriteAllText(Path.Combine(Program.EXECUTABLE_PATH, "settings.xml"), settings.ToString());
         }
 
         public static void LoadSettings()
         {
-            if (!File.Exists("settings.xml"))
+            if (!File.Exists(Path.Combine(Program.EXECUTABLE_PATH, "settings.xml")))
             {
                 Console.WriteLine("No settings.xml found, using default values.");
                 return;
@@ -188,7 +188,7 @@ namespace HomeworldDAEEditor
 
             try
             {
-                string file = File.ReadAllText("settings.xml");
+                string file = File.ReadAllText(Path.Combine(Program.EXECUTABLE_PATH, "settings.xml"));
                 XElement settings = XElement.Parse(file);
 
                 foreach (XElement element in settings.Elements())
@@ -229,7 +229,7 @@ namespace HomeworldDAEEditor
             }
             catch
             {
-                Console.WriteLine("Failed to load \"settings.xml\".");
+                Console.WriteLine("Failed to load \"" + Path.Combine(Program.EXECUTABLE_PATH, "settings.xml") + "\".");
             }
         }
 

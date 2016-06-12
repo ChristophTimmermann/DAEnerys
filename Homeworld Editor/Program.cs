@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -25,19 +26,22 @@ namespace HomeworldDAEEditor
         public static Stopwatch DeltaCounter = new Stopwatch();
         public static double ElapsedTime;
 
+        public static string EXECUTABLE_PATH = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+        public static string OPEN_PATH;
+
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            if (args.Length > 0)
+                OPEN_PATH = args[0];
 
             main = new Main();
             Settings.LoadSettings();
             CreateGLControl();
             Application.Run(main);
-
-            Camera.Init();
-            DeltaCounter.Start();
         }
 
         public static void CreateGLControl()

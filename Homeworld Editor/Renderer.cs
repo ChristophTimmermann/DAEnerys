@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using Assimp;
 using OpenTK.Graphics;
+using System.IO;
 
 namespace HomeworldDAEEditor
 {
@@ -74,7 +75,7 @@ namespace HomeworldDAEEditor
             activeShader = "lit";
 
             //AmbientLight.Enabled = false;
-            DefaultTexture = new HWTexture(@"resources/missing.tga");
+            DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
             GL.UseProgram(shaders[activeShader].ProgramID);
             GraphicsContext.CurrentContext.SwapInterval = 1;
 

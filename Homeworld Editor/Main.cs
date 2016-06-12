@@ -47,10 +47,22 @@ namespace HomeworldDAEEditor
             comboPerspectiveOrtho.SelectedIndex = 0;
 
             Loaded = true;
+            Program.DeltaCounter.Start();
 
             HWData.ParseDataPaths();
 
             Clear();
+
+            //Open DAE from arguments
+            if (Program.OPEN_PATH != null)
+                if (File.Exists(Program.OPEN_PATH))
+                {
+                    HWScene.LoadCollada(Program.OPEN_PATH);
+
+                    Renderer.UpdateMeshData();
+                    Renderer.UpdateView();
+                    Program.GLControl.Invalidate();
+                }
         }
 
         public void glControl_Update(object sender, EventArgs e)

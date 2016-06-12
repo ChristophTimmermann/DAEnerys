@@ -26,13 +26,13 @@ namespace HomeworldDAEEditor
             });
             logStream.Attach();
 
-            Scene joint = importer.ImportFile(@"resources/joint.ply", PostProcessPreset.TargetRealTimeMaximumQuality);
+            Scene joint = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/joint.ply"), PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorJoint.Mesh = joint.Meshes[0];
 
-            Scene icosphere = importer.ImportFile(@"resources/icosphere.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
+            Scene icosphere = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/icosphere.obj"), PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorIcosphere.Mesh = icosphere.Meshes[0];
 
-            Scene icon = importer.ImportFile(@"resources/icon.obj", PostProcessPreset.TargetRealTimeMaximumQuality);
+            Scene icon = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/icon.obj"), PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorIcon.Mesh = icon.Meshes[0];
 
             importer.Dispose();

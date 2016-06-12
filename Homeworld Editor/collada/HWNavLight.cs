@@ -2,6 +2,7 @@
 using OpenTK;
 using System.Drawing;
 using System;
+using System.Reflection;
 
 namespace HomeworldDAEEditor
 {
@@ -154,9 +155,7 @@ namespace HomeworldDAEEditor
                 brightness = 1;
 
             if (Style.LinkThrust) //If the navlight brightness is modified by the thruster strength
-            {
                 brightness *= Renderer.ThrusterInterpolation;
-            }
 
             if (RenderSprite != null)
             {

@@ -44,11 +44,6 @@ namespace HomeworldDAEEditor
 
         //private Cursor cursor = new Cursor(Program.main.Cursor.Handle);
 
-        public void Init()
-        {
-
-        }
-
         public void MouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
