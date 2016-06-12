@@ -36,6 +36,7 @@ namespace HomeworldDAEEditor
             buttonBackgroundColor.BackColor = Renderer.BackgroundColor;
 
             numericFOV.Value = (int)Math.Round(MathHelper.RadiansToDegrees(Program.Camera.FieldOfView));
+            numericIconSize.Value = (decimal)HWNavLight.IconSize;
 
             hideFSAAMessage = true;
             switch(Program.FSAASamples)
@@ -154,6 +155,14 @@ namespace HomeworldDAEEditor
         {
             Renderer.DrawVisualizationsInFront = checkRenderOnTop.Checked;
 
+            Program.GLControl.Invalidate();
+        }
+
+        private void numericIconSize_ValueChanged(object sender, EventArgs e)
+        {
+            HWNavLight.IconSize = (float)numericIconSize.Value;
+
+            Renderer.UpdateMeshData();
             Program.GLControl.Invalidate();
         }
 

@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace HomeworldDAEEditor
 {
@@ -13,6 +14,8 @@ namespace HomeworldDAEEditor
 
         public override int VertexCount { get { return Mesh.VertexCount; } }
         public override int IndiceCount { get { return Mesh.GetIndices().Length; } }
+
+        public static HWTexture LightbulbTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/lightbulb.png"), true, true);
 
         public EditorIcon(Vector3 position, HWTexture texture) : base()
         {

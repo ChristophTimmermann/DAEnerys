@@ -296,6 +296,7 @@ namespace HomeworldDAEEditor
             Program.Camera.ZoomSpeed = zoomSpeed;
             EditorJoint.Size = jointSize;
             HWMarker.MarkerSize = markerSize;
+            HWNavLight.IconSize = farthest / 45;
             Program.Camera.ClipDistance = farClip;
             Program.Camera.NearClipDistance = nearClip;
         }

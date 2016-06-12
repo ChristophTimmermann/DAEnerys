@@ -42,6 +42,8 @@
             this.labelNearClip = new System.Windows.Forms.Label();
             this.numericNearClip = new System.Windows.Forms.NumericUpDown();
             this.groupEditor = new System.Windows.Forms.GroupBox();
+            this.labelIconSize = new System.Windows.Forms.Label();
+            this.numericIconSize = new System.Windows.Forms.NumericUpDown();
             this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
             this.numericMarkerSize = new System.Windows.Forms.NumericUpDown();
             this.numericJointSize = new System.Windows.Forms.NumericUpDown();
@@ -52,17 +54,18 @@
             this.labelAmbientColor = new System.Windows.Forms.Label();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.groupDataPaths = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.buttonRemoveDataPath = new System.Windows.Forms.Button();
             this.buttonAddDataPath = new System.Windows.Forms.Button();
             this.listDataPaths = new System.Windows.Forms.ListBox();
             this.addDataPathDialog = new System.Windows.Forms.OpenFileDialog();
-            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericFOV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericNearClip)).BeginInit();
             this.groupEditor.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericIconSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarkerSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).BeginInit();
             this.groupLighting.SuspendLayout();
@@ -276,6 +279,8 @@
             // 
             this.groupEditor.AutoSize = true;
             this.groupEditor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupEditor.Controls.Add(this.labelIconSize);
+            this.groupEditor.Controls.Add(this.numericIconSize);
             this.groupEditor.Controls.Add(this.checkRenderOnTop);
             this.groupEditor.Controls.Add(this.numericMarkerSize);
             this.groupEditor.Controls.Add(this.numericJointSize);
@@ -283,17 +288,50 @@
             this.groupEditor.Controls.Add(this.labelJointSize);
             this.groupEditor.Location = new System.Drawing.Point(13, 182);
             this.groupEditor.Name = "groupEditor";
-            this.groupEditor.Size = new System.Drawing.Size(329, 107);
+            this.groupEditor.Size = new System.Drawing.Size(329, 133);
             this.groupEditor.TabIndex = 16;
             this.groupEditor.TabStop = false;
             this.groupEditor.Text = "Editor";
+            // 
+            // labelIconSize
+            // 
+            this.labelIconSize.AutoSize = true;
+            this.labelIconSize.Location = new System.Drawing.Point(8, 73);
+            this.labelIconSize.Name = "labelIconSize";
+            this.labelIconSize.Size = new System.Drawing.Size(49, 13);
+            this.labelIconSize.TabIndex = 19;
+            this.labelIconSize.Text = "Icon size";
+            // 
+            // numericIconSize
+            // 
+            this.numericIconSize.DecimalPlaces = 3;
+            this.numericIconSize.Location = new System.Drawing.Point(75, 71);
+            this.numericIconSize.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericIconSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericIconSize.Name = "numericIconSize";
+            this.numericIconSize.Size = new System.Drawing.Size(248, 20);
+            this.numericIconSize.TabIndex = 18;
+            this.numericIconSize.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.numericIconSize.ValueChanged += new System.EventHandler(this.numericIconSize_ValueChanged);
             // 
             // checkRenderOnTop
             // 
             this.checkRenderOnTop.AutoSize = true;
             this.checkRenderOnTop.Checked = true;
             this.checkRenderOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkRenderOnTop.Location = new System.Drawing.Point(11, 71);
+            this.checkRenderOnTop.Location = new System.Drawing.Point(11, 97);
             this.checkRenderOnTop.Name = "checkRenderOnTop";
             this.checkRenderOnTop.Size = new System.Drawing.Size(151, 17);
             this.checkRenderOnTop.TabIndex = 17;
@@ -357,7 +395,7 @@
             this.groupLighting.Controls.Add(this.labelBackgroundColor);
             this.groupLighting.Controls.Add(this.buttonAmbientColor);
             this.groupLighting.Controls.Add(this.labelAmbientColor);
-            this.groupLighting.Location = new System.Drawing.Point(13, 295);
+            this.groupLighting.Location = new System.Drawing.Point(13, 321);
             this.groupLighting.Name = "groupLighting";
             this.groupLighting.Size = new System.Drawing.Size(329, 84);
             this.groupLighting.TabIndex = 17;
@@ -418,12 +456,21 @@
             this.groupDataPaths.Controls.Add(this.buttonRemoveDataPath);
             this.groupDataPaths.Controls.Add(this.buttonAddDataPath);
             this.groupDataPaths.Controls.Add(this.listDataPaths);
-            this.groupDataPaths.Location = new System.Drawing.Point(13, 385);
+            this.groupDataPaths.Location = new System.Drawing.Point(13, 411);
             this.groupDataPaths.Name = "groupDataPaths";
             this.groupDataPaths.Size = new System.Drawing.Size(329, 188);
             this.groupDataPaths.TabIndex = 19;
             this.groupDataPaths.TabStop = false;
             this.groupDataPaths.Text = "Data paths";
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(6, 146);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(317, 26);
+            this.label1.TabIndex = 25;
+            this.label1.Text = "The order of the paths matter. Files in lower paths will overwrite files in the p" +
+    "aths above them.";
             // 
             // buttonRemoveDataPath
             // 
@@ -460,22 +507,13 @@
             this.addDataPathDialog.Filter = "Data roots|keeper.txt";
             this.addDataPathDialog.Title = "Select keeper.txt in data root folder";
             // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(6, 146);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(317, 26);
-            this.label1.TabIndex = 25;
-            this.label1.Text = "The order of the paths matter. Files in lower paths will overwrite files in the p" +
-    "aths above them.";
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(374, 628);
+            this.ClientSize = new System.Drawing.Size(415, 705);
             this.Controls.Add(this.groupDataPaths);
             this.Controls.Add(this.groupLighting);
             this.Controls.Add(this.groupEditor);
@@ -494,6 +532,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericNearClip)).EndInit();
             this.groupEditor.ResumeLayout(false);
             this.groupEditor.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericIconSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarkerSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).EndInit();
             this.groupLighting.ResumeLayout(false);
@@ -535,5 +574,7 @@
         private System.Windows.Forms.ListBox listDataPaths;
         private System.Windows.Forms.OpenFileDialog addDataPathDialog;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numericIconSize;
+        private System.Windows.Forms.Label labelIconSize;
     }
 }

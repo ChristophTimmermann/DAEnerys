@@ -8,6 +8,10 @@ namespace HomeworldDAEEditor
 {
     public class HWNavLight
     {
+        //Statics
+        private static float iconSize = 3;
+        public static float IconSize { get { return iconSize; } set { iconSize = value; foreach (HWNavLight navLight in HWScene.NavLights) { navLight.Icon.Size = value; } } }
+
         public HWNode Node;
         public int NavLightListItemIndex;
 
@@ -19,6 +23,9 @@ namespace HomeworldDAEEditor
         public Vector3 Color;
         public float Distance;
         public List<NavLightFlag> Flags;
+
+        //Editor
+        public EditorIcon Icon;
 
         //Rendering
         public Light RenderLight;
@@ -48,6 +55,8 @@ namespace HomeworldDAEEditor
                 if (Program.main.DrawNavLightRadius)
                     if (RenderIcosphere != null)
                         RenderIcosphere.Visible = value;
+
+                Icon.Visible = value;
             }
         }
 
@@ -86,6 +95,12 @@ namespace HomeworldDAEEditor
                 RenderSprite.NeverDrawInFront = true;
                 RenderSprite.Material.DiffuseColor = Color;
             }
+
+            Icon = new EditorIcon(Node.AbsolutePosition, EditorIcon.LightbulbTexture);
+            Icon.Visible = true;
+            Icon.Size = IconSize;
+            Icon.DrawAboveShip = true;
+            Icon.Material.DiffuseColor = Color;
 
             if (Phase > 0)
                 state = NavLightState.SHIFT;
@@ -167,6 +182,8 @@ namespace HomeworldDAEEditor
             {
                 RenderIcosphere.Material.DiffuseColor = Color * brightness;
             }
+
+            Icon.Material.DiffuseColor = Color * brightness;
 
             if (RenderLight != null)
                 RenderLight.Color = Color * brightness * 3;

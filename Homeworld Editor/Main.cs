@@ -884,7 +884,7 @@ namespace HomeworldDAEEditor
 
         private void buttonAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(this, "Homeworld DAE Editor b" + BUILD + "\n\nDeveloped by Christoph (PayDay) Timmermann\nwith help from the Gearbox forums.\n\nUses\n - OpenTK\n - Assimp\n - Assimp.NET\n - FSharp\n - DevIL\n - DevILSharp", "Homeworld DAE Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, "Homeworld DAE Editor b" + BUILD + "\n\nDeveloped by Christoph (PayDay) Timmermann\nwith help from the Gearbox forums.\n\nEditor icons made by SumoChick.\n\nUses\n - OpenTK\n - Assimp\n - Assimp.NET\n - FSharp\n - DevIL\n - DevILSharp", "Homeworld DAE Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         //Perspective-Orthographic combobox

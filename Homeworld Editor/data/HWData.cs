@@ -60,7 +60,7 @@ namespace HomeworldDAEEditor
                 string spritePath = Path.Combine(dataPath, "effect/textures/navlight.tga");
                 if (File.Exists(spritePath))
                 {
-                    NavLightSprite = new HWTexture(spritePath);
+                    NavLightSprite = new HWTexture(spritePath, false, true);
                 }
             }
 

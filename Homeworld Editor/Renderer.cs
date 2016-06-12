@@ -63,6 +63,11 @@ namespace HomeworldDAEEditor
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
+            //Anisotropic filtering
+            float maxAniso;
+            GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
+            GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
+
             GL.LineWidth(2);
 
             GL.GenBuffers(1, out ibo_elements);
@@ -114,12 +119,20 @@ namespace HomeworldDAEEditor
             foreach(EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.NeverDrawInFront)
-                    newList.Add(mesh);
+                    if (!mesh.DrawAboveShip)
+                        newList.Add(mesh);
             }
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (!mesh.NeverDrawInFront)
-                    newList.Add(mesh);
+                    if (mesh.DrawAboveShip)
+                        newList.Add(mesh);
+            }
+            foreach (EditorMesh mesh in EditorScene.meshes)
+            {
+                if (!mesh.NeverDrawInFront)
+                    if (!mesh.DrawAboveShip)
+                        newList.Add(mesh);
             }
             EditorScene.meshes = newList;
 
@@ -367,8 +380,17 @@ namespace HomeworldDAEEditor
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.Visible)
+                    if (!mesh.NeverDrawInFront)
+                        if(mesh.DrawAboveShip)
+                            indiceat += DrawEditorMesh(mesh, indiceat);
+            }
+
+            foreach (EditorMesh mesh in EditorScene.meshes)
+            {
+                if (mesh.Visible)
                     if(!mesh.NeverDrawInFront)
-                        indiceat += DrawEditorMesh(mesh, indiceat);
+                        if(!mesh.DrawAboveShip)
+                            indiceat += DrawEditorMesh(mesh, indiceat);
             }
 
             shaders[activeShader].DisableVertexAttribArrays();
