@@ -118,8 +118,8 @@
             0});
             this.numericFarClip.Location = new System.Drawing.Point(105, 45);
             this.numericFarClip.Maximum = new decimal(new int[] {
-            50000000,
-            0,
+            658067456,
+            1164,
             0,
             0});
             this.numericFarClip.Minimum = new decimal(new int[] {
@@ -142,8 +142,8 @@
             this.numericZoomSpeed.DecimalPlaces = 1;
             this.numericZoomSpeed.Location = new System.Drawing.Point(105, 19);
             this.numericZoomSpeed.Maximum = new decimal(new int[] {
-            50000000,
-            0,
+            658067456,
+            1164,
             0,
             0});
             this.numericZoomSpeed.Minimum = new decimal(new int[] {
@@ -256,8 +256,8 @@
             131072});
             this.numericNearClip.Location = new System.Drawing.Point(105, 71);
             this.numericNearClip.Maximum = new decimal(new int[] {
-            100000000,
-            0,
+            658067456,
+            1164,
             0,
             0});
             this.numericNearClip.Minimum = new decimal(new int[] {
@@ -307,8 +307,8 @@
             this.numericIconSize.DecimalPlaces = 3;
             this.numericIconSize.Location = new System.Drawing.Point(75, 71);
             this.numericIconSize.Maximum = new decimal(new int[] {
-            1000,
-            0,
+            658067456,
+            1164,
             0,
             0});
             this.numericIconSize.Minimum = new decimal(new int[] {
@@ -344,8 +344,8 @@
             this.numericMarkerSize.DecimalPlaces = 3;
             this.numericMarkerSize.Location = new System.Drawing.Point(75, 45);
             this.numericMarkerSize.Maximum = new decimal(new int[] {
-            705032704,
-            1,
+            658067456,
+            1164,
             0,
             0});
             this.numericMarkerSize.Minimum = new decimal(new int[] {
@@ -368,8 +368,8 @@
             this.numericJointSize.DecimalPlaces = 1;
             this.numericJointSize.Location = new System.Drawing.Point(75, 19);
             this.numericJointSize.Maximum = new decimal(new int[] {
-            50000000,
-            0,
+            658067456,
+            1164,
             0,
             0});
             this.numericJointSize.Minimum = new decimal(new int[] {

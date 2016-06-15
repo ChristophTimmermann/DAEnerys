@@ -23,7 +23,7 @@ namespace HomeworldDAEEditor
             {
                 string[] splitted = name.Split('[');
                 int end = -1;
-
+                
                 for (int i = 0; i < splitted.Length; i++)
                 {
                     if (i != 0)
@@ -31,7 +31,15 @@ namespace HomeworldDAEEditor
                         end = splitted[i].IndexOf(']');
                         if (splitted[i - 1].EndsWith("IMG")) //Name
                         {
-                            Name = splitted[i].Substring(0, end);
+                            if (splitted.Length > 3)
+                            {
+                                string combined = splitted[i] + splitted[i + 1];
+                                end = combined.LastIndexOf(']');
+                                Name = combined.Substring(0, end);
+                            }
+                            else
+                                Name = splitted[i].Substring(0, end);
+
                         }
                         else if (splitted[i - 1].EndsWith("FMT")) //Format
                         {

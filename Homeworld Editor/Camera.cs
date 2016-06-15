@@ -3,7 +3,6 @@ using OpenTK.Input;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Utilities;
 
 namespace HomeworldDAEEditor
 {
@@ -130,7 +129,7 @@ namespace HomeworldDAEEditor
                     angles.Y = (float)Math.PI;
                 }
 
-                angles.X = (float)Utilities.Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
+                angles.X = (float)Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
 
                 UpdatePosition();
                 Renderer.UpdateView();
@@ -158,7 +157,7 @@ namespace HomeworldDAEEditor
                     angles.X += deltaY * 0.01f;
                     angles.Y -= deltaX * 0.01f;
 
-                    angles.X = (float)Utilities.Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
+                    angles.X = (float)Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
 
                     Renderer.UpdateView();
                     Program.GLControl.Invalidate();
@@ -167,12 +166,12 @@ namespace HomeworldDAEEditor
                 if (!this.Orthographic)
                 {
                     zoom -= zoomDelta * ZoomSpeed * 0.01f;
-                    zoom = Utilities.Utilities.Clamp(zoom, 0.001f, 500000);
+                    zoom = Utilities.Clamp(zoom, 0.001f, 500000);
                 }
                 else
                 {
                     orthographicSize += zoomDelta * (orthographicSize / 30);
-                    orthographicSize = Utilities.Utilities.Clamp(orthographicSize, 0.0001f, 500);
+                    orthographicSize = Utilities.Clamp(orthographicSize, 0.0001f, 500);
                     Console.WriteLine(orthographicSize);
                 }
             }
