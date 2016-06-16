@@ -63,11 +63,6 @@ namespace HomeworldDAEEditor
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
-            //Anisotropic filtering
-            float maxAniso;
-            GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
-            GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
-
             GL.LineWidth(2);
 
             GL.GenBuffers(1, out ibo_elements);
