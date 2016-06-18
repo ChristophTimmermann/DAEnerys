@@ -126,7 +126,7 @@ namespace HomeworldDAEEditor
                             brightness = 0;
                             waitedTime = 0;
                         }
-                        phasedTime += (float)Program.ElapsedTime;
+                        phasedTime += (float)Program.ElapsedSeconds;
                         break;
 
                     case NavLightState.BOTTOM:
@@ -188,7 +188,7 @@ namespace HomeworldDAEEditor
             if (RenderLight != null)
                 RenderLight.Color = Color * brightness * 3;
 
-            waitedTime += (float)Program.ElapsedTime * Frequency;
+            waitedTime += (float)Program.ElapsedSeconds * Frequency;
         }
     }
 

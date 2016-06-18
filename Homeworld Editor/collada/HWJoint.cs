@@ -19,6 +19,7 @@ namespace HomeworldDAEEditor
         public TreeNode TreeNode;
         public object ComboItemShipMeshParent;
         public object ComboItemGoblinParent;
+        public object ComboItemEngineGlowParent;
 
         public HWJoint(HWNode node, HWJoint parent, string name)
         {

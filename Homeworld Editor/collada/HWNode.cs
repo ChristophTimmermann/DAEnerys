@@ -17,6 +17,7 @@ namespace HomeworldDAEEditor
         public Matrix4 WorldMatrix = Matrix4.Identity;
 
         public Vector3 AbsolutePosition { get { return Vector3.TransformPosition(Vector3.Zero, WorldMatrix); } }
+        public OpenTK.Quaternion AbsoluteRotation;
         public Vector3 AbsoluteScale { get { return WorldMatrix.ExtractScale(); } }
 
         public HWJoint Joint;
@@ -264,6 +265,8 @@ namespace HomeworldDAEEditor
             }
 
             WorldMatrix = WorldMatrix.ClearScale(); //Ignore scale
+
+            AbsoluteRotation = WorldMatrix.ExtractRotation();
         }
     }
 }

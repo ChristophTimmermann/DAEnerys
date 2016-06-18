@@ -19,6 +19,7 @@ namespace HomeworldDAEEditor
         public bool BlackIsTransparent = false;
         public bool Wireframe = false;
         public bool DrawAboveShip = false;
+        public bool VertexColored = true;
 
         public Matrix4 ModelMatrix = Matrix4.Identity;
         public Matrix4 ViewProjectionMatrix = Matrix4.Identity;

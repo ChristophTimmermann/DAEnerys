@@ -24,7 +24,8 @@ namespace HomeworldDAEEditor
         public static OpenTK.NativeWindow NativeWindow = new OpenTK.NativeWindow();
 
         public static Stopwatch DeltaCounter = new Stopwatch();
-        public static double ElapsedTime;
+        public static double ElapsedSeconds;
+        public static double ElapsedMilliseconds;
 
         public static string EXECUTABLE_PATH = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
         public static string OPEN_PATH;

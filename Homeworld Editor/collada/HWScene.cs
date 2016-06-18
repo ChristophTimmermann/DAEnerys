@@ -25,6 +25,7 @@ namespace HomeworldDAEEditor
         public static List<HWShipMesh> ShipMeshes = new List<HWShipMesh>();
         public static List<HWGoblinMesh> GoblinMeshes = new List<HWGoblinMesh>();
         public static List<HWCollisionMesh> CollisionMeshes = new List<HWCollisionMesh>();
+        public static List<HWEngineGlow> EngineGlows = new List<HWEngineGlow>();
         public static List<HWMaterial> Materials = new List<HWMaterial>();
         public static List<HWImage> Images = new List<HWImage>();
         public static List<HWNode> Nodes = new List<HWNode>();
@@ -296,7 +297,7 @@ namespace HomeworldDAEEditor
             Program.Camera.ZoomSpeed = zoomSpeed;
             EditorJoint.Size = jointSize;
             HWMarker.MarkerSize = markerSize;
-            HWNavLight.IconSize = farthest / 45;
+            HWNavLight.IconSize = farthest / 55;
             Program.Camera.ClipDistance = farClip;
             Program.Camera.NearClipDistance = nearClip;
         }
@@ -333,6 +334,7 @@ namespace HomeworldDAEEditor
             ShipMeshes.Clear();
             GoblinMeshes.Clear();
             CollisionMeshes.Clear();
+            EngineGlows.Clear();
             Materials.Clear();
             Images.Clear();
             Nodes.Clear();

@@ -13,8 +13,11 @@ namespace HomeworldDAEEditor
         public string Name;
         public bool Visible = false;
         public bool Shaded = true;
+        public bool Translucent = false;
+        public bool VertexColored = true;
+        public Vector3 Scale = Vector3.One;
 
-        public Matrix4 ModelMatrix = Matrix4.Identity;
+        public Matrix4 ModelMatrix;
         public Matrix4 ViewProjectionMatrix = Matrix4.Identity;
         public Matrix4 ModelViewProjectionMatrix = Matrix4.Identity;
 
@@ -35,6 +38,7 @@ namespace HomeworldDAEEditor
 
         public void ParseMesh()
         {
+            #region ShipMesh
             if (Parent.Name.StartsWith("MULT")) //If visible ship mesh
             {
                 string name = "";
@@ -98,6 +102,8 @@ namespace HomeworldDAEEditor
                 HWShipMeshLOD newLOD = new HWShipMeshLOD(newShipMesh, this, lod);
                 newShipMesh.AddLODMesh(newLOD);
             }
+            #endregion
+            #region GoblinMesh
             else if (Parent.Name.StartsWith("GOBG")) //If goblin mesh
             {
                 string name = "";
@@ -155,7 +161,8 @@ namespace HomeworldDAEEditor
 
                 newGoblinMesh.AddMesh(this);
             }
-
+            #endregion
+            #region CollisionMesh
             else if (Parent.Name.StartsWith("COL")) //If collision mesh
             {
                 string name = "";
@@ -184,6 +191,61 @@ namespace HomeworldDAEEditor
 
                 HWCollisionMesh newCollisionMesh = new HWCollisionMesh(this, parentJoint, name);
             }
+            #endregion
+            #region EngineGlow
+            if (Parent.Name.StartsWith("GLOW")) //If visible glow mesh
+            {
+                string name = "";
+                int lod = 0;
+
+                string[] splitted = Parent.Name.Split('[');
+                int end = -1;
+                for (int i = 0; i < splitted.Length; i++)
+                {
+                    if (i != 0)
+                    {
+                        end = splitted[i].IndexOf(']');
+                        if (splitted[i - 1].EndsWith("GLOW")) //Name
+                        {
+                            name = splitted[i].Substring(0, end);
+                        }
+                        else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
+                        {
+                            lod = int.Parse(splitted[i].Substring(0, end));
+                        }
+                    }
+                }
+
+                HWJoint parentJoint = null;
+
+                if (Parent.Parent != null)
+                {
+                    if (Parent.Parent.Joint != null)
+                        parentJoint = Parent.Parent.Joint;
+                }
+
+                HWEngineGlow newGlowMesh = null;
+                foreach (HWEngineGlow glowMesh in HWScene.EngineGlows)
+                {
+                    if (glowMesh.Name == name)
+                    {
+                        newGlowMesh = glowMesh;
+                        break;
+                    }
+                }
+
+                if (newGlowMesh == null) //If a glow mesh does not already exist with that name
+                    newGlowMesh = new HWEngineGlow(parentJoint, name);
+                else
+                {
+                    if (parentJoint != null)
+                        newGlowMesh.Parent = parentJoint;
+                }
+
+                HWEngineGlowLOD newLOD = new HWEngineGlowLOD(newGlowMesh, this, lod);
+                newGlowMesh.AddLODMesh(newLOD);
+            }
+            #endregion
         }
 
         public Vector3[] GetVertices()
@@ -246,7 +308,7 @@ namespace HomeworldDAEEditor
             Vector3[] colorData = new Vector3[VertexCount];
             for(int i = 0; i < VertexCount; i++)
             {
-                colorData[i] = new Vector3(Color.Purple.R, Color.Purple.G, Color.Purple.B);
+                colorData[i] = new Vector3(Color.White.R, Color.White.G, Color.White.B);
             }
 
             return colorData;
@@ -277,6 +339,9 @@ namespace HomeworldDAEEditor
         public void CalculateModelMatrix()
         {
             ModelMatrix = Parent.WorldMatrix;
+
+            if (Scale != Vector3.One)
+                ModelMatrix = Matrix4.CreateScale(Scale) * Matrix4.CreateFromQuaternion(Parent.AbsoluteRotation) * Matrix4.CreateTranslation(Parent.AbsolutePosition);
         }
     }
 }

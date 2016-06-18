@@ -19,6 +19,7 @@ uniform vec3 materialSpecularColor;
 
 uniform bool textured;
 uniform bool shaded;
+uniform bool vertexColored;
 uniform bool emissive;
 uniform bool discreteGlow;
 uniform bool thruster;
@@ -105,7 +106,10 @@ void main()
 		}
 	}
 	
-	surfaceColor = surfaceColor * vec4(materialDiffuseColor.xyz, materialOpacity);
+	if(vertexColored)
+		surfaceColor = surfaceColor * vec4(materialDiffuseColor.xyz, materialOpacity);
+	else
+		surfaceColor = vec4(materialDiffuseColor.xyz, materialOpacity);
 	
 	if(shaded)
 	{

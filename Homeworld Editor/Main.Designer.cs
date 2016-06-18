@@ -102,6 +102,8 @@ namespace HomeworldDAEEditor
             this.panelDockpathList = new System.Windows.Forms.Panel();
             this.dockpathList = new System.Windows.Forms.CheckedListBox();
             this.tabNavLights = new System.Windows.Forms.TabPage();
+            this.groupNavLightPreview = new System.Windows.Forms.GroupBox();
+            this.checkNavLightDrawRadius = new System.Windows.Forms.CheckBox();
             this.groupNavLightParameters = new System.Windows.Forms.GroupBox();
             this.comboNavLightType = new System.Windows.Forms.ComboBox();
             this.labelNavLightDistance = new System.Windows.Forms.Label();
@@ -120,10 +122,16 @@ namespace HomeworldDAEEditor
             this.checkNavLightFlagSprite = new System.Windows.Forms.CheckBox();
             this.panelNavLightList = new System.Windows.Forms.Panel();
             this.navLightList = new System.Windows.Forms.CheckedListBox();
+            this.tabEngineGlows = new System.Windows.Forms.TabPage();
+            this.groupEngineGlowLODs = new System.Windows.Forms.GroupBox();
+            this.listEngineGlowLODs = new System.Windows.Forms.CheckedListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.listEngineGlows = new System.Windows.Forms.ListBox();
+            this.labelEngineGlowParent = new System.Windows.Forms.Label();
+            this.comboEngineGlowParent = new System.Windows.Forms.ComboBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
-            this.groupNavLightPreview = new System.Windows.Forms.GroupBox();
-            this.checkNavLightDrawRadius = new System.Windows.Forms.CheckBox();
+            this.labelFPS = new System.Windows.Forms.Label();
             this.toolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabShipMeshes.SuspendLayout();
@@ -153,6 +161,7 @@ namespace HomeworldDAEEditor
             this.groupDockpathFamilies.SuspendLayout();
             this.panelDockpathList.SuspendLayout();
             this.tabNavLights.SuspendLayout();
+            this.groupNavLightPreview.SuspendLayout();
             this.groupNavLightParameters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericNavLightDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericNavLightFrequency)).BeginInit();
@@ -160,10 +169,12 @@ namespace HomeworldDAEEditor
             ((System.ComponentModel.ISupportInitialize)(this.numericNavLightSize)).BeginInit();
             this.groupNavLightFlags.SuspendLayout();
             this.panelNavLightList.SuspendLayout();
+            this.tabEngineGlows.SuspendLayout();
+            this.groupEngineGlowLODs.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.groupNavLightPreview.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -228,6 +239,7 @@ namespace HomeworldDAEEditor
             this.tabControl.Controls.Add(this.tabMarkers);
             this.tabControl.Controls.Add(this.tabDockpaths);
             this.tabControl.Controls.Add(this.tabNavLights);
+            this.tabControl.Controls.Add(this.tabEngineGlows);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Multiline = true;
@@ -991,6 +1003,30 @@ namespace HomeworldDAEEditor
             this.tabNavLights.Text = "NavLights";
             this.tabNavLights.UseVisualStyleBackColor = true;
             // 
+            // groupNavLightPreview
+            // 
+            this.groupNavLightPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupNavLightPreview.Controls.Add(this.checkNavLightDrawRadius);
+            this.groupNavLightPreview.Location = new System.Drawing.Point(8, 642);
+            this.groupNavLightPreview.Name = "groupNavLightPreview";
+            this.groupNavLightPreview.Size = new System.Drawing.Size(226, 46);
+            this.groupNavLightPreview.TabIndex = 14;
+            this.groupNavLightPreview.TabStop = false;
+            this.groupNavLightPreview.Text = "Preview";
+            // 
+            // checkNavLightDrawRadius
+            // 
+            this.checkNavLightDrawRadius.AutoSize = true;
+            this.checkNavLightDrawRadius.Location = new System.Drawing.Point(7, 20);
+            this.checkNavLightDrawRadius.Name = "checkNavLightDrawRadius";
+            this.checkNavLightDrawRadius.Size = new System.Drawing.Size(136, 17);
+            this.checkNavLightDrawRadius.TabIndex = 0;
+            this.checkNavLightDrawRadius.Text = "Draw illumination radius";
+            this.checkNavLightDrawRadius.UseVisualStyleBackColor = true;
+            this.checkNavLightDrawRadius.CheckedChanged += new System.EventHandler(this.checkNavLightDrawRadius_CheckedChanged);
+            // 
             // groupNavLightParameters
             // 
             this.groupNavLightParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1225,6 +1261,84 @@ namespace HomeworldDAEEditor
             this.navLightList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.navLightList_ItemCheck);
             this.navLightList.SelectedIndexChanged += new System.EventHandler(this.navLightList_SelectedIndexChanged);
             // 
+            // tabEngineGlows
+            // 
+            this.tabEngineGlows.Controls.Add(this.groupEngineGlowLODs);
+            this.tabEngineGlows.Controls.Add(this.panel2);
+            this.tabEngineGlows.Location = new System.Drawing.Point(4, 58);
+            this.tabEngineGlows.Name = "tabEngineGlows";
+            this.tabEngineGlows.Padding = new System.Windows.Forms.Padding(3);
+            this.tabEngineGlows.Size = new System.Drawing.Size(242, 696);
+            this.tabEngineGlows.TabIndex = 8;
+            this.tabEngineGlows.Text = "Engine Glows";
+            this.tabEngineGlows.UseVisualStyleBackColor = true;
+            // 
+            // groupEngineGlowLODs
+            // 
+            this.groupEngineGlowLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupEngineGlowLODs.Controls.Add(this.listEngineGlowLODs);
+            this.groupEngineGlowLODs.Location = new System.Drawing.Point(8, 471);
+            this.groupEngineGlowLODs.Name = "groupEngineGlowLODs";
+            this.groupEngineGlowLODs.Size = new System.Drawing.Size(228, 240);
+            this.groupEngineGlowLODs.TabIndex = 1;
+            this.groupEngineGlowLODs.TabStop = false;
+            this.groupEngineGlowLODs.Text = "Level of detail(s)";
+            // 
+            // listEngineGlowLODs
+            // 
+            this.listEngineGlowLODs.CheckOnClick = true;
+            this.listEngineGlowLODs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listEngineGlowLODs.FormattingEnabled = true;
+            this.listEngineGlowLODs.Location = new System.Drawing.Point(3, 16);
+            this.listEngineGlowLODs.Name = "listEngineGlowLODs";
+            this.listEngineGlowLODs.Size = new System.Drawing.Size(222, 221);
+            this.listEngineGlowLODs.TabIndex = 0;
+            this.listEngineGlowLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineGlowLODs_ItemCheck);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.listEngineGlows);
+            this.panel2.Controls.Add(this.labelEngineGlowParent);
+            this.panel2.Controls.Add(this.comboEngineGlowParent);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(236, 462);
+            this.panel2.TabIndex = 0;
+            // 
+            // listEngineGlows
+            // 
+            this.listEngineGlows.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listEngineGlows.FormattingEnabled = true;
+            this.listEngineGlows.Location = new System.Drawing.Point(3, 3);
+            this.listEngineGlows.Name = "listEngineGlows";
+            this.listEngineGlows.Size = new System.Drawing.Size(230, 420);
+            this.listEngineGlows.TabIndex = 10;
+            this.listEngineGlows.SelectedIndexChanged += new System.EventHandler(this.listEngineGlows_SelectedIndexChanged);
+            // 
+            // labelEngineGlowParent
+            // 
+            this.labelEngineGlowParent.AutoSize = true;
+            this.labelEngineGlowParent.Location = new System.Drawing.Point(5, 441);
+            this.labelEngineGlowParent.Name = "labelEngineGlowParent";
+            this.labelEngineGlowParent.Size = new System.Drawing.Size(44, 13);
+            this.labelEngineGlowParent.TabIndex = 9;
+            this.labelEngineGlowParent.Text = "Parent: ";
+            // 
+            // comboEngineGlowParent
+            // 
+            this.comboEngineGlowParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboEngineGlowParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboEngineGlowParent.Enabled = false;
+            this.comboEngineGlowParent.FormattingEnabled = true;
+            this.comboEngineGlowParent.Location = new System.Drawing.Point(53, 438);
+            this.comboEngineGlowParent.Name = "comboEngineGlowParent";
+            this.comboEngineGlowParent.Size = new System.Drawing.Size(180, 21);
+            this.comboEngineGlowParent.TabIndex = 8;
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1255,35 +1369,23 @@ namespace HomeworldDAEEditor
             this.comboPerspectiveOrtho.TabIndex = 5;
             this.comboPerspectiveOrtho.SelectedIndexChanged += new System.EventHandler(this.comboPerspectiveOrtho_SelectedIndexChanged);
             // 
-            // groupNavLightPreview
+            // labelFPS
             // 
-            this.groupNavLightPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupNavLightPreview.Controls.Add(this.checkNavLightDrawRadius);
-            this.groupNavLightPreview.Location = new System.Drawing.Point(8, 642);
-            this.groupNavLightPreview.Name = "groupNavLightPreview";
-            this.groupNavLightPreview.Size = new System.Drawing.Size(226, 46);
-            this.groupNavLightPreview.TabIndex = 14;
-            this.groupNavLightPreview.TabStop = false;
-            this.groupNavLightPreview.Text = "Preview";
-            // 
-            // checkNavLightDrawRadius
-            // 
-            this.checkNavLightDrawRadius.AutoSize = true;
-            this.checkNavLightDrawRadius.Location = new System.Drawing.Point(7, 20);
-            this.checkNavLightDrawRadius.Name = "checkNavLightDrawRadius";
-            this.checkNavLightDrawRadius.Size = new System.Drawing.Size(136, 17);
-            this.checkNavLightDrawRadius.TabIndex = 0;
-            this.checkNavLightDrawRadius.Text = "Draw illumination radius";
-            this.checkNavLightDrawRadius.UseVisualStyleBackColor = true;
-            this.checkNavLightDrawRadius.CheckedChanged += new System.EventHandler(this.checkNavLightDrawRadius_CheckedChanged);
+            this.labelFPS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelFPS.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.labelFPS.Location = new System.Drawing.Point(885, 2);
+            this.labelFPS.Name = "labelFPS";
+            this.labelFPS.Size = new System.Drawing.Size(124, 20);
+            this.labelFPS.TabIndex = 7;
+            this.labelFPS.Text = "5000 FPS";
+            this.labelFPS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1123, 783);
+            this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.comboPerspectiveOrtho);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip);
@@ -1331,6 +1433,8 @@ namespace HomeworldDAEEditor
             this.groupDockpathFamilies.ResumeLayout(false);
             this.panelDockpathList.ResumeLayout(false);
             this.tabNavLights.ResumeLayout(false);
+            this.groupNavLightPreview.ResumeLayout(false);
+            this.groupNavLightPreview.PerformLayout();
             this.groupNavLightParameters.ResumeLayout(false);
             this.groupNavLightParameters.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericNavLightDistance)).EndInit();
@@ -1340,11 +1444,13 @@ namespace HomeworldDAEEditor
             this.groupNavLightFlags.ResumeLayout(false);
             this.groupNavLightFlags.PerformLayout();
             this.panelNavLightList.ResumeLayout(false);
+            this.tabEngineGlows.ResumeLayout(false);
+            this.groupEngineGlowLODs.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.groupNavLightPreview.ResumeLayout(false);
-            this.groupNavLightPreview.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1444,6 +1550,14 @@ namespace HomeworldDAEEditor
         private System.Windows.Forms.ComboBox comboNavLightType;
         private System.Windows.Forms.GroupBox groupNavLightPreview;
         private System.Windows.Forms.CheckBox checkNavLightDrawRadius;
+        private System.Windows.Forms.TabPage tabEngineGlows;
+        private System.Windows.Forms.GroupBox groupEngineGlowLODs;
+        private System.Windows.Forms.CheckedListBox listEngineGlowLODs;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.ListBox listEngineGlows;
+        private System.Windows.Forms.Label labelEngineGlowParent;
+        private System.Windows.Forms.ComboBox comboEngineGlowParent;
+        private System.Windows.Forms.Label labelFPS;
     }
 }
 

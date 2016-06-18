@@ -23,6 +23,9 @@ namespace HomeworldDAEEditor
         public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
         public Dictionary<HWJoint, object> ShipMeshParentComboItems = new Dictionary<HWJoint, object>();
 
+        public Dictionary<object, HWEngineGlow> EngineGlowListItems = new Dictionary<object, HWEngineGlow>();
+        public Dictionary<HWJoint, object> EngineGlowParentComboItems = new Dictionary<HWJoint, object>();
+
         public Dictionary<object, HWGoblinMesh> GoblinMeshListItems = new Dictionary<object, HWGoblinMesh>();
         public Dictionary<HWJoint, object> GoblinParentComboItems = new Dictionary<HWJoint, object>();
 
@@ -45,6 +48,8 @@ namespace HomeworldDAEEditor
             Application.Idle += glControl_Update;
             Console.WriteLine("OpenTK initialized.");
             comboPerspectiveOrtho.SelectedIndex = 0;
+
+            FPSCounter.LabelFPS = labelFPS;
 
             Loaded = true;
             Program.DeltaCounter.Start();
@@ -69,7 +74,8 @@ namespace HomeworldDAEEditor
         {
             //For frame-independent stuff
             Program.DeltaCounter.Stop();
-            Program.ElapsedTime = Program.DeltaCounter.Elapsed.TotalSeconds;
+            Program.ElapsedSeconds = Program.DeltaCounter.Elapsed.TotalSeconds;
+            Program.ElapsedMilliseconds = Program.DeltaCounter.Elapsed.TotalMilliseconds;
             Program.DeltaCounter.Reset();
             Program.DeltaCounter.Start();
 
@@ -94,6 +100,7 @@ namespace HomeworldDAEEditor
             if (!Loaded)
                 return;
 
+            FPSCounter.Update();
             Renderer.Render();
         }
 
@@ -115,6 +122,12 @@ namespace HomeworldDAEEditor
             listShipMeshLODs.Items.Clear();
             ShipMeshListItems.Clear();
             ShipMeshParentComboItems.Clear();
+
+            listEngineGlows.Items.Clear();
+            comboEngineGlowParent.Items.Clear();
+            listEngineGlowLODs.Items.Clear();
+            EngineGlowListItems.Clear();
+            EngineGlowParentComboItems.Clear();
 
             listGoblinMeshes.Items.Clear();
             comboGoblinMeshParent.Items.Clear();
@@ -181,6 +194,7 @@ namespace HomeworldDAEEditor
             comboShipMeshParent.Items.Add("Root"); //Add root joint to possible ship mesh parents
             comboGoblinMeshParent.Items.Add("Root"); //Add root joint to possible goblin parents
             comboCollisionMeshParent.Items.Add("Root"); //Add root joint to possible collision mesh parents
+            comboEngineGlowParent.Items.Add("Root"); //Add root joint to possible engine glow parents
 
             comboMaterialFormat.Items.Add("DXT1");
             comboMaterialFormat.Items.Add("DXT3");
@@ -190,6 +204,7 @@ namespace HomeworldDAEEditor
             comboShipMeshParent.SelectedItem = 0;
             comboGoblinMeshParent.SelectedItem = 0;
             comboCollisionMeshParent.SelectedItem = 0;
+            comboEngineGlowParent.SelectedItem = 0;
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
@@ -262,6 +277,11 @@ namespace HomeworldDAEEditor
             comboShipMeshParent.Items.Add(item);
             joint.ComboItemShipMeshParent = item;
             ShipMeshParentComboItems.Add(joint, item);
+
+            //Add joint to engine glow parents
+            comboEngineGlowParent.Items.Add(item);
+            joint.ComboItemEngineGlowParent = item;
+            EngineGlowParentComboItems.Add(joint, item);
 
             //Add joint to goblin parents
             comboGoblinMeshParent.Items.Add(item);
@@ -721,6 +741,101 @@ namespace HomeworldDAEEditor
             Renderer.UpdateView();
             Program.GLControl.Invalidate();
         }
+        //--------------------------------- ENGINE GLOW MESHES ---------------------------------//
+        private void listEngineGlows_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            listEngineGlowLODs.Items.Clear(); //Clear LOD list
+
+            HWEngineGlow selectedEngineGlow = null;
+            if (listEngineGlows.SelectedItem != null)
+            {
+                selectedEngineGlow = EngineGlowListItems[listEngineGlows.SelectedItem];
+            }
+
+            if (selectedEngineGlow != null)
+            {
+                //Select parent joint in combo box
+                if (selectedEngineGlow.Parent != null) //If engine glow has a parent joint
+                {
+                    object item = EngineGlowParentComboItems[selectedEngineGlow.Parent];
+                    comboEngineGlowParent.SelectedItem = item; //Select parent joint in combo box
+                }
+                else
+                    comboEngineGlowParent.SelectedIndex = 0; //Select root joint in combo box
+
+                //Fill LOD list
+                if (selectedEngineGlow.LOD0Meshes.Count > 0) //If engine glow has an LOD0
+                    listEngineGlowLODs.Items.Add("LOD 0");
+                if (selectedEngineGlow.LOD1Meshes.Count > 0) //If engine glow has an LOD1
+                    listEngineGlowLODs.Items.Add("LOD 1");
+                if (selectedEngineGlow.LOD2Meshes.Count > 0) //If engine glow has an LOD2
+                    listEngineGlowLODs.Items.Add("LOD 2");
+
+                //Check LOD checkboxes if visible
+                if (selectedEngineGlow.LOD0Meshes.Count > 0)
+                {
+                    if (selectedEngineGlow.LOD0Meshes[0].Mesh.Visible)
+                        listEngineGlowLODs.SetItemChecked(0, true);
+                }
+                if (selectedEngineGlow.LOD1Meshes.Count > 0)
+                {
+                    if (selectedEngineGlow.LOD1Meshes[0].Mesh.Visible)
+                        listEngineGlowLODs.SetItemChecked(1, true);
+                }
+                if (selectedEngineGlow.LOD2Meshes.Count > 0)
+                {
+                    if (selectedEngineGlow.LOD2Meshes[0].Mesh.Visible)
+                        listEngineGlowLODs.SetItemChecked(2, true);
+                }
+            }
+        }
+        public void AddEngineGlow(HWEngineGlow glow)
+        {
+            object item = glow.Name;
+            listEngineGlows.Items.Add(item);
+            glow.EngineGlowListItem = item;
+            EngineGlowListItems.Add(item, glow);
+        }
+        private void listEngineGlowLODs_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            HWEngineGlow selectedEngineGlow = EngineGlowListItems[listEngineGlows.SelectedItem];
+
+            bool visible = false;
+            if (e.NewValue == CheckState.Checked)
+                visible = true;
+
+            switch (e.Index)
+            {
+                case 0:
+                    {
+                        foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LOD0Meshes)
+                        {
+                            engineGlowLOD.Mesh.Visible = visible;
+                        }
+                        break;
+                    }
+                case 1:
+                    {
+                        foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LOD1Meshes)
+                        {
+                            engineGlowLOD.Mesh.Visible = visible;
+                        }
+                        break;
+                    }
+                case 2:
+                    {
+                        foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LOD2Meshes)
+                        {
+                            engineGlowLOD.Mesh.Visible = visible;
+                        }
+                        break;
+                    }
+            }
+
+            Renderer.UpdateMeshData();
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
 
         //--------------------------------- GOBLIN MESHES ---------------------------------//
         private void listGoblinMeshes_SelectedIndexChanged(object sender, EventArgs e)
@@ -878,7 +993,17 @@ namespace HomeworldDAEEditor
         private void trackBarThrusterStrength_Scroll(object sender, EventArgs e)
         {
             Renderer.ThrusterInterpolation = (float)trackBarThrusterStrength.Value / 100;
+            foreach(HWEngineGlow engineGlow in HWScene.EngineGlows)
+            {
+                foreach(HWEngineGlowLOD engineGlowLOD in engineGlow.LOD0Meshes)
+                    engineGlowLOD.UpdateEngineStrength();
+                foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD1Meshes)
+                    engineGlowLOD.UpdateEngineStrength();
+                foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD2Meshes)
+                    engineGlowLOD.UpdateEngineStrength();
+            }
 
+            Renderer.UpdateView();
             Program.GLControl.Invalidate();
         }
 
@@ -895,7 +1020,6 @@ namespace HomeworldDAEEditor
             else
                 Program.Camera.Orthographic = true;
         }
-
         public void UpdatePerspectiveOrthoCombo()
         {
             if (!Program.Camera.Orthographic)
