@@ -993,15 +993,7 @@ namespace HomeworldDAEEditor
         private void trackBarThrusterStrength_Scroll(object sender, EventArgs e)
         {
             Renderer.ThrusterInterpolation = (float)trackBarThrusterStrength.Value / 100;
-            foreach(HWEngineGlow engineGlow in HWScene.EngineGlows)
-            {
-                foreach(HWEngineGlowLOD engineGlowLOD in engineGlow.LOD0Meshes)
-                    engineGlowLOD.UpdateEngineStrength();
-                foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD1Meshes)
-                    engineGlowLOD.UpdateEngineStrength();
-                foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD2Meshes)
-                    engineGlowLOD.UpdateEngineStrength();
-            }
+            HWEngineGlow.UpdateEngineStrength();
 
             Renderer.UpdateView();
             Program.GLControl.Invalidate();

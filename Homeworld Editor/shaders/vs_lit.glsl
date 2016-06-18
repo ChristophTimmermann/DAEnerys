@@ -8,7 +8,6 @@ in vec3 vert;
 in vec2 vertTexCoord;
 in vec3 vertNormal;
 in vec3 vertColor;
-in float vertUnused;
 
 out vec3 fragVert;
 out vec3 fragColor;
@@ -23,7 +22,7 @@ void main()
 	fragColor = vertColor;
 	
 	mat3 normMatrix = transpose(inverse(mat3(model)));
-	fragNormal = normMatrix * vertNormal;
+	fragNormal = normMatrix * vertNormal.xyz;
 		
 	fragVert = (model * vec4(vert, 1.0)).xyz;
 }

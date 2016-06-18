@@ -12,7 +12,7 @@ namespace HomeworldDAEEditor
         public int ProgramID = -1;
         public int VShaderID = -1;
         public int FShaderID = -1;
-        public int AttributeCount = 0;
+        public int AttributeCount = 0; 
         public int UniformCount = 0;
 
         public Dictionary<String, AttributeInfo> Attributes = new Dictionary<string, AttributeInfo>();

@@ -29,12 +29,5 @@ namespace HomeworldDAEEditor
             Mesh.Material.DiffuseColor = new Vector3(0.27f, 0.47f, 0.69f) * 2;
             Mesh.Material.Opacity = 0.25f;
         }
-
-        public void UpdateEngineStrength()
-        {
-            Mesh.Scale.Z = Renderer.ThrusterInterpolation;
-            Mesh.Material.Opacity = Renderer.ThrusterInterpolation / 4;
-            Console.WriteLine(Mesh.Material.Opacity);
-        }
     }
 }

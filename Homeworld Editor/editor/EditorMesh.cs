@@ -25,6 +25,12 @@ namespace HomeworldDAEEditor
         public Matrix4 ViewProjectionMatrix = Matrix4.Identity;
         public Matrix4 ModelViewProjectionMatrix = Matrix4.Identity;
 
+        public Vector3[] Vertices;
+        public Vector3[] Normals;
+        public int[] Indices;
+        public Vector3[] Colors;
+        public Vector2[] TextureCoords;
+
         public abstract int VertexCount { get; }
         public abstract int IndiceCount { get; }
 

@@ -21,10 +21,16 @@ namespace HomeworldDAEEditor
         public Matrix4 ViewProjectionMatrix = Matrix4.Identity;
         public Matrix4 ModelViewProjectionMatrix = Matrix4.Identity;
 
+        public Vector3[] Vertices;
+        public Vector3[] Normals;
+        public int[] Indices;
+        public Vector3[] Colors;
+        public Vector2[] TextureCoords;
+
         public HWMaterial Material = new HWMaterial();
 
         public int VertexCount { get { return mesh.VertexCount; } }
-        public int IndiceCount { get { return mesh.GetIndices().Length; } }
+        public int IndiceCount { get { return Indices.Length; } }
 
         Mesh mesh;
 
@@ -32,6 +38,12 @@ namespace HomeworldDAEEditor
         {
             this.mesh = mesh;
             Name = mesh.Name;
+
+            Vertices = GetVertices();
+            Normals = GetNormals();
+            Indices = GetIndices();
+            Colors = GetColorData();
+            TextureCoords = GetTextureCoords();
 
             HWScene.Meshes.Add(this);
         }

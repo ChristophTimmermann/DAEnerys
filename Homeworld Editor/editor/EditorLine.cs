@@ -13,8 +13,10 @@ namespace HomeworldDAEEditor
     {
         public static new Vector3 Scale = Vector3.One;
 
-        public Color StartColor;
-        public Color EndColor;
+        private Color startColor;
+        public Color StartColor { get { return startColor; } set { startColor = value; Colors = GetColorData(); } }
+        private Color endColor;
+        public Color EndColor { get { return endColor; } set { endColor = value; Colors = GetColorData(); } }
 
         public Vector3 Start;
         public Vector3 End;
@@ -29,6 +31,12 @@ namespace HomeworldDAEEditor
 
             this.Start = start;
             this.End = end;
+
+            Vertices = GetVertices();
+            Normals = GetNormals();
+            Indices = GetIndices();
+            Colors = GetColorData();
+            TextureCoords = GetTextureCoords();
         }
 
         public override Vector3[] GetVertices()

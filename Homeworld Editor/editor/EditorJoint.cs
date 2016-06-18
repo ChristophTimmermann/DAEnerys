@@ -15,12 +15,18 @@ namespace HomeworldDAEEditor
         public static EditorMaterial JointMaterial;
 
         public override int VertexCount { get { return Mesh.VertexCount; } }
-        public override int IndiceCount { get { return Mesh.GetIndices().Length; } }
+        public override int IndiceCount { get { return Indices.Length; } }
 
         public EditorJoint(HWJoint joint) : base()
         {
             this.HWNode = joint.Node;
             this.Material = JointMaterial;
+
+            Vertices = GetVertices();
+            Normals = GetNormals();
+            Indices = GetIndices();
+            Colors = GetColorData();
+            TextureCoords = GetTextureCoords();
         }
 
         public override Vector3[] GetVertices()

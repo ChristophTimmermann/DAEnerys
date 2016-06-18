@@ -100,7 +100,16 @@ namespace HomeworldDAEEditor
                 Program.main.CheckNavLightVisible(navLight, true); //Set all navlights visible by default
             }
 
+            foreach (HWEngineGlow engineGlow in EngineGlows) //Set all LOD0 engine glows visible by default
+            {
+                foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD0Meshes)
+                {
+                    engineGlowLOD.Mesh.Visible = true;
+                }
+            }
+
             CalibrateSettings();
+            HWEngineGlow.UpdateEngineStrength();
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();

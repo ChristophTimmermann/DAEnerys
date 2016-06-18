@@ -58,6 +58,8 @@ namespace HomeworldDAEEditor
             GL.Enable(EnableCap.DepthTest);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
+            GL.Enable(EnableCap.CullFace);
+
             GL.AlphaFunc(AlphaFunction.Greater, 0.05f);
 
             GL.LineWidth(2);
@@ -113,11 +115,11 @@ namespace HomeworldDAEEditor
             {
                 if (mesh.Visible)
                 {
-                    verts.AddRange(mesh.GetVertices().ToList());
+                    verts.AddRange(mesh.Vertices);
                     inds.AddRange(mesh.GetIndices(vertcount).ToList());
-                    colors.AddRange(mesh.GetColorData().ToList());
-                    texcoords.AddRange(mesh.GetTextureCoords());
-                    normals.AddRange(mesh.GetNormals().ToList());
+                    colors.AddRange(mesh.Colors);
+                    texcoords.AddRange(mesh.TextureCoords);
+                    normals.AddRange(mesh.Normals);
                     //tangents.AddRange(mesh.GetTangents().ToList());
                     //bitangents.AddRange(mesh.GetBiTangents().ToList());
                     vertcount += mesh.VertexCount;
@@ -150,11 +152,11 @@ namespace HomeworldDAEEditor
             {
                 if (mesh.Visible)
                 {
-                    verts.AddRange(mesh.GetVertices().ToList());
+                    verts.AddRange(mesh.Vertices);
                     inds.AddRange(mesh.GetIndices(vertcount).ToList());
-                    colors.AddRange(mesh.GetColorData().ToList());
-                    texcoords.AddRange(mesh.GetTextureCoords());
-                    normals.AddRange(mesh.GetNormals().ToList());
+                    colors.AddRange(mesh.Colors);
+                    texcoords.AddRange(mesh.TextureCoords);
+                    normals.AddRange(mesh.Normals);
                     //ADD TANGENTS
                     vertcount += mesh.VertexCount;
                 }
@@ -167,6 +169,13 @@ namespace HomeworldDAEEditor
             normdata = normals.ToArray();
             //tangentdata = tangents.ToArray();
             //bitangentdata = bitangents.ToArray();
+
+            Vector4[] normdataVec4 = new Vector4[normdata.Length];
+            for(int i = 0; i < normdata.Length; i++)
+            {
+                normdataVec4[i] = new Vector4(normdata[i], 0);
+            }
+
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vert"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(vertdata.Length * Vector3.SizeInBytes), vertdata, BufferUsageHint.StaticDraw);
@@ -181,8 +190,8 @@ namespace HomeworldDAEEditor
             GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertColor"), 3, VertexAttribPointerType.Float, false, 0, 0);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertNormal"));
-            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(normdata.Length * Vector3.SizeInBytes), normdata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertNormal"), 3, VertexAttribPointerType.Float, true, 0, 0);
+            GL.BufferData<Vector4>(BufferTarget.ArrayBuffer, (IntPtr)(normdataVec4.Length * Vector4.SizeInBytes), normdataVec4, BufferUsageHint.StaticDraw);
+            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertNormal"), 4, VertexAttribPointerType.Float, true, 0, 0);
 
             /*GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertTangent"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(tangentdata.Length * Vector3.SizeInBytes), tangentdata, BufferUsageHint.StaticDraw);
@@ -240,7 +249,7 @@ namespace HomeworldDAEEditor
         public static void Render()
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
+            
             //These uniforms are the same for every mesh
             GL.Uniform1(shaders[activeShader].GetUniform("thrusterInterpolation"), ThrusterInterpolation); //Send thruster interpolation value
             GL.Uniform3(shaders[activeShader].GetUniform("cameraPosition"), ref Program.Camera.Position);
@@ -299,6 +308,7 @@ namespace HomeworldDAEEditor
             if (DrawVisualizationsInFront)
                 GL.Clear(ClearBufferMask.DepthBufferBit);
 
+            GL.Enable(EnableCap.AlphaTest);
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.Visible)
@@ -317,6 +327,7 @@ namespace HomeworldDAEEditor
 
             //shaders[activeShader].DisableVertexAttribArrays();
 
+            GL.Disable(EnableCap.AlphaTest);
             GL.Disable(EnableCap.Blend);
 
             //DEBUG DRAWING
@@ -337,7 +348,6 @@ namespace HomeworldDAEEditor
             }
             GL.End();*/
 
-            //GL.Flush();
             Program.GLControl.SwapBuffers();
         }
 

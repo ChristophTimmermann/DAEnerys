@@ -12,15 +12,22 @@ namespace HomeworldDAEEditor
         public new Vector3 Scale = Vector3.One;
         public HWNode HWNode;
 
-        public Vector3 Color;
+        private Vector3 color;
+        public Vector3 Color { get { return color; } set { color = value; Colors = GetColorData(); } }
 
         public override int VertexCount { get { return Mesh.VertexCount; } }
-        public override int IndiceCount { get { return Mesh.GetIndices().Length; } }
+        public override int IndiceCount { get { return Indices.Length; } }
 
         public EditorIcosphere(HWNode node, Vector3 color) : base()
         {
             this.HWNode = node;
             this.Color = color;
+
+            Vertices = GetVertices();
+            Normals = GetNormals();
+            Indices = GetIndices();
+            Colors = GetColorData();
+            TextureCoords = GetTextureCoords();
         }
 
         public override Vector3[] GetVertices()

@@ -13,7 +13,7 @@ namespace HomeworldDAEEditor
         public float Size = 10;
 
         public override int VertexCount { get { return Mesh.VertexCount; } }
-        public override int IndiceCount { get { return Mesh.GetIndices().Length; } }
+        public override int IndiceCount { get { return Indices.Length; } }
 
         public static HWTexture LightbulbTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/lightbulb.png"), true, true);
 
@@ -24,6 +24,12 @@ namespace HomeworldDAEEditor
             this.Material = new EditorMaterial("iconMaterial", new Vector3(1), new Vector3(1));
             this.Material.DiffuseTexture = texture;
             Visible = false;
+
+            Vertices = GetVertices();
+            Normals = GetNormals();
+            Indices = GetIndices();
+            Colors = GetColorData();
+            TextureCoords = GetTextureCoords();
         }
 
         public override Vector3[] GetVertices()
@@ -31,7 +37,7 @@ namespace HomeworldDAEEditor
             List<Vector3> verticesList = new List<Vector3>();
             foreach (Assimp.Vector3D vertex in Mesh.Vertices)
             {
-                verticesList.Add(new Vector3(vertex.X * Size, vertex.Y * Size, vertex.Z * Size));
+                verticesList.Add(new Vector3(vertex.X, vertex.Y, vertex.Z));
             }
             return verticesList.ToArray();
         }
@@ -90,7 +96,7 @@ namespace HomeworldDAEEditor
         /// </summary>
         public override void CalculateModelMatrix()
         {
-            ModelMatrix = Renderer.View.Inverted().ClearTranslation() * Matrix4.CreateTranslation(Position);
+            ModelMatrix = Renderer.View.Inverted().ClearTranslation() * Matrix4.CreateScale(Size) * Matrix4.CreateTranslation(Position);
         }
     }
 }

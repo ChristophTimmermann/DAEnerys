@@ -162,7 +162,7 @@ namespace HomeworldDAEEditor
         {
             HWNavLight.IconSize = (float)numericIconSize.Value;
 
-            Renderer.UpdateMeshData();
+            Renderer.UpdateView();
             Program.GLControl.Invalidate();
         }
 

@@ -172,7 +172,6 @@ namespace HomeworldDAEEditor
                 {
                     orthographicSize += zoomDelta * (orthographicSize / 30);
                     orthographicSize = Utilities.Clamp(orthographicSize, 0.0001f, 500);
-                    Console.WriteLine(orthographicSize);
                 }
             }
 

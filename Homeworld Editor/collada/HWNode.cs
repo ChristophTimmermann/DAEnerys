@@ -260,9 +260,7 @@ namespace HomeworldDAEEditor
                 WorldMatrix *= Parent.WorldMatrix;
 
             if(Name.StartsWith("ROOT_")) //Ignore root positions
-            {
                 WorldMatrix = WorldMatrix.ClearTranslation();
-            }
 
             WorldMatrix = WorldMatrix.ClearScale(); //Ignore scale
 
