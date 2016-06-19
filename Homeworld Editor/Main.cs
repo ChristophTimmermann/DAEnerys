@@ -26,9 +26,6 @@ namespace HomeworldDAEEditor
         public Dictionary<object, HWEngineGlow> EngineGlowListItems = new Dictionary<object, HWEngineGlow>();
         public Dictionary<HWJoint, object> EngineGlowParentComboItems = new Dictionary<HWJoint, object>();
 
-        public Dictionary<object, HWGoblinMesh> GoblinMeshListItems = new Dictionary<object, HWGoblinMesh>();
-        public Dictionary<HWJoint, object> GoblinParentComboItems = new Dictionary<HWJoint, object>();
-
         public Dictionary<HWJoint, object> CollisionMeshParentComboItems = new Dictionary<HWJoint, object>();
 
         public Dictionary<object, HWMaterial> MaterialListItems = new Dictionary<object, HWMaterial>();
@@ -129,11 +126,6 @@ namespace HomeworldDAEEditor
             EngineGlowListItems.Clear();
             EngineGlowParentComboItems.Clear();
 
-            listGoblinMeshes.Items.Clear();
-            comboGoblinMeshParent.Items.Clear();
-            checkGoblinDoScar.Checked = false;
-            GoblinMeshListItems.Clear();
-
             listCollisionMeshes.Items.Clear();
             comboCollisionMeshParent.Items.Clear();
 
@@ -192,7 +184,6 @@ namespace HomeworldDAEEditor
             EditorScene.Clear();
 
             comboShipMeshParent.Items.Add("Root"); //Add root joint to possible ship mesh parents
-            comboGoblinMeshParent.Items.Add("Root"); //Add root joint to possible goblin parents
             comboCollisionMeshParent.Items.Add("Root"); //Add root joint to possible collision mesh parents
             comboEngineGlowParent.Items.Add("Root"); //Add root joint to possible engine glow parents
 
@@ -202,7 +193,6 @@ namespace HomeworldDAEEditor
             comboMaterialFormat.Items.Add("8888");
 
             comboShipMeshParent.SelectedItem = 0;
-            comboGoblinMeshParent.SelectedItem = 0;
             comboCollisionMeshParent.SelectedItem = 0;
             comboEngineGlowParent.SelectedItem = 0;
 
@@ -282,11 +272,6 @@ namespace HomeworldDAEEditor
             comboEngineGlowParent.Items.Add(item);
             joint.ComboItemEngineGlowParent = item;
             EngineGlowParentComboItems.Add(joint, item);
-
-            //Add joint to goblin parents
-            comboGoblinMeshParent.Items.Add(item);
-            joint.ComboItemGoblinParent = item;
-            GoblinParentComboItems.Add(joint, item);
         }
 
         //--------------------------------- DOCKPATHS ---------------------------------//
@@ -835,58 +820,6 @@ namespace HomeworldDAEEditor
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
             Program.GLControl.Invalidate();
-        }
-
-        //--------------------------------- GOBLIN MESHES ---------------------------------//
-        private void listGoblinMeshes_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            checkGoblinDoScar.Checked = false; //Reset do scar checkbox
-
-            HWGoblinMesh selectedGoblinMesh = GoblinMeshListItems[listGoblinMeshes.SelectedItem];
-
-            //Check do scar checkbox
-            if (selectedGoblinMesh.Tags.Contains(GoblinMeshTag.DOSCAR))
-                checkGoblinDoScar.Checked = true;
-
-            //Select parent joint in combo box
-            if (selectedGoblinMesh.Parent != null) //If ship mesh has a parent joint
-            {
-                object item = GoblinParentComboItems[selectedGoblinMesh.Parent];
-                comboGoblinMeshParent.SelectedItem = item; //Select parent joint in combo box
-            }
-            else
-                comboGoblinMeshParent.SelectedIndex = 0; //Select root joint in combo box
-        }
-        public void AddGoblinMesh(HWGoblinMesh mesh)
-        {
-            object item = mesh.Name;
-            listGoblinMeshes.Items.Add(item);
-            mesh.GoblinMeshListItemIndex = listGoblinMeshes.Items.Count - 1;
-            GoblinMeshListItems.Add(item, mesh);
-        }
-        private void listGoblinMeshes_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            if (listGoblinMeshes.SelectedItem != null)
-            {
-                HWGoblinMesh selectedGoblinMesh = GoblinMeshListItems[listGoblinMeshes.SelectedItem];
-
-                bool visible = false;
-                if (e.NewValue == CheckState.Checked)
-                    visible = true;
-
-                foreach (HWMesh mesh in selectedGoblinMesh.Meshes)
-                {
-                    mesh.Visible = visible;
-                }
-
-                Renderer.UpdateMeshData();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
-            }
-        }
-        public void CheckGoblinVisible(HWGoblinMesh goblin, bool visible)
-        {
-            listGoblinMeshes.SetItemChecked(goblin.GoblinMeshListItemIndex, visible);
         }
 
         //--------------------------------- COLLISION MESHES ---------------------------------//

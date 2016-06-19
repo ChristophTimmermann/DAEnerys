@@ -3,11 +3,14 @@ using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace HomeworldDAEEditor
 {
     public class HWMesh
     {
+        private static bool goblinWarningShown;
+
         public HWNode Parent;
 
         public string Name;
@@ -116,62 +119,13 @@ namespace HomeworldDAEEditor
             }
             #endregion
             #region GoblinMesh
-            else if (Parent.Name.StartsWith("GOBG")) //If goblin mesh
+            else if (Parent.Name.StartsWith("GOBG")) //If goblin mesh (deprecated)
             {
-                string name = "";
-                List<GoblinMeshTag> tags = new List<GoblinMeshTag>();
-
-                string[] splitted = Parent.Name.Split('[');
-                int end = -1;
-                for (int i = 0; i < splitted.Length; i++)
+                if (!goblinWarningShown)
                 {
-                    if (i != 0)
-                    {
-                        end = splitted[i].IndexOf(']');
-                        if (splitted[i - 1].EndsWith("GOBG")) //Name
-                        {
-                            name = splitted[i].Substring(0, end);
-                        }
-                        else if (splitted[i - 1].EndsWith("TAGS")) //Tags
-                        {
-                            string tagsString = splitted[i].Substring(0, end);
-                            string[] tagsStrings = tagsString.Split(' ');
-
-                            foreach (string tag in tagsStrings)
-                            {
-                                tags.Add((GoblinMeshTag)Enum.Parse(typeof(GoblinMeshTag), tag.ToUpper()));
-                            }
-                        }
-                    }
+                    MessageBox.Show("Attention, this DAE has a goblin mesh, they are not valid anymore since the 2.0 update, and will crash your game.", "Goblin mesh detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    goblinWarningShown = true;
                 }
-
-                HWJoint parentJoint = null;
-
-                if (Parent.Parent != null)
-                {
-                    if (Parent.Parent.Joint != null)
-                        parentJoint = Parent.Parent.Joint;
-                }
-
-                HWGoblinMesh newGoblinMesh = null;
-                foreach (HWGoblinMesh goblinMesh in HWScene.GoblinMeshes)
-                {
-                    if (goblinMesh.Name == name)
-                    {
-                        newGoblinMesh = goblinMesh;
-                        break;
-                    }
-                }
-
-                if (newGoblinMesh == null) //If a goblin mesh does not already exist with that name
-                    newGoblinMesh = new HWGoblinMesh(parentJoint, name, tags);
-                else
-                {
-                    if (parentJoint != null)
-                        newGoblinMesh.Parent = parentJoint;
-                }
-
-                newGoblinMesh.AddMesh(this);
             }
             #endregion
             #region CollisionMesh

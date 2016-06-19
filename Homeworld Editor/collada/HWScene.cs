@@ -23,7 +23,6 @@ namespace HomeworldDAEEditor
 
         public static List<HWMesh> Meshes = new List<HWMesh>();
         public static List<HWShipMesh> ShipMeshes = new List<HWShipMesh>();
-        public static List<HWGoblinMesh> GoblinMeshes = new List<HWGoblinMesh>();
         public static List<HWCollisionMesh> CollisionMeshes = new List<HWCollisionMesh>();
         public static List<HWEngineGlow> EngineGlows = new List<HWEngineGlow>();
         public static List<HWMaterial> Materials = new List<HWMaterial>();
@@ -88,11 +87,6 @@ namespace HomeworldDAEEditor
                 {
                     shipMeshLOD.Mesh.Visible = true;
                 }
-            }
-
-            foreach(HWGoblinMesh goblin in GoblinMeshes) //Set all goblin meshes visible by default
-            {
-                goblin.SetVisible(true);
             }
 
             foreach(HWNavLight navLight in NavLights)
@@ -356,7 +350,6 @@ namespace HomeworldDAEEditor
 
             Meshes.Clear();
             ShipMeshes.Clear();
-            GoblinMeshes.Clear();
             CollisionMeshes.Clear();
             EngineGlows.Clear();
             Materials.Clear();
