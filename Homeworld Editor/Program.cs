@@ -39,6 +39,8 @@ namespace HomeworldDAEEditor
             if (args.Length > 0)
                 OPEN_PATH = args[0];
 
+            Log.Init();
+
             main = new Main();
             Settings.LoadSettings();
             CreateGLControl();

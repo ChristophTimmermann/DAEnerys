@@ -143,8 +143,8 @@ namespace HomeworldDAEEditor
                     colors.AddRange(mesh.Colors);
                     texcoords.AddRange(mesh.TextureCoords);
                     normals.AddRange(mesh.Normals);
-                    //tangents.AddRange(mesh.GetTangents().ToList());
-                    //bitangents.AddRange(mesh.GetBiTangents().ToList());
+                    //tangents.AddRange(mesh.Tangents);
+                    //bitangents.AddRange(mesh.BiTangents);
                     vertcount += mesh.VertexCount;
                 }
             }
@@ -199,7 +199,6 @@ namespace HomeworldDAEEditor
                 normdataVec4[i] = new Vector4(normdata[i], 0);
             }
 
-
             GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vert"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(vertdata.Length * Vector3.SizeInBytes), vertdata, BufferUsageHint.StaticDraw);
             GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vert"), 3, VertexAttribPointerType.Float, false, 0, 0);
@@ -220,13 +219,15 @@ namespace HomeworldDAEEditor
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(tangentdata.Length * Vector3.SizeInBytes), tangentdata, BufferUsageHint.StaticDraw);
             GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertTangent"), 3, VertexAttribPointerType.Float, true, 0, 0);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertBitangent"));
+            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertBiTangent"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(bitangentdata.Length * Vector3.SizeInBytes), bitangentdata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertBitangent"), 3, VertexAttribPointerType.Float, true, 0, 0);*/
+            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertBiTangent"), 3, VertexAttribPointerType.Float, true, 0, 0);*/
 
             // Buffer index data
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(int)), indicedata, BufferUsageHint.StaticDraw);
+
+            GetError("OpenTK Buffering");
         }
 
         public static void UpdateView()
@@ -371,6 +372,7 @@ namespace HomeworldDAEEditor
             }
             GL.End();*/
 
+            GetError("OpenTK Rendering");
             Program.GLControl.SwapBuffers();
         }
 
@@ -569,6 +571,13 @@ namespace HomeworldDAEEditor
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projection);
+        }
+
+        private static void GetError(string type)
+        {
+            ErrorCode code = GL.GetError();
+            if (code != ErrorCode.NoError)
+                Log.WriteLine(type + ": " + code);
         }
     }
 }

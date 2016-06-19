@@ -119,7 +119,7 @@ namespace HomeworldDAEEditor
                 if(mesh.TextureCoordinateChannelCount > 0)
                     newMesh.Material = HWScene.Materials[mesh.MaterialIndex];
 
-                Console.WriteLine("Mesh '" + mesh.Name + "' added.");
+                Log.WriteLine("Mesh '" + mesh.Name + "' added.");
             }
         }
 
@@ -146,7 +146,7 @@ namespace HomeworldDAEEditor
                 }
 
                 newMaterial.Parse();
-                Console.WriteLine("Material '" + material.Name + "' added.");
+                Log.WriteLine("Material '" + material.Name + "' added.");
             }
         }
 
@@ -276,9 +276,6 @@ namespace HomeworldDAEEditor
                 if (value > farthest)
                     farthest = value;
             }
-
-            Console.WriteLine("Volume = " + volume);
-            Console.WriteLine("Farthest = " + farthest);
 
             float zoomSpeed = (float)farthest * 10;
 

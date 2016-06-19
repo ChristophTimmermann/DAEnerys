@@ -50,8 +50,8 @@ namespace HomeworldDAEEditor
             GL.AttachShader(ProgramID, address);
 
             string log = GL.GetShaderInfoLog(address);
-            if(log != "")
-                Console.WriteLine(log);
+            if (log != "")
+                Log.WriteLine(log);
         }
 
         public void LoadShaderFromString(String code, ShaderType type)
@@ -86,8 +86,8 @@ namespace HomeworldDAEEditor
             GL.LinkProgram(ProgramID);
 
             string log = GL.GetProgramInfoLog(ProgramID);
-            if(log != "")
-                Console.WriteLine(log);
+            if (log != "")
+                Log.WriteLine(log);
 
             GL.GetProgram(ProgramID, GetProgramParameterName.ActiveAttributes, out AttributeCount);
             GL.GetProgram(ProgramID, GetProgramParameterName.ActiveUniforms, out UniformCount);

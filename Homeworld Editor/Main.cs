@@ -43,7 +43,7 @@ namespace HomeworldDAEEditor
             Renderer.Init();
             EditorScene.Init();
             Application.Idle += glControl_Update;
-            Console.WriteLine("OpenTK initialized.");
+            Log.WriteLine("OpenTK initialized.");
             comboPerspectiveOrtho.SelectedIndex = 0;
 
             FPSCounter.LabelFPS = labelFPS;
@@ -233,6 +233,7 @@ namespace HomeworldDAEEditor
             HWTexture.Close();
             GraphicsContext.CurrentContext.Dispose();
             Settings.SaveSettings();
+            Log.Close();
         }
 
         public void AddMarker(HWMarker marker)

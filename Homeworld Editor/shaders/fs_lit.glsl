@@ -113,7 +113,6 @@ void main()
 	
 	if(shaded)
 	{
-		//vec3 normal = normalize(transpose(inverse(mat3(model))) * fragNormal);
 		vec3 normal = normalize(fragNormal);
 		vec3 surfacePos = vec3(model * vec4(fragVert, 1));
 		

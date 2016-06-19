@@ -29,6 +29,8 @@ namespace HomeworldDAEEditor
         public int[] Indices;
         public Vector3[] Colors;
         public Vector2[] TextureCoords;
+        public Vector3[] Tangents;
+        public Vector3[] BiTangents;
 
         public HWMaterial Material = new HWMaterial();
 
@@ -47,6 +49,8 @@ namespace HomeworldDAEEditor
             Indices = GetIndices();
             Colors = GetColorData();
             TextureCoords = GetTextureCoords();
+            Tangents = GetTangents();
+            BiTangents = GetBiTangents();
 
             HWScene.Meshes.Add(this);
         }

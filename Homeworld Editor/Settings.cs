@@ -207,7 +207,7 @@ namespace HomeworldDAEEditor
         {
             if (!File.Exists(Path.Combine(Program.EXECUTABLE_PATH, "settings.xml")))
             {
-                Console.WriteLine("No settings.xml found, using default values.");
+                Log.WriteLine("No settings.xml found, using default values.");
                 return;
             }
 
@@ -259,7 +259,7 @@ namespace HomeworldDAEEditor
             }
             catch
             {
-                Console.WriteLine("Failed to load \"" + Path.Combine(Program.EXECUTABLE_PATH, "settings.xml") + "\".");
+                Log.WriteLine("Failed to load \"" + Path.Combine(Program.EXECUTABLE_PATH, "settings.xml") + "\".");
             }
         }
 
