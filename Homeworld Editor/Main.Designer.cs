@@ -267,7 +267,7 @@ namespace HomeworldDAEEditor
             this.groupShipMeshLODs.Controls.Add(this.listShipMeshLODs);
             this.groupShipMeshLODs.Location = new System.Drawing.Point(8, 471);
             this.groupShipMeshLODs.Name = "groupShipMeshLODs";
-            this.groupShipMeshLODs.Size = new System.Drawing.Size(228, 240);
+            this.groupShipMeshLODs.Size = new System.Drawing.Size(228, 217);
             this.groupShipMeshLODs.TabIndex = 1;
             this.groupShipMeshLODs.TabStop = false;
             this.groupShipMeshLODs.Text = "Level of detail(s)";
@@ -279,7 +279,7 @@ namespace HomeworldDAEEditor
             this.listShipMeshLODs.FormattingEnabled = true;
             this.listShipMeshLODs.Location = new System.Drawing.Point(3, 16);
             this.listShipMeshLODs.Name = "listShipMeshLODs";
-            this.listShipMeshLODs.Size = new System.Drawing.Size(222, 221);
+            this.listShipMeshLODs.Size = new System.Drawing.Size(222, 198);
             this.listShipMeshLODs.TabIndex = 0;
             this.listShipMeshLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listShipMeshLODs_ItemCheck);
             // 
@@ -356,9 +356,9 @@ namespace HomeworldDAEEditor
             this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
-            this.groupThrusterStrength.Location = new System.Drawing.Point(8, 661);
+            this.groupThrusterStrength.Location = new System.Drawing.Point(8, 640);
             this.groupThrusterStrength.Name = "groupThrusterStrength";
-            this.groupThrusterStrength.Size = new System.Drawing.Size(228, 47);
+            this.groupThrusterStrength.Size = new System.Drawing.Size(228, 46);
             this.groupThrusterStrength.TabIndex = 2;
             this.groupThrusterStrength.TabStop = false;
             this.groupThrusterStrength.Text = "Thruster strength";
@@ -370,7 +370,7 @@ namespace HomeworldDAEEditor
             this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
             this.trackBarThrusterStrength.Maximum = 100;
             this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
-            this.trackBarThrusterStrength.Size = new System.Drawing.Size(222, 28);
+            this.trackBarThrusterStrength.Size = new System.Drawing.Size(222, 27);
             this.trackBarThrusterStrength.TabIndex = 0;
             this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarThrusterStrength.Value = 100;
@@ -383,7 +383,7 @@ namespace HomeworldDAEEditor
             this.groupMaterialTextures.Controls.Add(this.listMaterialTextures);
             this.groupMaterialTextures.Location = new System.Drawing.Point(8, 384);
             this.groupMaterialTextures.Name = "groupMaterialTextures";
-            this.groupMaterialTextures.Size = new System.Drawing.Size(228, 271);
+            this.groupMaterialTextures.Size = new System.Drawing.Size(228, 253);
             this.groupMaterialTextures.TabIndex = 1;
             this.groupMaterialTextures.TabStop = false;
             this.groupMaterialTextures.Text = "Textures";
@@ -394,7 +394,7 @@ namespace HomeworldDAEEditor
             this.listMaterialTextures.FormattingEnabled = true;
             this.listMaterialTextures.Location = new System.Drawing.Point(3, 16);
             this.listMaterialTextures.Name = "listMaterialTextures";
-            this.listMaterialTextures.Size = new System.Drawing.Size(222, 252);
+            this.listMaterialTextures.Size = new System.Drawing.Size(222, 234);
             this.listMaterialTextures.TabIndex = 0;
             // 
             // panelMaterialsList
@@ -1280,7 +1280,7 @@ namespace HomeworldDAEEditor
             this.groupEngineGlowLODs.Controls.Add(this.listEngineGlowLODs);
             this.groupEngineGlowLODs.Location = new System.Drawing.Point(8, 471);
             this.groupEngineGlowLODs.Name = "groupEngineGlowLODs";
-            this.groupEngineGlowLODs.Size = new System.Drawing.Size(228, 240);
+            this.groupEngineGlowLODs.Size = new System.Drawing.Size(228, 219);
             this.groupEngineGlowLODs.TabIndex = 1;
             this.groupEngineGlowLODs.TabStop = false;
             this.groupEngineGlowLODs.Text = "Level of detail(s)";
@@ -1292,7 +1292,7 @@ namespace HomeworldDAEEditor
             this.listEngineGlowLODs.FormattingEnabled = true;
             this.listEngineGlowLODs.Location = new System.Drawing.Point(3, 16);
             this.listEngineGlowLODs.Name = "listEngineGlowLODs";
-            this.listEngineGlowLODs.Size = new System.Drawing.Size(222, 221);
+            this.listEngineGlowLODs.Size = new System.Drawing.Size(222, 200);
             this.listEngineGlowLODs.TabIndex = 0;
             this.listEngineGlowLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineGlowLODs_ItemCheck);
             // 
@@ -1377,7 +1377,7 @@ namespace HomeworldDAEEditor
             this.labelFPS.Name = "labelFPS";
             this.labelFPS.Size = new System.Drawing.Size(124, 20);
             this.labelFPS.TabIndex = 7;
-            this.labelFPS.Text = "5000 FPS";
+            this.labelFPS.Text = "0 FPS";
             this.labelFPS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Main

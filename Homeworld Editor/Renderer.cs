@@ -35,6 +35,26 @@ namespace HomeworldDAEEditor
 
         public static bool DrawVisualizationsInFront = true;
 
+        private static bool enableVSync = true;
+        public static bool EnableVSync
+        {
+            get
+            {
+                return enableVSync;
+            }
+            set
+            {
+                enableVSync = value;
+                if (GraphicsContext.CurrentContext != null)
+                {
+                    if (value)
+                        GraphicsContext.CurrentContext.SwapInterval = 1;
+                    else
+                        GraphicsContext.CurrentContext.SwapInterval = 0;
+                }
+            }
+        }
+
         public static float ThrusterInterpolation = 1;
 
         static string activeShader;
@@ -76,10 +96,13 @@ namespace HomeworldDAEEditor
             //AmbientLight.Enabled = false;
             DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
 
+            if (EnableVSync)
+                GraphicsContext.CurrentContext.SwapInterval = 1;
+            else
+                GraphicsContext.CurrentContext.SwapInterval = 0;
+
             GL.UseProgram(shaders[activeShader].ProgramID);
             shaders[activeShader].EnableVertexAttribArrays();
-
-            GraphicsContext.CurrentContext.SwapInterval = 0;
 
             //new Light(new Vector4(3, 0, 0, 1), new Vector3(1, 0, 0), 0.01f);
         }

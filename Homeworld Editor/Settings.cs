@@ -54,6 +54,7 @@ namespace HomeworldDAEEditor
             hideFSAAMessage = false;
 
             checkRenderOnTop.Checked = Renderer.DrawVisualizationsInFront;
+            checkVSync.Checked = Renderer.EnableVSync;
 
             listDataPaths.Items.Clear();
             listDataPaths.Items.AddRange(HWData.DataPaths.ToArray());
@@ -71,6 +72,15 @@ namespace HomeworldDAEEditor
         private void numericMarkerSize_ValueChanged(object sender, EventArgs e)
         {
             HWMarker.MarkerSize = (float)numericMarkerSize.Value;
+
+            //Update line vertices
+            foreach(HWMarker marker in HWScene.Markers)
+            {
+                foreach(EditorLine line in marker.Lines)
+                {
+                    line.Vertices = line.GetVertices();
+                }
+            }
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
@@ -158,6 +168,11 @@ namespace HomeworldDAEEditor
             Program.GLControl.Invalidate();
         }
 
+        private void checkVSync_CheckedChanged(object sender, EventArgs e)
+        {
+            Renderer.EnableVSync = checkVSync.Checked;
+        }
+
         private void numericIconSize_ValueChanged(object sender, EventArgs e)
         {
             HWNavLight.IconSize = (float)numericIconSize.Value;
@@ -177,9 +192,10 @@ namespace HomeworldDAEEditor
                 new XElement("ambientColor", ambientColor.ToArgb()),
                 new XElement("fieldOfView", MathHelper.RadiansToDegrees(Program.Camera.FieldOfView)),
                 new XElement("fsaaSamples", Program.FSAASamples),
-                new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront));
-            
-            foreach(string dataPath in HWData.DataPaths)
+                new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront),
+                new XElement("enableVSync", Renderer.EnableVSync));
+
+            foreach (string dataPath in HWData.DataPaths)
             {
                 settings.Add(new XElement("dataPath", dataPath));
             }
@@ -229,6 +245,11 @@ namespace HomeworldDAEEditor
                             bool drawInFront = true;
                             bool.TryParse(element.Value, out drawInFront);
                             Renderer.DrawVisualizationsInFront = drawInFront;
+                            break;
+                        case "enableVSync":
+                            bool enableVSync = true;
+                            bool.TryParse(element.Value, out enableVSync);
+                            Renderer.EnableVSync = enableVSync;
                             break;
                         case "dataPath":
                             HWData.DataPaths.Add(element.Value);

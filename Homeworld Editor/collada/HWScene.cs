@@ -289,14 +289,15 @@ namespace HomeworldDAEEditor
             float zoomSpeed = (float)farthest * 10;
 
             float jointSize = 1;
+            float markerSize = 1;
             if (BiggestMesh != null)
             {
-                jointSize = farthest / 35 / BiggestMesh.Mesh.Parent.AbsoluteScale.X;
+                jointSize = farthest / 60 / BiggestMesh.Mesh.Parent.AbsoluteScale.X;
                 jointSize = Math.Max(jointSize, 0.3f);
-            }
 
-            float markerSize = farthest / 60;
-            markerSize = Math.Max(markerSize, 0.01f);
+                markerSize = farthest / 65 / BiggestMesh.Mesh.Parent.AbsoluteScale.X;
+                markerSize = Math.Max(markerSize, 0.01f);
+            }
 
             float farClip = farthest * 32;
             float nearClip = farthest / 16;
@@ -309,6 +310,15 @@ namespace HomeworldDAEEditor
             HWNavLight.IconSize = farthest / 55;
             Program.Camera.ClipDistance = farClip;
             Program.Camera.NearClipDistance = nearClip;
+
+            //Update line vertices
+            foreach (HWMarker marker in HWScene.Markers)
+            {
+                foreach (EditorLine line in marker.Lines)
+                {
+                    line.Vertices = line.GetVertices();
+                }
+            }
         }
 
         public static void SaveCollada(string path)
@@ -338,6 +348,11 @@ namespace HomeworldDAEEditor
         {
             Min = Vector3.Zero;
             Max = Vector3.Zero;
+
+            foreach(HWNavLight navLight in NavLights)
+            {
+                Light.Lights.Remove(navLight.RenderLight);
+            }
 
             Meshes.Clear();
             ShipMeshes.Clear();
