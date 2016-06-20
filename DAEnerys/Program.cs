@@ -15,7 +15,7 @@ namespace DAEnerys
         public static Settings settings;
 
         public static Assembly Assembly = Assembly.GetExecutingAssembly();
-        public static string AssemblyName = "Homeworld_Editor.";
+        public static string AssemblyName = "DAEnerys.";
         public static int FSAASamples = 4;
 
         public static Camera Camera = new Camera();

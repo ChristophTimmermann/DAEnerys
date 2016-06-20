@@ -1,9 +1,5 @@
-D:\DAEnerys\DAEnerys\bin\Debug\Homeworld Editor.exe.config
-D:\DAEnerys\DAEnerys\obj\Debug\Homeworld Editor.exe
-D:\DAEnerys\DAEnerys\obj\Debug\Homeworld Editor.pdb
 D:\DAEnerys\DAEnerys\obj\Debug\DAEnerys.csprojResolveAssemblyReference.cache
 D:\DAEnerys\DAEnerys\obj\Debug\DAEnerys.Main.resources
-D:\DAEnerys\DAEnerys\obj\Debug\Homeworld_Editor.Properties.Resources.resources
 D:\DAEnerys\DAEnerys\obj\Debug\DAEnerys.Settings.resources
 D:\DAEnerys\DAEnerys\obj\Debug\DAEnerys.csproj.GenerateResource.Cache
 D:\DAEnerys\DAEnerys\bin\Debug\resources\lightbulb.png
@@ -11,8 +7,6 @@ D:\DAEnerys\DAEnerys\bin\Debug\resources\icon.obj
 D:\DAEnerys\DAEnerys\bin\Debug\resources\icosphere.obj
 D:\DAEnerys\DAEnerys\bin\Debug\resources\joint.ply
 D:\DAEnerys\DAEnerys\bin\Debug\resources\missing.tga
-D:\DAEnerys\DAEnerys\bin\Debug\Homeworld Editor.exe
-D:\DAEnerys\DAEnerys\bin\Debug\Homeworld Editor.pdb
 D:\DAEnerys\DAEnerys\bin\Debug\AssimpNet.dll
 D:\DAEnerys\DAEnerys\bin\Debug\DevILSharp.dll
 D:\DAEnerys\DAEnerys\bin\Debug\FSharp.Core.dll
@@ -21,3 +15,9 @@ D:\DAEnerys\DAEnerys\bin\Debug\OpenTK.pdb
 D:\DAEnerys\DAEnerys\bin\Debug\OpenTK.xml
 D:\DAEnerys\DAEnerys\bin\Debug\OpenTK.GLControl.xml
 D:\DAEnerys\DAEnerys\bin\Debug\FSharp.Core.xml
+D:\DAEnerys\DAEnerys\bin\Debug\DAEnerys.exe.config
+D:\DAEnerys\DAEnerys\bin\Debug\DAEnerys.exe
+D:\DAEnerys\DAEnerys\bin\Debug\DAEnerys.pdb
+D:\DAEnerys\DAEnerys\obj\Debug\DAEnerys.Properties.Resources.resources
+D:\DAEnerys\DAEnerys\obj\Debug\DAEnerys.exe
+D:\DAEnerys\DAEnerys\obj\Debug\DAEnerys.pdb
