@@ -469,7 +469,7 @@ namespace DAEnerys
             GL.Uniform1(shaders[activeShader].GetUniform("materialOpacity"), mesh.Material.Opacity);
             GL.Uniform3(shaders[activeShader].GetUniform("materialDiffuseColor"), ref mesh.Material.DiffuseColor);
 
-            GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.Parent.WorldMatrix);
+            GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
             GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
 
             GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));

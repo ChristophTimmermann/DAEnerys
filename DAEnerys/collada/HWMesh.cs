@@ -308,10 +308,21 @@ namespace DAEnerys
         /// </summary>
         public void CalculateModelMatrix()
         {
-            ModelMatrix = Parent.WorldMatrix;
+            //ModelMatrix = Matrix4.CreateScale(Scale) * Matrix4.CreateFromQuaternion(Parent.AbsoluteRotation) * Matrix4.CreateTranslation(Parent.AbsolutePosition);
+            ModelMatrix = Matrix4.CreateScale(Scale);
 
-            if (Scale != Vector3.One)
-                ModelMatrix = Matrix4.CreateScale(Scale) * Matrix4.CreateFromQuaternion(Parent.AbsoluteRotation) * Matrix4.CreateTranslation(Parent.AbsolutePosition);
+            //ModelMatrix *= Matrix4.CreateRotationX((float)Math.PI / 2);
+
+            //if(Name.StartsWith("COL"))
+                //ModelMatrix *= Matrix4.CreateFromQuaternion(Parent.AbsoluteRotation.Inverted());
+
+            if(Parent.Parent != null) //Ignore first parent
+                ModelMatrix *= Parent.Parent.WorldMatrix;
+
+            //ModelMatrix *= Matrix4.CreateTranslation(Parent.AbsolutePosition);
+
+            //if (Scale != Vector3.One)
+            //ModelMatrix = Matrix4.CreateScale(Scale);
         }
     }
 }

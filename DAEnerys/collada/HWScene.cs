@@ -116,8 +116,9 @@ namespace DAEnerys
             {
                 HWMesh newMesh = new HWMesh(mesh);
 
-                if(mesh.TextureCoordinateChannelCount > 0)
-                    newMesh.Material = HWScene.Materials[mesh.MaterialIndex];
+                if(!mesh.Name.StartsWith("COL")) //Don't put textures on collision meshes
+                    if(mesh.TextureCoordinateChannelCount > 0)
+                        newMesh.Material = HWScene.Materials[mesh.MaterialIndex];
 
                 Log.WriteLine("Mesh '" + mesh.Name + "' added.");
             }

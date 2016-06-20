@@ -9,6 +9,8 @@ namespace DAEnerys
 {
     public class HWNode
     {
+        public static HWNode[] Roots = new HWNode[5];
+
         public List<HWNode> children = new List<HWNode>();
         public List<HWMesh> meshes = new List<HWMesh>();
 
@@ -39,6 +41,15 @@ namespace DAEnerys
             WorldMatrix = new Matrix4(node.Transform.A1, node.Transform.B1, node.Transform.C1, node.Transform.D1, node.Transform.A2, node.Transform.B2, node.Transform.C2, node.Transform.D2, node.Transform.A3, node.Transform.B3, node.Transform.C3, node.Transform.D3, node.Transform.A4, node.Transform.B4, node.Transform.C4, node.Transform.D4);
 
             CalculateWorldMatrix();
+
+            if (Name.StartsWith("ROOT_LOD")) //If node is a root LOD node
+            {
+                string lodString = Name.Split('[')[1];
+                lodString = lodString.Remove(lodString.Length - 1);
+                int lod = int.Parse(lodString);
+
+                Roots[lod] = this;
+            }
 
             if (Name.StartsWith("JNT")) //If node is a joint
             {
@@ -256,15 +267,18 @@ namespace DAEnerys
         /// </summary>
         public void CalculateWorldMatrix()
         {
-            if(Parent != null)
+            if (Parent != null)
                 WorldMatrix *= Parent.WorldMatrix;
 
-            if(Name.StartsWith("ROOT_")) //Ignore root positions
+            AbsoluteRotation = WorldMatrix.ExtractRotation();
+
+            if (Name.StartsWith("ROOT_")) //Ignore root positions
                 WorldMatrix = WorldMatrix.ClearTranslation();
 
-            WorldMatrix = WorldMatrix.ClearScale(); //Ignore scale
+            if (Name.StartsWith("ROOT_LOD")) //Fix Homeworld rotation
+                WorldMatrix *= Matrix4.CreateFromQuaternion(AbsoluteRotation.Inverted());
 
-            AbsoluteRotation = WorldMatrix.ExtractRotation();
+            WorldMatrix = WorldMatrix.ClearScale(); //Ignore scale
         }
     }
 }
