@@ -237,6 +237,7 @@ namespace DAEnerys
             HWTexture.Close();
             GraphicsContext.CurrentContext.Dispose();
             Settings.SaveSettings();
+            Hotkeys.SaveHotkeys();
             Log.Close();
         }
 
@@ -592,7 +593,13 @@ namespace DAEnerys
 
         public void glControl_KeyDown(object sender, KeyEventArgs e)
         {
+            ActionKey.KeyDown(e);
             Program.Camera.KeyDown(e);
+        }
+
+        public void glControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            ActionKey.KeyUp(e);
         }
 
         private void jointsTree_AfterCheck(object sender, TreeViewEventArgs e)
@@ -619,6 +626,13 @@ namespace DAEnerys
             Program.settings = new Settings();
             Program.settings.Visible = true;
             Program.settings.Init();
+        }
+
+        private void buttonHotkeys_Click(object sender, EventArgs e)
+        {
+            Program.hotkeys = new Hotkeys();
+            Program.hotkeys.Visible = true;
+            Program.hotkeys.Init();
         }
 
         public void glControl_Enter(object sender, EventArgs e)

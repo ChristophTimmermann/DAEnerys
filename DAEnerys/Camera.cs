@@ -67,7 +67,7 @@ namespace DAEnerys
 
         public void KeyDown(System.Windows.Forms.KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.NumPad5) //Toggle orthographic view
+            if (ActionKey.IsDown(Action.TOGGLE_ORTHOGRAPHIC)) //Toggle orthographic view
             {
                 this.Orthographic = !this.Orthographic;
                 if (this.Orthographic)
@@ -82,52 +82,57 @@ namespace DAEnerys
                 Renderer.UpdateView();
                 Program.GLControl.Invalidate();
             }
-            else if (e.KeyCode == Keys.NumPad1) 
+            else if (ActionKey.IsDown(Action.VIEW_FRONT)) 
             {
-                if (!e.Control) //Front view
-                {
-                    angles.X = (float)Math.PI;
-                    angles.Y = (float)Math.PI;
-                }
-                else //Back view
-                {
-                    angles.X = (float)Math.PI;
-                    angles.Y = 0;
-                }
+                angles.X = (float)Math.PI;
+                angles.Y = (float)Math.PI;
 
                 UpdatePosition();
                 Renderer.UpdateView();
                 Program.GLControl.Invalidate();
             }
-            else if (e.KeyCode == Keys.NumPad3) 
+            else if (ActionKey.IsDown(Action.VIEW_BACK))
             {
-                if (!e.Control) //Left side view
-                {
-                    angles.X = (float)Math.PI;
-                    angles.Y = (float)-Math.PI / 2;
-                }
-                else //Right side view
-                {
-                    angles.X = (float)Math.PI;
-                    angles.Y = (float)Math.PI / 2;
-                }
+                angles.X = (float)Math.PI;
+                angles.Y = 0;
 
                 UpdatePosition();
                 Renderer.UpdateView();
                 Program.GLControl.Invalidate();
             }
-            else if (e.KeyCode == Keys.NumPad7) 
+            else if (ActionKey.IsDown(Action.VIEW_LEFT)) 
             {
-                if (!e.Control) //Top view
-                {
-                    angles.X = (float)Math.PI * 1.5f;
-                    angles.Y = (float)Math.PI;
-                }
-                else //Bottom view
-                {
-                    angles.X = 0;
-                    angles.Y = (float)Math.PI;
-                }
+                angles.X = (float)Math.PI;
+                angles.Y = (float)-Math.PI / 2;
+
+                UpdatePosition();
+                Renderer.UpdateView();
+                Program.GLControl.Invalidate();
+            }
+            else if (ActionKey.IsDown(Action.VIEW_RIGHT))
+            {
+                angles.X = (float)Math.PI;
+                angles.Y = (float)Math.PI / 2;
+
+                UpdatePosition();
+                Renderer.UpdateView();
+                Program.GLControl.Invalidate();
+            }
+            else if (ActionKey.IsDown(Action.VIEW_TOP)) 
+            {
+                angles.X = (float)Math.PI * 1.5f;
+                angles.Y = (float)Math.PI;
+
+                angles.X = (float)Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
+
+                UpdatePosition();
+                Renderer.UpdateView();
+                Program.GLControl.Invalidate();
+            }
+            else if (ActionKey.IsDown(Action.VIEW_BOTTOM))
+            {
+                angles.X = 0;
+                angles.Y = (float)Math.PI;
 
                 angles.X = (float)Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
 

@@ -57,10 +57,10 @@
             this.listDataPaths = new System.Windows.Forms.ListBox();
             this.addDataPathDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupRendering = new System.Windows.Forms.GroupBox();
+            this.checkVSync = new System.Windows.Forms.CheckBox();
+            this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
             this.labelFSAASamples = new System.Windows.Forms.Label();
             this.comboFSAASamples = new System.Windows.Forms.ComboBox();
-            this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
-            this.checkVSync = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -486,6 +486,32 @@
             this.groupRendering.TabStop = false;
             this.groupRendering.Text = "Rendering";
             // 
+            // checkVSync
+            // 
+            this.checkVSync.AutoSize = true;
+            this.checkVSync.Checked = true;
+            this.checkVSync.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkVSync.Location = new System.Drawing.Point(11, 69);
+            this.checkVSync.Name = "checkVSync";
+            this.checkVSync.Size = new System.Drawing.Size(172, 17);
+            this.checkVSync.TabIndex = 23;
+            this.checkVSync.Text = "Enable vertical synchronization";
+            this.checkVSync.UseVisualStyleBackColor = true;
+            this.checkVSync.CheckedChanged += new System.EventHandler(this.checkVSync_CheckedChanged);
+            // 
+            // checkRenderOnTop
+            // 
+            this.checkRenderOnTop.AutoSize = true;
+            this.checkRenderOnTop.Checked = true;
+            this.checkRenderOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkRenderOnTop.Location = new System.Drawing.Point(11, 46);
+            this.checkRenderOnTop.Name = "checkRenderOnTop";
+            this.checkRenderOnTop.Size = new System.Drawing.Size(151, 17);
+            this.checkRenderOnTop.TabIndex = 21;
+            this.checkRenderOnTop.Text = "Draw visualizations in front";
+            this.checkRenderOnTop.UseVisualStyleBackColor = true;
+            this.checkRenderOnTop.CheckedChanged += new System.EventHandler(this.checkRenderOnTop_CheckedChanged);
+            // 
             // labelFSAASamples
             // 
             this.labelFSAASamples.AutoSize = true;
@@ -508,39 +534,13 @@
             this.comboFSAASamples.Size = new System.Drawing.Size(218, 21);
             this.comboFSAASamples.TabIndex = 19;
             // 
-            // checkRenderOnTop
-            // 
-            this.checkRenderOnTop.AutoSize = true;
-            this.checkRenderOnTop.Checked = true;
-            this.checkRenderOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkRenderOnTop.Location = new System.Drawing.Point(11, 46);
-            this.checkRenderOnTop.Name = "checkRenderOnTop";
-            this.checkRenderOnTop.Size = new System.Drawing.Size(151, 17);
-            this.checkRenderOnTop.TabIndex = 21;
-            this.checkRenderOnTop.Text = "Draw visualizations in front";
-            this.checkRenderOnTop.UseVisualStyleBackColor = true;
-            this.checkRenderOnTop.CheckedChanged += new System.EventHandler(this.checkRenderOnTop_CheckedChanged);
-            // 
-            // checkVSync
-            // 
-            this.checkVSync.AutoSize = true;
-            this.checkVSync.Checked = true;
-            this.checkVSync.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkVSync.Location = new System.Drawing.Point(11, 69);
-            this.checkVSync.Name = "checkVSync";
-            this.checkVSync.Size = new System.Drawing.Size(172, 17);
-            this.checkVSync.TabIndex = 23;
-            this.checkVSync.Text = "Enable vertical synchronization";
-            this.checkVSync.UseVisualStyleBackColor = true;
-            this.checkVSync.CheckedChanged += new System.EventHandler(this.checkVSync_CheckedChanged);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(415, 705);
+            this.ClientSize = new System.Drawing.Size(394, 689);
             this.Controls.Add(this.groupRendering);
             this.Controls.Add(this.groupDataPaths);
             this.Controls.Add(this.groupLighting);

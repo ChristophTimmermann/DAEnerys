@@ -13,6 +13,7 @@ namespace DAEnerys
         //Windows
         public static Main main;
         public static Settings settings;
+        public static Hotkeys hotkeys;
 
         public static Assembly Assembly = Assembly.GetExecutingAssembly();
         public static string AssemblyName = "DAEnerys.";
@@ -40,9 +41,11 @@ namespace DAEnerys
                 OPEN_PATH = args[0];
 
             Log.Init();
+            ActionKey.Init();
 
             main = new Main();
             Settings.LoadSettings();
+            Hotkeys.LoadHotkeys();
             CreateGLControl();
             Application.Run(main);
         }
@@ -60,6 +63,7 @@ namespace DAEnerys
             GLControl.Paint += new System.Windows.Forms.PaintEventHandler(main.glControl_Render);
             GLControl.Enter += new System.EventHandler(main.glControl_Enter);
             GLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(main.glControl_KeyDown);
+            GLControl.KeyUp += new System.Windows.Forms.KeyEventHandler(main.glControl_KeyUp);
             GLControl.Leave += new System.EventHandler(main.glControl_Leave);
             GLControl.MouseDown += new System.Windows.Forms.MouseEventHandler(main.glControl_MouseDown);
             GLControl.MouseUp += new System.Windows.Forms.MouseEventHandler(main.glControl_MouseUp);

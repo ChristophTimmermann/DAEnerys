@@ -126,6 +126,7 @@ namespace DAEnerys
             this.comboEngineGlowParent = new System.Windows.Forms.ComboBox();
             this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
             this.labelFPS = new System.Windows.Forms.Label();
+            this.buttonHotkeys = new System.Windows.Forms.ToolStripButton();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -175,6 +176,7 @@ namespace DAEnerys
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buttonOpen,
             this.buttonSettings,
+            this.buttonHotkeys,
             this.buttonAbout});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
@@ -1303,6 +1305,16 @@ namespace DAEnerys
             this.labelFPS.Text = "0 FPS";
             this.labelFPS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // buttonHotkeys
+            // 
+            this.buttonHotkeys.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.buttonHotkeys.Image = ((System.Drawing.Image)(resources.GetObject("buttonHotkeys.Image")));
+            this.buttonHotkeys.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonHotkeys.Name = "buttonHotkeys";
+            this.buttonHotkeys.Size = new System.Drawing.Size(23, 22);
+            this.buttonHotkeys.Text = "Hotkeys";
+            this.buttonHotkeys.Click += new System.EventHandler(this.buttonHotkeys_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1472,6 +1484,7 @@ namespace DAEnerys
         private System.Windows.Forms.ListBox listEngineGlows;
         private System.Windows.Forms.Label labelEngineGlowParent;
         private System.Windows.Forms.ComboBox comboEngineGlowParent;
+        private System.Windows.Forms.ToolStripButton buttonHotkeys;
     }
 }
 
