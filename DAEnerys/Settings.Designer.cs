@@ -61,6 +61,7 @@
             this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
             this.labelFSAASamples = new System.Windows.Forms.Label();
             this.comboFSAASamples = new System.Windows.Forms.ComboBox();
+            this.checkDisableLighting = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -359,7 +360,7 @@
             this.groupLighting.Controls.Add(this.labelBackgroundColor);
             this.groupLighting.Controls.Add(this.buttonAmbientColor);
             this.groupLighting.Controls.Add(this.labelAmbientColor);
-            this.groupLighting.Location = new System.Drawing.Point(13, 382);
+            this.groupLighting.Location = new System.Drawing.Point(13, 405);
             this.groupLighting.Name = "groupLighting";
             this.groupLighting.Size = new System.Drawing.Size(329, 84);
             this.groupLighting.TabIndex = 17;
@@ -420,7 +421,7 @@
             this.groupDataPaths.Controls.Add(this.buttonRemoveDataPath);
             this.groupDataPaths.Controls.Add(this.buttonAddDataPath);
             this.groupDataPaths.Controls.Add(this.listDataPaths);
-            this.groupDataPaths.Location = new System.Drawing.Point(13, 472);
+            this.groupDataPaths.Location = new System.Drawing.Point(13, 495);
             this.groupDataPaths.Name = "groupDataPaths";
             this.groupDataPaths.Size = new System.Drawing.Size(329, 188);
             this.groupDataPaths.TabIndex = 19;
@@ -475,13 +476,14 @@
             // 
             this.groupRendering.AutoSize = true;
             this.groupRendering.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupRendering.Controls.Add(this.checkDisableLighting);
             this.groupRendering.Controls.Add(this.checkVSync);
             this.groupRendering.Controls.Add(this.checkRenderOnTop);
             this.groupRendering.Controls.Add(this.labelFSAASamples);
             this.groupRendering.Controls.Add(this.comboFSAASamples);
             this.groupRendering.Location = new System.Drawing.Point(13, 271);
             this.groupRendering.Name = "groupRendering";
-            this.groupRendering.Size = new System.Drawing.Size(328, 105);
+            this.groupRendering.Size = new System.Drawing.Size(328, 128);
             this.groupRendering.TabIndex = 18;
             this.groupRendering.TabStop = false;
             this.groupRendering.Text = "Rendering";
@@ -534,13 +536,24 @@
             this.comboFSAASamples.Size = new System.Drawing.Size(218, 21);
             this.comboFSAASamples.TabIndex = 19;
             // 
+            // checkDisableLighting
+            // 
+            this.checkDisableLighting.AutoSize = true;
+            this.checkDisableLighting.Location = new System.Drawing.Point(11, 92);
+            this.checkDisableLighting.Name = "checkDisableLighting";
+            this.checkDisableLighting.Size = new System.Drawing.Size(97, 17);
+            this.checkDisableLighting.TabIndex = 25;
+            this.checkDisableLighting.Text = "Disable lighting";
+            this.checkDisableLighting.UseVisualStyleBackColor = true;
+            this.checkDisableLighting.CheckedChanged += new System.EventHandler(this.checkDisableLighting_CheckedChanged);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(394, 689);
+            this.ClientSize = new System.Drawing.Size(394, 782);
             this.Controls.Add(this.groupRendering);
             this.Controls.Add(this.groupDataPaths);
             this.Controls.Add(this.groupLighting);
@@ -608,5 +621,6 @@
         private System.Windows.Forms.CheckBox checkRenderOnTop;
         private System.Windows.Forms.Label labelFSAASamples;
         private System.Windows.Forms.ComboBox comboFSAASamples;
+        private System.Windows.Forms.CheckBox checkDisableLighting;
     }
 }

@@ -121,7 +121,6 @@ namespace DAEnerys
 
             File.WriteAllText(Path.Combine(Program.EXECUTABLE_PATH, "hotkeys.xml"), hotkeys.ToString());
         }
-
         public static void LoadHotkeys()
         {
             if (!File.Exists(Path.Combine(Program.EXECUTABLE_PATH, "hotkeys.xml")))
@@ -162,11 +161,6 @@ namespace DAEnerys
 
                     Keys modifiers;
                     Enum.TryParse(splitted[1], out modifiers);
-                    if (modifiers == 0)
-                    {
-                        Log.WriteLine("Failed to parse value \"" + element.Value + "\" from hotkeys.xml.");
-                        continue;
-                    }
 
                     if(!ActionKey.ActionKeys.ContainsKey(action))
                     {

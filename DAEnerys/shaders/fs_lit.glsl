@@ -11,6 +11,7 @@ uniform sampler2D thrusterOffGlow;
 uniform sampler2D specularTex;
 
 uniform float thrusterInterpolation;
+uniform bool disableLighting;
 
 uniform vec3 materialDiffuseColor;
 uniform float materialOpacity;
@@ -111,7 +112,8 @@ void main()
 	else
 		surfaceColor = vec4(materialDiffuseColor.xyz, materialOpacity);
 	
-	if(shaded)
+	vec3 linearColor = vec3(0);
+	if(shaded && !disableLighting)
 	{
 		vec3 normal = normalize(fragNormal);
 		vec3 surfacePos = vec3(model * vec4(fragVert, 1));
@@ -125,7 +127,6 @@ void main()
 			specularIntensity = specularMap.x;
 		}
 		
-		vec3 linearColor = vec3(0);
 		for(int i = 0; i < numLights; ++i)
 		{
 			if(allLights[i].enabled)
@@ -152,13 +153,14 @@ void main()
 				linearColor += glowMap.xyz;
 			}
 		}
-		
-		//final color (after gamma correction)
-		vec3 gamma = vec3(1.0/2.2);
-		finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
 	}
 	else
 	{
 		finalColor = surfaceColor;
+		linearColor = finalColor.xyz;
 	}
+	
+	//final color (after gamma correction)
+	vec3 gamma = vec3(1.0/2.2);
+	finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
 }

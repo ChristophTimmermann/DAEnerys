@@ -34,6 +34,7 @@ namespace DAEnerys
         }
 
         public static bool DrawVisualizationsInFront = true;
+        public static bool DisableLighting = false;
 
         private static bool enableVSync = true;
         public static bool EnableVSync
@@ -276,6 +277,13 @@ namespace DAEnerys
             
             //These uniforms are the same for every mesh
             GL.Uniform1(shaders[activeShader].GetUniform("thrusterInterpolation"), ThrusterInterpolation); //Send thruster interpolation value
+
+            if(DisableLighting)
+                GL.Uniform1(shaders[activeShader].GetUniform("disableLighting"), 1);
+            else
+                GL.Uniform1(shaders[activeShader].GetUniform("disableLighting"), 0);
+
+
             GL.Uniform3(shaders[activeShader].GetUniform("cameraPosition"), ref Program.Camera.Position);
             GL.UniformMatrix4(shaders[activeShader].GetUniform("camera"), false, ref View);
 

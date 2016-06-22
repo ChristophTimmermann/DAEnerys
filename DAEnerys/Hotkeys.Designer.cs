@@ -39,6 +39,8 @@
             this.ClientSize = new System.Drawing.Size(546, 558);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Hotkeys";
             this.Text = "Hotkeys";
             this.TopMost = true;

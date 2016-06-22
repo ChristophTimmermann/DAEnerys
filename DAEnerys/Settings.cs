@@ -55,6 +55,7 @@ namespace DAEnerys
 
             checkRenderOnTop.Checked = Renderer.DrawVisualizationsInFront;
             checkVSync.Checked = Renderer.EnableVSync;
+            checkDisableLighting.Checked = Renderer.DisableLighting;
 
             listDataPaths.Items.Clear();
             listDataPaths.Items.AddRange(HWData.DataPaths.ToArray());
@@ -181,6 +182,13 @@ namespace DAEnerys
             Program.GLControl.Invalidate();
         }
 
+        private void checkDisableLighting_CheckedChanged(object sender, EventArgs e)
+        {
+            Renderer.DisableLighting = checkDisableLighting.Checked;
+
+            Program.GLControl.Invalidate();
+        }
+
         //------------------------------------------ SETTINGS SAVING ----------------------------------------//
         public static void SaveSettings()
         {
@@ -193,7 +201,8 @@ namespace DAEnerys
                 new XElement("fieldOfView", MathHelper.RadiansToDegrees(Program.Camera.FieldOfView)),
                 new XElement("fsaaSamples", Program.FSAASamples),
                 new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront),
-                new XElement("enableVSync", Renderer.EnableVSync));
+                new XElement("enableVSync", Renderer.EnableVSync),
+                new XElement("disableLighting", Renderer.DisableLighting));
 
             foreach (string dataPath in HWData.DataPaths)
             {
@@ -250,6 +259,11 @@ namespace DAEnerys
                             bool enableVSync = true;
                             bool.TryParse(element.Value, out enableVSync);
                             Renderer.EnableVSync = enableVSync;
+                            break;
+                        case "disableLighting":
+                            bool disableLighting = false;
+                            bool.TryParse(element.Value, out disableLighting);
+                            Renderer.DisableLighting = disableLighting;
                             break;
                         case "dataPath":
                             HWData.DataPaths.Add(element.Value);
