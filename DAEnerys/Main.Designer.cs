@@ -34,6 +34,7 @@ namespace DAEnerys
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
             this.buttonSettings = new System.Windows.Forms.ToolStripButton();
+            this.buttonHotkeys = new System.Windows.Forms.ToolStripButton();
             this.buttonAbout = new System.Windows.Forms.ToolStripButton();
             this.openColladaDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveColladaDialog = new System.Windows.Forms.SaveFileDialog();
@@ -126,7 +127,6 @@ namespace DAEnerys
             this.comboEngineGlowParent = new System.Windows.Forms.ComboBox();
             this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
             this.labelFPS = new System.Windows.Forms.Label();
-            this.buttonHotkeys = new System.Windows.Forms.ToolStripButton();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -203,6 +203,16 @@ namespace DAEnerys
             this.buttonSettings.Size = new System.Drawing.Size(23, 22);
             this.buttonSettings.Text = "Settings";
             this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
+            // 
+            // buttonHotkeys
+            // 
+            this.buttonHotkeys.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.buttonHotkeys.Image = ((System.Drawing.Image)(resources.GetObject("buttonHotkeys.Image")));
+            this.buttonHotkeys.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonHotkeys.Name = "buttonHotkeys";
+            this.buttonHotkeys.Size = new System.Drawing.Size(23, 22);
+            this.buttonHotkeys.Text = "Hotkeys";
+            this.buttonHotkeys.Click += new System.EventHandler(this.buttonHotkeys_Click);
             // 
             // buttonAbout
             // 
@@ -1305,16 +1315,6 @@ namespace DAEnerys
             this.labelFPS.Text = "0 FPS";
             this.labelFPS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // buttonHotkeys
-            // 
-            this.buttonHotkeys.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonHotkeys.Image = ((System.Drawing.Image)(resources.GetObject("buttonHotkeys.Image")));
-            this.buttonHotkeys.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.buttonHotkeys.Name = "buttonHotkeys";
-            this.buttonHotkeys.Size = new System.Drawing.Size(23, 22);
-            this.buttonHotkeys.Text = "Hotkeys";
-            this.buttonHotkeys.Click += new System.EventHandler(this.buttonHotkeys_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1324,6 +1324,8 @@ namespace DAEnerys
             this.Controls.Add(this.comboPerspectiveOrtho);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.Name = "Main";
             this.Text = "DAEnerys";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
