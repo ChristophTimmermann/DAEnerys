@@ -19,6 +19,7 @@ namespace DAEnerys
         public TreeNode TreeNode;
         public object ComboItemShipMeshParent;
         public object ComboItemEngineGlowParent;
+        public object ComboItemEngineShapeParent;
 
         public HWJoint(HWNode node, HWJoint parent, string name)
         {

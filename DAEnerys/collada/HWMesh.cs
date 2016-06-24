@@ -216,6 +216,36 @@ namespace DAEnerys
                 newGlowMesh.AddLODMesh(newLOD);
             }
             #endregion
+            #region EngineShape
+            else if (Parent.Name.StartsWith("ETSH")) //If engine shape
+            {
+                string name = "";
+
+                string[] splitted = Parent.Name.Split('[');
+                int end = -1;
+                for (int i = 0; i < splitted.Length; i++)
+                {
+                    if (i != 0)
+                    {
+                        end = splitted[i].IndexOf(']');
+                        if (splitted[i - 1].EndsWith("ETSH")) //Name
+                        {
+                            name = splitted[i].Substring(0, end);
+                        }
+                    }
+                }
+
+                HWJoint parentJoint = null;
+
+                if (Parent.Parent != null)
+                {
+                    if (Parent.Parent.Joint != null)
+                        parentJoint = Parent.Parent.Joint;
+                }
+
+                HWEngineShape newEngineShape = new HWEngineShape(this, parentJoint, name);
+            }
+            #endregion
         }
 
         public Vector3[] GetVertices()

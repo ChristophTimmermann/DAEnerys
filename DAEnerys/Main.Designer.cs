@@ -125,6 +125,11 @@ namespace DAEnerys
             this.listEngineGlows = new System.Windows.Forms.ListBox();
             this.labelEngineGlowParent = new System.Windows.Forms.Label();
             this.comboEngineGlowParent = new System.Windows.Forms.ComboBox();
+            this.tabEngineShapes = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.listEngineShapes = new System.Windows.Forms.CheckedListBox();
+            this.labelEngineShapeParent = new System.Windows.Forms.Label();
+            this.comboEngineShapeParent = new System.Windows.Forms.ComboBox();
             this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
             this.labelFPS = new System.Windows.Forms.Label();
             this.toolStrip.SuspendLayout();
@@ -168,6 +173,8 @@ namespace DAEnerys
             this.tabEngineGlows.SuspendLayout();
             this.groupEngineGlowLODs.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.tabEngineShapes.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -257,6 +264,7 @@ namespace DAEnerys
             this.tabControl.Controls.Add(this.tabDockpaths);
             this.tabControl.Controls.Add(this.tabNavLights);
             this.tabControl.Controls.Add(this.tabEngineGlows);
+            this.tabControl.Controls.Add(this.tabEngineShapes);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Multiline = true;
@@ -533,7 +541,7 @@ namespace DAEnerys
             this.comboCollisionMeshParent.FormattingEnabled = true;
             this.comboCollisionMeshParent.Location = new System.Drawing.Point(56, 412);
             this.comboCollisionMeshParent.Name = "comboCollisionMeshParent";
-            this.comboCollisionMeshParent.Size = new System.Drawing.Size(180, 21);
+            this.comboCollisionMeshParent.Size = new System.Drawing.Size(177, 21);
             this.comboCollisionMeshParent.TabIndex = 8;
             // 
             // tabJoints
@@ -1288,6 +1296,62 @@ namespace DAEnerys
             this.comboEngineGlowParent.Size = new System.Drawing.Size(180, 21);
             this.comboEngineGlowParent.TabIndex = 8;
             // 
+            // tabEngineShapes
+            // 
+            this.tabEngineShapes.Controls.Add(this.panel3);
+            this.tabEngineShapes.Location = new System.Drawing.Point(4, 58);
+            this.tabEngineShapes.Name = "tabEngineShapes";
+            this.tabEngineShapes.Padding = new System.Windows.Forms.Padding(3);
+            this.tabEngineShapes.Size = new System.Drawing.Size(242, 696);
+            this.tabEngineShapes.TabIndex = 9;
+            this.tabEngineShapes.Text = "Engine Shapes";
+            this.tabEngineShapes.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.Controls.Add(this.listEngineShapes);
+            this.panel3.Controls.Add(this.labelEngineShapeParent);
+            this.panel3.Controls.Add(this.comboEngineShapeParent);
+            this.panel3.Location = new System.Drawing.Point(3, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(236, 443);
+            this.panel3.TabIndex = 0;
+            // 
+            // listEngineShapes
+            // 
+            this.listEngineShapes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listEngineShapes.FormattingEnabled = true;
+            this.listEngineShapes.Location = new System.Drawing.Point(3, 3);
+            this.listEngineShapes.Name = "listEngineShapes";
+            this.listEngineShapes.Size = new System.Drawing.Size(230, 394);
+            this.listEngineShapes.TabIndex = 12;
+            this.listEngineShapes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineShapes_ItemCheck);
+            this.listEngineShapes.SelectedIndexChanged += new System.EventHandler(this.listEngineShapes_SelectedIndexChanged);
+            // 
+            // labelEngineShapeParent
+            // 
+            this.labelEngineShapeParent.AutoSize = true;
+            this.labelEngineShapeParent.Location = new System.Drawing.Point(3, 415);
+            this.labelEngineShapeParent.Name = "labelEngineShapeParent";
+            this.labelEngineShapeParent.Size = new System.Drawing.Size(44, 13);
+            this.labelEngineShapeParent.TabIndex = 9;
+            this.labelEngineShapeParent.Text = "Parent: ";
+            // 
+            // comboEngineShapeParent
+            // 
+            this.comboEngineShapeParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboEngineShapeParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
+            this.comboEngineShapeParent.Enabled = false;
+            this.comboEngineShapeParent.FormattingEnabled = true;
+            this.comboEngineShapeParent.Location = new System.Drawing.Point(56, 412);
+            this.comboEngineShapeParent.Name = "comboEngineShapeParent";
+            this.comboEngineShapeParent.Size = new System.Drawing.Size(177, 21);
+            this.comboEngineShapeParent.TabIndex = 8;
+            // 
             // comboPerspectiveOrtho
             // 
             this.comboPerspectiveOrtho.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1385,6 +1449,9 @@ namespace DAEnerys
             this.groupEngineGlowLODs.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.tabEngineShapes.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1487,6 +1554,11 @@ namespace DAEnerys
         private System.Windows.Forms.Label labelEngineGlowParent;
         private System.Windows.Forms.ComboBox comboEngineGlowParent;
         private System.Windows.Forms.ToolStripButton buttonHotkeys;
+        private System.Windows.Forms.TabPage tabEngineShapes;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.CheckedListBox listEngineShapes;
+        private System.Windows.Forms.Label labelEngineShapeParent;
+        private System.Windows.Forms.ComboBox comboEngineShapeParent;
     }
 }
 

@@ -20,11 +20,11 @@ namespace DAEnerys
         public static Vector3 Max = Vector3.Zero;
         public static HWShipMeshLOD BiggestMesh = null;
 
-
         public static List<HWMesh> Meshes = new List<HWMesh>();
         public static List<HWShipMesh> ShipMeshes = new List<HWShipMesh>();
         public static List<HWCollisionMesh> CollisionMeshes = new List<HWCollisionMesh>();
         public static List<HWEngineGlow> EngineGlows = new List<HWEngineGlow>();
+        public static List<HWEngineShape> EngineShapes = new List<HWEngineShape>();
         public static List<HWMaterial> Materials = new List<HWMaterial>();
         public static List<HWImage> Images = new List<HWImage>();
         public static List<HWNode> Nodes = new List<HWNode>();
@@ -117,8 +117,9 @@ namespace DAEnerys
                 HWMesh newMesh = new HWMesh(mesh);
 
                 if(!mesh.Name.StartsWith("COL")) //Don't put textures on collision meshes
-                    if(mesh.TextureCoordinateChannelCount > 0)
-                        newMesh.Material = HWScene.Materials[mesh.MaterialIndex];
+                    if (!mesh.Name.StartsWith("ETSH")) //Don't put textures on engine shapes
+                        if (mesh.TextureCoordinateChannelCount > 0)
+                            newMesh.Material = HWScene.Materials[mesh.MaterialIndex];
 
                 Log.WriteLine("Mesh '" + mesh.Name + "' added.");
             }
@@ -350,6 +351,7 @@ namespace DAEnerys
             ShipMeshes.Clear();
             CollisionMeshes.Clear();
             EngineGlows.Clear();
+            EngineShapes.Clear();
             Materials.Clear();
             Images.Clear();
             Nodes.Clear();

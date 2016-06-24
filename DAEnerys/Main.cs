@@ -27,6 +27,7 @@ namespace DAEnerys
         public Dictionary<HWJoint, object> EngineGlowParentComboItems = new Dictionary<HWJoint, object>();
 
         public Dictionary<HWJoint, object> CollisionMeshParentComboItems = new Dictionary<HWJoint, object>();
+        public Dictionary<HWJoint, object> EngineShapeParentComboItems = new Dictionary<HWJoint, object>();
 
         public Dictionary<object, HWMaterial> MaterialListItems = new Dictionary<object, HWMaterial>();
 
@@ -130,6 +131,9 @@ namespace DAEnerys
             listCollisionMeshes.Items.Clear();
             comboCollisionMeshParent.Items.Clear();
 
+            listEngineShapes.Items.Clear();
+            comboEngineShapeParent.Items.Clear();
+
             listMaterials.Items.Clear();
             MaterialListItems.Clear();
             boxMaterialShader.Clear();
@@ -187,6 +191,7 @@ namespace DAEnerys
             comboShipMeshParent.Items.Add("Root"); //Add root joint to possible ship mesh parents
             comboCollisionMeshParent.Items.Add("Root"); //Add root joint to possible collision mesh parents
             comboEngineGlowParent.Items.Add("Root"); //Add root joint to possible engine glow parents
+            comboEngineShapeParent.Items.Add("Root"); //Add root joint to possible engine shape parents
 
             comboMaterialFormat.Items.Add("DXT1");
             comboMaterialFormat.Items.Add("DXT3");
@@ -196,6 +201,7 @@ namespace DAEnerys
             comboShipMeshParent.SelectedItem = 0;
             comboCollisionMeshParent.SelectedItem = 0;
             comboEngineGlowParent.SelectedItem = 0;
+            comboEngineShapeParent.SelectedItem = 0;
 
             this.Text = "DAEnerys";
 
@@ -278,6 +284,11 @@ namespace DAEnerys
             comboEngineGlowParent.Items.Add(item);
             joint.ComboItemEngineGlowParent = item;
             EngineGlowParentComboItems.Add(joint, item);
+
+            //Add joint to engine shape parents
+            comboEngineShapeParent.Items.Add(item);
+            joint.ComboItemEngineShapeParent = item;
+            EngineShapeParentComboItems.Add(joint, item);
         }
 
         //--------------------------------- DOCKPATHS ---------------------------------//
@@ -895,6 +906,65 @@ namespace DAEnerys
                     visible = true;
 
                 selectedCollisionMesh.Mesh.Visible = visible;
+
+                Renderer.UpdateMeshData();
+                Renderer.UpdateView();
+                Program.GLControl.Invalidate();
+            }
+        }
+
+        //--------------------------------- ENGINE SHAPES ---------------------------------//
+        private void listEngineShapes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            HWEngineShape selectedEngineShape = null;
+            //Has to be done with a loop, because of multiple engine shapes with the same name
+            foreach (HWEngineShape engineShape in HWScene.EngineShapes)
+            {
+                if (engineShape.EngineShapeListItemIndex == listEngineShapes.SelectedIndex)
+                {
+                    selectedEngineShape = engineShape;
+                    break;
+                }
+            }
+
+            if (selectedEngineShape == null)
+                return;
+
+            //Select parent joint in combo box
+            if (selectedEngineShape.Parent != null) //If engine shape has a parent joint
+            {
+                object item = EngineShapeParentComboItems[selectedEngineShape.Parent];
+                comboEngineShapeParent.SelectedItem = item; //Select parent joint in combo box
+            }
+            else
+                comboEngineShapeParent.SelectedIndex = 0; //Select root joint in combo box
+        }
+        public void AddEngineShape(HWEngineShape mesh)
+        {
+            object item = mesh.Name;
+            listEngineShapes.Items.Add(item);
+            mesh.EngineShapeListItemIndex = listEngineShapes.Items.Count - 1;
+        }
+        private void listEngineShapes_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (listEngineShapes.SelectedItem != null)
+            {
+                HWEngineShape selectedEngineShape = null;
+                //Has to be done with a loop, because of multiple engine shapes with the same name
+                foreach (HWEngineShape engineShape in HWScene.EngineShapes)
+                {
+                    if (engineShape.EngineShapeListItemIndex == listEngineShapes.SelectedIndex)
+                    {
+                        selectedEngineShape = engineShape;
+                        break;
+                    }
+                }
+
+                bool visible = false;
+                if (e.NewValue == CheckState.Checked)
+                    visible = true;
+
+                selectedEngineShape.Mesh.Visible = visible;
 
                 Renderer.UpdateMeshData();
                 Renderer.UpdateView();

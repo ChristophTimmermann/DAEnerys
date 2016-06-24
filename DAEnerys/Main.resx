@@ -150,11 +150,11 @@
   <data name="buttonHotkeys.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADnSURBVDhPnZO9DYMwEIUZISNkFnqktIgmG7BCNsgozEHF
-        CGmSNBRu+Ckdf9adOJCMIE863Z3vvWdjINvDOI63YRhe0zR5gpo1Ge8DYt/3vq5rn+d5DGrWDpmwmxVb
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADnSURBVDhPnZOxDYMwEEUZISNkFnqktIgmG7BCNsgozEHF
+        CGmSNBQuEFA6ftadOJCMIF863Z3v/29jINvDOI63YRhe0zR5gpo1Ge8DYt/3vq5rn+d5DGrWDpmwmxVb
         E2ZCS4Mjq+jz/sbQnpnQ0vjbwDl3mef5Hkju9CME0RN3jVOXiLhtW19VVRST6anVgDr5BhgWReHLsoxE
         Mv3WQENkC5RoDVSkBhpJA3a0xLMniHegJuTtHVgjka0RBg0iSCJurAG1hkjWCDf8sAb0VpQUKhB0XRcN
-        yPQyOobwBV719yXTyyiBLPsByeCoqAA+gfkAAAAASUVORK5CYII=
+        yPQyOobwBV719yXTyyiBLPsBlUuok9oE5yoAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="buttonAbout.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
