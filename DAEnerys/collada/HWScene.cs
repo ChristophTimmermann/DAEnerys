@@ -104,6 +104,7 @@ namespace DAEnerys
 
             CalibrateSettings();
             HWEngineGlow.UpdateEngineStrength();
+            Program.main.UpdateProblems(); 
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();

@@ -32,6 +32,7 @@ namespace DAEnerys
         public Dictionary<object, HWMaterial> MaterialListItems = new Dictionary<object, HWMaterial>();
 
         public bool DrawNavLightRadius;
+        private bool problemsVisible;
 
         public Main()
         {
@@ -53,6 +54,10 @@ namespace DAEnerys
             Program.DeltaCounter.Start();
 
             HWData.ParseDataPaths();
+
+            gridProblems.RowTemplate.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            gridProblems.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            gridProblems.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
             Clear();
 
@@ -202,6 +207,11 @@ namespace DAEnerys
             comboCollisionMeshParent.SelectedItem = 0;
             comboEngineGlowParent.SelectedItem = 0;
             comboEngineShapeParent.SelectedItem = 0;
+
+            problemsVisible = false;
+            splitContainer2.Panel2Collapsed = true;
+            Problem.Problems.Clear();
+            gridProblems.Rows.Clear();
 
             this.Text = "DAEnerys";
 
@@ -1040,6 +1050,73 @@ namespace DAEnerys
                 comboPerspectiveOrtho.SelectedIndex = 0;
             else
                 comboPerspectiveOrtho.SelectedIndex = 1;
+        }
+
+        //--------------------------------- PROBLEMS TAB ---------------------------------//
+        private void gridProblems_SelectionChanged(object sender, EventArgs e)
+        {
+            gridProblems.ClearSelection();
+        }
+
+        private void buttonProblems_Click(object sender, EventArgs e)
+        {
+            problemsVisible = !problemsVisible;
+            splitContainer2.Panel2Collapsed = !problemsVisible;
+
+            if (problemsVisible)
+                buttonProblems.BackColor = Color.FromArgb(255, 178, 178, 178);
+            else
+                buttonProblems.BackColor = Color.FromArgb(255, 248, 248, 248);
+        }
+
+        public void AddProblem(Problem problem)
+        {
+            DataGridViewRow row = (DataGridViewRow)gridProblems.RowTemplate.Clone();
+            row.CreateCells(gridProblems, problem.Description);
+            gridProblems.Rows.Add(row);
+
+            if (problem.Type == ProblemTypes.ERROR)
+                row.Cells[0].Style.ForeColor = Color.Red;
+            else if(problem.Type == ProblemTypes.WARNING)
+                row.Cells[0].Style.ForeColor = Color.DarkOrange;
+        }
+
+        public void UpdateProblems()
+        {
+            bool errors = false;
+            bool warnings = false;
+            
+            foreach(Problem problem in Problem.Problems)
+            {
+                if (problem.Type == ProblemTypes.ERROR)
+                    errors = true;
+                else if (problem.Type == ProblemTypes.WARNING)
+                    warnings = true;
+            }
+
+            if(warnings)
+            {
+                buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagYellow;
+                problemsVisible = true;
+            }
+
+            if (errors)
+            {
+                buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagRed;
+                problemsVisible = true;
+            }
+            
+            if(!warnings && !errors)
+            {
+                problemsVisible = false;
+                buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagWhite;
+            }
+
+            if (problemsVisible)
+                buttonProblems.BackColor = Color.FromArgb(255, 178, 178, 178);
+            else
+                buttonProblems.BackColor = Color.FromArgb(255, 248, 248, 248);
+            splitContainer2.Panel2Collapsed = !problemsVisible;
         }
     }
 }

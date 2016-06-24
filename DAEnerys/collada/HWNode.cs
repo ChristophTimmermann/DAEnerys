@@ -238,7 +238,7 @@ namespace DAEnerys
                 if(navLightStyle != null)
                     NavLight = new HWNavLight(this, lightName, navLightStyle, size, phase, frequency, color, distance, flags);
                 else
-                    MessageBox.Show("Navlight style \"" + type + "\" not found. Skipping navlight \"" + lightName + "\".", "Invalid navlight style", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    new Problem(ProblemTypes.WARNING, "Navlight style \"" + type + "\" not found. Skipping navlight \"" + lightName + "\".");
             }
             #endregion
 

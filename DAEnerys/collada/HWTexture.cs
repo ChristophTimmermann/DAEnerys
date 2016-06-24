@@ -24,7 +24,7 @@ namespace DAEnerys
             bool exists = File.Exists(filename);
             if(!exists)
             {
-                MessageBox.Show("Failed to load texture \"" + filename + "\".", "Texture loading error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + filename + "\".");
                 return Renderer.DefaultTexture.ID;
             }
 

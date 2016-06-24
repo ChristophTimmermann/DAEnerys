@@ -127,7 +127,7 @@ namespace DAEnerys
             {
                 if (!goblinWarningShown)
                 {
-                    MessageBox.Show("Attention, this DAE has a goblin mesh, they are not valid anymore since the 2.0 update, and will crash your game.", "Goblin mesh detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    new Problem(ProblemTypes.ERROR, "Goblins detected, remove them or your game will crash.");
                     goblinWarningShown = true;
                 }
             }

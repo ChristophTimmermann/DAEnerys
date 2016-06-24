@@ -69,7 +69,7 @@ namespace DAEnerys
             GLControl.MouseUp += new System.Windows.Forms.MouseEventHandler(main.glControl_MouseUp);
             GLControl.Resize += new System.EventHandler(main.glControl_Resize);
 
-            main.splitContainer1.Panel2.Controls.Add(GLControl);
+            main.splitContainer2.Panel1.Controls.Add(GLControl);
         }
     }
 }
