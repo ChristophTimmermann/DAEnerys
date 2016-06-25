@@ -32,6 +32,7 @@ namespace DAEnerys
         public Dictionary<object, HWMaterial> MaterialListItems = new Dictionary<object, HWMaterial>();
 
         public bool DrawNavLightRadius;
+
         private bool problemsVisible;
 
         public Main()
@@ -313,6 +314,11 @@ namespace DAEnerys
             if (e.NewValue == CheckState.Checked)
                 newValue = true;
 
+            foreach (HWDockSegment segment in HWScene.DockSegments)
+            {
+                segment.ToleranceIcosphere.Visible = false;
+            }
+
             foreach (HWDockpath dockpath in HWScene.Dockpaths)
             {
                 if (dockpath.Name == dockpathList.Items[e.Index].ToString())
@@ -320,6 +326,8 @@ namespace DAEnerys
                     dockpath.Visible = newValue;
                 }
             }
+
+            trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
@@ -347,6 +355,11 @@ namespace DAEnerys
             checkDockpathSegmentFlagCheck.Checked = false;
             checkDockpathSegmentFlagUnfocus.Checked = false;
             checkDockpathSegmentFlagClip.Checked = false;
+
+            foreach (HWDockSegment segment in HWScene.DockSegments)
+            {
+                segment.ToleranceIcosphere.Visible = false;
+            }
 
             HWDockpath dockpath = null;
             foreach (HWDockpath path in HWScene.Dockpaths)
@@ -401,6 +414,7 @@ namespace DAEnerys
             foreach (HWDockSegment segment in HWScene.DockSegments)
             {
                 segment.Icosphere.Color = new Vector3(1, 0, 0);
+                segment.ToleranceIcosphere.Visible = false;
             }
 
             //Reset line colors
@@ -412,7 +426,11 @@ namespace DAEnerys
 
             HWDockSegment selectedSegment = selectedDockpath.Segments[trackBarDockpathSegments.Value];
 
-            selectedSegment.Icosphere.Color = new Vector3(1, 1, 0);
+            if (selectedDockpath.Visible)
+            {
+                selectedSegment.Icosphere.Color = new Vector3(1, 1, 0);
+                selectedSegment.ToleranceIcosphere.Visible = true;
+            }
 
             /* if(selectedSegment.ID < selectedDockpath.Lines.Count)
              selectedDockpath.Lines[selectedSegment.ID].StartColor = Color.Yellow;
@@ -464,6 +482,7 @@ namespace DAEnerys
             }
 
             Renderer.UpdateMeshData();
+            Renderer.UpdateView();
             Program.GLControl.Invalidate();
         }
 

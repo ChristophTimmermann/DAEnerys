@@ -28,14 +28,15 @@ namespace DAEnerys
                 return Renderer.DefaultTexture.ID;
             }
 
+            if(System.IO.Path.GetExtension(filename).ToLower() != ".tga")
+            {
+                new Problem(ProblemTypes.WARNING, "The texture \"" + filename + "\" is not in TGA-Format.");
+                return Renderer.DefaultTexture.ID;
+            }
+
             int img = IL.GenImage();
             IL.BindImage(img);
             IL.LoadImage(filename);
-
-            ILU.Info info = new ILU.Info();
-            ILU.GetImageInfo(ref info);
-            //if (info.Origin == OriginMode.LowerLeft)
-                //ILU.FlipImage();
 
             IL.ConvertImage(ChannelFormat.RGBA, ChannelType.UnsignedByte);
 

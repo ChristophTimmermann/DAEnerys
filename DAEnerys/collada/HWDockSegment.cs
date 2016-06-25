@@ -13,6 +13,7 @@ namespace DAEnerys
         public List<DockSegmentFlag> Flags;
         public HWDockpath Dockpath;
         public EditorIcosphere Icosphere;
+        public EditorIcosphere ToleranceIcosphere;
 
         public HWDockSegment(HWNode node, int id, float tolerance, float speed, List<DockSegmentFlag> flags)
         {
@@ -27,6 +28,11 @@ namespace DAEnerys
 
             Icosphere = new EditorIcosphere(Node, new Vector3(1, 0, 0));
             Icosphere.Scale = new Vector3(5, 5, 5);
+
+            ToleranceIcosphere = new EditorIcosphere(node, new Vector3(1, 1, 0));
+            ToleranceIcosphere.Scale = new Vector3(Tolerance);
+            ToleranceIcosphere.Wireframe = true;
+            ToleranceIcosphere.Visible = false;
 
             HWScene.DockSegments.Add(this);
         }
