@@ -3,5 +3,5 @@
 ################################################################################
 
 /packages
-/DAEnerys/bin/Debug
-/DAEnerys/bin/Release
+/DAEnerys/bin
+/DAEnerys/obj

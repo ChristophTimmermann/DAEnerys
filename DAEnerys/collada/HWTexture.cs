@@ -22,6 +22,8 @@ namespace DAEnerys
         private static int loadImage(string filename, bool loadAlpha, bool sprite)
         {
             bool exists = File.Exists(filename);
+            bool flip = false;
+
             if(!exists)
             {
                 new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + filename + "\".");
@@ -31,12 +33,15 @@ namespace DAEnerys
             if(System.IO.Path.GetExtension(filename).ToLower() != ".tga")
             {
                 new Problem(ProblemTypes.WARNING, "The texture \"" + filename + "\" is not in TGA-Format.");
-                return Renderer.DefaultTexture.ID;
-            }
+                flip = true;
+            }    
 
             int img = IL.GenImage();
             IL.BindImage(img);
             IL.LoadImage(filename);
+
+            if (flip)
+                ILU.FlipImage();
 
             IL.ConvertImage(ChannelFormat.RGBA, ChannelType.UnsignedByte);
 
