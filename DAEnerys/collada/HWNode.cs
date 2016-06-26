@@ -91,7 +91,10 @@ namespace DAEnerys
                         else if (splitted[i - 1].EndsWith("Link")) //Links
                         {
                             string linksString = splitted[i].Substring(0, end);
-                            links = linksString.Replace(" ", "").Split(',');
+
+                            //Don't load empty links
+                            if(linksString.Trim().Length > 0)
+                                links = linksString.Replace(" ", "").Split(',');
                         }
                         else if (splitted[i - 1].EndsWith("Flags")) //Flags
                         {

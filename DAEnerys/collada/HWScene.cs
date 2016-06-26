@@ -103,6 +103,7 @@ namespace DAEnerys
             }
 
             CalibrateSettings();
+            CheckForProblems();
             HWEngineGlow.UpdateEngineStrength();
             Program.main.UpdateProblems(); 
 
@@ -186,7 +187,6 @@ namespace DAEnerys
             reader.Close();
             reader.Dispose();
         }
-
         private static string FixCollada(string path)
         {
             string file = File.ReadAllText(path);
@@ -311,6 +311,30 @@ namespace DAEnerys
                 foreach (EditorLine line in marker.Lines)
                 {
                     line.Vertices = line.GetVertices();
+                }
+            }
+        }
+
+        private static void CheckForProblems()
+        {
+            List<string> dockpathNames = new List<string>();
+
+            //Check if there are multiple dockpaths with the same name
+            foreach (HWDockpath dockpath in Dockpaths)
+            {
+                if(!dockpathNames.Contains(dockpath.Name))
+                    dockpathNames.Add(dockpath.Name);
+                else
+                    new Problem(ProblemTypes.WARNING, "There are multiple dockpaths with the same name \"" + dockpath.Name + "\".");
+            }
+
+            //Check if there is a non-existent linked path
+            foreach (HWDockpath dockpath in Dockpaths)
+            {
+                foreach(string link in dockpath.Links)
+                {
+                    if (!dockpathNames.Contains(link))
+                        new Problem(ProblemTypes.WARNING, "The dockpath \"" + dockpath.Name + "\" is linked to the non-existent dockpath \"" + link + "\".");
                 }
             }
         }
