@@ -322,9 +322,7 @@ namespace DAEnerys
             foreach (HWDockpath dockpath in HWScene.Dockpaths)
             {
                 if (dockpath.Name == dockpathList.Items[e.Index].ToString())
-                {
                     dockpath.Visible = newValue;
-                }
             }
 
             trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
@@ -357,9 +355,7 @@ namespace DAEnerys
             checkDockpathSegmentFlagClip.Checked = false;
 
             foreach (HWDockSegment segment in HWScene.DockSegments)
-            {
                 segment.ToleranceIcosphere.Visible = false;
-            }
 
             HWDockpath dockpath = null;
             foreach (HWDockpath path in HWScene.Dockpaths)
@@ -1135,6 +1131,7 @@ namespace DAEnerys
                 buttonProblems.BackColor = Color.FromArgb(255, 178, 178, 178);
             else
                 buttonProblems.BackColor = Color.FromArgb(255, 248, 248, 248);
+
             splitContainer2.Panel2Collapsed = !problemsVisible;
         }
     }

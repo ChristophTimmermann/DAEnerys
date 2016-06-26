@@ -1,4 +1,3 @@
-D:\DAEnerys\DAEnerys\bin\Release\resources\lightbulb.png
 D:\DAEnerys\DAEnerys\bin\Release\resources\icon.obj
 D:\DAEnerys\DAEnerys\bin\Release\resources\icosphere.obj
 D:\DAEnerys\DAEnerys\bin\Release\resources\joint.ply
@@ -23,3 +22,5 @@ D:\DAEnerys\DAEnerys\obj\Release\DAEnerys.Properties.Resources.resources
 D:\DAEnerys\DAEnerys\obj\Release\DAEnerys.exe
 D:\DAEnerys\DAEnerys\obj\Release\DAEnerys.pdb
 D:\DAEnerys\DAEnerys\obj\Release\DAEnerys.csprojResolveAssemblyReference.cache
+D:\DAEnerys\DAEnerys\bin\Release\resources\lightbulb.tga
+D:\DAEnerys\DAEnerys\obj\Release\DAEnerys.Hotkeys.resources

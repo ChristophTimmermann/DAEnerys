@@ -154,21 +154,18 @@ namespace DAEnerys
             List<EditorMesh> newList = new List<EditorMesh>();
             foreach(EditorMesh mesh in EditorScene.meshes)
             {
-                if (mesh.NeverDrawInFront)
-                    if (!mesh.DrawAboveShip)
-                        newList.Add(mesh);
+                if (mesh.NeverDrawInFront && !mesh.DrawAboveShip)
+                    newList.Add(mesh);
             }
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
-                if (!mesh.NeverDrawInFront)
-                    if (mesh.DrawAboveShip)
-                        newList.Add(mesh);
+                if (!mesh.NeverDrawInFront && mesh.DrawAboveShip)
+                    newList.Add(mesh);
             }
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
-                if (!mesh.NeverDrawInFront)
-                    if (!mesh.DrawAboveShip)
-                        newList.Add(mesh);
+                if (!mesh.NeverDrawInFront && !mesh.DrawAboveShip)
+                    newList.Add(mesh);
             }
             EditorScene.meshes = newList;
 
@@ -305,12 +302,9 @@ namespace DAEnerys
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             foreach (HWMesh mesh in HWScene.Meshes)
             {
-                if (mesh.Visible)
+                if (mesh.Visible && !mesh.Translucent)
                 {
-                    if (!mesh.Translucent)
-                    {
-                        indiceat += DrawHWMesh(mesh, indiceat);
-                    }
+                    indiceat += DrawHWMesh(mesh, indiceat);
                 }
             }
 
@@ -320,21 +314,15 @@ namespace DAEnerys
             GL.DepthMask(false);
             foreach (HWMesh mesh in HWScene.Meshes)
             {
-                if (mesh.Visible)
-                {
-                    if (mesh.Translucent)
-                    {
-                        indiceat += DrawHWMesh(mesh, indiceat);
-                    }
-                }
+                if (mesh.Visible && mesh.Translucent)
+                    indiceat += DrawHWMesh(mesh, indiceat);
             }
             GL.DepthMask(true);
 
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
-                if (mesh.Visible)
-                    if (mesh.NeverDrawInFront)
-                        indiceat += DrawEditorMesh(mesh, indiceat);
+                if (mesh.Visible && mesh.NeverDrawInFront)
+                    indiceat += DrawEditorMesh(mesh, indiceat);
             }
 
             if (DrawVisualizationsInFront)
@@ -343,18 +331,14 @@ namespace DAEnerys
             GL.Enable(EnableCap.AlphaTest);
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
-                if (mesh.Visible)
-                    if (!mesh.NeverDrawInFront)
-                        if(mesh.DrawAboveShip)
-                            indiceat += DrawEditorMesh(mesh, indiceat);
+                if (mesh.Visible && !mesh.NeverDrawInFront && mesh.DrawAboveShip)
+                    indiceat += DrawEditorMesh(mesh, indiceat);
             }
 
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
-                if (mesh.Visible)
-                    if(!mesh.NeverDrawInFront)
-                        if(!mesh.DrawAboveShip)
-                            indiceat += DrawEditorMesh(mesh, indiceat);
+                if (mesh.Visible && !mesh.NeverDrawInFront && !mesh.DrawAboveShip)
+                    indiceat += DrawEditorMesh(mesh, indiceat);
             }
 
             //shaders[activeShader].DisableVertexAttribArrays();

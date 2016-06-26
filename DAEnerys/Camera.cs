@@ -180,6 +180,8 @@ namespace DAEnerys
                 }
             }
 
+            UpdatePosition();
+
             if (lastZoom != zoom)
             {
                 Renderer.UpdateView();
@@ -196,8 +198,6 @@ namespace DAEnerys
             lastZoom = zoom;
             lastOrthographicSize = orthographicSize;
             lastWheelPrecise = mouse.WheelPrecise;
-
-            UpdatePosition();
         }
 
         private void UpdatePosition()
