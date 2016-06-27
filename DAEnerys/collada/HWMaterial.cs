@@ -51,6 +51,7 @@ namespace DAEnerys
 
         public void Parse()
         {
+            String fullName = Name;
             if (Name.StartsWith("MAT[")) //If material is a homeworld valid material
             {
                 string[] splitted = Name.Split('[');
@@ -61,7 +62,10 @@ namespace DAEnerys
                     if (i != 0)
                     {
                         end = splitted[i].IndexOf(']');
-                        if (splitted[i - 1].EndsWith("MAT")) //Name
+                        if (end < 0) {
+                            Problem.Problems.Add(new Problem(ProblemTypes.ERROR,
+                                "Material parsing error: '" + fullName + "' has an invalid name format."));
+                        } else if (splitted[i - 1].EndsWith("MAT")) //Name
                         {
                             Name = splitted[i].Substring(0, end);
                         }
