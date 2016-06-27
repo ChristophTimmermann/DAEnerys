@@ -91,7 +91,10 @@ namespace DAEnerys
                         else if (splitted[i - 1].EndsWith("Link")) //Links
                         {
                             string linksString = splitted[i].Substring(0, end);
-                            links = linksString.Replace(" ", "").Split(',');
+
+                            //Don't load empty links
+                            if(linksString.Trim().Length > 0)
+                                links = linksString.Replace(" ", "").Split(',');
                         }
                         else if (splitted[i - 1].EndsWith("Flags")) //Flags
                         {
@@ -100,8 +103,17 @@ namespace DAEnerys
 
                             foreach (string flag in flagsStrings)
                             {
-                                if(flag.Length > 0) //If FLAGS is not empty
-                                    flags.Add((DockpathFlag)Enum.Parse(typeof(DockpathFlag), flag.ToUpper()));
+                                if (flag.Length > 0) //If FLAGS is not empty
+                                {
+                                    DockpathFlag newFlag;
+                                    bool success = Enum.TryParse(flag.ToUpper(), out newFlag);
+
+                                    //Check if flag is valid
+                                    if (success)
+                                        flags.Add(newFlag);
+                                    else
+                                        new Problem(ProblemTypes.WARNING, "Unknown dockpath flag \"" + flag + "\" on dockpath \"" + pathName + "\".");
+                                }
                             }
                         }
                     }
@@ -113,48 +125,61 @@ namespace DAEnerys
             #region DockSegment
             else if (Name.StartsWith("SEG")) //If node is a docksegment
             {
-                int id = -1;
-                float tolerance = 0;
-                float speed = 0;
-                List<DockSegmentFlag> flags = new List<DockSegmentFlag>();
-
-                string[] splitted = Name.Split('_');
-                int start = -1;
-                int end = -1;
-                foreach (string split in splitted)
+                //Check if segment is child of dockpath
+                if (this.Parent.Dockpath != null)
                 {
-                    if (split.StartsWith("SEG")) //ID
-                    {
-                        start = split.IndexOf('[') + 1;
-                        end = split.IndexOf(']');
-                        id = int.Parse(split.Substring(start, end - start));
-                    }
-                    else if (split.StartsWith("Tol")) //Tolerance
-                    {
-                        start = split.IndexOf('[') + 1;
-                        end = split.IndexOf(']');
-                        tolerance = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
-                    }
-                    else if (split.StartsWith("Spd")) //Speed
-                    {
-                        start = split.IndexOf('[') + 1;
-                        end = split.IndexOf(']');
-                        speed = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
-                    }
-                    else if (split.StartsWith("Flags")) //Flags
-                    {
-                        start = split.IndexOf('[') + 1;
-                        end = split.IndexOf(']');
-                        string flagsString = split.Substring(start, end - start);
-                        string[] flagsStrings = flagsString.Split(' ');
+                    int id = -1;
+                    float tolerance = 0;
+                    float speed = 0;
+                    List<DockSegmentFlag> flags = new List<DockSegmentFlag>();
 
-                        foreach (string flag in flagsStrings)
+                    string[] splitted = Name.Split('_');
+                    int start = -1;
+                    int end = -1;
+                    foreach (string split in splitted)
+                    {
+                        if (split.StartsWith("SEG")) //ID
                         {
-                            flags.Add((DockSegmentFlag)Enum.Parse(typeof(DockSegmentFlag), flag.ToUpper()));
+                            start = split.IndexOf('[') + 1;
+                            end = split.IndexOf(']');
+                            id = int.Parse(split.Substring(start, end - start));
+                        }
+                        else if (split.StartsWith("Tol")) //Tolerance
+                        {
+                            start = split.IndexOf('[') + 1;
+                            end = split.IndexOf(']');
+                            tolerance = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (split.StartsWith("Spd")) //Speed
+                        {
+                            start = split.IndexOf('[') + 1;
+                            end = split.IndexOf(']');
+                            speed = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (split.StartsWith("Flags")) //Flags
+                        {
+                            start = split.IndexOf('[') + 1;
+                            end = split.IndexOf(']');
+                            string flagsString = split.Substring(start, end - start);
+                            string[] flagsStrings = flagsString.Split(' ');
+
+                            foreach (string flag in flagsStrings)
+                            {
+                                DockSegmentFlag newFlag;
+                                bool success = Enum.TryParse(flag.ToUpper(), out newFlag);
+
+                                //Check if flag is valid
+                                if (success)
+                                    flags.Add(newFlag);
+                                else
+                                    new Problem(ProblemTypes.WARNING, "Unknown dockpath segment flag \"" + flag + "\" in dockpath \"" + this.Parent.Dockpath.Name + "\".");
+                            }
                         }
                     }
+                    DockSegment = new HWDockSegment(this, id, tolerance, speed, flags);
                 }
-                DockSegment = new HWDockSegment(this, id, tolerance, speed, flags);
+                else
+                    new Problem(ProblemTypes.WARNING, "Dockpath segment \"" + Name + "\" is not a child of a dockpath.");
             }
             #endregion
 
