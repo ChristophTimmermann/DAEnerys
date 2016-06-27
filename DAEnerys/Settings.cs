@@ -28,12 +28,15 @@ namespace DAEnerys
         {
             numericJointSize.Value = (decimal)EditorJoint.Size;
             numericMarkerSize.Value = (decimal)HWMarker.MarkerSize;
-            numericZoomSpeed.Value = (decimal)Program.Camera.ZoomSpeed;
+            numericZoomSpeed.Value = (decimal)Program.Camera.ZoomScalar;
             numericFarClip.Value = (decimal)Program.Camera.ClipDistance;
             numericNearClip.Value = (decimal)Program.Camera.NearClipDistance;
 
             buttonAmbientColor.BackColor = Color.FromArgb((int)Math.Round(Renderer.AmbientLight.Color.X * 255), (int)Math.Round(Renderer.AmbientLight.Color.Y * 255), (int)Math.Round(Renderer.AmbientLight.Color.Z * 255));
             buttonBackgroundColor.BackColor = Renderer.BackgroundColor;
+
+            buttonTeamColor.BackColor = Renderer.TeamColor;
+            buttonStripeColor.BackColor = Renderer.StripeColor;
 
             numericFOV.Value = (int)Math.Round(MathHelper.RadiansToDegrees(Program.Camera.FieldOfView));
             numericIconSize.Value = (decimal)HWNavLight.IconSize;
@@ -90,7 +93,7 @@ namespace DAEnerys
 
         private void numericZoomSpeed_ValueChanged(object sender, EventArgs e)
         {
-            Program.Camera.ZoomSpeed = (float)numericZoomSpeed.Value;
+            Program.Camera.ZoomScalar = (float)numericZoomSpeed.Value;
         }
 
         private void numericClipDistance_ValueChanged(object sender, EventArgs e)
@@ -198,6 +201,8 @@ namespace DAEnerys
                 new XElement("settings",
                 new XElement("backgroundColor", Renderer.BackgroundColor.ToArgb()),
                 new XElement("ambientColor", ambientColor.ToArgb()),
+                new XElement("teamColor", Renderer.TeamColor.ToArgb()),
+                new XElement("stripeColor", Renderer.StripeColor.ToArgb()),
                 new XElement("fieldOfView", MathHelper.RadiansToDegrees(Program.Camera.FieldOfView)),
                 new XElement("fsaaSamples", Program.FSAASamples),
                 new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront),
@@ -239,6 +244,16 @@ namespace DAEnerys
                             int.TryParse(element.Value, out aRGB);
                             Color ambientColor = Color.FromArgb(aRGB);
                             Renderer.AmbientLight.Color = new Vector3((float)ambientColor.R / 255, (float)ambientColor.G / 255, (float)ambientColor.B / 255);
+                            break;
+                        case "teamColor":
+                            aRGB = 0;
+                            int.TryParse(element.Value, out aRGB);
+                            Renderer.TeamColor = Color.FromArgb(aRGB);
+                            break;
+                        case "stripeColor":
+                            aRGB = 0;
+                            int.TryParse(element.Value, out aRGB);
+                            Renderer.StripeColor = Color.FromArgb(aRGB);
                             break;
                         case "fieldOfView":
                             double fov = 1.22f;
@@ -304,6 +319,26 @@ namespace DAEnerys
                 string path = (string)listDataPaths.SelectedItem;
                 HWData.DataPaths.Remove(path);
                 listDataPaths.Items.Remove(path);
+            }
+        }
+
+        private void buttonTeamColor_Click(object sender, EventArgs e)
+        {
+            DialogResult result = colorDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Renderer.TeamColor = colorDialog.Color;
+                buttonTeamColor.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void buttonStripeColor_Click(object sender, EventArgs e)
+        {
+            DialogResult result = colorDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Renderer.StripeColor = colorDialog.Color;
+                buttonStripeColor.BackColor = colorDialog.Color;
             }
         }
     }

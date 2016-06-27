@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+            Program.hotkeys = null;
             base.Dispose(disposing);
         }
 

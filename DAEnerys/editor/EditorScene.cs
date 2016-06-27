@@ -36,6 +36,7 @@ namespace DAEnerys
             EditorIcon.Mesh = icon.Meshes[0];
 
             importer.Dispose();
+            logStream.Detach();
             #endregion
         }
 

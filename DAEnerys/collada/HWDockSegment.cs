@@ -24,7 +24,11 @@ namespace DAEnerys
             Flags = flags;
 
             Dockpath = node.Parent.Dockpath;
-            Dockpath.Segments.Add(this);
+            if (Dockpath == null)
+            {
+                Problem.Problems.Add(new Problem(ProblemTypes.ERROR, "Dockpath error with node " + node.Name.ToString()));
+            } else
+                Dockpath.Segments.Add(this);
 
             Icosphere = new EditorIcosphere(Node, new Vector3(1, 0, 0));
             Icosphere.Scale = new Vector3(5, 5, 5);

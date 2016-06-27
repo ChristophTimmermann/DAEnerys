@@ -627,6 +627,16 @@ namespace DAEnerys
             Program.Camera.MouseUp(e);
         }
 
+        public void glControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            Program.Camera.MouseMove(e);
+        }
+
+        public void glControl_MouseWheel(object sender, MouseEventArgs e)
+        {
+            Program.Camera.MouseWheel(e);
+        }
+
         public void glControl_KeyDown(object sender, KeyEventArgs e)
         {
             ActionKey.KeyDown(e);
@@ -659,6 +669,7 @@ namespace DAEnerys
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
+            if (Program.settings != null) return;
             Program.settings = new Settings();
             Program.settings.Visible = true;
             Program.settings.Init();
@@ -666,6 +677,7 @@ namespace DAEnerys
 
         private void buttonHotkeys_Click(object sender, EventArgs e)
         {
+            if (Program.hotkeys != null) return;
             Program.hotkeys = new Hotkeys();
             Program.hotkeys.Visible = true;
             Program.hotkeys.Init();
@@ -1134,5 +1146,12 @@ namespace DAEnerys
 
             splitContainer2.Panel2Collapsed = !problemsVisible;
         }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            Renderer.ReloadShaders();
+        }
+
+        
     }
 }

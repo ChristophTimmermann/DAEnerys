@@ -12,7 +12,7 @@ namespace DAEnerys
 {
     static class Renderer
     {
-        static Dictionary<string, Shader> shaders = new Dictionary<string, Shader>();
+        static Shader shader;
 
         public static HWTexture DefaultTexture;
 
@@ -31,6 +31,20 @@ namespace DAEnerys
                     Program.GLControl.Invalidate();
                 }
             }
+        }
+
+        private static Color teamColor = Color.FromArgb(255, 255, 127, 0);
+        public static Color TeamColor
+        {
+            get { return teamColor; }
+            set { teamColor = value; }
+        }
+
+        private static Color stripeColor = Color.FromArgb(255, 0, 127, 127);
+        public static Color StripeColor
+        {
+            get { return stripeColor; }
+            set { stripeColor = value; }
         }
 
         public static bool DrawVisualizationsInFront = true;
@@ -57,9 +71,7 @@ namespace DAEnerys
         }
 
         public static float ThrusterInterpolation = 1;
-
-        static string activeShader;
-
+        
         static int ibo_elements;
 
         static Vector3[] vertdata;
@@ -88,11 +100,7 @@ namespace DAEnerys
             GL.GenBuffers(1, out ibo_elements);
 
             // Load shaders from file
-            shaders.Add("textured", new Shader("vs_tex.glsl", "fs_tex.glsl", true));
-            shaders.Add("normal", new Shader("vs_norm.glsl", "fs_norm.glsl", true));
-            shaders.Add("lit", new Shader("vs_lit.glsl", "fs_lit.glsl", true));
-
-            activeShader = "lit";
+            shader = new Shader("vs_lit.glsl", "fs_lit.glsl", true);
 
             //AmbientLight.Enabled = false;
             DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
@@ -102,10 +110,18 @@ namespace DAEnerys
             else
                 GraphicsContext.CurrentContext.SwapInterval = 0;
 
-            GL.UseProgram(shaders[activeShader].ProgramID);
-            shaders[activeShader].EnableVertexAttribArrays();
+            GL.UseProgram(shader.ProgramID);
+            shader.EnableVertexAttribArrays();
 
             //new Light(new Vector4(3, 0, 0, 1), new Vector3(1, 0, 0), 0.01f);
+        }
+
+        public static void ReloadShaders()
+        {
+            shader.DisableVertexAttribArrays();
+            shader.Reload();
+            GL.UseProgram(shader.ProgramID);
+            shader.EnableVertexAttribArrays();
         }
 
         public static void UpdateMeshData()
@@ -197,29 +213,29 @@ namespace DAEnerys
                 normdataVec4[i] = new Vector4(normdata[i], 0);
             }
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vert"));
+            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vert"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(vertdata.Length * Vector3.SizeInBytes), vertdata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vert"), 3, VertexAttribPointerType.Float, false, 0, 0);
+            GL.VertexAttribPointer(shader.GetAttribute("vert"), 3, VertexAttribPointerType.Float, false, 0, 0);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertTexCoord"));
+            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertTexCoord"));
             GL.BufferData<Vector2>(BufferTarget.ArrayBuffer, (IntPtr)(texcoorddata.Length * Vector2.SizeInBytes), texcoorddata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertTexCoord"), 2, VertexAttribPointerType.Float, true, 0, 0);
+            GL.VertexAttribPointer(shader.GetAttribute("vertTexCoord"), 2, VertexAttribPointerType.Float, true, 0, 0);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertColor"));
+            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertColor"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(coldata.Length * Vector3.SizeInBytes), coldata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertColor"), 3, VertexAttribPointerType.Float, false, 0, 0);
+            GL.VertexAttribPointer(shader.GetAttribute("vertColor"), 3, VertexAttribPointerType.Float, false, 0, 0);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertNormal"));
+            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertNormal"));
             GL.BufferData<Vector4>(BufferTarget.ArrayBuffer, (IntPtr)(normdataVec4.Length * Vector4.SizeInBytes), normdataVec4, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertNormal"), 4, VertexAttribPointerType.Float, true, 0, 0);
+            GL.VertexAttribPointer(shader.GetAttribute("vertNormal"), 4, VertexAttribPointerType.Float, true, 0, 0);
 
-            /*GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertTangent"));
+            /*GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertTangent"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(tangentdata.Length * Vector3.SizeInBytes), tangentdata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertTangent"), 3, VertexAttribPointerType.Float, true, 0, 0);
+            GL.VertexAttribPointer(shader.GetAttribute("vertTangent"), 3, VertexAttribPointerType.Float, true, 0, 0);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vertBiTangent"));
+            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertBiTangent"));
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(bitangentdata.Length * Vector3.SizeInBytes), bitangentdata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shaders[activeShader].GetAttribute("vertBiTangent"), 3, VertexAttribPointerType.Float, true, 0, 0);*/
+            GL.VertexAttribPointer(shader.GetAttribute("vertBiTangent"), 3, VertexAttribPointerType.Float, true, 0, 0);*/
 
             // Buffer index data
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
@@ -273,29 +289,33 @@ namespace DAEnerys
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
             //These uniforms are the same for every mesh
-            GL.Uniform1(shaders[activeShader].GetUniform("thrusterInterpolation"), ThrusterInterpolation); //Send thruster interpolation value
+            GL.Uniform1(shader.GetUniform("thrusterInterpolation"), ThrusterInterpolation); //Send thruster interpolation value
 
             if(DisableLighting)
-                GL.Uniform1(shaders[activeShader].GetUniform("disableLighting"), 1);
+                GL.Uniform1(shader.GetUniform("disableLighting"), 1);
             else
-                GL.Uniform1(shaders[activeShader].GetUniform("disableLighting"), 0);
+                GL.Uniform1(shader.GetUniform("disableLighting"), 0);
 
+            Vector3 tColor = new Vector3(teamColor.R, teamColor.G, teamColor.B);
+            Vector3 sColor = new Vector3(stripeColor.R, stripeColor.G, stripeColor.B);
+            GL.Uniform3(shader.GetUniform("teamColor"), ref tColor);
+            GL.Uniform3(shader.GetUniform("stripeColor"), ref sColor);
 
-            GL.Uniform3(shaders[activeShader].GetUniform("cameraPosition"), ref Program.Camera.Position);
-            GL.UniformMatrix4(shaders[activeShader].GetUniform("camera"), false, ref View);
+            GL.Uniform3(shader.GetUniform("cameraPosition"), ref Program.Camera.Position);
+            GL.UniformMatrix4(shader.GetUniform("camera"), false, ref View);
 
-            GL.Uniform1(shaders[activeShader].GetUniform("numLights"), Light.Lights.Count);
+            GL.Uniform1(shader.GetUniform("numLights"), Light.Lights.Count);
             for (int i = 0; i < Light.Lights.Count; i++)
             {
                 if(Light.Lights[i].Enabled)
-                    GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "enabled"), 1);
+                    GL.Uniform1(shader.GetUniform("allLights[" + i + "]." + "enabled"), 1);
                 else
-                    GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "enabled"), 0);
+                    GL.Uniform1(shader.GetUniform("allLights[" + i + "]." + "enabled"), 0);
 
-                GL.Uniform4(shaders[activeShader].GetUniform("allLights[" + i + "]." + "position"), ref Light.Lights[i].Position);
-                GL.Uniform3(shaders[activeShader].GetUniform("allLights[" + i + "]." + "intensities"), ref Light.Lights[i].Color);
-                GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "attenuation"), Light.Lights[i].Attenuation);
-                GL.Uniform1(shaders[activeShader].GetUniform("allLights[" + i + "]." + "ambientCoefficient"), Light.Lights[i].AmbientCoefficient);
+                GL.Uniform4(shader.GetUniform("allLights[" + i + "]." + "position"), ref Light.Lights[i].Position);
+                GL.Uniform3(shader.GetUniform("allLights[" + i + "]." + "intensities"), ref Light.Lights[i].Color);
+                GL.Uniform1(shader.GetUniform("allLights[" + i + "]." + "attenuation"), Light.Lights[i].Attenuation);
+                GL.Uniform1(shader.GetUniform("allLights[" + i + "]." + "ambientCoefficient"), Light.Lights[i].AmbientCoefficient);
             }
 
             int indiceat = 0;
@@ -341,7 +361,7 @@ namespace DAEnerys
                     indiceat += DrawEditorMesh(mesh, indiceat);
             }
 
-            //shaders[activeShader].DisableVertexAttribArrays();
+            //shader.DisableVertexAttribArrays();
 
             GL.Disable(EnableCap.AlphaTest);
             GL.Disable(EnableCap.Blend);
@@ -362,18 +382,18 @@ namespace DAEnerys
                 {
                     GL.ActiveTexture(TextureUnit.Texture1);
                     GL.BindTexture(TextureTarget.Texture2D, mesh.Material.GlowTexture.ID);
-                    GL.Uniform1(shaders[activeShader].GetUniform("glowTex"), 1);
-                    GL.Uniform1(shaders[activeShader].GetUniform("emissive"), 1); //Tell shader to use a GLOW map
+                    GL.Uniform1(shader.GetUniform("glowTex"), 1);
+                    GL.Uniform1(shader.GetUniform("emissive"), 1); //Tell shader to use a GLOW map
 
                     if (mesh.Material.Shader == "shipglow" || mesh.Material.Shader == "shipglow_ns") //If shader with discrete GLOW map
-                        GL.Uniform1(shaders[activeShader].GetUniform("discreteGlow"), 1); //Tell shader that it is a discrete GLOW map
+                        GL.Uniform1(shader.GetUniform("discreteGlow"), 1); //Tell shader that it is a discrete GLOW map
                     else
-                        GL.Uniform1(shaders[activeShader].GetUniform("discreteGlow"), 0); //Tell shader that it is not a discrete GLOW map
+                        GL.Uniform1(shader.GetUniform("discreteGlow"), 0); //Tell shader that it is not a discrete GLOW map
                 }
                 else
                 {
-                    GL.Uniform1(shaders[activeShader].GetUniform("glowTex"), 0);
-                    GL.Uniform1(shaders[activeShader].GetUniform("emissive"), 0); //Tell shader to not use a GLOW map
+                    GL.Uniform1(shader.GetUniform("glowTex"), 0);
+                    GL.Uniform1(shader.GetUniform("emissive"), 0); //Tell shader to not use a GLOW map
                 }
 
                 if (mesh.Material.Shader == "thruster") //If the mesh material is a thruster
@@ -382,23 +402,23 @@ namespace DAEnerys
                     {
                         GL.ActiveTexture(TextureUnit.Texture2);
                         GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffDiffuseTexture.ID);
-                        GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffDiff"), 2);
+                        GL.Uniform1(shader.GetUniform("thrusterOffDiff"), 2);
                     }
 
                     if (mesh.Material.ThrusterOffGlowTexture != null)
                     {
                         GL.ActiveTexture(TextureUnit.Texture3);
                         GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffGlowTexture.ID);
-                        GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffGlow"), 3);
+                        GL.Uniform1(shader.GetUniform("thrusterOffGlow"), 3);
                     }
 
-                    GL.Uniform1(shaders[activeShader].GetUniform("thruster"), 1); //Tell shader to interpolate between thruster textures
+                    GL.Uniform1(shader.GetUniform("thruster"), 1); //Tell shader to interpolate between thruster textures
                 }
                 else
                 {
-                    GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffDiff"), 0);
-                    GL.Uniform1(shaders[activeShader].GetUniform("thrusterOffGlow"), 0);
-                    GL.Uniform1(shaders[activeShader].GetUniform("thruster"), 0); //Tell shader not to interpolate between thruster textures
+                    GL.Uniform1(shader.GetUniform("thrusterOffDiff"), 0);
+                    GL.Uniform1(shader.GetUniform("thrusterOffGlow"), 0);
+                    GL.Uniform1(shader.GetUniform("thruster"), 0); //Tell shader not to interpolate between thruster textures
                 }
 
                 //--------------------------------------------------------- SPECULAR MAPPING -------------------------------------------------------------//
@@ -406,13 +426,13 @@ namespace DAEnerys
                 {
                     GL.ActiveTexture(TextureUnit.Texture4);
                     GL.BindTexture(TextureTarget.Texture2D, mesh.Material.SpecularTexture.ID);
-                    GL.Uniform1(shaders[activeShader].GetUniform("specularTex"), 4);
-                    GL.Uniform1(shaders[activeShader].GetUniform("specular"), 1); //Tell shader to use a SPEC map
+                    GL.Uniform1(shader.GetUniform("specularTex"), 4);
+                    GL.Uniform1(shader.GetUniform("specular"), 1); //Tell shader to use a SPEC map
                 }
                 else
                 {
-                    GL.Uniform1(shaders[activeShader].GetUniform("specularTex"), 0);
-                    GL.Uniform1(shaders[activeShader].GetUniform("specular"), 0); //Tell shader to not use a SPEC map
+                    GL.Uniform1(shader.GetUniform("specularTex"), 0);
+                    GL.Uniform1(shader.GetUniform("specular"), 0); //Tell shader to not use a SPEC map
                 }
 
                 //--------------------------------------------------------- NORMAL MAPPING -------------------------------------------------------------//
@@ -420,49 +440,77 @@ namespace DAEnerys
                 {
                     GL.ActiveTexture(TextureUnit.Texture5);
                     GL.BindTexture(TextureTarget.Texture2D, mesh.Material.NormalTexture.ID);
-                    GL.Uniform1(shaders[activeShader].GetUniform("normalTex"), 5);
-                    GL.Uniform1(shaders[activeShader].GetUniform("normalMapped"), 1); //Tell shader to use a NORM map
+                    GL.Uniform1(shader.GetUniform("normalTex"), 5);
+                    GL.Uniform1(shader.GetUniform("normalMapped"), 1); //Tell shader to use a NORM map
                 }
                 else
                 {
-                    GL.Uniform1(shaders[activeShader].GetUniform("normalTex"), 0);
-                    GL.Uniform1(shaders[activeShader].GetUniform("normalMapped"), 0); //Tell shader to not use a NORM map
+                    GL.Uniform1(shader.GetUniform("normalTex"), 0);
+                    GL.Uniform1(shader.GetUniform("normalMapped"), 0); //Tell shader to not use a NORM map
                 }*/
+
+                //--------------------------------------------------------- TEAM COLORS MAPPING -------------------------------------------------------------//
+                if (mesh.Material.TeamTexture != null) //Check if the material has a TEAM-Map
+                {
+                    GL.ActiveTexture(TextureUnit.Texture6);
+                    GL.BindTexture(TextureTarget.Texture2D, mesh.Material.TeamTexture.ID);
+                    GL.Uniform1(shader.GetUniform("teamTex"), 6);
+                    GL.Uniform1(shader.GetUniform("team"), 1); //Tell shader to use a TEAM map
+                }
+                else
+                {
+                    GL.Uniform1(shader.GetUniform("teamTex"), 0);
+                    GL.Uniform1(shader.GetUniform("team"), 0); //Tell shader to not use a TEAM map
+                }
+                if (mesh.Material.StripeTexture != null) //Check if the material has a STRP-Map
+                {
+                    GL.ActiveTexture(TextureUnit.Texture7);
+                    GL.BindTexture(TextureTarget.Texture2D, mesh.Material.StripeTexture.ID);
+                    GL.Uniform1(shader.GetUniform("stripeTex"), 7);
+                    GL.Uniform1(shader.GetUniform("stripe"), 1); //Tell shader to use a STRP map
+                }
+                else
+                {
+                    GL.Uniform1(shader.GetUniform("stripeTex"), 0);
+                    GL.Uniform1(shader.GetUniform("stripe"), 0); //Tell shader to not use a SPEC map
+                }
 
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, texture.ID);
-                GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
-                GL.Uniform1(shaders[activeShader].GetUniform("textured"), 1); //Tell shader to use texture colors
+                GL.Uniform1(shader.GetUniform("materialTex"), 0);
+                GL.Uniform1(shader.GetUniform("textured"), 1); //Tell shader to use texture colors
             }
             else
             {
-                GL.Uniform1(shaders[activeShader].GetUniform("textured"), 0); //Tell shader to use vertex colors
-                GL.Uniform1(shaders[activeShader].GetUniform("specular"), 0); //Tell shader to not use a SPEC map
-                GL.Uniform1(shaders[activeShader].GetUniform("thruster"), 0); //Tell shader not to interpolate between thruster textures
-                GL.Uniform1(shaders[activeShader].GetUniform("emissive"), 0); //Tell shader to not use a GLOW map
+                GL.Uniform1(shader.GetUniform("textured"), 0); //Tell shader to use vertex colors
+                GL.Uniform1(shader.GetUniform("specular"), 0); //Tell shader to not use a SPEC map
+                GL.Uniform1(shader.GetUniform("team"), 0); //Tell shader to not use a TEAM map
+                GL.Uniform1(shader.GetUniform("stripe"), 0); //Tell shader to not use a STRP map
+                GL.Uniform1(shader.GetUniform("thruster"), 0); //Tell shader not to interpolate between thruster textures
+                GL.Uniform1(shader.GetUniform("emissive"), 0); //Tell shader to not use a GLOW map
             }
 
             if (mesh.Shaded)
             {
-                GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 1); //Tell shader to calculate lighting
+                GL.Uniform1(shader.GetUniform("shaded"), 1); //Tell shader to calculate lighting
 
-                GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
-                GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
+                GL.Uniform3(shader.GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
+                GL.Uniform1(shader.GetUniform("materialShininess"), mesh.Material.SpecularExponent);
             }
             else
-                GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 0); //Tell shader not to calculate lighting
+                GL.Uniform1(shader.GetUniform("shaded"), 0); //Tell shader not to calculate lighting
 
             if (mesh.VertexColored)
-                GL.Uniform1(shaders[activeShader].GetUniform("vertexColored"), 1);
+                GL.Uniform1(shader.GetUniform("vertexColored"), 1);
             else
-                GL.Uniform1(shaders[activeShader].GetUniform("vertexColored"), 0);
+                GL.Uniform1(shader.GetUniform("vertexColored"), 0);
 
-            GL.Uniform1(shaders[activeShader].GetUniform("blackIsTransparent"), 0);
-            GL.Uniform1(shaders[activeShader].GetUniform("materialOpacity"), mesh.Material.Opacity);
-            GL.Uniform3(shaders[activeShader].GetUniform("materialDiffuseColor"), ref mesh.Material.DiffuseColor);
+            GL.Uniform1(shader.GetUniform("blackIsTransparent"), 0);
+            GL.Uniform1(shader.GetUniform("materialOpacity"), mesh.Material.Opacity);
+            GL.Uniform3(shader.GetUniform("materialDiffuseColor"), ref mesh.Material.DiffuseColor);
 
-            GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
-            GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
+            GL.UniformMatrix4(shader.GetUniform("model"), false, ref mesh.ModelMatrix);
+            GL.UniformMatrix4(shader.GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
 
             GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
             return mesh.IndiceCount;
@@ -479,51 +527,51 @@ namespace DAEnerys
             if (mesh.Material != null)
             {
                 texture = mesh.Material.DiffuseTexture;
-                GL.Uniform3(shaders[activeShader].GetUniform("materialDiffuseColor"), ref mesh.Material.DiffuseColor);
-                GL.Uniform1(shaders[activeShader].GetUniform("materialOpacity"), mesh.Material.Opacity);
+                GL.Uniform3(shader.GetUniform("materialDiffuseColor"), ref mesh.Material.DiffuseColor);
+                GL.Uniform1(shader.GetUniform("materialOpacity"), mesh.Material.Opacity);
             }
             else
             {
-                GL.Uniform3(shaders[activeShader].GetUniform("materialDiffuseColor"), Vector3.One);
-                GL.Uniform1(shaders[activeShader].GetUniform("materialOpacity"), 1.0f);
+                GL.Uniform3(shader.GetUniform("materialDiffuseColor"), Vector3.One);
+                GL.Uniform1(shader.GetUniform("materialOpacity"), 1.0f);
             }
 
             if (texture != null)
             {
                 GL.BindTexture(TextureTarget.Texture2D, texture.ID);
-                GL.Uniform1(shaders[activeShader].GetUniform("textured"), 1); //Tell shader to use texture colors
+                GL.Uniform1(shader.GetUniform("textured"), 1); //Tell shader to use texture colors
             }
             else
             {
-                GL.Uniform1(shaders[activeShader].GetUniform("textured"), 0); //Tell shader to use vertex colors
+                GL.Uniform1(shader.GetUniform("textured"), 0); //Tell shader to use vertex colors
             }
 
             if (mesh.Shaded)
             {
-                GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 1); //Tell shader to calculate lighting
+                GL.Uniform1(shader.GetUniform("shaded"), 1); //Tell shader to calculate lighting
 
                 if (mesh.Material != null)
                 {
-                    GL.Uniform1(shaders[activeShader].GetUniform("materialTex"), 0);
-                    GL.Uniform3(shaders[activeShader].GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
-                    GL.Uniform1(shaders[activeShader].GetUniform("materialShininess"), mesh.Material.SpecularExponent);
+                    GL.Uniform1(shader.GetUniform("materialTex"), 0);
+                    GL.Uniform3(shader.GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
+                    GL.Uniform1(shader.GetUniform("materialShininess"), mesh.Material.SpecularExponent);
                 }
             }
             else
-                GL.Uniform1(shaders[activeShader].GetUniform("shaded"), 0); //Tell shader not to calculate lighting
+                GL.Uniform1(shader.GetUniform("shaded"), 0); //Tell shader not to calculate lighting
 
             if(mesh.BlackIsTransparent)
-                GL.Uniform1(shaders[activeShader].GetUniform("blackIsTransparent"), 1);
+                GL.Uniform1(shader.GetUniform("blackIsTransparent"), 1);
             else
-                GL.Uniform1(shaders[activeShader].GetUniform("blackIsTransparent"), 0);
+                GL.Uniform1(shader.GetUniform("blackIsTransparent"), 0);
 
             if (mesh.VertexColored)
-                GL.Uniform1(shaders[activeShader].GetUniform("vertexColored"), 1);
+                GL.Uniform1(shader.GetUniform("vertexColored"), 1);
             else
-                GL.Uniform1(shaders[activeShader].GetUniform("vertexColored"), 0);
+                GL.Uniform1(shader.GetUniform("vertexColored"), 0);
 
-            GL.UniformMatrix4(shaders[activeShader].GetUniform("model"), false, ref mesh.ModelMatrix);
-            GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
+            GL.UniformMatrix4(shader.GetUniform("model"), false, ref mesh.ModelMatrix);
+            GL.UniformMatrix4(shader.GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
 
             if (mesh.GetType() == typeof(EditorLine))
                 GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));

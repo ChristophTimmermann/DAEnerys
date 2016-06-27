@@ -28,6 +28,8 @@ namespace DAEnerys
         public HWTexture ThrusterOffGlowTexture;
         public HWTexture NormalTexture;
         public HWTexture SpecularTexture;
+        public HWTexture TeamTexture;
+        public HWTexture StripeTexture;
 
         public List<HWImage> Images = new List<HWImage>();
 
@@ -122,6 +124,12 @@ namespace DAEnerys
                                                 break;
                                             case "SPEC":
                                                 SpecularTexture = new HWTexture(file);
+                                                break;
+                                            case "TEAM":
+                                                TeamTexture = new HWTexture(file, true);
+                                                break;
+                                            case "STRP":
+                                                StripeTexture = new HWTexture(file, true);
                                                 break;
                                         }
 

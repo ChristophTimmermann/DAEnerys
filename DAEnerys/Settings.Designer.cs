@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+            Program.settings = null;
             base.Dispose(disposing);
         }
 
@@ -44,7 +45,6 @@
             this.numericIconSize = new System.Windows.Forms.NumericUpDown();
             this.numericMarkerSize = new System.Windows.Forms.NumericUpDown();
             this.numericJointSize = new System.Windows.Forms.NumericUpDown();
-            this.groupLighting = new System.Windows.Forms.GroupBox();
             this.buttonBackgroundColor = new System.Windows.Forms.Button();
             this.labelBackgroundColor = new System.Windows.Forms.Label();
             this.buttonAmbientColor = new System.Windows.Forms.Button();
@@ -57,11 +57,15 @@
             this.listDataPaths = new System.Windows.Forms.ListBox();
             this.addDataPathDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupRendering = new System.Windows.Forms.GroupBox();
+            this.buttonStripeColor = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.buttonTeamColor = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.checkDisableLighting = new System.Windows.Forms.CheckBox();
             this.checkVSync = new System.Windows.Forms.CheckBox();
             this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
             this.labelFSAASamples = new System.Windows.Forms.Label();
             this.comboFSAASamples = new System.Windows.Forms.ComboBox();
-            this.checkDisableLighting = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -71,7 +75,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericIconSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarkerSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).BeginInit();
-            this.groupLighting.SuspendLayout();
             this.groupDataPaths.SuspendLayout();
             this.groupRendering.SuspendLayout();
             this.SuspendLayout();
@@ -177,7 +180,7 @@
             this.groupCamera.Controls.Add(this.labelZoomSpeed);
             this.groupCamera.Controls.Add(this.numericZoomSpeed);
             this.groupCamera.Controls.Add(this.numericFarClip);
-            this.groupCamera.Location = new System.Drawing.Point(13, 13);
+            this.groupCamera.Location = new System.Drawing.Point(8, 8);
             this.groupCamera.Name = "groupCamera";
             this.groupCamera.Size = new System.Drawing.Size(329, 136);
             this.groupCamera.TabIndex = 15;
@@ -264,7 +267,7 @@
             this.groupEditor.Controls.Add(this.numericJointSize);
             this.groupEditor.Controls.Add(this.labelMarkerSize);
             this.groupEditor.Controls.Add(this.labelJointSize);
-            this.groupEditor.Location = new System.Drawing.Point(13, 155);
+            this.groupEditor.Location = new System.Drawing.Point(8, 152);
             this.groupEditor.Name = "groupEditor";
             this.groupEditor.Size = new System.Drawing.Size(329, 110);
             this.groupEditor.TabIndex = 16;
@@ -352,26 +355,11 @@
             0});
             this.numericJointSize.ValueChanged += new System.EventHandler(this.numericJointSize_ValueChanged);
             // 
-            // groupLighting
-            // 
-            this.groupLighting.AutoSize = true;
-            this.groupLighting.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupLighting.Controls.Add(this.buttonBackgroundColor);
-            this.groupLighting.Controls.Add(this.labelBackgroundColor);
-            this.groupLighting.Controls.Add(this.buttonAmbientColor);
-            this.groupLighting.Controls.Add(this.labelAmbientColor);
-            this.groupLighting.Location = new System.Drawing.Point(13, 405);
-            this.groupLighting.Name = "groupLighting";
-            this.groupLighting.Size = new System.Drawing.Size(329, 84);
-            this.groupLighting.TabIndex = 17;
-            this.groupLighting.TabStop = false;
-            this.groupLighting.Text = "Lighting";
-            // 
             // buttonBackgroundColor
             // 
             this.buttonBackgroundColor.BackColor = System.Drawing.Color.Red;
             this.buttonBackgroundColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonBackgroundColor.Location = new System.Drawing.Point(105, 45);
+            this.buttonBackgroundColor.Location = new System.Drawing.Point(104, 144);
             this.buttonBackgroundColor.Name = "buttonBackgroundColor";
             this.buttonBackgroundColor.Size = new System.Drawing.Size(218, 20);
             this.buttonBackgroundColor.TabIndex = 4;
@@ -381,7 +369,7 @@
             // labelBackgroundColor
             // 
             this.labelBackgroundColor.AutoSize = true;
-            this.labelBackgroundColor.Location = new System.Drawing.Point(8, 49);
+            this.labelBackgroundColor.Location = new System.Drawing.Point(7, 148);
             this.labelBackgroundColor.Name = "labelBackgroundColor";
             this.labelBackgroundColor.Size = new System.Drawing.Size(91, 13);
             this.labelBackgroundColor.TabIndex = 3;
@@ -391,7 +379,7 @@
             // 
             this.buttonAmbientColor.BackColor = System.Drawing.Color.Red;
             this.buttonAmbientColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonAmbientColor.Location = new System.Drawing.Point(105, 19);
+            this.buttonAmbientColor.Location = new System.Drawing.Point(104, 120);
             this.buttonAmbientColor.Name = "buttonAmbientColor";
             this.buttonAmbientColor.Size = new System.Drawing.Size(218, 20);
             this.buttonAmbientColor.TabIndex = 2;
@@ -401,7 +389,7 @@
             // labelAmbientColor
             // 
             this.labelAmbientColor.AutoSize = true;
-            this.labelAmbientColor.Location = new System.Drawing.Point(8, 23);
+            this.labelAmbientColor.Location = new System.Drawing.Point(7, 124);
             this.labelAmbientColor.Name = "labelAmbientColor";
             this.labelAmbientColor.Size = new System.Drawing.Size(71, 13);
             this.labelAmbientColor.TabIndex = 0;
@@ -421,7 +409,7 @@
             this.groupDataPaths.Controls.Add(this.buttonRemoveDataPath);
             this.groupDataPaths.Controls.Add(this.buttonAddDataPath);
             this.groupDataPaths.Controls.Add(this.listDataPaths);
-            this.groupDataPaths.Location = new System.Drawing.Point(13, 495);
+            this.groupDataPaths.Location = new System.Drawing.Point(8, 272);
             this.groupDataPaths.Name = "groupDataPaths";
             this.groupDataPaths.Size = new System.Drawing.Size(329, 188);
             this.groupDataPaths.TabIndex = 19;
@@ -476,17 +464,76 @@
             // 
             this.groupRendering.AutoSize = true;
             this.groupRendering.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupRendering.Controls.Add(this.buttonStripeColor);
+            this.groupRendering.Controls.Add(this.label2);
+            this.groupRendering.Controls.Add(this.buttonTeamColor);
+            this.groupRendering.Controls.Add(this.label3);
+            this.groupRendering.Controls.Add(this.buttonBackgroundColor);
             this.groupRendering.Controls.Add(this.checkDisableLighting);
+            this.groupRendering.Controls.Add(this.labelBackgroundColor);
             this.groupRendering.Controls.Add(this.checkVSync);
+            this.groupRendering.Controls.Add(this.buttonAmbientColor);
+            this.groupRendering.Controls.Add(this.labelAmbientColor);
             this.groupRendering.Controls.Add(this.checkRenderOnTop);
             this.groupRendering.Controls.Add(this.labelFSAASamples);
             this.groupRendering.Controls.Add(this.comboFSAASamples);
-            this.groupRendering.Location = new System.Drawing.Point(13, 271);
+            this.groupRendering.Location = new System.Drawing.Point(352, 8);
             this.groupRendering.Name = "groupRendering";
-            this.groupRendering.Size = new System.Drawing.Size(328, 128);
+            this.groupRendering.Size = new System.Drawing.Size(328, 231);
             this.groupRendering.TabIndex = 18;
             this.groupRendering.TabStop = false;
             this.groupRendering.Text = "Rendering";
+            // 
+            // buttonStripeColor
+            // 
+            this.buttonStripeColor.BackColor = System.Drawing.Color.Red;
+            this.buttonStripeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonStripeColor.Location = new System.Drawing.Point(104, 192);
+            this.buttonStripeColor.Name = "buttonStripeColor";
+            this.buttonStripeColor.Size = new System.Drawing.Size(218, 20);
+            this.buttonStripeColor.TabIndex = 29;
+            this.buttonStripeColor.UseVisualStyleBackColor = false;
+            this.buttonStripeColor.Click += new System.EventHandler(this.buttonStripeColor_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 196);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(60, 13);
+            this.label2.TabIndex = 28;
+            this.label2.Text = "Stripe color";
+            // 
+            // buttonTeamColor
+            // 
+            this.buttonTeamColor.BackColor = System.Drawing.Color.Red;
+            this.buttonTeamColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonTeamColor.Location = new System.Drawing.Point(104, 168);
+            this.buttonTeamColor.Name = "buttonTeamColor";
+            this.buttonTeamColor.Size = new System.Drawing.Size(218, 20);
+            this.buttonTeamColor.TabIndex = 27;
+            this.buttonTeamColor.UseVisualStyleBackColor = false;
+            this.buttonTeamColor.Click += new System.EventHandler(this.buttonTeamColor_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 172);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(60, 13);
+            this.label3.TabIndex = 26;
+            this.label3.Text = "Team color";
+            // 
+            // checkDisableLighting
+            // 
+            this.checkDisableLighting.AutoSize = true;
+            this.checkDisableLighting.Location = new System.Drawing.Point(11, 92);
+            this.checkDisableLighting.Name = "checkDisableLighting";
+            this.checkDisableLighting.Size = new System.Drawing.Size(97, 17);
+            this.checkDisableLighting.TabIndex = 25;
+            this.checkDisableLighting.Text = "Disable lighting";
+            this.checkDisableLighting.UseVisualStyleBackColor = true;
+            this.checkDisableLighting.CheckedChanged += new System.EventHandler(this.checkDisableLighting_CheckedChanged);
             // 
             // checkVSync
             // 
@@ -536,27 +583,15 @@
             this.comboFSAASamples.Size = new System.Drawing.Size(218, 21);
             this.comboFSAASamples.TabIndex = 19;
             // 
-            // checkDisableLighting
-            // 
-            this.checkDisableLighting.AutoSize = true;
-            this.checkDisableLighting.Location = new System.Drawing.Point(11, 92);
-            this.checkDisableLighting.Name = "checkDisableLighting";
-            this.checkDisableLighting.Size = new System.Drawing.Size(97, 17);
-            this.checkDisableLighting.TabIndex = 25;
-            this.checkDisableLighting.Text = "Disable lighting";
-            this.checkDisableLighting.UseVisualStyleBackColor = true;
-            this.checkDisableLighting.CheckedChanged += new System.EventHandler(this.checkDisableLighting_CheckedChanged);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(394, 782);
+            this.ClientSize = new System.Drawing.Size(688, 469);
             this.Controls.Add(this.groupRendering);
             this.Controls.Add(this.groupDataPaths);
-            this.Controls.Add(this.groupLighting);
             this.Controls.Add(this.groupEditor);
             this.Controls.Add(this.groupCamera);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -576,8 +611,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericIconSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMarkerSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericJointSize)).EndInit();
-            this.groupLighting.ResumeLayout(false);
-            this.groupLighting.PerformLayout();
             this.groupDataPaths.ResumeLayout(false);
             this.groupRendering.ResumeLayout(false);
             this.groupRendering.PerformLayout();
@@ -600,7 +633,6 @@
         private System.Windows.Forms.NumericUpDown numericJointSize;
         private System.Windows.Forms.Label labelNearClip;
         private System.Windows.Forms.NumericUpDown numericNearClip;
-        private System.Windows.Forms.GroupBox groupLighting;
         private System.Windows.Forms.Label labelAmbientColor;
         private System.Windows.Forms.Button buttonAmbientColor;
         private System.Windows.Forms.ColorDialog colorDialog;
@@ -622,5 +654,9 @@
         private System.Windows.Forms.Label labelFSAASamples;
         private System.Windows.Forms.ComboBox comboFSAASamples;
         private System.Windows.Forms.CheckBox checkDisableLighting;
+        private System.Windows.Forms.Button buttonStripeColor;
+        private System.Windows.Forms.Button buttonTeamColor;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
     }
 }

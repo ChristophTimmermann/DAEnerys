@@ -112,7 +112,7 @@ void main()
 	else
 		surfaceColor = vec4(materialDiffuseColor.xyz, materialOpacity);
 	
-	vec3 linearColor = vec3(0);
+	vec3 linearColor = vec3(1, 0, 0);
 	if(shaded && !disableLighting)
 	{
 		vec3 normal = normalize(fragNormal);
@@ -134,25 +134,25 @@ void main()
 		}
 	
 		//GLOW
-		if(emissive)
-		{
-			vec4 glowMap = texture(glowTex, fragTexCoord);
-			if(thruster)
-			{
-				vec4 thrusterOffColor = texture(thrusterOffGlow, fragTexCoord);
-				glowMap = (1.0 - thrusterInterpolation) * thrusterOffColor + thrusterInterpolation * glowMap;
-			}
+		// if(emissive)
+		// {
+			// vec4 glowMap = texture(glowTex, fragTexCoord);
+			// if(thruster)
+			// {
+				// vec4 thrusterOffColor = texture(thrusterOffGlow, fragTexCoord);
+				// glowMap = (1.0 - thrusterInterpolation) * thrusterOffColor + thrusterInterpolation * glowMap;
+			// }
 			
-			if(!discreteGlow)
-			{
-				float glowValue = glowMap.x;
-				linearColor += vec3(surfaceColor.r, surfaceColor.g, surfaceColor.b) * glowValue;
-			}
-			else
-			{
-				linearColor += glowMap.xyz;
-			}
-		}
+			// if(!discreteGlow)
+			// {
+				// float glowValue = glowMap.x;
+				// linearColor += vec3(surfaceColor.r, surfaceColor.g, surfaceColor.b) * glowValue;
+			// }
+			// else
+			// {
+				// linearColor += glowMap.xyz;
+			// }
+		// }
 	}
 	else
 	{

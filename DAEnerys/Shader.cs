@@ -19,76 +19,149 @@ namespace DAEnerys
         public Dictionary<String, UniformInfo> Uniforms = new Dictionary<string, UniformInfo>();
         public Dictionary<String, uint> Buffers = new Dictionary<string, uint>();
 
-        public Shader()
-        {
-            ProgramID = GL.CreateProgram();
-        }
+        private String vshader;
+        private String fshader;
+        private bool fromFile = false;
+        
         public Shader(String vshader, String fshader, bool fromFile = false)
         {
-            ProgramID = GL.CreateProgram();
+            this.vshader = vshader;
+            this.fshader = fshader;
+            this.fromFile = fromFile;
+
+            Reload();
+        }
+
+        ~Shader()
+        {
+            //Delete();
+        }
+        
+        public void Reload()
+        {
+            int pID, vsID, fsID;
+
+            if (CreateProgram(out pID, out vsID, out fsID))
+            {
+                Delete();
+                Apply(pID, vsID, fsID);
+                Link();
+            }
+        }
+
+        private void Apply(int pID, int vsID, int fsID)
+        {
+            ProgramID = pID;
+            VShaderID = vsID;
+            FShaderID = fsID;
+        }
+
+        private void Delete()
+        {
+            GL.DetachShader(ProgramID, VShaderID);
+            GL.DetachShader(ProgramID, FShaderID);
+            GL.DeleteProgram(ProgramID);
+            GL.DeleteShader(VShaderID);
+            GL.DeleteShader(FShaderID);
+        }
+
+        private int LoadShader(String code, ShaderType type)
+        {
+            int shaderID = GL.CreateShader(type);
+            GL.ShaderSource(shaderID, code);
+            GL.CompileShader(shaderID);
+
+            int shader_ok;
+            GL.GetShader(shaderID, ShaderParameter.CompileStatus, out shader_ok);
+
+            if (shader_ok == 0)
+            {
+                Log.WriteLine("Failed to compile shader:");
+                Log.WriteLine(GL.GetShaderInfoLog(shaderID));
+                GL.DeleteShader(shaderID);
+                return 0;
+            }
+
+            return shaderID;
+        }
+
+        private int LoadShaderFromString(String code, ShaderType type)
+        {
+            int shaderID = 0;
+            if (type == ShaderType.VertexShader || type == ShaderType.FragmentShader)
+                shaderID = LoadShader(code, type);
+            return shaderID;
+        }
+
+        private int LoadShaderFromFile(String filename, ShaderType type)
+        {
+            int shaderID = 0;
+            // using (StreamReader sr = new StreamReader(Program.Assembly.GetManifestResourceStream(Program.AssemblyName + @"shaders." + filename)))
+            using (StreamReader sr = new StreamReader(new FileStream("shaders\\" + filename, FileMode.Open)))
+            {
+                if (type == ShaderType.VertexShader || type == ShaderType.FragmentShader)
+                {
+                    string file = sr.ReadToEnd();
+                    shaderID = LoadShader(file, type);
+                }
+                sr.Close();
+            }
+            return shaderID;
+        }
+
+        private bool CreateProgram(out int pID, out int vsID, out int fsID)
+        {
+            pID = 0;
+            vsID = 0;
+            fsID = 0;
+
+            int programID, vShaderID, fShaderID;
 
             if (fromFile)
             {
-                LoadShaderFromFile(vshader, ShaderType.VertexShader);
-                LoadShaderFromFile(fshader, ShaderType.FragmentShader);
+                vShaderID = LoadShaderFromFile(vshader, ShaderType.VertexShader);
+                fShaderID = LoadShaderFromFile(fshader, ShaderType.FragmentShader);
             }
             else
             {
-                LoadShaderFromString(vshader, ShaderType.VertexShader);
-                LoadShaderFromString(fshader, ShaderType.FragmentShader);
+                vShaderID = LoadShaderFromString(vshader, ShaderType.VertexShader);
+                fShaderID = LoadShaderFromString(fshader, ShaderType.FragmentShader);
             }
+            if (vShaderID == 0) return false;
+            if (fShaderID == 0) return false;
 
-            Link();
-            GenBuffers();
-        }
+            programID = GL.CreateProgram();
+            GL.AttachShader(programID, vShaderID);
+            GL.AttachShader(programID, fShaderID);
+            GL.LinkProgram(programID);
 
-        private void LoadShader(String code, ShaderType type, out int address)
-        {
-            address = GL.CreateShader(type);
-            GL.ShaderSource(address, code);
-            GL.CompileShader(address);
-            GL.AttachShader(ProgramID, address);
-
-            string log = GL.GetShaderInfoLog(address);
-            if (log != "")
-                Log.WriteLine(log);
-        }
-
-        public void LoadShaderFromString(String code, ShaderType type)
-        {
-            if (type == ShaderType.VertexShader)
+            int program_ok;
+            GL.GetProgram(programID, GetProgramParameterName.LinkStatus, out program_ok);
+            if (program_ok == 0)
             {
-                LoadShader(code, type, out VShaderID);
+                Log.WriteLine("Failed to link shader program:");
+                Log.WriteLine(GL.GetProgramInfoLog(programID));
+                GL.DeleteProgram(programID);
+                return false;
             }
-            else if (type == ShaderType.FragmentShader)
-            {
-                LoadShader(code, type, out FShaderID);
-            }
+
+            pID = programID;
+            vsID = vShaderID;
+            fsID = fShaderID;
+
+            return true;
         }
 
-        public void LoadShaderFromFile(String filename, ShaderType type)
+        private void Link()
         {
-            using (StreamReader sr = new StreamReader(Program.Assembly.GetManifestResourceStream(Program.AssemblyName + @"shaders." + filename)))
-            {
-                if (type == ShaderType.VertexShader)
-                {
-                    LoadShader(sr.ReadToEnd(), type, out VShaderID);
-                }
-                else if (type == ShaderType.FragmentShader)
-                {
-                    LoadShader(sr.ReadToEnd(), type, out FShaderID);
-                }
-            }
-        }
-
-        public void Link()
-        {
-            GL.LinkProgram(ProgramID);
-
-            string log = GL.GetProgramInfoLog(ProgramID);
-            if (log != "")
-                Log.WriteLine(log);
-
+            Attributes.Clear();
+            Uniforms.Clear();
+            //foreach (KeyValuePair<string, uint> buffer in Buffers)
+            //{
+            //    GL.DeleteBuffer(buffer.Value);
+            //}
+            Buffers.Clear();
+            
             GL.GetProgram(ProgramID, GetProgramParameterName.ActiveAttributes, out AttributeCount);
             GL.GetProgram(ProgramID, GetProgramParameterName.ActiveUniforms, out UniformCount);
 
@@ -117,12 +190,12 @@ namespace DAEnerys
 
                 info.name = name.ToString();
                 info.address = GL.GetUniformLocation(ProgramID, info.name);
-                Uniforms.Add(name.ToString(), info);
+                if (Uniforms.ContainsKey(name.ToString()))
+                    Uniforms[name.ToString()] = info;
+                else
+                    Uniforms.Add(name.ToString(), info);
             }
-        }
 
-        public void GenBuffers()
-        {
             for (int i = 0; i < Attributes.Count; i++)
             {
                 uint buffer = 0;
