@@ -97,7 +97,7 @@ namespace DAEnerys
         {
             int shaderID = 0;
             StreamReader sr;
-            if (File.exists("shaders\\" + filename))
+            if (File.Exists("shaders\\" + filename))
                 sr = new StreamReader(new FileStream("shaders\\" + filename, FileMode.Open));
             else 
                 sr = new StreamReader(Program.Assembly.GetManifestResourceStream(Program.AssemblyName + @"shaders." + filename));
