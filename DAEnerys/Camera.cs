@@ -124,15 +124,20 @@ namespace DAEnerys
                 UpdateAngles((float)Math.PI * 1.5f, (float)Math.PI);
             else if (ActionKey.IsDown(Action.VIEW_BOTTOM))
                 UpdateAngles(0, (float)Math.PI);
+            else if (ActionKey.IsDown(Action.CAM_RESET))
+                Reset();
         }
-        
-        private void UpdateAngles(float X, float Y) {
+
+        private void UpdateAngles(float X, float Y)
+        {
             angles.X = X;
             angles.Y = Y;
-
+            UpdatePosition();
             Update(true);
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
         }
-
+        
         private void CameraRotate(float deltaX, float deltaY)
         {
             UpdateAngles(angles.X + deltaY * 0.01f, angles.Y - deltaX * 0.01f);
@@ -179,6 +184,14 @@ namespace DAEnerys
             angles.Y = (float)(angles.Y % (2.0 * Math.PI));
             zoom = Utilities.Clamp(zoom, UnfactorZoom(MinZoom), UnfactorZoom(MaxZoom));
             orthographicSize = Utilities.Clamp(orthographicSize, FactorZoom(MinZoom), MaxZoom);
+        }
+        
+        public void Reset()
+        {
+            orbitPoint = new Vector3();
+            angles = new Vector2((float)Math.PI, (float)Math.PI);
+            SetDistance(MaxZoom / 40 * ZoomScalar * 2);
+            Update(true);
         }
 
         public void Update(bool forceUpdate = false)
