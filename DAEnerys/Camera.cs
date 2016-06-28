@@ -41,7 +41,7 @@ namespace DAEnerys
             get { return zoom; }
             set {
                 CameraZoom(value - zoom);
-                Update();
+                Update(true);
             }
         }
         public void SetDistance(float distance)
@@ -98,14 +98,12 @@ namespace DAEnerys
                 else if (!leftButton && rightButton)
                     CameraZoom(-dY);
 
-                //lastPos = Cursor.Position;
                 Cursor.Position = pressPos;
             }
         }
 
         public void MouseWheel(System.Windows.Forms.MouseEventArgs e)
         {
-            //Not sure if this works just yet...
             if (e.Delta != 0)
                 CameraZoom(e.Delta / 30);
         }
@@ -113,71 +111,31 @@ namespace DAEnerys
         public void KeyDown(System.Windows.Forms.KeyEventArgs e)
         {
             if (ActionKey.IsDown(Action.TOGGLE_ORTHOGRAPHIC)) //Toggle orthographic view
-            {
                 this.Orthographic = !this.Orthographic;
-            }
             else if (ActionKey.IsDown(Action.VIEW_FRONT))
-            {
-                angles.X = (float)Math.PI;
-                angles.Y = (float)Math.PI;
-
-                UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
-            }
+                UpdateAngles((float)Math.PI, (float)Math.PI);
             else if (ActionKey.IsDown(Action.VIEW_BACK))
-            {
-                angles.X = (float)Math.PI;
-                angles.Y = 0;
-
-                UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
-            }
+                UpdateAngles((float)Math.PI, 0);
             else if (ActionKey.IsDown(Action.VIEW_LEFT))
-            {
-                angles.X = (float)Math.PI;
-                angles.Y = (float)-Math.PI / 2;
-
-                UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
-            }
+                UpdateAngles((float)Math.PI, (float)-Math.PI / 2);
             else if (ActionKey.IsDown(Action.VIEW_RIGHT))
-            {
-                angles.X = (float)Math.PI;
-                angles.Y = (float)Math.PI / 2;
-
-                UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
-            }
+                UpdateAngles((float)Math.PI, (float)Math.PI / 2);
             else if (ActionKey.IsDown(Action.VIEW_TOP))
-            {
-                angles.X = (float)Math.PI * 1.5f;
-                angles.Y = (float)Math.PI;
-
-                UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
-            }
+                UpdateAngles((float)Math.PI * 1.5f, (float)Math.PI);
             else if (ActionKey.IsDown(Action.VIEW_BOTTOM))
-            {
-                angles.X = 0;
-                angles.Y = (float)Math.PI;
+                UpdateAngles(0, (float)Math.PI);
+        }
+        
+        private void UpdateAngles(float X, float Y) {
+            angles.X = X;
+            angles.Y = Y;
 
-                UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
-            }
+            Update(true);
         }
 
         private void CameraRotate(float deltaX, float deltaY)
         {
-            angles.X += deltaY * 0.01f;
-            angles.Y -= deltaX * 0.01f;
-
-            UpdatePosition();
+            UpdateAngles(angles.X + deltaY * 0.01f, angles.Y - deltaX * 0.01f);
         }
 
         private void CameraZoom(float delta)
@@ -192,7 +150,17 @@ namespace DAEnerys
             else
                 orthographicSize += delta * (orthographicSize / 30);
 
-            UpdatePosition();
+            Update(true);
+        }
+
+        private void CameraPan(float deltaX, float deltaY)
+        {
+            Vector3 left = Vector3.Transform(new Vector3(1, 0, 0), Matrix4.CreateRotationY(angles.Y));
+            Vector3 upTemp = Vector3.Transform(new Vector3(0, 1, 0), Matrix4.CreateRotationX(angles.X));
+            Vector3 up = Vector3.Transform(upTemp, Matrix4.CreateRotationY(angles.Y));
+            orbitPoint += left * deltaX;
+            orbitPoint -= up * deltaY;
+            Update(true);
         }
 
         private float FactorZoom(float value)
@@ -203,12 +171,6 @@ namespace DAEnerys
         private float UnfactorZoom(float value)
         {
             return (float)(Math.Log(value) / Math.Log(ZoomScalar));
-        }
-
-        private void CameraPan(float deltaX, float deltaY)
-        {
-
-            // UpdatePosition();
         }
 
         private void ConstrainValues()
