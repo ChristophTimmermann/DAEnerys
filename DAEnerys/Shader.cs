@@ -96,8 +96,12 @@ namespace DAEnerys
         private int LoadShaderFromFile(String filename, ShaderType type)
         {
             int shaderID = 0;
-            // using (StreamReader sr = new StreamReader(Program.Assembly.GetManifestResourceStream(Program.AssemblyName + @"shaders." + filename)))
-            using (StreamReader sr = new StreamReader(new FileStream("shaders\\" + filename, FileMode.Open)))
+            StreamReader sr;
+            if (File.exists("shaders\\" + filename))
+                sr = new StreamReader(new FileStream("shaders\\" + filename, FileMode.Open));
+            else 
+                sr = new StreamReader(Program.Assembly.GetManifestResourceStream(Program.AssemblyName + @"shaders." + filename));
+            using (sr)
             {
                 if (type == ShaderType.VertexShader || type == ShaderType.FragmentShader)
                 {
