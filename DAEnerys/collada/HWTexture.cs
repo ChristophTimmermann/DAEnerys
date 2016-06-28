@@ -67,7 +67,7 @@ namespace DAEnerys
             if (!loadAlpha)
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Srgb, imageWidth, imageHeight, 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
             else
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.SrgbAlpha, IL.GetInteger(IntName.ImageWidth), IL.GetInteger(IntName.ImageHeight), 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.SrgbAlpha, imageWidth, imageHeight, 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
 
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             if (sprite)
