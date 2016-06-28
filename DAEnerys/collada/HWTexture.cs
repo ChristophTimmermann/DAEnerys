@@ -54,9 +54,18 @@ namespace DAEnerys
             float maxAniso;
             GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
             GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
-
+            
+            int imageWidth = IL.GetInteger(IntName.ImageWidth);
+            int imageHeight = IL.GetInteger(IntName.ImageHeight);
+            double widthLog2 = Math.log(imageWidth) / Math.log(2);
+            double heightLog2 = Math.log(imageHeight) / Math.log(2);
+            
+            if ((((int)widthLog2) != widthLog2) || (((int)heightLog2) != heightLog2)) {
+                new Problem(ProblemTypes.WARNING, "The texture \"" + filename + "\" does not have a power-of-2 dimension.");
+            }
+            
             if (!loadAlpha)
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Srgb, IL.GetInteger(IntName.ImageWidth), IL.GetInteger(IntName.ImageHeight), 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Srgb, imageWidth, imageHeight, 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
             else
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.SrgbAlpha, IL.GetInteger(IntName.ImageWidth), IL.GetInteger(IntName.ImageHeight), 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
 
