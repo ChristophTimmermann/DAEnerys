@@ -33,14 +33,14 @@ namespace DAEnerys
             }
         }
 
-        private static Color teamColor = Color.FromArgb(255, 255, 127, 0);
+        private static Color teamColor = Color.FromArgb(255, 92, 139, 170);
         public static Color TeamColor
         {
             get { return teamColor; }
             set { teamColor = value; }
         }
 
-        private static Color stripeColor = Color.FromArgb(255, 0, 127, 127);
+        private static Color stripeColor = Color.FromArgb(255, 204, 204, 204);
         public static Color StripeColor
         {
             get { return stripeColor; }
