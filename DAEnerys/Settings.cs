@@ -28,7 +28,7 @@ namespace DAEnerys
         {
             numericJointSize.Value = (decimal)EditorJoint.Size;
             numericMarkerSize.Value = (decimal)HWMarker.MarkerSize;
-            numericZoomSpeed.Value = (decimal)Program.Camera.ZoomScalar;
+            numericZoomSpeed.Value = (decimal)Program.Camera.ZoomSpeed;
             numericFarClip.Value = (decimal)Program.Camera.ClipDistance;
             numericNearClip.Value = (decimal)Program.Camera.NearClipDistance;
 
@@ -93,7 +93,7 @@ namespace DAEnerys
 
         private void numericZoomSpeed_ValueChanged(object sender, EventArgs e)
         {
-            Program.Camera.ZoomScalar = (float)numericZoomSpeed.Value;
+            Program.Camera.ZoomSpeed = (float)numericZoomSpeed.Value;
         }
 
         private void numericClipDistance_ValueChanged(object sender, EventArgs e)

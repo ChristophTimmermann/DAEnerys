@@ -67,8 +67,6 @@ namespace DAEnerys
             GLControl.Leave += new System.EventHandler(main.glControl_Leave);
             GLControl.MouseDown += new System.Windows.Forms.MouseEventHandler(main.glControl_MouseDown);
             GLControl.MouseUp += new System.Windows.Forms.MouseEventHandler(main.glControl_MouseUp);
-            GLControl.MouseMove += new System.Windows.Forms.MouseEventHandler(main.glControl_MouseMove);
-            GLControl.MouseWheel += new System.Windows.Forms.MouseEventHandler(main.glControl_MouseWheel);
             GLControl.Resize += new System.EventHandler(main.glControl_Resize);
 
             main.splitContainer2.Panel1.Controls.Add(GLControl);

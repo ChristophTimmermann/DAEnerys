@@ -627,16 +627,6 @@ namespace DAEnerys
             Program.Camera.MouseUp(e);
         }
 
-        public void glControl_MouseMove(object sender, MouseEventArgs e)
-        {
-            Program.Camera.MouseMove(e);
-        }
-
-        public void glControl_MouseWheel(object sender, MouseEventArgs e)
-        {
-            Program.Camera.MouseWheel(e);
-        }
-
         public void glControl_KeyDown(object sender, KeyEventArgs e)
         {
             ActionKey.KeyDown(e);

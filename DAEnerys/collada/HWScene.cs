@@ -64,7 +64,7 @@ namespace DAEnerys
             File.Delete(fixedColladaPath);
             #endregion
 
-            Program.Camera.ZoomFactor = 0; //Set camera zoom to 0 for bounding box calculations to set it
+            Program.Camera.Zoom = 0; //Set camera zoom to 0 for bounding box calculations to set it
 
             LoadMaterials();
             LoadMeshes();
@@ -269,8 +269,6 @@ namespace DAEnerys
                     farthest = value;
             }
 
-            float zoomScalar = 1.2f;
-
             float jointSize = 1;
             float markerSize = 1;
             if (BiggestMesh != null)
@@ -287,8 +285,10 @@ namespace DAEnerys
 
             Program.Camera.MinZoom = farthest / 40;
             Program.Camera.MaxZoom = farthest * 40;
-            Program.Camera.ZoomScalar = zoomScalar;
-            Program.Camera.SetDistance(farthest * zoomScalar * 2);
+            Program.Camera.Zoom = farthest * 2f;
+            Program.Camera.ZoomSpeed = farthest * 10;
+            Program.Camera.CalculatedZoom = Program.Camera.Zoom;
+
             EditorJoint.Size = jointSize;
             HWMarker.MarkerSize = markerSize;
             HWNavLight.IconSize = farthest / 55;
