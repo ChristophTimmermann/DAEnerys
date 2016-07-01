@@ -211,8 +211,8 @@ void main()
 		if (team)
 		{
 			vec4 tColor = texture(teamTex, fragTexCoord);
-			float maskValue = tColor.a;
-			vec3 maskColor = teamColor * maskValue / 255;
+			float maskValue = tColor.a / 2;
+			vec3 maskColor = teamColor * (maskValue / 255);
 			
 			if (maskValue > 0)
 				surfaceColor = vec4(vec3(ApplyTeamStripe(vec3(surfaceColor), maskColor)), 1);
@@ -222,8 +222,8 @@ void main()
 		if (stripe)
 		{
 			vec4 sColor = texture(stripeTex, fragTexCoord);
-			float maskValue = sColor.a;
-			vec3 maskColor = stripeColor * maskValue / 255;
+			float maskValue = sColor.a / 2;
+			vec3 maskColor = stripeColor * (maskValue / 255);
 			
 			if (maskValue > 0)
 				surfaceColor = vec4(vec3(ApplyTeamStripe(vec3(surfaceColor), maskColor)), 1);

@@ -44,14 +44,19 @@ namespace DAEnerys
 
             if (Name.StartsWith("ROOT_LOD")) //If node is a root LOD node
             {
-                string lodString = Name.Split('[')[1];
-                lodString = lodString.Remove(lodString.Length - 1);
+                string[] split = Name.Split('[');
 
-                int lod = 0;
-                bool success = int.TryParse(lodString, out lod);
+                if (split.Length > 1)
+                {
+                    string lodString = split[1];
+                    lodString = lodString.Remove(lodString.Length - 1);
 
-                if(success)
-                    Roots[lod] = this;
+                    int lod = 0;
+                    bool success = int.TryParse(lodString, out lod);
+
+                    if (success)
+                        Roots[lod] = this;
+                }
             }
 
             if (Name.StartsWith("JNT")) //If node is a joint
