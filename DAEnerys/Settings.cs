@@ -329,6 +329,8 @@ namespace DAEnerys
             {
                 Renderer.TeamColor = colorDialog.Color;
                 buttonTeamColor.BackColor = colorDialog.Color;
+
+                Program.GLControl.Invalidate();
             }
         }
 
@@ -339,6 +341,8 @@ namespace DAEnerys
             {
                 Renderer.StripeColor = colorDialog.Color;
                 buttonStripeColor.BackColor = colorDialog.Color;
+
+                Program.GLControl.Invalidate();
             }
         }
     }

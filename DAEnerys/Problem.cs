@@ -18,6 +18,7 @@ namespace DAEnerys
             Type = type;
             Description = description;
 
+            Log.WriteLine(Type.ToString() + ": " + description);
             Problems.Add(this);
             Program.main.AddProblem(this);
         }

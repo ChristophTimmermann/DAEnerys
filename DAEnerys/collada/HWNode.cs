@@ -46,9 +46,12 @@ namespace DAEnerys
             {
                 string lodString = Name.Split('[')[1];
                 lodString = lodString.Remove(lodString.Length - 1);
-                int lod = int.Parse(lodString);
 
-                Roots[lod] = this;
+                int lod = 0;
+                bool success = int.TryParse(lodString, out lod);
+
+                if(success)
+                    Roots[lod] = this;
             }
 
             if (Name.StartsWith("JNT")) //If node is a joint

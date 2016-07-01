@@ -57,8 +57,8 @@ namespace DAEnerys
             
             int imageWidth = IL.GetInteger(IntName.ImageWidth);
             int imageHeight = IL.GetInteger(IntName.ImageHeight);
-            double widthLog2 = Math.log(imageWidth) / Math.log(2);
-            double heightLog2 = Math.log(imageHeight) / Math.log(2);
+            double widthLog2 = Math.Log(imageWidth) / Math.Log(2);
+            double heightLog2 = Math.Log(imageHeight) / Math.Log(2);
             
             if ((((int)widthLog2) != widthLog2) || (((int)heightLog2) != heightLog2)) {
                 new Problem(ProblemTypes.WARNING, "The texture \"" + filename + "\" does not have a power-of-2 dimension.");

@@ -91,6 +91,10 @@ namespace DAEnerys
                         string diffuseName = Path.GetFileNameWithoutExtension(image.Path);
                         diffuseName = diffuseName.Remove(diffuseName.Length - 4);
                         int underspaceIndex = diffuseName.LastIndexOf('_');
+
+                        if (underspaceIndex == -1)
+                            continue;
+
                         string diffusePrefix = diffuseName.Remove(underspaceIndex);
 
                         //string diffusePath = new Uri(image.Path).LocalPath;
@@ -99,6 +103,10 @@ namespace DAEnerys
 
                         string absolutePath = Path.Combine(HWScene.ColladaPath, image.Path.Replace("file://", ""));
                         absolutePath = Path.GetDirectoryName(absolutePath);
+
+                        if (!Directory.Exists(absolutePath))
+                            continue;
+
                         string[] files = Directory.GetFiles(absolutePath);
                         foreach(string file in files)
                         {
@@ -110,37 +118,37 @@ namespace DAEnerys
                                 string prefix = fileName.Remove(fileUnderspaceIndex);
                                 if (prefix == diffusePrefix)
                                 {
-                                    if (suffix != "DIFF") //If image is not an diffuse map
+                                    switch(suffix)
                                     {
-                                        switch(suffix)
-                                        {
-                                            case "GLOW":
-                                                GlowTexture = new HWTexture(file);
-                                                break;
-                                            case "GLOX":
-                                                ThrusterOffGlowTexture = new HWTexture(file);
-                                                break;
-                                            case "DIFX":
-                                                ThrusterOffDiffuseTexture = new HWTexture(file);
-                                                break;
-                                            case "NORM":
-                                                NormalTexture = new HWTexture(file);
-                                                break;
-                                            case "SPEC":
-                                                SpecularTexture = new HWTexture(file);
-                                                break;
-                                            case "TEAM":
-                                                TeamTexture = new HWTexture(file, true);
-                                                break;
-                                            case "STRP":
-                                                StripeTexture = new HWTexture(file, true);
-                                                break;
-                                        }
-
-                                        HWImage newImage = new HWImage(fileName, file);
-                                        newImage.Material = this;
-                                        Images.Add(newImage);
+                                        case "DIFF":
+                                            DiffuseTexture = new HWTexture(file);
+                                            break;
+                                        case "GLOW":
+                                            GlowTexture = new HWTexture(file);
+                                            break;
+                                        case "GLOX":
+                                            ThrusterOffGlowTexture = new HWTexture(file);
+                                            break;
+                                        case "DIFX":
+                                            ThrusterOffDiffuseTexture = new HWTexture(file);
+                                            break;
+                                        case "NORM":
+                                            NormalTexture = new HWTexture(file);
+                                            break;
+                                        case "SPEC":
+                                            SpecularTexture = new HWTexture(file);
+                                            break;
+                                        case "TEAM":
+                                            TeamTexture = new HWTexture(file, true);
+                                            break;
+                                        case "STRP":
+                                            StripeTexture = new HWTexture(file, true);
+                                            break;
                                     }
+
+                                    HWImage newImage = new HWImage(fileName, file);
+                                    newImage.Material = this;
+                                    Images.Add(newImage);
                                 }
                             }
                         }

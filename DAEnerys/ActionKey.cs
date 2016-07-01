@@ -24,7 +24,7 @@ namespace DAEnerys
             new ActionKey("Top view", Action.VIEW_TOP, Keys.NumPad7);
             new ActionKey("Bottom view", Action.VIEW_BOTTOM, Keys.NumPad7, Keys.Control);
             
-            new ActionKey("Reset Camera", Action.CAM_RESET, Keys.R);
+            new ActionKey("Reset camera", Action.CAM_RESET, Keys.R);
         }
 
         public static void KeyDown(KeyEventArgs e)

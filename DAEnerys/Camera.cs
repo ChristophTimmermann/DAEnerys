@@ -86,10 +86,13 @@ namespace DAEnerys
 
         public void MouseMove(System.Windows.Forms.MouseEventArgs e)
         {
-            if (leftButton || rightButton) {
+            if (leftButton || rightButton)
+            {
                 float dX = Cursor.Position.X - pressPos.X;
                 float dY = Cursor.Position.Y - pressPos.Y;
-                if (dX == 0 && dY == 0) return;
+
+                if (dX == 0 && dY == 0)
+                    return;
 
                 if (leftButton && !rightButton)
                     CameraRotate(dX, dY);
@@ -105,7 +108,7 @@ namespace DAEnerys
         public void MouseWheel(System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Delta != 0)
-                CameraZoom(e.Delta / 30);
+                CameraZoom(e.Delta / 50);
         }
 
         public void KeyDown(System.Windows.Forms.KeyEventArgs e)
@@ -147,13 +150,13 @@ namespace DAEnerys
         {
             if (!this.Orthographic)
             {
-                zoom -= delta;
+                zoom -= delta / 3;
                 float len = FactorZoom(zoom);
                 if (len < MinZoom) SetDistance(MinZoom);
                 if (len > MaxZoom) SetDistance(MaxZoom);
             }
             else
-                orthographicSize += delta * (orthographicSize / 30);
+                orthographicSize += delta * (orthographicSize / 50);
 
             Update(true);
         }

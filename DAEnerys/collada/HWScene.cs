@@ -135,20 +135,8 @@ namespace DAEnerys
                 HWMaterial newMaterial = new HWMaterial();
 
                 newMaterial.Name = material.Name;
-                //newMaterial.AmbientColor = new Vector3(material.ColorAmbient.R, material.ColorAmbient.G, material.ColorAmbient.B);
-                //newMaterial.DiffuseColor = new Vector3(material.ColorDiffuse.R, material.ColorDiffuse.G, material.ColorDiffuse.B);
-                //newMaterial.SpecularColor = new Vector3(material.ColorSpecular.R, material.ColorSpecular.G, material.ColorSpecular.B);
-                //newMaterial.SpecularExponent = material.ShininessStrength;
-                //newMaterial.Opacity = material.Opacity;
 
-                newMaterial.DiffuseMap = material.TextureDiffuse.FilePath;
-                //TODO: Add more maps
-
-                if (newMaterial.DiffuseMap != null)
-                {
-                    string mapPath = Path.Combine(HWScene.ColladaPath, newMaterial.DiffuseMap);
-                    newMaterial.DiffuseTexture = new HWTexture(mapPath);
-                }
+                newMaterial.DiffuseMap = material.TextureDiffuse.FilePath; 
 
                 newMaterial.Parse();
                 Log.WriteLine("Material '" + material.Name + "' added.");
