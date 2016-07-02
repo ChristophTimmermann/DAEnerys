@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -20,7 +20,16 @@ namespace DAEnerys
             KithSjet,
             Hiigaran,
             VaygrSP,
-            VaygrMP,
+            TanisDefense,
+            KithSoban,
+            HiigaranElite,
+            MP1,
+            MP2,
+            MP3,
+            MP4,
+            MP5,
+            MP6,
+            MP7,
             Custom
         }
 
@@ -136,12 +145,57 @@ namespace DAEnerys
                     case PresetColors.VaygrSP:
                         teamColor = Color.FromArgb((int)229.5, (int)229.5, (int)229.5);
                         stripeColor = Color.FromArgb((int)25.5, (int)25.5, (int)25.5);
-                        title = "VaygrSP";
+                        title = "Vaygr";
                         break;
-                    case PresetColors.VaygrMP:
+                    case PresetColors.TanisDefense:
+                        teamColor = Color.FromArgb(192, 177, 142);
+                        stripeColor = Color.White;
+                        title = "Tanis Defenders";
+                        break;
+                    case PresetColors.KithSoban:
+                        teamColor = Color.Black;
+                        stripeColor = Color.Red;
+                        title = "Kith Soban";
+                        break;
+                    case PresetColors.HiigaranElite:
+                        teamColor = Color.FromArgb(0, 0, 160);
+                        stripeColor = Color.Yellow;
+                        title = "Hiigaran Elite";
+                        break;
+                    case PresetColors.MP1:
                         teamColor = Color.FromArgb(200, 165, 111);
                         stripeColor = Color.FromArgb(204, 204, 204);
-                        title = "VaygrMP";
+                        title = "Multiplayer 1";
+                        break;
+                    case PresetColors.MP2:
+                        teamColor = Color.FromArgb(67, 229, 7);
+                        stripeColor = Color.FromArgb(25, 25, 25);
+                        title = "Multiplayer 2";
+                        break;
+                    case PresetColors.MP3:
+                        teamColor = Color.FromArgb(175, 255, 233);
+                        stripeColor = Color.FromArgb(25, 25, 25);
+                        title = "Multiplayer 3";
+                        break;
+                    case PresetColors.MP4:
+                        teamColor = Color.FromArgb(229, 229, 229);
+                        stripeColor = Color.FromArgb(255, 211, 0);
+                        title = "Multiplayer 4";
+                        break;
+                    case PresetColors.MP5:
+                        teamColor = Color.FromArgb(149, 129, 182);
+                        stripeColor = Color.Yellow;
+                        title = "Multiplayer 5";
+                        break;
+                    case PresetColors.MP6:
+                        teamColor = Color.FromArgb(0, 255, 127);
+                        stripeColor = Color.FromArgb(25, 51, 153);
+                        title = "Multiplayer 6";
+                        break;
+                    case PresetColors.MP7:
+                        teamColor = Color.FromArgb(127, 127, 127);
+                        stripeColor = Color.FromArgb(178, 178, 153);
+                        title = "Multiplayer 7";
                         break;
                     case PresetColors.Custom:
                         teamColor = Color.FromArgb(0, 127, 255);
