@@ -1,4 +1,4 @@
-﻿using OpenTK;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -330,13 +330,15 @@ namespace DAEnerys
 
         private void buttonTeamColor_Click(object sender, EventArgs e)
         {
+            colorDialog.Color = buttonTeamColor.BackColor;
+            colorDialog.FullOpen = true;
             DialogResult result = colorDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
                 Renderer.TeamColor = colorDialog.Color;
                 buttonTeamColor.BackColor = colorDialog.Color;
-                teamColorButtonCustom.TeamColor = colorDialog.Color;
                 SavedTeamColor = colorDialog.Color;
+                teamColorButtonCustom.SetColors(Renderer.TeamColor, Renderer.StripeColor);
 
                 Program.GLControl.Invalidate();
             }
@@ -344,13 +346,15 @@ namespace DAEnerys
 
         private void buttonStripeColor_Click(object sender, EventArgs e)
         {
+            colorDialog.Color = buttonStripeColor.BackColor;
+            colorDialog.FullOpen = true;
             DialogResult result = colorDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
                 Renderer.StripeColor = colorDialog.Color;
                 buttonStripeColor.BackColor = colorDialog.Color;
-                teamColorButtonCustom.StripeColor = colorDialog.Color;
                 SavedStripeColor = colorDialog.Color;
+                teamColorButtonCustom.SetColors(Renderer.TeamColor, Renderer.StripeColor);
 
                 Program.GLControl.Invalidate();
             }
