@@ -35,14 +35,15 @@ namespace DAEnerys
             buttonAmbientColor.BackColor = Color.FromArgb((int)Math.Round(Renderer.AmbientLight.Color.X * 255), (int)Math.Round(Renderer.AmbientLight.Color.Y * 255), (int)Math.Round(Renderer.AmbientLight.Color.Z * 255));
             buttonBackgroundColor.BackColor = Renderer.BackgroundColor;
 
-            buttonTeamColor.BackColor = Renderer.TeamColor;
-            buttonStripeColor.BackColor = Renderer.StripeColor;
+            buttonTeamColor.BackColor = SavedTeamColor;
+            buttonStripeColor.BackColor = SavedStripeColor;
+            teamColorButtonCustom.SetColors(SavedTeamColor, SavedStripeColor);
 
             numericFOV.Value = (int)Math.Round(MathHelper.RadiansToDegrees(Program.Camera.FieldOfView));
             numericIconSize.Value = (decimal)HWNavLight.IconSize;
 
             hideFSAAMessage = true;
-            switch(Program.FSAASamples)
+            switch (Program.FSAASamples)
             {
                 case 0:
                     comboFSAASamples.SelectedIndex = 0;
@@ -78,9 +79,9 @@ namespace DAEnerys
             HWMarker.MarkerSize = (float)numericMarkerSize.Value;
 
             //Update line vertices
-            foreach(HWMarker marker in HWScene.Markers)
+            foreach (HWMarker marker in HWScene.Markers)
             {
-                foreach(EditorLine line in marker.Lines)
+                foreach (EditorLine line in marker.Lines)
                 {
                     line.Vertices = line.GetVertices();
                 }
@@ -146,7 +147,7 @@ namespace DAEnerys
 
         private void comboFSAASamples_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch(comboFSAASamples.SelectedIndex)
+            switch (comboFSAASamples.SelectedIndex)
             {
                 case 0:
                     Program.FSAASamples = 0;
@@ -159,7 +160,7 @@ namespace DAEnerys
                     break;
             }
 
-            if(comboFSAASamples.SelectedIndex != oldComboFSAAIndex && !hideFSAAMessage)
+            if (comboFSAASamples.SelectedIndex != oldComboFSAAIndex && !hideFSAAMessage)
                 MessageBox.Show("This action will come into effect after the program has been restarted.", "Restart needed", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             oldComboFSAAIndex = comboFSAASamples.SelectedIndex;
@@ -201,8 +202,8 @@ namespace DAEnerys
                 new XElement("settings",
                 new XElement("backgroundColor", Renderer.BackgroundColor.ToArgb()),
                 new XElement("ambientColor", ambientColor.ToArgb()),
-                new XElement("teamColor", Renderer.TeamColor.ToArgb()),
-                new XElement("stripeColor", Renderer.StripeColor.ToArgb()),
+                new XElement("teamColor", SavedTeamColor.ToArgb()),
+                new XElement("stripeColor", SavedStripeColor.ToArgb()),
                 new XElement("fieldOfView", MathHelper.RadiansToDegrees(Program.Camera.FieldOfView)),
                 new XElement("fsaaSamples", Program.FSAASamples),
                 new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront),
@@ -216,6 +217,9 @@ namespace DAEnerys
 
             File.WriteAllText(Path.Combine(Program.EXECUTABLE_PATH, "settings.xml"), settings.ToString());
         }
+
+        public static Color SavedTeamColor = Color.FromArgb(0, 127, 255);
+        public static Color SavedStripeColor = Color.SpringGreen;
 
         public static void LoadSettings()
         {
@@ -248,11 +252,13 @@ namespace DAEnerys
                         case "teamColor":
                             aRGB = 0;
                             int.TryParse(element.Value, out aRGB);
+                            SavedTeamColor = Color.FromArgb(aRGB);
                             Renderer.TeamColor = Color.FromArgb(aRGB);
                             break;
                         case "stripeColor":
                             aRGB = 0;
                             int.TryParse(element.Value, out aRGB);
+                            SavedStripeColor = Color.FromArgb(aRGB);
                             Renderer.StripeColor = Color.FromArgb(aRGB);
                             break;
                         case "fieldOfView":
@@ -314,7 +320,7 @@ namespace DAEnerys
 
         private void buttonRemoveDataPath_Click(object sender, EventArgs e)
         {
-            if(listDataPaths.SelectedItem != null)
+            if (listDataPaths.SelectedItem != null)
             {
                 string path = (string)listDataPaths.SelectedItem;
                 HWData.DataPaths.Remove(path);
@@ -329,6 +335,8 @@ namespace DAEnerys
             {
                 Renderer.TeamColor = colorDialog.Color;
                 buttonTeamColor.BackColor = colorDialog.Color;
+                teamColorButtonCustom.TeamColor = colorDialog.Color;
+                SavedTeamColor = colorDialog.Color;
 
                 Program.GLControl.Invalidate();
             }
@@ -341,9 +349,26 @@ namespace DAEnerys
             {
                 Renderer.StripeColor = colorDialog.Color;
                 buttonStripeColor.BackColor = colorDialog.Color;
+                teamColorButtonCustom.StripeColor = colorDialog.Color;
+                SavedStripeColor = colorDialog.Color;
 
                 Program.GLControl.Invalidate();
             }
+        }
+
+        private void buttonTeamColorPreset_Click(object sender, EventArgs e)
+        {
+            buttonTeamColor.BackColor = Renderer.TeamColor = ((TeamColorButton)sender).TeamColor;
+            buttonStripeColor.BackColor = Renderer.StripeColor = ((TeamColorButton)sender).StripeColor;
+            Program.GLControl.Invalidate();
+        }
+
+        private void buttonTeamColorSwap_Click(object sender, EventArgs e)
+        {
+            Color save = Renderer.TeamColor;
+            buttonTeamColor.BackColor = Renderer.TeamColor = Renderer.StripeColor;
+            buttonStripeColor.BackColor = Renderer.StripeColor = save;
+            Program.GLControl.Invalidate();
         }
     }
 }

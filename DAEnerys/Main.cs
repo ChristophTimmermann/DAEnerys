@@ -1140,6 +1140,7 @@ namespace DAEnerys
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             Renderer.ReloadShaders();
+            Program.GLControl.Invalidate();
         }
 
         
