@@ -57,6 +57,11 @@ namespace DAEnerys
             this.listDataPaths = new System.Windows.Forms.ListBox();
             this.addDataPathDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupRendering = new System.Windows.Forms.GroupBox();
+            this.teamColorButton20 = new DAEnerys.TeamColorButton();
+            this.teamColorButton19 = new DAEnerys.TeamColorButton();
+            this.teamColorButton18 = new DAEnerys.TeamColorButton();
+            this.teamColorButton17 = new DAEnerys.TeamColorButton();
+            this.teamColorButton16 = new DAEnerys.TeamColorButton();
             this.teamColorButton15 = new DAEnerys.TeamColorButton();
             this.teamColorButton14 = new DAEnerys.TeamColorButton();
             this.teamColorButton13 = new DAEnerys.TeamColorButton();
@@ -85,11 +90,6 @@ namespace DAEnerys
             this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
             this.labelFSAASamples = new System.Windows.Forms.Label();
             this.comboFSAASamples = new System.Windows.Forms.ComboBox();
-            this.teamColorButton16 = new DAEnerys.TeamColorButton();
-            this.teamColorButton17 = new DAEnerys.TeamColorButton();
-            this.teamColorButton18 = new DAEnerys.TeamColorButton();
-            this.teamColorButton19 = new DAEnerys.TeamColorButton();
-            this.teamColorButton20 = new DAEnerys.TeamColorButton();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -527,10 +527,70 @@ namespace DAEnerys
             this.groupRendering.Controls.Add(this.comboFSAASamples);
             this.groupRendering.Location = new System.Drawing.Point(352, 8);
             this.groupRendering.Name = "groupRendering";
-            this.groupRendering.Size = new System.Drawing.Size(342, 303);
+            this.groupRendering.Size = new System.Drawing.Size(343, 303);
             this.groupRendering.TabIndex = 18;
             this.groupRendering.TabStop = false;
             this.groupRendering.Text = "Rendering";
+            // 
+            // teamColorButton20
+            // 
+            this.teamColorButton20.BackColor = System.Drawing.Color.DarkGray;
+            this.teamColorButton20.Location = new System.Drawing.Point(200, 264);
+            this.teamColorButton20.Name = "teamColorButton20";
+            this.teamColorButton20.Size = new System.Drawing.Size(20, 20);
+            this.teamColorButton20.StripeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(178)))), ((int)(((byte)(153)))));
+            this.teamColorButton20.TabIndex = 123;
+            this.teamColorButton20.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.teamColorButton20.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP7;
+            this.teamColorButton20.UseVisualStyleBackColor = false;
+            // 
+            // teamColorButton19
+            // 
+            this.teamColorButton19.BackColor = System.Drawing.Color.DarkGray;
+            this.teamColorButton19.Location = new System.Drawing.Point(176, 264);
+            this.teamColorButton19.Name = "teamColorButton19";
+            this.teamColorButton19.Size = new System.Drawing.Size(20, 20);
+            this.teamColorButton19.StripeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(51)))), ((int)(((byte)(153)))));
+            this.teamColorButton19.TabIndex = 122;
+            this.teamColorButton19.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(127)))));
+            this.teamColorButton19.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP6;
+            this.teamColorButton19.UseVisualStyleBackColor = false;
+            // 
+            // teamColorButton18
+            // 
+            this.teamColorButton18.BackColor = System.Drawing.Color.DarkGray;
+            this.teamColorButton18.Location = new System.Drawing.Point(152, 264);
+            this.teamColorButton18.Name = "teamColorButton18";
+            this.teamColorButton18.Size = new System.Drawing.Size(20, 20);
+            this.teamColorButton18.StripeColor = System.Drawing.Color.Yellow;
+            this.teamColorButton18.TabIndex = 121;
+            this.teamColorButton18.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(149)))), ((int)(((byte)(129)))), ((int)(((byte)(182)))));
+            this.teamColorButton18.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP5;
+            this.teamColorButton18.UseVisualStyleBackColor = false;
+            // 
+            // teamColorButton17
+            // 
+            this.teamColorButton17.BackColor = System.Drawing.Color.DarkGray;
+            this.teamColorButton17.Location = new System.Drawing.Point(128, 264);
+            this.teamColorButton17.Name = "teamColorButton17";
+            this.teamColorButton17.Size = new System.Drawing.Size(20, 20);
+            this.teamColorButton17.StripeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(211)))), ((int)(((byte)(0)))));
+            this.teamColorButton17.TabIndex = 120;
+            this.teamColorButton17.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(229)))), ((int)(((byte)(229)))));
+            this.teamColorButton17.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP4;
+            this.teamColorButton17.UseVisualStyleBackColor = false;
+            // 
+            // teamColorButton16
+            // 
+            this.teamColorButton16.BackColor = System.Drawing.Color.DarkGray;
+            this.teamColorButton16.Location = new System.Drawing.Point(104, 264);
+            this.teamColorButton16.Name = "teamColorButton16";
+            this.teamColorButton16.Size = new System.Drawing.Size(20, 20);
+            this.teamColorButton16.StripeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
+            this.teamColorButton16.TabIndex = 119;
+            this.teamColorButton16.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(175)))), ((int)(((byte)(255)))), ((int)(((byte)(233)))));
+            this.teamColorButton16.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP3;
+            this.teamColorButton16.UseVisualStyleBackColor = false;
             // 
             // teamColorButton15
             // 
@@ -594,9 +654,9 @@ namespace DAEnerys
             // 
             // buttonTeamColorSwap
             // 
-            this.buttonTeamColorSwap.Location = new System.Drawing.Point(272, 216);
+            this.buttonTeamColorSwap.Location = new System.Drawing.Point(271, 215);
             this.buttonTeamColorSwap.Name = "buttonTeamColorSwap";
-            this.buttonTeamColorSwap.Size = new System.Drawing.Size(64, 24);
+            this.buttonTeamColorSwap.Size = new System.Drawing.Size(66, 22);
             this.buttonTeamColorSwap.TabIndex = 113;
             this.buttonTeamColorSwap.Text = "Swap";
             this.buttonTeamColorSwap.UseVisualStyleBackColor = true;
@@ -869,66 +929,6 @@ namespace DAEnerys
             this.comboFSAASamples.Name = "comboFSAASamples";
             this.comboFSAASamples.Size = new System.Drawing.Size(232, 21);
             this.comboFSAASamples.TabIndex = 19;
-            // 
-            // teamColorButton16
-            // 
-            this.teamColorButton16.BackColor = System.Drawing.Color.DarkGray;
-            this.teamColorButton16.Location = new System.Drawing.Point(104, 264);
-            this.teamColorButton16.Name = "teamColorButton16";
-            this.teamColorButton16.Size = new System.Drawing.Size(20, 20);
-            this.teamColorButton16.StripeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
-            this.teamColorButton16.TabIndex = 119;
-            this.teamColorButton16.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(175)))), ((int)(((byte)(255)))), ((int)(((byte)(233)))));
-            this.teamColorButton16.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP3;
-            this.teamColorButton16.UseVisualStyleBackColor = false;
-            // 
-            // teamColorButton17
-            // 
-            this.teamColorButton17.BackColor = System.Drawing.Color.DarkGray;
-            this.teamColorButton17.Location = new System.Drawing.Point(128, 264);
-            this.teamColorButton17.Name = "teamColorButton17";
-            this.teamColorButton17.Size = new System.Drawing.Size(20, 20);
-            this.teamColorButton17.StripeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(211)))), ((int)(((byte)(0)))));
-            this.teamColorButton17.TabIndex = 120;
-            this.teamColorButton17.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(229)))), ((int)(((byte)(229)))));
-            this.teamColorButton17.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP4;
-            this.teamColorButton17.UseVisualStyleBackColor = false;
-            // 
-            // teamColorButton18
-            // 
-            this.teamColorButton18.BackColor = System.Drawing.Color.DarkGray;
-            this.teamColorButton18.Location = new System.Drawing.Point(152, 264);
-            this.teamColorButton18.Name = "teamColorButton18";
-            this.teamColorButton18.Size = new System.Drawing.Size(20, 20);
-            this.teamColorButton18.StripeColor = System.Drawing.Color.Yellow;
-            this.teamColorButton18.TabIndex = 121;
-            this.teamColorButton18.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(149)))), ((int)(((byte)(129)))), ((int)(((byte)(182)))));
-            this.teamColorButton18.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP5;
-            this.teamColorButton18.UseVisualStyleBackColor = false;
-            // 
-            // teamColorButton19
-            // 
-            this.teamColorButton19.BackColor = System.Drawing.Color.DarkGray;
-            this.teamColorButton19.Location = new System.Drawing.Point(176, 264);
-            this.teamColorButton19.Name = "teamColorButton19";
-            this.teamColorButton19.Size = new System.Drawing.Size(20, 20);
-            this.teamColorButton19.StripeColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(51)))), ((int)(((byte)(153)))));
-            this.teamColorButton19.TabIndex = 122;
-            this.teamColorButton19.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(127)))));
-            this.teamColorButton19.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP6;
-            this.teamColorButton19.UseVisualStyleBackColor = false;
-            // 
-            // teamColorButton20
-            // 
-            this.teamColorButton20.BackColor = System.Drawing.Color.DarkGray;
-            this.teamColorButton20.Location = new System.Drawing.Point(200, 264);
-            this.teamColorButton20.Name = "teamColorButton20";
-            this.teamColorButton20.Size = new System.Drawing.Size(20, 20);
-            this.teamColorButton20.StripeColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(178)))), ((int)(((byte)(153)))));
-            this.teamColorButton20.TabIndex = 123;
-            this.teamColorButton20.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
-            this.teamColorButton20.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP7;
-            this.teamColorButton20.UseVisualStyleBackColor = false;
             // 
             // Settings
             // 
