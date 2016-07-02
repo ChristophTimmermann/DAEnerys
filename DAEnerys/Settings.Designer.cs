@@ -57,6 +57,16 @@ namespace DAEnerys
             this.listDataPaths = new System.Windows.Forms.ListBox();
             this.addDataPathDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupRendering = new System.Windows.Forms.GroupBox();
+            this.buttonTeamColorSwap = new System.Windows.Forms.Button();
+            this.buttonStripeColor = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.buttonTeamColor = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.checkDisableLighting = new System.Windows.Forms.CheckBox();
+            this.checkVSync = new System.Windows.Forms.CheckBox();
+            this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
+            this.labelFSAASamples = new System.Windows.Forms.Label();
+            this.comboFSAASamples = new System.Windows.Forms.ComboBox();
             this.teamColorButton20 = new DAEnerys.TeamColorButton();
             this.teamColorButton19 = new DAEnerys.TeamColorButton();
             this.teamColorButton18 = new DAEnerys.TeamColorButton();
@@ -67,7 +77,6 @@ namespace DAEnerys
             this.teamColorButton13 = new DAEnerys.TeamColorButton();
             this.teamColorButton12 = new DAEnerys.TeamColorButton();
             this.teamColorButton11 = new DAEnerys.TeamColorButton();
-            this.buttonTeamColorSwap = new System.Windows.Forms.Button();
             this.teamColorButtonCustom = new DAEnerys.TeamColorButton();
             this.teamColorButtonDefault = new DAEnerys.TeamColorButton();
             this.teamColorButton10 = new DAEnerys.TeamColorButton();
@@ -80,16 +89,7 @@ namespace DAEnerys
             this.teamColorButton3 = new DAEnerys.TeamColorButton();
             this.teamColorButton2 = new DAEnerys.TeamColorButton();
             this.teamColorButton1 = new DAEnerys.TeamColorButton();
-            this.buttonStripeColor = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.buttonTeamColor = new System.Windows.Forms.Button();
             this.teamColorButton0 = new DAEnerys.TeamColorButton();
-            this.label3 = new System.Windows.Forms.Label();
-            this.checkDisableLighting = new System.Windows.Forms.CheckBox();
-            this.checkVSync = new System.Windows.Forms.CheckBox();
-            this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
-            this.labelFSAASamples = new System.Windows.Forms.Label();
-            this.comboFSAASamples = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -532,6 +532,115 @@ namespace DAEnerys
             this.groupRendering.TabStop = false;
             this.groupRendering.Text = "Rendering";
             // 
+            // buttonTeamColorSwap
+            // 
+            this.buttonTeamColorSwap.Location = new System.Drawing.Point(271, 215);
+            this.buttonTeamColorSwap.Name = "buttonTeamColorSwap";
+            this.buttonTeamColorSwap.Size = new System.Drawing.Size(66, 22);
+            this.buttonTeamColorSwap.TabIndex = 113;
+            this.buttonTeamColorSwap.Text = "Swap";
+            this.buttonTeamColorSwap.UseVisualStyleBackColor = true;
+            this.buttonTeamColorSwap.Click += new System.EventHandler(this.buttonTeamColorSwap_Click);
+            // 
+            // buttonStripeColor
+            // 
+            this.buttonStripeColor.BackColor = System.Drawing.Color.Red;
+            this.buttonStripeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonStripeColor.Location = new System.Drawing.Point(104, 192);
+            this.buttonStripeColor.Name = "buttonStripeColor";
+            this.buttonStripeColor.Size = new System.Drawing.Size(232, 20);
+            this.buttonStripeColor.TabIndex = 29;
+            this.buttonStripeColor.UseVisualStyleBackColor = false;
+            this.buttonStripeColor.Click += new System.EventHandler(this.buttonStripeColor_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 196);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(60, 13);
+            this.label2.TabIndex = 28;
+            this.label2.Text = "Stripe color";
+            // 
+            // buttonTeamColor
+            // 
+            this.buttonTeamColor.BackColor = System.Drawing.Color.Red;
+            this.buttonTeamColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonTeamColor.Location = new System.Drawing.Point(104, 168);
+            this.buttonTeamColor.Name = "buttonTeamColor";
+            this.buttonTeamColor.Size = new System.Drawing.Size(232, 20);
+            this.buttonTeamColor.TabIndex = 27;
+            this.buttonTeamColor.UseVisualStyleBackColor = false;
+            this.buttonTeamColor.Click += new System.EventHandler(this.buttonTeamColor_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 172);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(60, 13);
+            this.label3.TabIndex = 26;
+            this.label3.Text = "Team color";
+            // 
+            // checkDisableLighting
+            // 
+            this.checkDisableLighting.AutoSize = true;
+            this.checkDisableLighting.Location = new System.Drawing.Point(11, 92);
+            this.checkDisableLighting.Name = "checkDisableLighting";
+            this.checkDisableLighting.Size = new System.Drawing.Size(97, 17);
+            this.checkDisableLighting.TabIndex = 25;
+            this.checkDisableLighting.Text = "Disable lighting";
+            this.checkDisableLighting.UseVisualStyleBackColor = true;
+            this.checkDisableLighting.CheckedChanged += new System.EventHandler(this.checkDisableLighting_CheckedChanged);
+            // 
+            // checkVSync
+            // 
+            this.checkVSync.AutoSize = true;
+            this.checkVSync.Checked = true;
+            this.checkVSync.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkVSync.Location = new System.Drawing.Point(11, 69);
+            this.checkVSync.Name = "checkVSync";
+            this.checkVSync.Size = new System.Drawing.Size(172, 17);
+            this.checkVSync.TabIndex = 23;
+            this.checkVSync.Text = "Enable vertical synchronization";
+            this.checkVSync.UseVisualStyleBackColor = true;
+            this.checkVSync.CheckedChanged += new System.EventHandler(this.checkVSync_CheckedChanged);
+            // 
+            // checkRenderOnTop
+            // 
+            this.checkRenderOnTop.AutoSize = true;
+            this.checkRenderOnTop.Checked = true;
+            this.checkRenderOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkRenderOnTop.Location = new System.Drawing.Point(11, 46);
+            this.checkRenderOnTop.Name = "checkRenderOnTop";
+            this.checkRenderOnTop.Size = new System.Drawing.Size(151, 17);
+            this.checkRenderOnTop.TabIndex = 21;
+            this.checkRenderOnTop.Text = "Draw visualizations in front";
+            this.checkRenderOnTop.UseVisualStyleBackColor = true;
+            this.checkRenderOnTop.CheckedChanged += new System.EventHandler(this.checkRenderOnTop_CheckedChanged);
+            // 
+            // labelFSAASamples
+            // 
+            this.labelFSAASamples.AutoSize = true;
+            this.labelFSAASamples.Location = new System.Drawing.Point(7, 22);
+            this.labelFSAASamples.Name = "labelFSAASamples";
+            this.labelFSAASamples.Size = new System.Drawing.Size(92, 13);
+            this.labelFSAASamples.TabIndex = 20;
+            this.labelFSAASamples.Text = "FSAA anti-aliasing";
+            // 
+            // comboFSAASamples
+            // 
+            this.comboFSAASamples.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboFSAASamples.FormattingEnabled = true;
+            this.comboFSAASamples.Items.AddRange(new object[] {
+            "0 samples",
+            "2 samples",
+            "4 samples"});
+            this.comboFSAASamples.Location = new System.Drawing.Point(104, 19);
+            this.comboFSAASamples.Name = "comboFSAASamples";
+            this.comboFSAASamples.Size = new System.Drawing.Size(232, 21);
+            this.comboFSAASamples.TabIndex = 19;
+            // 
             // teamColorButton20
             // 
             this.teamColorButton20.BackColor = System.Drawing.Color.DarkGray;
@@ -543,6 +652,7 @@ namespace DAEnerys
             this.teamColorButton20.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.teamColorButton20.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP7;
             this.teamColorButton20.UseVisualStyleBackColor = false;
+            this.teamColorButton20.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButton19
             // 
@@ -555,6 +665,7 @@ namespace DAEnerys
             this.teamColorButton19.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(127)))));
             this.teamColorButton19.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP6;
             this.teamColorButton19.UseVisualStyleBackColor = false;
+            this.teamColorButton19.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButton18
             // 
@@ -567,6 +678,7 @@ namespace DAEnerys
             this.teamColorButton18.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(149)))), ((int)(((byte)(129)))), ((int)(((byte)(182)))));
             this.teamColorButton18.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP5;
             this.teamColorButton18.UseVisualStyleBackColor = false;
+            this.teamColorButton18.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButton17
             // 
@@ -579,6 +691,7 @@ namespace DAEnerys
             this.teamColorButton17.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(229)))), ((int)(((byte)(229)))));
             this.teamColorButton17.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP4;
             this.teamColorButton17.UseVisualStyleBackColor = false;
+            this.teamColorButton17.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButton16
             // 
@@ -591,6 +704,7 @@ namespace DAEnerys
             this.teamColorButton16.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(175)))), ((int)(((byte)(255)))), ((int)(((byte)(233)))));
             this.teamColorButton16.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP3;
             this.teamColorButton16.UseVisualStyleBackColor = false;
+            this.teamColorButton16.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButton15
             // 
@@ -603,6 +717,7 @@ namespace DAEnerys
             this.teamColorButton15.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(229)))), ((int)(((byte)(7)))));
             this.teamColorButton15.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP2;
             this.teamColorButton15.UseVisualStyleBackColor = false;
+            this.teamColorButton15.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButton14
             // 
@@ -615,6 +730,7 @@ namespace DAEnerys
             this.teamColorButton14.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(165)))), ((int)(((byte)(111)))));
             this.teamColorButton14.UsePreset = DAEnerys.TeamColorButton.PresetColors.MP1;
             this.teamColorButton14.UseVisualStyleBackColor = false;
+            this.teamColorButton14.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButton13
             // 
@@ -627,6 +743,7 @@ namespace DAEnerys
             this.teamColorButton13.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(160)))));
             this.teamColorButton13.UsePreset = DAEnerys.TeamColorButton.PresetColors.HiigaranElite;
             this.teamColorButton13.UseVisualStyleBackColor = false;
+            this.teamColorButton13.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButton12
             // 
@@ -639,6 +756,7 @@ namespace DAEnerys
             this.teamColorButton12.TeamColor = System.Drawing.Color.Black;
             this.teamColorButton12.UsePreset = DAEnerys.TeamColorButton.PresetColors.KithSoban;
             this.teamColorButton12.UseVisualStyleBackColor = false;
+            this.teamColorButton12.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButton11
             // 
@@ -651,16 +769,7 @@ namespace DAEnerys
             this.teamColorButton11.TeamColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(177)))), ((int)(((byte)(142)))));
             this.teamColorButton11.UsePreset = DAEnerys.TeamColorButton.PresetColors.TanisDefense;
             this.teamColorButton11.UseVisualStyleBackColor = false;
-            // 
-            // buttonTeamColorSwap
-            // 
-            this.buttonTeamColorSwap.Location = new System.Drawing.Point(271, 215);
-            this.buttonTeamColorSwap.Name = "buttonTeamColorSwap";
-            this.buttonTeamColorSwap.Size = new System.Drawing.Size(66, 22);
-            this.buttonTeamColorSwap.TabIndex = 113;
-            this.buttonTeamColorSwap.Text = "Swap";
-            this.buttonTeamColorSwap.UseVisualStyleBackColor = true;
-            this.buttonTeamColorSwap.Click += new System.EventHandler(this.buttonTeamColorSwap_Click);
+            this.teamColorButton11.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
             // teamColorButtonCustom
             // 
@@ -818,37 +927,6 @@ namespace DAEnerys
             this.teamColorButton1.UseVisualStyleBackColor = false;
             this.teamColorButton1.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
-            // buttonStripeColor
-            // 
-            this.buttonStripeColor.BackColor = System.Drawing.Color.Red;
-            this.buttonStripeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonStripeColor.Location = new System.Drawing.Point(104, 192);
-            this.buttonStripeColor.Name = "buttonStripeColor";
-            this.buttonStripeColor.Size = new System.Drawing.Size(232, 20);
-            this.buttonStripeColor.TabIndex = 29;
-            this.buttonStripeColor.UseVisualStyleBackColor = false;
-            this.buttonStripeColor.Click += new System.EventHandler(this.buttonStripeColor_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 196);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 28;
-            this.label2.Text = "Stripe color";
-            // 
-            // buttonTeamColor
-            // 
-            this.buttonTeamColor.BackColor = System.Drawing.Color.Red;
-            this.buttonTeamColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonTeamColor.Location = new System.Drawing.Point(104, 168);
-            this.buttonTeamColor.Name = "buttonTeamColor";
-            this.buttonTeamColor.Size = new System.Drawing.Size(232, 20);
-            this.buttonTeamColor.TabIndex = 27;
-            this.buttonTeamColor.UseVisualStyleBackColor = false;
-            this.buttonTeamColor.Click += new System.EventHandler(this.buttonTeamColor_Click);
-            // 
             // teamColorButton0
             // 
             this.teamColorButton0.BackColor = System.Drawing.Color.DarkGray;
@@ -861,74 +939,6 @@ namespace DAEnerys
             this.teamColorButton0.UsePreset = DAEnerys.TeamColorButton.PresetColors.Kushan;
             this.teamColorButton0.UseVisualStyleBackColor = false;
             this.teamColorButton0.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 172);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(60, 13);
-            this.label3.TabIndex = 26;
-            this.label3.Text = "Team color";
-            // 
-            // checkDisableLighting
-            // 
-            this.checkDisableLighting.AutoSize = true;
-            this.checkDisableLighting.Location = new System.Drawing.Point(11, 92);
-            this.checkDisableLighting.Name = "checkDisableLighting";
-            this.checkDisableLighting.Size = new System.Drawing.Size(97, 17);
-            this.checkDisableLighting.TabIndex = 25;
-            this.checkDisableLighting.Text = "Disable lighting";
-            this.checkDisableLighting.UseVisualStyleBackColor = true;
-            this.checkDisableLighting.CheckedChanged += new System.EventHandler(this.checkDisableLighting_CheckedChanged);
-            // 
-            // checkVSync
-            // 
-            this.checkVSync.AutoSize = true;
-            this.checkVSync.Checked = true;
-            this.checkVSync.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkVSync.Location = new System.Drawing.Point(11, 69);
-            this.checkVSync.Name = "checkVSync";
-            this.checkVSync.Size = new System.Drawing.Size(172, 17);
-            this.checkVSync.TabIndex = 23;
-            this.checkVSync.Text = "Enable vertical synchronization";
-            this.checkVSync.UseVisualStyleBackColor = true;
-            this.checkVSync.CheckedChanged += new System.EventHandler(this.checkVSync_CheckedChanged);
-            // 
-            // checkRenderOnTop
-            // 
-            this.checkRenderOnTop.AutoSize = true;
-            this.checkRenderOnTop.Checked = true;
-            this.checkRenderOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkRenderOnTop.Location = new System.Drawing.Point(11, 46);
-            this.checkRenderOnTop.Name = "checkRenderOnTop";
-            this.checkRenderOnTop.Size = new System.Drawing.Size(151, 17);
-            this.checkRenderOnTop.TabIndex = 21;
-            this.checkRenderOnTop.Text = "Draw visualizations in front";
-            this.checkRenderOnTop.UseVisualStyleBackColor = true;
-            this.checkRenderOnTop.CheckedChanged += new System.EventHandler(this.checkRenderOnTop_CheckedChanged);
-            // 
-            // labelFSAASamples
-            // 
-            this.labelFSAASamples.AutoSize = true;
-            this.labelFSAASamples.Location = new System.Drawing.Point(7, 22);
-            this.labelFSAASamples.Name = "labelFSAASamples";
-            this.labelFSAASamples.Size = new System.Drawing.Size(92, 13);
-            this.labelFSAASamples.TabIndex = 20;
-            this.labelFSAASamples.Text = "FSAA anti-aliasing";
-            // 
-            // comboFSAASamples
-            // 
-            this.comboFSAASamples.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboFSAASamples.FormattingEnabled = true;
-            this.comboFSAASamples.Items.AddRange(new object[] {
-            "0 samples",
-            "2 samples",
-            "4 samples"});
-            this.comboFSAASamples.Location = new System.Drawing.Point(104, 19);
-            this.comboFSAASamples.Name = "comboFSAASamples";
-            this.comboFSAASamples.Size = new System.Drawing.Size(232, 21);
-            this.comboFSAASamples.TabIndex = 19;
             // 
             // Settings
             // 
