@@ -169,10 +169,10 @@ namespace DAEnerys
             MouseState mouse = Mouse.GetState();
             Point position = Cursor.Position;
 
-            float zoomDelta = mouse.WheelPrecise - lastWheelPrecise;
-
             if (Program.GLControl.Focused || forceUpdate)
             {
+                float zoomDelta = mouse.WheelPrecise - lastWheelPrecise;
+            
                 if (mouse.RightButton == OpenTK.Input.ButtonState.Pressed || forceUpdate)
                 {
                     float deltaX = position.X - lastPos.X;
