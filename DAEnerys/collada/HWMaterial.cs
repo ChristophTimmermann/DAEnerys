@@ -76,15 +76,10 @@ namespace DAEnerys
                     }
                 }
 
-                //Set diffuse image
                 foreach(HWImage image in HWScene.Images)
                 {
                     if(image.Path.Replace("file://", "") == DiffuseMap)
                     {
-                        string realDiffuseName = Path.GetFileNameWithoutExtension(image.Path);
-                        image.Name = realDiffuseName;
-                        Images.Add(image);
-                        image.Material = this;
                         Format = image.Format;
 
                         //Search for other images in the diffuse image folder

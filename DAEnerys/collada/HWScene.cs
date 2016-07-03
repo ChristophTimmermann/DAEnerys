@@ -307,6 +307,7 @@ namespace DAEnerys
 
         private static void CheckForProblems()
         {
+            #region Dockpaths
             List<string> dockpathNames = new List<string>();
 
             //Check if there are multiple dockpaths with the same name
@@ -325,6 +326,25 @@ namespace DAEnerys
                 {
                     if (!dockpathNames.Contains(link))
                         new Problem(ProblemTypes.WARNING, "The dockpath \"" + dockpath.Name + "\" is linked to the non-existent dockpath \"" + link + "\".");
+                }
+            }
+            #endregion
+
+            foreach(HWMaterial material in Materials)
+            {
+                if(material.Shader == "thruster")
+                {
+                    if (material.ThrusterOffDiffuseTexture == null)
+                        new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no DIFX texture.");
+
+                    if (material.ThrusterOffGlowTexture == null)
+                        new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no GLOX texture.");
+
+                    if (material.DiffuseTexture == null)
+                        new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no DIFF texture.");
+
+                    if (material.GlowTexture == null)
+                        new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no GLOW texture.");
                 }
             }
         }
