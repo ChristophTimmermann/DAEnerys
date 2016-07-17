@@ -9,6 +9,9 @@ namespace DAEnerys
 {
     class Shader
     {
+        //private ShaderProgram.Program program;
+
+
         public int ProgramID = -1;
         public int VShaderID = -1;
         public int FShaderID = -1;
@@ -19,12 +22,40 @@ namespace DAEnerys
         public Dictionary<String, UniformInfo> Uniforms = new Dictionary<string, UniformInfo>();
         public Dictionary<String, uint> Buffers = new Dictionary<string, uint>();
 
+        private String pshader;
         private String vshader;
         private String fshader;
         private bool fromFile = false;
-        
+        //private string programdir = "";
+        //private string programpath = "";
+
+        //public Shader(string sprog)
+        //{
+        //    if (File.Exists(sprog))
+        //    {
+        //        string curdir = Directory.GetCurrentDirectory();
+        //        fromFile = true;
+        //        programpath = sprog;
+        //        program = new ShaderProgram.Program(programpath);
+        //        programdir = Directory.GetCurrentDirectory();
+        //        Directory.SetCurrentDirectory(curdir);
+        //        Reload();
+        //    }
+        //}
+
+        public Shader(String pshader, String vshader, String fshader, bool fromFile = false)
+        {
+            this.pshader = pshader;
+            this.vshader = vshader;
+            this.fshader = fshader;
+            this.fromFile = fromFile;
+
+            Reload();
+        }
+
         public Shader(String vshader, String fshader, bool fromFile = false)
         {
+            this.pshader = "";
             this.vshader = vshader;
             this.fshader = fshader;
             this.fromFile = fromFile;
@@ -58,6 +89,7 @@ namespace DAEnerys
 
         private void Delete()
         {
+            if (ProgramID == -1) return;
             GL.DetachShader(ProgramID, VShaderID);
             GL.DetachShader(ProgramID, FShaderID);
             GL.DeleteProgram(ProgramID);
@@ -95,6 +127,15 @@ namespace DAEnerys
 
         private int LoadShaderFromFile(String filename, ShaderType type)
         {
+            StreamReader progsr;
+            string progcode = "";
+            if (File.Exists("shaders\\" + pshader))
+            {
+                progsr = new StreamReader(new FileStream("shaders\\" + pshader, FileMode.Open));
+                progcode = progsr.ReadToEnd();
+                progsr.Close();
+            }
+
             int shaderID = 0;
             StreamReader sr;
             if (File.Exists("shaders\\" + filename))
@@ -105,7 +146,7 @@ namespace DAEnerys
             {
                 if (type == ShaderType.VertexShader || type == ShaderType.FragmentShader)
                 {
-                    string file = sr.ReadToEnd();
+                    string file = progcode + "\n" + sr.ReadToEnd();
                     shaderID = LoadShader(file, type);
                 }
                 sr.Close();
@@ -119,8 +160,8 @@ namespace DAEnerys
             vsID = 0;
             fsID = 0;
 
-            int programID, vShaderID, fShaderID;
-
+            int programID = 0, vShaderID = 0, fShaderID = 0;
+            
             if (fromFile)
             {
                 vShaderID = LoadShaderFromFile(vshader, ShaderType.VertexShader);
@@ -165,9 +206,12 @@ namespace DAEnerys
             //    GL.DeleteBuffer(buffer.Value);
             //}
             Buffers.Clear();
-            
+
+            GetError("Link");
             GL.GetProgram(ProgramID, GetProgramParameterName.ActiveAttributes, out AttributeCount);
+            GetError("Link");
             GL.GetProgram(ProgramID, GetProgramParameterName.ActiveUniforms, out UniformCount);
+            GetError("Link");
 
             for (int i = 0; i < AttributeCount; i++)
             {
@@ -182,6 +226,7 @@ namespace DAEnerys
                 info.address = GL.GetAttribLocation(ProgramID, info.name);
                 Attributes.Add(name.ToString(), info);
             }
+            GetError("Link");
 
             for (int i = 0; i < UniformCount; i++)
             {
@@ -199,6 +244,7 @@ namespace DAEnerys
                 else
                     Uniforms.Add(name.ToString(), info);
             }
+            GetError("Link");
 
             for (int i = 0; i < Attributes.Count; i++)
             {
@@ -207,6 +253,7 @@ namespace DAEnerys
 
                 Buffers.Add(Attributes.Values.ElementAt(i).name, buffer);
             }
+            GetError("Link");
 
             for (int i = 0; i < Uniforms.Count; i++)
             {
@@ -215,6 +262,7 @@ namespace DAEnerys
 
                 Buffers.Add(Uniforms.Values.ElementAt(i).name, buffer);
             }
+            GetError("Link");
         }
 
         public void EnableVertexAttribArrays()
@@ -266,6 +314,13 @@ namespace DAEnerys
             {
                 return 0;
             }
+        }
+
+        private static void GetError(string type)
+        {
+            ErrorCode code = GL.GetError();
+            if (code != ErrorCode.NoError)
+                Log.WriteLine(type + ": " + code);
         }
     }
 

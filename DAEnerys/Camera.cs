@@ -30,7 +30,14 @@ namespace DAEnerys
         public float CalculatedZoom = 1;
         public float ZoomSpeed = 5;
 
-        private Vector3 orbitPoint = Vector3.Zero;
+        public Vector3 LookAt = Vector3.Zero;
+        public Vector3 Direction
+        {
+            get
+            {
+                return Program.Camera.LookAt - Program.Camera.Position;
+            }
+        }
 
         private float zoom = 1;
         public float Zoom { get { return zoom; } set { zoom = value; Update(); } }
@@ -172,7 +179,7 @@ namespace DAEnerys
             if (Program.GLControl.Focused || forceUpdate)
             {
                 float zoomDelta = mouse.WheelPrecise - lastWheelPrecise;
-            
+
                 if (mouse.RightButton == OpenTK.Input.ButtonState.Pressed || forceUpdate)
                 {
                     float deltaX = position.X - lastPos.X;
@@ -221,12 +228,12 @@ namespace DAEnerys
 
         private void UpdatePosition()
         {
-            Position = orbitPoint + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix4.CreateRotationX(angles.X) * Matrix4.CreateRotationY(angles.Y));
+            Position = LookAt + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix4.CreateRotationX(angles.X) * Matrix4.CreateRotationY(angles.Y));
         }
 
         public Matrix4 GetViewMatrix()
         {
-            return Matrix4.LookAt(Position, orbitPoint, new Vector3(0, 1, 0));
+            return Matrix4.LookAt(Position, LookAt, new Vector3(0, 1, 0));
         }
     }
 }
