@@ -12,9 +12,8 @@ smooth in vec3 outEye_W;
 // material settings
 uniform sampler2D inTexMat;
 
-uniform vec3 diffuse;
-uniform vec3 specular;
-uniform float opacity;
+uniform vec4 matDiffuse;
+uniform vec4 matSpecular;
 uniform float shininess;
 
 uniform bool isTextured;
@@ -26,26 +25,30 @@ out vec4 finalColor;
 
 void main() 
 {
-	vec4 surfaceColor = vec4(outColor, 1.0);
-	
+	vec4 vertexColor = matDiffuse;
+	finalColor = vertexColor;
+    
 	if (isTextured)
 	{
-		surfaceColor = texture(inTexMat, outUV0);
+		vec4 texColor = texture(inTexMat, outUV0);
 		
 		//For navlights (billboards)
 		if(isNavLight)
 		{
-			float blackness = (surfaceColor.x + surfaceColor.y + surfaceColor.z) / 3.0;
-			surfaceColor = vec4(surfaceColor.xyz * 2, blackness * 2);
+			vec3 navcolor = matDiffuse.xyz * texColor.xyz;
+			float alpha = (navcolor.x + navcolor.y + navcolor.z) / 3.0;
+            finalColor = vec4(navcolor, alpha);
 		}
-	} else {
-        if (vertexColored)
-            surfaceColor = surfaceColor * vec4(diffuse.xyz, opacity);
         else
-            surfaceColor = vec4(diffuse.xyz, opacity);
+        {
+            finalColor = texColor;
+        }
+	}
+    if (vertexColored) {
+        //finalColor.xyz = finalColor.xyz * outColor;
 	}
 	
 	//final color (after gamma correction)
 	vec3 gamma = vec3(1.0/2.2);
-	finalColor = vec4(pow(surfaceColor.xyz, gamma), surfaceColor.a);
+	finalColor = vec4(pow(finalColor.xyz, gamma), finalColor.a);
 }

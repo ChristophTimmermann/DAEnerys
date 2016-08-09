@@ -29,6 +29,7 @@ namespace DAEnerys
         public int[] Indices;
         public Vector3[] Colors;
         public Vector2[] TextureCoords;
+        public Vector2[] TextureCoordsUV1;
         public Vector3[] Tangents;
         public Vector3[] BiTangents;
 
@@ -49,6 +50,7 @@ namespace DAEnerys
             Indices = GetIndices();
             Colors = GetColorData();
             TextureCoords = GetTextureCoords();
+            TextureCoordsUV1 = GetTextureCoordsUV1();
             Tangents = GetTangents();
             BiTangents = GetBiTangents();
 
@@ -321,6 +323,25 @@ namespace DAEnerys
                 List<Vector2> coords = new List<Vector2>();
 
                 foreach (Vector3D coord in mesh.TextureCoordinateChannels[0])
+                {
+                    coords.Add(new Vector2(coord.X, coord.Y));
+                }
+
+                return coords.ToArray();
+            }
+            else
+            {
+                return new Vector2[VertexCount];
+            }
+        }
+
+        public Vector2[] GetTextureCoordsUV1()
+        {
+            if (mesh.TextureCoordinateChannelCount > 1)
+            {
+                List<Vector2> coords = new List<Vector2>();
+
+                foreach (Vector3D coord in mesh.TextureCoordinateChannels[1])
                 {
                     coords.Add(new Vector2(coord.X, coord.Y));
                 }

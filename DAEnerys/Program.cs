@@ -13,6 +13,7 @@ namespace DAEnerys
         //Windows
         public static Main main;
         public static Settings settings;
+        public static ShaderSettings ShaderSettings;
         public static Hotkeys hotkeys;
 
         public static Assembly Assembly = Assembly.GetExecutingAssembly();

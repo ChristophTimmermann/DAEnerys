@@ -51,7 +51,8 @@ namespace DAEnerys
 
         public void Parse()
         {
-            String fullName = Name;
+            string fullName = Name;
+            string TeamTexturePath = "", StripeTexturePath = "";
             if (Name.StartsWith("MAT[")) //If material is a homeworld valid material
             {
                 string[] splitted = Name.Split('[');
@@ -134,10 +135,10 @@ namespace DAEnerys
                                             SpecularTexture = new HWTexture(file);
                                             break;
                                         case "TEAM":
-                                            TeamTexture = new HWTexture(file, true);
+                                            TeamTexturePath = file;
                                             break;
                                         case "STRP":
-                                            StripeTexture = new HWTexture(file, true);
+                                            StripeTexturePath = file;
                                             break;
                                     }
 
@@ -153,6 +154,8 @@ namespace DAEnerys
 
                 Program.main.AddMaterial(this);
             }
+
+            TeamTexture = HWTexture.MakeTeamTexture(TeamTexturePath, StripeTexturePath);
         }
     }
 

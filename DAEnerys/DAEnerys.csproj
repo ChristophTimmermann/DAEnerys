@@ -37,9 +37,12 @@
   <PropertyGroup>
     <ApplicationIcon>DAEnerys.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AssimpNet, Version=3.3.1.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\AssimpNet.3.3.1\lib\net45\AssimpNet.dll</HintPath>
+      <HintPath>packages\AssimpNet.3.3.1\lib\net45\AssimpNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -49,9 +52,6 @@
     <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\OpenTK.GLControl.dll</HintPath>
-    </Reference>
-    <Reference Include="ShaderProgram">
-      <HintPath>..\..\..\Users\antho\Documents\Visual Studio 2015\Projects\ShaderProgram\ShaderProgram\bin\Debug\ShaderProgram.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -108,6 +108,12 @@
     </Compile>
     <Compile Include="Log.cs" />
     <Compile Include="Problem.cs" />
+    <Compile Include="ShaderSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShaderSettings.Designer.cs">
+      <DependentUpon>ShaderSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +141,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -146,6 +153,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="ShaderSettings.resx">
+      <DependentUpon>ShaderSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
@@ -176,6 +186,7 @@
     <None Include="resources\joint.ply">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="resources\k76.tga" />
     <None Include="resources\lightbulb.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -191,6 +202,12 @@
     <None Include="resources\FlagThread-NotFlagged,NotHot,NotSelected_10391_16x.png" />
     <None Include="resources\FlagThread-Flagged,NotHot,NotSelected_10392_16x.png" />
     <None Include="resources\flagThread-Yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\shadermanifest\ShaderManifest\ShaderManifest.csproj">
+      <Project>{888c4401-a89a-4979-ab54-af0db00197cd}</Project>
+      <Name>ShaderManifest</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

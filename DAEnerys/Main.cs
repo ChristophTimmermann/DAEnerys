@@ -1142,6 +1142,12 @@ namespace DAEnerys
             Renderer.ReloadShaders();
         }
 
-        
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            if (Program.ShaderSettings != null) return;
+            Program.ShaderSettings = new ShaderSettings();
+            Program.ShaderSettings.Visible = true;
+            Program.ShaderSettings.Init();
+        }
     }
 }
