@@ -134,7 +134,7 @@ namespace DAEnerys
             // Load shaders from file
             Manifest.SetModPaths(HWData.DataPaths);
             Manifest.LoadManifest();
-            foreach (string cfg in Config.UserDefines)
+            foreach (string cfg in Config.ProgDefines)
             {
                 ShaderSettings.AddConfigOption(cfg);
             }
@@ -375,8 +375,8 @@ namespace DAEnerys
             GL.DepthMask(false);
             foreach (HWMesh mesh in HWScene.Meshes)
             {
-                //if (mesh.Visible && mesh.Translucent)
-                //    indiceat[mesh.Material.Shader] += DrawHWMesh(mesh, indiceat[mesh.Material.Shader]);
+                if (mesh.Visible && mesh.Translucent)
+                    indiceat += DrawHWMesh(mesh, indiceat);
             }
             GL.DepthMask(true);
 
@@ -421,7 +421,10 @@ namespace DAEnerys
 
         private static void AttachTexture(Surface surface, string name, HWTexture tex)
         {
-            surface.AssignTexture(name, tex.Path, tex.ID);
+            if (tex != null)
+                surface.AssignTexture(name, tex.Path, tex.ID);
+            else
+                surface.AssignTexture(name, "", 0);
         }
 
         private static void AttachTexture(Surface surface, string name, string path, int id)
@@ -437,43 +440,90 @@ namespace DAEnerys
             if (mesh.Material != null)
             {
                 texture = mesh.Material.DiffuseTexture;
-                if (mesh.Material.Shader == "default")
-                    return mesh.IndiceCount;
-                if (mesh.Material.Shader == "innateSS")
-                    return mesh.IndiceCount;
+                //if (mesh.Material.Shader == "default")
+                //    return mesh.IndiceCount;
             }
             else
                 return mesh.IndiceCount;
             GetError("OpenTK Rendering");
 
-            Manifest.Globals.Set("timeTable", new float[] { 0f, 0f, 0f, 0f });
-
             CurrentMeshShader = mesh.Material.Shader;
-            Surface surface = Manifest.UseSurface(mesh.Material.Shader);
+            if (CurrentMeshShader == "default") CurrentMeshShader = "matte";
+            Surface surface = Manifest.UseSurface(CurrentMeshShader.ToLower());
+
+            //load vertex buffers
             surface.LinkAttrib(mesh_pos_buffer, "inPos", 3, false);
             surface.LinkAttrib(mesh_nrm_buffer, "inNorm", 3, false);
             surface.LinkAttrib(mesh_tan_buffer, "inTan", 3, false);
             surface.LinkAttrib(mesh_bin_buffer, "inBiNorm", 3, false);
             surface.LinkAttrib(mesh_uv0_buffer, "inUV0", 2, false);
             surface.LinkAttrib(mesh_uv1_buffer, "inUV1", 2, false);
+            //surface.LinkAttrib(mesh_uv2_buffer, "inUV2", 2, false);
+
+            // load global vars
+            float[] shiplights;
+            int shiplight_count = GetShipLights(out shiplights);
 
             Matrix4 model = mesh.ModelMatrix;
             Matrix4 camera = Program.Camera.GetViewMatrix();
             Matrix4 projection = Matrix4.Identity;
-
             if (!Program.Camera.Orthographic)
                 projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
             else
                 projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
 
-            surface.SetVar("modelview", model);
-            surface.SetVar("camera", camera);
-            surface.SetVar("projection", projection);
+            Matrix4 mat_keylight = Matrix4.Identity;
+            Matrix4 mat_altlight = Matrix4.Identity;
 
+            Manifest.Globals.Set("timeTable", new float[] { 0f, 0f, 0f, 0f });
+            Manifest.Globals.Set("lightCounts", new int[] { shiplight_count, 7 });
+            surface.SetVar("inLightShip[0]", shiplights);
+            surface.SetVar("inLightCore[0]", GetCoreLights());
+            Manifest.Globals.Set("gammaScale", new float[] { 0.8625f, 0.8625f, 0.8625f, 0.95f });
+            Manifest.Globals.Set("bgAddLight", new float[] { 0f, 1f, 0f, 1f });
+            Manifest.Globals.Set("bgEnvParams", new float[] { 1f, 1f, 1f, 1f });
             Manifest.Globals.Set("bgShipExps", new float[] { 1f, 1f, 1f, 1f });
-            if (SOB_USECLIP(CurrentMeshShader))
+
+            Manifest.Globals.Set("clipPlane", new float[] { 0f, 0f, 0f, 1000f }); // SOB_USECLIP
+            Manifest.Globals.Set("sobParams", new float[] { 1f, 0f, 0f, 0f });  // Alpha, Cloak, Clip, unused
+            Manifest.Globals.Set("lifeParams", new float[] { 1f, 1f, 0f, 0f }); // Life Alpha, Death Ratio, unused x2
+
+            Manifest.Globals.Set("fogColor", new float[] { 0f, 0f, 0f, 0f });   // R, G, B, A
+            Manifest.Globals.Set("fogWindow", new float[] { 10f, 0f, 0f, 0f });  // Near, Min, Far, Max
+
+            if (Config.Get("CFG_Shadow_Quality") >= 1)
             {
-                Manifest.Globals.Set("clipPlane", new float[] { 0f, 0f, 0f, 1000f }); // SOB_USECLIP
+                // Light windowing for shadows - Trans/Scale key, Trans/Scale fill
+                Manifest.Globals.Set("shadowTrans", new float[] { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f });
+            }
+
+            Manifest.Globals.Set("modelview", model);
+            Manifest.Globals.Set("camera", camera);
+            Manifest.Globals.Set("projection", projection);
+
+            if (Config.Get("CFG_Shadow_Quality") >= 1)
+                Manifest.Globals.Set("keylight", mat_keylight);
+
+            if (Config.Get("CFG_Shadow_Quality") >= 3)
+                Manifest.Globals.Set("keylight", mat_altlight);
+
+            // Vertex Shader
+            if (SOB_RESOURCE(CurrentMeshShader))
+            {
+                surface.SetVar("inFadeInfo", new float[] { 0f, 0f });
+                if (SOB_DUALINPUT(CurrentMeshShader))
+                {
+                    surface.SetVar("inGridDiff", new float[] { 1f, 1f, 0f, 0f });
+                    surface.SetVar("inGridGlow", new float[] { 1f, 1f, 0f, 0f });
+                    surface.SetVar("inGridSpec", new float[] { 1f, 1f, 0f, 0f });
+                    surface.SetVar("inGridNorm", new float[] { 1f, 1f, 0f, 0f });
+                }
+            }
+
+            // Fragment Shader
+            if (Config.Get("CFG_Shadow_Quality") >= 1)
+            {
+                AttachTexture(surface, "inTexShadow", null);
             }
 
             if (SOB_BADGE(CurrentMeshShader))
@@ -495,47 +545,24 @@ namespace DAEnerys
                 AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
                 if (SOB_GLOWRGB(CurrentMeshShader))
                 {
-                    if (CurrentMeshShader == "ore" || CurrentMeshShader == "salvage")
-                        AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
-                    else
-                        AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
+                    AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
                 }
             }
 
             if (SOB_RESOURCE(CurrentMeshShader))
             {
-                if (SOB_DUALINPUT(CurrentMeshShader))
-                {
-                    surface.SetVar("inGridDiff", new float[] { 1f, 1f, 0f, 0f });
-                    surface.SetVar("inGridGlow", new float[] { 1f, 1f, 0f, 0f });
-                    surface.SetVar("inGridSpec", new float[] { 1f, 1f, 0f, 0f });
-                    surface.SetVar("inGridNorm", new float[] { 1f, 1f, 0f, 0f });
-                }
-            }
-            //GetError("OpenTK Rendering");
-
-            if (SOB_RESOURCE(CurrentMeshShader))
-            {
-                //AttachTexture(surface.GetVar("SOB_spec"), mesh.Material.SpecularTexture);
-                //AttachTexture(CurrentShader, TextureUnit.Texture4, mesh.Material.Progress, "inTexProgress", 4);
-                surface.SetVar("inFadeInfo", new float[] { 0f, 0f });
-                surface.SetVar("inTime", new float[] { 0f, 0f, 0f, 0f });
-                surface.SetVar("inFadeWindow", new float[] { 0.1f, 0.1f, 0.9f });
-                surface.SetVar("inGlowStyle", new float[] { 0f, 1f, 0f, 0f });
+                //AttachTexture(surface, "inTexProgress", mesh.Material.???);
+                //surface.SetVar("inFadeWindow", new float[] { 0.1f, 0.1f, 0.9f });
+                //surface.SetVar("inGlowStyle", new float[] { 1f, 0f, 0f, 0f });
 
                 if (SOB_DUALINPUT(CurrentMeshShader)) // SOB_DUALINPUT
                 {
-                    surface.SetVar("inGridDiff", new float[] { 1f, 1f, 0f, 0f });
-                    surface.SetVar("inGridGlow", new float[] { 1f, 1f, 0f, 0f });
-                    surface.SetVar("inGridSpec", new float[] { 1f, 1f, 0f, 0f });
-                    surface.SetVar("inGridNorm", new float[] { 1f, 1f, 0f, 0f });
-
-                    surface.SetVar("inMulDiff0", new float[] { 1f, 1f, 1f, 1f });
-                    surface.SetVar("inMulDiff1", new float[] { 1f, 1f, 1f, 1f });
-                    surface.SetVar("inMulGlow0", new float[] { 1f, 1f, 1f, 1f });
-                    surface.SetVar("inMulGlow1", new float[] { 1f, 1f, 1f, 1f });
-                    surface.SetVar("inMulSpec0", new float[] { 1f, 1f, 1f, 1f });
-                    surface.SetVar("inMulSpec1", new float[] { 1f, 1f, 1f, 1f });
+                    //surface.SetVar("inMulDiff0", new float[] { 1f, 1f, 1f, 1f });
+                    //surface.SetVar("inMulDiff1", new float[] { 1f, 1f, 1f, 1f });
+                    //surface.SetVar("inMulGlow0", new float[] { 1f, 1f, 1f, 1f });
+                    //surface.SetVar("inMulGlow1", new float[] { 1f, 1f, 1f, 1f });
+                    //surface.SetVar("inMulSpec0", new float[] { 1f, 1f, 1f, 1f });
+                    //surface.SetVar("inMulSpec1", new float[] { 1f, 1f, 1f, 1f });
                 }
 
                 if (SOB_DEBRIS(CurrentMeshShader))
@@ -548,27 +575,20 @@ namespace DAEnerys
             {
                 if (mesh.Material.TeamTexture != null)
                     AttachTexture(surface, "SOB_team", mesh.Material.TeamTexture);
-                //AttachTexture(CurrentShader, TextureUnit.Texture2, mesh.Material.TeamTexture, "inTexTeam", 2);
-                //AttachTexture(CurrentShader, TextureUnit.Texture9, mesh.Material.StripeTexture, "inTexStripe", 9);
             }
 
             AttachTexture(surface, "SOB_normal", mesh.Material.NormalTexture);
-            ////AttachTexture(CurrentShader, TextureUnit.Texture6, texEnv0, "inTexEnv0", 6);
-            ////AttachTexture(CurrentShader, TextureUnit.Texture7, texEnv1, "inTexEnv1", 7);
-
-            //GetError("OpenTK Rendering");
-            Manifest.Globals.Set("sobParams", new float[] { 1f, 0f, 0f, 0f });
-            Manifest.Globals.Set("lifeParams", new float[] { 1f, 1f, 0f, 0f });
-            Manifest.Globals.Set("fogColor", new float[] { 1f, 0f, 0f, 0f });
-            Manifest.Globals.Set("fogWindow", new float[] { 1f, 0f, 0f, 0f });
+            AttachTexture(surface, "inTexEnv0", null);
+            AttachTexture(surface, "inTexEnv1", null);
 
             if (SOB_TEAM(CurrentMeshShader))
             {
                 surface.SetVar("SOB_teamCol", new float[] { TeamColor.R / 255f, TeamColor.G / 255f, TeamColor.B / 255f, TeamColor.A / 255f });
                 surface.SetVar("SOB_stripeCol", new float[] { StripeColor.R / 255f, StripeColor.G / 255f, StripeColor.B / 255f, StripeColor.A / 255f });
             }
-            //if (!SOB_DEBRIS(CurrentMeshShader))
-            //    surface.SetVar("SOB_uieffect", new float[] { 0f, 0f, 0f, 0f });
+
+            if (!SOB_DEBRIS(CurrentMeshShader))
+                surface.SetVar("SOB_uieffect", new float[] { 0.5f, 0.5f, 0.51f, 0f });
 
             //surface.SetVar("inSurfDiff", new float[] { 0f, 0.95f, 0f, 0f });
             //if (CurrentMeshShader == "thruster")
@@ -582,26 +602,20 @@ namespace DAEnerys
             //surface.SetVar("inSurfPaint", new float[] { 1.8f, -115f, -25f, 0.88f });
             //surface.SetVar("inSurfPeak", new float[] { 0.008f, 0.0035f, 0.5f, 2f });
 
-            ////GetError("OpenTK Rendering");
             surface.SetVar("inPaintStyle", new float[] { PaintCurve, PaintScale, PaintOffset, 0f });
 
-            //surface.SetVar("inGammaScale", new float[] { 0.8625f, 0.8625f, 0.8625f, 0.95f });
-            //surface.SetVar("inBGAddLight", new float[] { 0f, 0f, 0f, 0f });
-            //surface.SetVar("inBGEnvParams", new float[] { 1f, 1f, 1f, 1f });
-
             if (SOB_BAYLIGHT(CurrentMeshShader))
-            {
                 surface.SetVar("inBayExps", new float[] { 1f, 0.99f, 0.95f, 0.94f });
-            }
-            else
-            {
-                surface.SetVar("inLightCounts", new int[] { Light.Lights.Count - 1, 7 });
-                surface.SetVar("inLightShip[0]", GetShipLights());
-                surface.SetVar("inLightCore[0]", GetCoreLights());
-            }
+            
+            if (mesh.Material.Shader == "default")
+                Manifest.Globals.Set("sobParams", new float[] { 0.5f, 0f, 0f, 0f });
 
+
+            // Draw
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
             surface.Draw(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
+
+            GetError("Rendering");
 
             return mesh.IndiceCount;
         }
@@ -774,13 +788,13 @@ namespace DAEnerys
             return SOB_TEAM(shader);
         }
 
-        private static float[] GetShipLights()
+        private static int GetShipLights(out float[] shiplights)
         {
             int shipLight = 0;
-            float[] shiplights = new float[96 * 4];
+            shiplights = new float[96 * 4];
             foreach (Light l in Light.Lights)
             {
-                if (l != AmbientLight)
+                if (l != AmbientLight && l.Enabled)
                 {
                     // uniform vec4 inLightShip[96];   // Pos/Diff/Spec (or just Pos/Diff) + attenuations in W
                     shiplights[4 * shipLight + 0] = l.Position.X;
@@ -800,13 +814,13 @@ namespace DAEnerys
                     shipLight++;
                 }
             }
-            return shiplights;
+            return shipLight / 3;
         }
 
         private static float[] GetCoreLights()
         {
-            Vector3 keyLightVec = new Vector3(0f, -0.1f, 1f);
-            Vector3 fillLightVec = new Vector3(-0.6f, 0.4f, -0.3f);
+            Vector3 keyLightVec = new Vector3(-300f, -300f, -1000f);
+            Vector3 fillLightVec = Program.Camera.Position; // new Vector3(-600f, 400f, -300f);
 
             float[] corelights = new float[7 * 4];
 
