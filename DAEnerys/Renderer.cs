@@ -42,15 +42,55 @@ namespace DAEnerys
         public static Color TeamColor { get; set; } = Color.FromArgb(255, 92, 139, 170);
         public static Color StripeColor { get; set; } = Color.FromArgb(255, 204, 204, 204);
 
-        // GRAPHICS QUALITY
-        //public static float PaintCurve { get; set; } = 0f;
-        //public static float PaintScale { get; set; } = 2f;
-        //public static float PaintOffset { get; set; } = 0f;
+        // VARIABLE SHADER INPUTS
+        public static float Exec { get; set; } = 0f;
+        public static float ExecDelta { get; set; } = 0f;
+        public static float Sim { get; set; } = 0f;
+        public static float SimDelta { get; set; } = 0f;
 
+        public static float SOBAlpha { get; set; } = 1f;
+        public static float SOBCloak { get; set; } = 0f;
+        public static float SOBClip { get; set; } = 0f;
+
+        public static bool HACK_SpecialSauce {
+            get
+            {
+                return Config.Get("HACK_SpecialSauce") == 1;
+            }
+            set
+            {
+                Config.Set("HACK_SpecialSauce", value ? 1 : 0);
+            }
+        }
+
+        public static bool HACK_AllIFeelIsPain
+        {
+            get
+            {
+                return Config.Get("HACK_AllIFeelIsPain") == 1;
+            }
+            set
+            {
+                Config.Set("HACK_AllIFeelIsPain", value ? 1 : 0);
+            }
+        }
+
+        public static bool CFG_Patch_AltHyper
+        {
+            get
+            {
+                return Config.Get("CFG_Patch_AltHyper") == 1;
+            }
+            set
+            {
+                Config.Set("CFG_Patch_AltHyper", value ? 1 : 0);
+            }
+        }
 
         public static float PaintCurve { get; set; } = 0f;
         public static float PaintScale { get; set; } = 2f;
         public static float PaintOffset { get; set; } = 0f;
+
 
         private static HWTexture badgeTexture = null;
         public static HWTexture BadgeTexture
@@ -135,9 +175,8 @@ namespace DAEnerys
             Manifest.SetModPaths(HWData.DataPaths);
             Manifest.LoadManifest();
             foreach (string cfg in Config.ProgDefines)
-            {
                 ShaderSettings.AddConfigOption(cfg);
-            }
+            ShaderSettings.AddConfigOption("CFG_Patch_AltHyper");
 
             editor_shader = new Shader("editor.vs", "editor.fs", true);
 
@@ -149,7 +188,7 @@ namespace DAEnerys
 
             //AmbientLight.Enabled = false;
             DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
-            BadgeTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/k76.tga"));
+            BadgeTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/k76.tga"), true);
 
             if (EnableVSync)
                 GraphicsContext.CurrentContext.SwapInterval = 1;
@@ -475,7 +514,7 @@ namespace DAEnerys
             Matrix4 mat_keylight = Matrix4.Identity;
             Matrix4 mat_altlight = Matrix4.Identity;
 
-            Manifest.Globals.Set("timeTable", new float[] { 0f, 0f, 0f, 0f });
+            Manifest.Globals.Set("timeTable", new float[] { Exec, ExecDelta, Sim, SimDelta });
             Manifest.Globals.Set("lightCounts", new int[] { shiplight_count, 7 });
             surface.SetVar("inLightShip[0]", shiplights);
             surface.SetVar("inLightCore[0]", GetCoreLights());
@@ -484,12 +523,12 @@ namespace DAEnerys
             Manifest.Globals.Set("bgEnvParams", new float[] { 1f, 1f, 1f, 1f });
             Manifest.Globals.Set("bgShipExps", new float[] { 1f, 1f, 1f, 1f });
 
-            Manifest.Globals.Set("clipPlane", new float[] { 0f, 0f, 0f, 1000f }); // SOB_USECLIP
-            Manifest.Globals.Set("sobParams", new float[] { 1f, 0f, 0f, 0f });  // Alpha, Cloak, Clip, unused
-            Manifest.Globals.Set("lifeParams", new float[] { 1f, 1f, 0f, 0f }); // Life Alpha, Death Ratio, unused x2
+            Manifest.Globals.Set("clipPlane", new float[] { 0f, 0f, 0f, 1000f });   // SOB_USECLIP
+            Manifest.Globals.Set("sobParams", new float[] { SOBAlpha, SOBCloak, SOBClip, 0f });      // Alpha, Cloak, Clip, unused
+            Manifest.Globals.Set("lifeParams", new float[] { 1f, 1f, 0f, 0f });     // Life Alpha, Death Ratio, unused x2
 
-            Manifest.Globals.Set("fogColor", new float[] { 0f, 0f, 0f, 0f });   // R, G, B, A
-            Manifest.Globals.Set("fogWindow", new float[] { 10f, 0f, 0f, 0f });  // Near, Min, Far, Max
+            Manifest.Globals.Set("fogColor", new float[] { 0f, 0f, 0f, 0f });       // R, G, B, A
+            Manifest.Globals.Set("fogWindow", new float[] { 10f, 0f, 0f, 0f });     // Near, Min, Far, Max
 
             if (Config.Get("CFG_Shadow_Quality") >= 1)
             {
@@ -602,14 +641,14 @@ namespace DAEnerys
             //surface.SetVar("inSurfPaint", new float[] { 1.8f, -115f, -25f, 0.88f });
             //surface.SetVar("inSurfPeak", new float[] { 0.008f, 0.0035f, 0.5f, 2f });
 
-            surface.SetVar("inPaintStyle", new float[] { PaintCurve, PaintScale, PaintOffset, 0f });
+            if (HACK_AllIFeelIsPain)
+                surface.SetVar("inPaintStyle", new float[] { 1.0f, 12.0f, 5.0f, 0f });
+            else
+                surface.SetVar("inPaintStyle", new float[] { PaintCurve, PaintScale, PaintOffset, 0f });
 
             if (SOB_BAYLIGHT(CurrentMeshShader))
                 surface.SetVar("inBayExps", new float[] { 1f, 0.99f, 0.95f, 0.94f });
             
-            if (mesh.Material.Shader == "default")
-                Manifest.Globals.Set("sobParams", new float[] { 0.5f, 0f, 0f, 0f });
-
 
             // Draw
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
@@ -819,8 +858,8 @@ namespace DAEnerys
 
         private static float[] GetCoreLights()
         {
-            Vector3 keyLightVec = new Vector3(-300f, -300f, -1000f);
-            Vector3 fillLightVec = Program.Camera.Position; // new Vector3(-600f, 400f, -300f);
+            Vector3 keyLightVec = Program.Camera.Position; // new Vector3(600f, -400f, -300f);
+            Vector3 fillLightVec = new Vector3(-300f, 700f, 500f);
 
             float[] corelights = new float[7 * 4];
 

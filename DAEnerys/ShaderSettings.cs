@@ -169,7 +169,10 @@ namespace DAEnerys
         private void cbxConfigOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
             ignore = true;
-            numConfigOption.Maximum = Config.GetMax((string)cbxConfigOptions.SelectedItem);
+            if ((string)cbxConfigOptions.SelectedItem == "CFG_Patch_AltHyper")
+                numConfigOption.Maximum = 1;
+            else
+                numConfigOption.Maximum = Config.GetMax((string)cbxConfigOptions.SelectedItem);
             numConfigOption.Value = Config.Get((string)cbxConfigOptions.SelectedItem);
             ignore = false;
         }
@@ -183,6 +186,62 @@ namespace DAEnerys
         private void btnReloadShaders_Click(object sender, EventArgs e)
         {
             Manifest.ReloadManifest();
+        }
+
+        private void numExecTime_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.Exec = (float)numExecTime.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void numExecDelta_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.ExecDelta = (float)numExecDelta.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void numSimTime_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.Sim = (float)numSimTime.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void numSimDelta_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SimDelta = (float)numSimDelta.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void numSOBAlpha_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SOBAlpha = (float)numSOBAlpha.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void numSOBCloak_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SOBCloak = (float)numSOBCloak.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void numSOBClip_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SOBClip = (float)numSOBClip.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
         }
     }
 }

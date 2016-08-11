@@ -33,21 +33,47 @@
             this.addDataPathDialog = new System.Windows.Forms.OpenFileDialog();
             this.labelPaintCurve = new System.Windows.Forms.Label();
             this.numPaintCurve = new System.Windows.Forms.NumericUpDown();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbxPaintStyle = new System.Windows.Forms.GroupBox();
             this.numPaintOffset = new System.Windows.Forms.NumericUpDown();
             this.labelPaintOffset = new System.Windows.Forms.Label();
             this.numPaintScale = new System.Windows.Forms.NumericUpDown();
             this.labelPaintScale = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cbxConfigOptions = new System.Windows.Forms.ComboBox();
-            this.btnReloadShaders = new System.Windows.Forms.Button();
             this.numConfigOption = new System.Windows.Forms.NumericUpDown();
+            this.btnReloadShaders = new System.Windows.Forms.Button();
+            this.cbxConfigOptions = new System.Windows.Forms.ComboBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.numSimDelta = new System.Windows.Forms.NumericUpDown();
+            this.lblSimDelta = new System.Windows.Forms.Label();
+            this.numSimTime = new System.Windows.Forms.NumericUpDown();
+            this.lblSimTime = new System.Windows.Forms.Label();
+            this.numExecDelta = new System.Windows.Forms.NumericUpDown();
+            this.lblExecDelta = new System.Windows.Forms.Label();
+            this.numExecTime = new System.Windows.Forms.NumericUpDown();
+            this.lblExecTime = new System.Windows.Forms.Label();
+            this.gbxSOBParams = new System.Windows.Forms.GroupBox();
+            this.numSOBClip = new System.Windows.Forms.NumericUpDown();
+            this.lblSOBClip = new System.Windows.Forms.Label();
+            this.numSOBCloak = new System.Windows.Forms.NumericUpDown();
+            this.lblSOBCloak = new System.Windows.Forms.Label();
+            this.numSOBAlpha = new System.Windows.Forms.NumericUpDown();
+            this.lblSOBAlpha = new System.Windows.Forms.Label();
+            this.chkHACKPain = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numPaintCurve)).BeginInit();
-            this.groupBox1.SuspendLayout();
+            this.gbxPaintStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPaintOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPaintScale)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numConfigOption)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSimDelta)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSimTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numExecDelta)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numExecTime)).BeginInit();
+            this.gbxSOBParams.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSOBClip)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSOBCloak)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSOBAlpha)).BeginInit();
             this.SuspendLayout();
             // 
             // colorDialog
@@ -79,7 +105,7 @@
             0,
             0,
             65536});
-            this.numPaintCurve.Location = new System.Drawing.Point(112, 24);
+            this.numPaintCurve.Location = new System.Drawing.Point(152, 24);
             this.numPaintCurve.Maximum = new decimal(new int[] {
             20,
             0,
@@ -95,20 +121,21 @@
             this.numPaintCurve.TabIndex = 21;
             this.numPaintCurve.ValueChanged += new System.EventHandler(this.numPaintCurve_ValueChanged);
             // 
-            // groupBox1
+            // gbxPaintStyle
             // 
-            this.groupBox1.Controls.Add(this.numPaintOffset);
-            this.groupBox1.Controls.Add(this.labelPaintOffset);
-            this.groupBox1.Controls.Add(this.numPaintScale);
-            this.groupBox1.Controls.Add(this.labelPaintScale);
-            this.groupBox1.Controls.Add(this.numPaintCurve);
-            this.groupBox1.Controls.Add(this.labelPaintCurve);
-            this.groupBox1.Location = new System.Drawing.Point(8, 8);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 100);
-            this.groupBox1.TabIndex = 22;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Paint Style";
+            this.gbxPaintStyle.Controls.Add(this.chkHACKPain);
+            this.gbxPaintStyle.Controls.Add(this.numPaintOffset);
+            this.gbxPaintStyle.Controls.Add(this.labelPaintOffset);
+            this.gbxPaintStyle.Controls.Add(this.numPaintScale);
+            this.gbxPaintStyle.Controls.Add(this.labelPaintScale);
+            this.gbxPaintStyle.Controls.Add(this.numPaintCurve);
+            this.gbxPaintStyle.Controls.Add(this.labelPaintCurve);
+            this.gbxPaintStyle.Location = new System.Drawing.Point(8, 352);
+            this.gbxPaintStyle.Name = "gbxPaintStyle";
+            this.gbxPaintStyle.Size = new System.Drawing.Size(232, 128);
+            this.gbxPaintStyle.TabIndex = 22;
+            this.gbxPaintStyle.TabStop = false;
+            this.gbxPaintStyle.Text = "Paint Style";
             // 
             // numPaintOffset
             // 
@@ -118,7 +145,7 @@
             0,
             0,
             65536});
-            this.numPaintOffset.Location = new System.Drawing.Point(112, 72);
+            this.numPaintOffset.Location = new System.Drawing.Point(152, 72);
             this.numPaintOffset.Maximum = new decimal(new int[] {
             20,
             0,
@@ -151,7 +178,7 @@
             0,
             0,
             65536});
-            this.numPaintScale.Location = new System.Drawing.Point(112, 48);
+            this.numPaintScale.Location = new System.Drawing.Point(152, 48);
             this.numPaintScale.Maximum = new decimal(new int[] {
             20,
             0,
@@ -181,25 +208,29 @@
             this.groupBox2.Controls.Add(this.numConfigOption);
             this.groupBox2.Controls.Add(this.btnReloadShaders);
             this.groupBox2.Controls.Add(this.cbxConfigOptions);
-            this.groupBox2.Location = new System.Drawing.Point(8, 120);
+            this.groupBox2.Location = new System.Drawing.Point(8, 8);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(248, 96);
+            this.groupBox2.Size = new System.Drawing.Size(232, 96);
             this.groupBox2.TabIndex = 23;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Paint Style";
+            this.groupBox2.Text = "Graphics Config";
             // 
-            // cbxConfigOptions
+            // numConfigOption
             // 
-            this.cbxConfigOptions.FormattingEnabled = true;
-            this.cbxConfigOptions.Location = new System.Drawing.Point(16, 24);
-            this.cbxConfigOptions.Name = "cbxConfigOptions";
-            this.cbxConfigOptions.Size = new System.Drawing.Size(176, 21);
-            this.cbxConfigOptions.TabIndex = 0;
-            this.cbxConfigOptions.SelectedIndexChanged += new System.EventHandler(this.cbxConfigOptions_SelectedIndexChanged);
+            this.numConfigOption.Location = new System.Drawing.Point(176, 24);
+            this.numConfigOption.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numConfigOption.Name = "numConfigOption";
+            this.numConfigOption.Size = new System.Drawing.Size(48, 20);
+            this.numConfigOption.TabIndex = 2;
+            this.numConfigOption.ValueChanged += new System.EventHandler(this.numConfigOption_ValueChanged);
             // 
             // btnReloadShaders
             // 
-            this.btnReloadShaders.Location = new System.Drawing.Point(72, 56);
+            this.btnReloadShaders.Location = new System.Drawing.Point(48, 56);
             this.btnReloadShaders.Name = "btnReloadShaders";
             this.btnReloadShaders.Size = new System.Drawing.Size(104, 24);
             this.btnReloadShaders.TabIndex = 1;
@@ -207,18 +238,247 @@
             this.btnReloadShaders.UseVisualStyleBackColor = true;
             this.btnReloadShaders.Click += new System.EventHandler(this.btnReloadShaders_Click);
             // 
-            // numConfigOption
+            // cbxConfigOptions
             // 
-            this.numConfigOption.Location = new System.Drawing.Point(200, 24);
-            this.numConfigOption.Maximum = new decimal(new int[] {
+            this.cbxConfigOptions.FormattingEnabled = true;
+            this.cbxConfigOptions.Location = new System.Drawing.Point(16, 24);
+            this.cbxConfigOptions.Name = "cbxConfigOptions";
+            this.cbxConfigOptions.Size = new System.Drawing.Size(152, 21);
+            this.cbxConfigOptions.TabIndex = 0;
+            this.cbxConfigOptions.SelectedIndexChanged += new System.EventHandler(this.cbxConfigOptions_SelectedIndexChanged);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.numSimDelta);
+            this.groupBox3.Controls.Add(this.lblSimDelta);
+            this.groupBox3.Controls.Add(this.numSimTime);
+            this.groupBox3.Controls.Add(this.lblSimTime);
+            this.groupBox3.Controls.Add(this.numExecDelta);
+            this.groupBox3.Controls.Add(this.lblExecDelta);
+            this.groupBox3.Controls.Add(this.numExecTime);
+            this.groupBox3.Controls.Add(this.lblExecTime);
+            this.groupBox3.Location = new System.Drawing.Point(8, 112);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(232, 120);
+            this.groupBox3.TabIndex = 24;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Time Variables";
+            // 
+            // numSimDelta
+            // 
+            this.numSimDelta.DecimalPlaces = 2;
+            this.numSimDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numSimDelta.Location = new System.Drawing.Point(152, 96);
+            this.numSimDelta.Maximum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numSimDelta.Name = "numSimDelta";
+            this.numSimDelta.Size = new System.Drawing.Size(72, 20);
+            this.numSimDelta.TabIndex = 27;
+            this.numSimDelta.ValueChanged += new System.EventHandler(this.numSimDelta_ValueChanged);
+            // 
+            // lblSimDelta
+            // 
+            this.lblSimDelta.AutoSize = true;
+            this.lblSimDelta.Location = new System.Drawing.Point(15, 98);
+            this.lblSimDelta.Name = "lblSimDelta";
+            this.lblSimDelta.Size = new System.Drawing.Size(52, 13);
+            this.lblSimDelta.TabIndex = 26;
+            this.lblSimDelta.Text = "Sim Delta";
+            // 
+            // numSimTime
+            // 
+            this.numSimTime.DecimalPlaces = 2;
+            this.numSimTime.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numSimTime.Location = new System.Drawing.Point(152, 72);
+            this.numSimTime.Maximum = new decimal(new int[] {
+            3600,
+            0,
+            0,
+            0});
+            this.numSimTime.Name = "numSimTime";
+            this.numSimTime.Size = new System.Drawing.Size(72, 20);
+            this.numSimTime.TabIndex = 25;
+            this.numSimTime.ValueChanged += new System.EventHandler(this.numSimTime_ValueChanged);
+            // 
+            // lblSimTime
+            // 
+            this.lblSimTime.AutoSize = true;
+            this.lblSimTime.Location = new System.Drawing.Point(15, 74);
+            this.lblSimTime.Name = "lblSimTime";
+            this.lblSimTime.Size = new System.Drawing.Size(50, 13);
+            this.lblSimTime.TabIndex = 24;
+            this.lblSimTime.Text = "Sim Time";
+            // 
+            // numExecDelta
+            // 
+            this.numExecDelta.DecimalPlaces = 2;
+            this.numExecDelta.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numExecDelta.Location = new System.Drawing.Point(152, 48);
+            this.numExecDelta.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            65536});
+            this.numExecDelta.Name = "numExecDelta";
+            this.numExecDelta.Size = new System.Drawing.Size(72, 20);
+            this.numExecDelta.TabIndex = 23;
+            this.numExecDelta.ValueChanged += new System.EventHandler(this.numExecDelta_ValueChanged);
+            // 
+            // lblExecDelta
+            // 
+            this.lblExecDelta.AutoSize = true;
+            this.lblExecDelta.Location = new System.Drawing.Point(15, 50);
+            this.lblExecDelta.Name = "lblExecDelta";
+            this.lblExecDelta.Size = new System.Drawing.Size(59, 13);
+            this.lblExecDelta.TabIndex = 22;
+            this.lblExecDelta.Text = "Exec Delta";
+            // 
+            // numExecTime
+            // 
+            this.numExecTime.DecimalPlaces = 2;
+            this.numExecTime.Location = new System.Drawing.Point(152, 24);
+            this.numExecTime.Maximum = new decimal(new int[] {
+            18000,
+            0,
+            0,
+            0});
+            this.numExecTime.Name = "numExecTime";
+            this.numExecTime.Size = new System.Drawing.Size(72, 20);
+            this.numExecTime.TabIndex = 21;
+            this.numExecTime.ValueChanged += new System.EventHandler(this.numExecTime_ValueChanged);
+            // 
+            // lblExecTime
+            // 
+            this.lblExecTime.AutoSize = true;
+            this.lblExecTime.Location = new System.Drawing.Point(15, 26);
+            this.lblExecTime.Name = "lblExecTime";
+            this.lblExecTime.Size = new System.Drawing.Size(57, 13);
+            this.lblExecTime.TabIndex = 20;
+            this.lblExecTime.Text = "Exec Time";
+            // 
+            // gbxSOBParams
+            // 
+            this.gbxSOBParams.Controls.Add(this.numSOBClip);
+            this.gbxSOBParams.Controls.Add(this.lblSOBClip);
+            this.gbxSOBParams.Controls.Add(this.numSOBCloak);
+            this.gbxSOBParams.Controls.Add(this.lblSOBCloak);
+            this.gbxSOBParams.Controls.Add(this.numSOBAlpha);
+            this.gbxSOBParams.Controls.Add(this.lblSOBAlpha);
+            this.gbxSOBParams.Location = new System.Drawing.Point(8, 240);
+            this.gbxSOBParams.Name = "gbxSOBParams";
+            this.gbxSOBParams.Size = new System.Drawing.Size(232, 100);
+            this.gbxSOBParams.TabIndex = 25;
+            this.gbxSOBParams.TabStop = false;
+            this.gbxSOBParams.Text = "SOB Params";
+            // 
+            // numSOBClip
+            // 
+            this.numSOBClip.DecimalPlaces = 2;
+            this.numSOBClip.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numSOBClip.Location = new System.Drawing.Point(152, 72);
+            this.numSOBClip.Maximum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numConfigOption.Name = "numConfigOption";
-            this.numConfigOption.Size = new System.Drawing.Size(40, 20);
-            this.numConfigOption.TabIndex = 2;
-            this.numConfigOption.ValueChanged += new System.EventHandler(this.numConfigOption_ValueChanged);
+            this.numSOBClip.Name = "numSOBClip";
+            this.numSOBClip.Size = new System.Drawing.Size(72, 20);
+            this.numSOBClip.TabIndex = 25;
+            this.numSOBClip.ValueChanged += new System.EventHandler(this.numSOBClip_ValueChanged);
+            // 
+            // lblSOBClip
+            // 
+            this.lblSOBClip.AutoSize = true;
+            this.lblSOBClip.Location = new System.Drawing.Point(15, 74);
+            this.lblSOBClip.Name = "lblSOBClip";
+            this.lblSOBClip.Size = new System.Drawing.Size(49, 13);
+            this.lblSOBClip.TabIndex = 24;
+            this.lblSOBClip.Text = "SOB Clip";
+            // 
+            // numSOBCloak
+            // 
+            this.numSOBCloak.DecimalPlaces = 2;
+            this.numSOBCloak.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numSOBCloak.Location = new System.Drawing.Point(152, 48);
+            this.numSOBCloak.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numSOBCloak.Name = "numSOBCloak";
+            this.numSOBCloak.Size = new System.Drawing.Size(72, 20);
+            this.numSOBCloak.TabIndex = 23;
+            this.numSOBCloak.ValueChanged += new System.EventHandler(this.numSOBCloak_ValueChanged);
+            // 
+            // lblSOBCloak
+            // 
+            this.lblSOBCloak.AutoSize = true;
+            this.lblSOBCloak.Location = new System.Drawing.Point(15, 50);
+            this.lblSOBCloak.Name = "lblSOBCloak";
+            this.lblSOBCloak.Size = new System.Drawing.Size(59, 13);
+            this.lblSOBCloak.TabIndex = 22;
+            this.lblSOBCloak.Text = "SOB Cloak";
+            // 
+            // numSOBAlpha
+            // 
+            this.numSOBAlpha.DecimalPlaces = 2;
+            this.numSOBAlpha.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numSOBAlpha.Location = new System.Drawing.Point(152, 24);
+            this.numSOBAlpha.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numSOBAlpha.Name = "numSOBAlpha";
+            this.numSOBAlpha.Size = new System.Drawing.Size(72, 20);
+            this.numSOBAlpha.TabIndex = 21;
+            this.numSOBAlpha.ValueChanged += new System.EventHandler(this.numSOBAlpha_ValueChanged);
+            // 
+            // lblSOBAlpha
+            // 
+            this.lblSOBAlpha.AutoSize = true;
+            this.lblSOBAlpha.Location = new System.Drawing.Point(15, 26);
+            this.lblSOBAlpha.Name = "lblSOBAlpha";
+            this.lblSOBAlpha.Size = new System.Drawing.Size(59, 13);
+            this.lblSOBAlpha.TabIndex = 20;
+            this.lblSOBAlpha.Text = "SOB Alpha";
+            // 
+            // chkHACKPain
+            // 
+            this.chkHACKPain.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkHACKPain.Location = new System.Drawing.Point(16, 96);
+            this.chkHACKPain.Name = "chkHACKPain";
+            this.chkHACKPain.Size = new System.Drawing.Size(208, 17);
+            this.chkHACKPain.TabIndex = 26;
+            this.chkHACKPain.Text = "All I Feel is Pain";
+            this.chkHACKPain.UseVisualStyleBackColor = true;
             // 
             // ShaderSettings
             // 
@@ -226,9 +486,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(688, 469);
+            this.ClientSize = new System.Drawing.Size(688, 486);
+            this.Controls.Add(this.gbxSOBParams);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbxPaintStyle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -236,12 +498,23 @@
             this.Text = "Settings";
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.numPaintCurve)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.gbxPaintStyle.ResumeLayout(false);
+            this.gbxPaintStyle.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPaintOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPaintScale)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numConfigOption)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSimDelta)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSimTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numExecDelta)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numExecTime)).EndInit();
+            this.gbxSOBParams.ResumeLayout(false);
+            this.gbxSOBParams.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numSOBClip)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSOBCloak)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSOBAlpha)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -251,7 +524,7 @@
         private System.Windows.Forms.OpenFileDialog addDataPathDialog;
         private System.Windows.Forms.Label labelPaintCurve;
         private System.Windows.Forms.NumericUpDown numPaintCurve;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbxPaintStyle;
         private System.Windows.Forms.NumericUpDown numPaintOffset;
         private System.Windows.Forms.Label labelPaintOffset;
         private System.Windows.Forms.NumericUpDown numPaintScale;
@@ -260,5 +533,22 @@
         private System.Windows.Forms.NumericUpDown numConfigOption;
         private System.Windows.Forms.Button btnReloadShaders;
         private System.Windows.Forms.ComboBox cbxConfigOptions;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.NumericUpDown numSimDelta;
+        private System.Windows.Forms.Label lblSimDelta;
+        private System.Windows.Forms.NumericUpDown numSimTime;
+        private System.Windows.Forms.Label lblSimTime;
+        private System.Windows.Forms.NumericUpDown numExecDelta;
+        private System.Windows.Forms.Label lblExecDelta;
+        private System.Windows.Forms.NumericUpDown numExecTime;
+        private System.Windows.Forms.Label lblExecTime;
+        private System.Windows.Forms.GroupBox gbxSOBParams;
+        private System.Windows.Forms.NumericUpDown numSOBClip;
+        private System.Windows.Forms.Label lblSOBClip;
+        private System.Windows.Forms.NumericUpDown numSOBCloak;
+        private System.Windows.Forms.Label lblSOBCloak;
+        private System.Windows.Forms.NumericUpDown numSOBAlpha;
+        private System.Windows.Forms.Label lblSOBAlpha;
+        private System.Windows.Forms.CheckBox chkHACKPain;
     }
 }
