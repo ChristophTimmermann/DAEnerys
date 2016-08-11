@@ -48,6 +48,8 @@ namespace DAEnerys
         public static float Sim { get; set; } = 0f;
         public static float SimDelta { get; set; } = 0f;
 
+        public static float ClipDistance { get; set; } = 1000f;
+
         public static float SOBAlpha { get; set; } = 1f;
         public static float SOBCloak { get; set; } = 0f;
         public static float SOBClip { get; set; } = 0f;
@@ -523,7 +525,7 @@ namespace DAEnerys
             Manifest.Globals.Set("bgEnvParams", new float[] { 1f, 1f, 1f, 1f });
             Manifest.Globals.Set("bgShipExps", new float[] { 1f, 1f, 1f, 1f });
 
-            Manifest.Globals.Set("clipPlane", new float[] { 0f, 0f, 0f, 1000f });   // SOB_USECLIP
+            Manifest.Globals.Set("clipPlane", new float[] { 0f, 0f, 1f, ClipDistance });   // SOB_USECLIP
             Manifest.Globals.Set("sobParams", new float[] { SOBAlpha, SOBCloak, SOBClip, 0f });      // Alpha, Cloak, Clip, unused
             Manifest.Globals.Set("lifeParams", new float[] { 1f, 1f, 0f, 0f });     // Life Alpha, Death Ratio, unused x2
 
@@ -627,7 +629,7 @@ namespace DAEnerys
             }
 
             if (!SOB_DEBRIS(CurrentMeshShader))
-                surface.SetVar("SOB_uieffect", new float[] { 0.5f, 0.5f, 0.51f, 0f });
+                surface.SetVar("SOB_uieffect", new float[] { 0f, 0f, 0f, 0f });
 
             //surface.SetVar("inSurfDiff", new float[] { 0f, 0.95f, 0f, 0f });
             //if (CurrentMeshShader == "thruster")

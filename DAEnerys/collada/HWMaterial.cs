@@ -52,7 +52,7 @@ namespace DAEnerys
         public void Parse()
         {
             string fullName = Name;
-            string TeamTexturePath = "", StripeTexturePath = "";
+            string TeamTexturePath = "", StripeTexturePath = "", PaintTexturePath = "";
             if (Name.StartsWith("MAT[")) //If material is a homeworld valid material
             {
                 string[] splitted = Name.Split('[');
@@ -140,6 +140,9 @@ namespace DAEnerys
                                         case "STRP":
                                             StripeTexturePath = file;
                                             break;
+                                        case "PAIN":
+                                            PaintTexturePath = file;
+                                            break;
                                     }
 
                                     HWImage newImage = new HWImage(fileName, file);
@@ -155,7 +158,7 @@ namespace DAEnerys
                 Program.main.AddMaterial(this);
             }
 
-            TeamTexture = HWTexture.MakeTeamTexture(TeamTexturePath, StripeTexturePath);
+            TeamTexture = HWTexture.MakeTeamTexture(TeamTexturePath, StripeTexturePath, PaintTexturePath);
         }
     }
 

@@ -59,6 +59,8 @@
             this.numSOBAlpha = new System.Windows.Forms.NumericUpDown();
             this.lblSOBAlpha = new System.Windows.Forms.Label();
             this.chkHACKPain = new System.Windows.Forms.CheckBox();
+            this.numClipDist = new System.Windows.Forms.NumericUpDown();
+            this.lblClipDist = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numPaintCurve)).BeginInit();
             this.gbxPaintStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPaintOffset)).BeginInit();
@@ -74,6 +76,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numSOBClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSOBCloak)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSOBAlpha)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numClipDist)).BeginInit();
             this.SuspendLayout();
             // 
             // colorDialog
@@ -459,6 +462,11 @@
             this.numSOBAlpha.Name = "numSOBAlpha";
             this.numSOBAlpha.Size = new System.Drawing.Size(72, 20);
             this.numSOBAlpha.TabIndex = 21;
+            this.numSOBAlpha.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numSOBAlpha.ValueChanged += new System.EventHandler(this.numSOBAlpha_ValueChanged);
             // 
             // lblSOBAlpha
@@ -480,6 +488,44 @@
             this.chkHACKPain.Text = "All I Feel is Pain";
             this.chkHACKPain.UseVisualStyleBackColor = true;
             // 
+            // numClipDist
+            // 
+            this.numClipDist.DecimalPlaces = 2;
+            this.numClipDist.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numClipDist.Location = new System.Drawing.Point(385, 14);
+            this.numClipDist.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numClipDist.Minimum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            -2147483648});
+            this.numClipDist.Name = "numClipDist";
+            this.numClipDist.Size = new System.Drawing.Size(72, 20);
+            this.numClipDist.TabIndex = 27;
+            this.numClipDist.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numClipDist.ValueChanged += new System.EventHandler(this.numClipDist_ValueChanged);
+            // 
+            // lblClipDist
+            // 
+            this.lblClipDist.AutoSize = true;
+            this.lblClipDist.Location = new System.Drawing.Point(248, 16);
+            this.lblClipDist.Name = "lblClipDist";
+            this.lblClipDist.Size = new System.Drawing.Size(69, 13);
+            this.lblClipDist.TabIndex = 26;
+            this.lblClipDist.Text = "Clip Distance";
+            // 
             // ShaderSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -487,6 +533,8 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(688, 486);
+            this.Controls.Add(this.numClipDist);
+            this.Controls.Add(this.lblClipDist);
             this.Controls.Add(this.gbxSOBParams);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -515,7 +563,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numSOBClip)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSOBCloak)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSOBAlpha)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numClipDist)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -550,5 +600,7 @@
         private System.Windows.Forms.NumericUpDown numSOBAlpha;
         private System.Windows.Forms.Label lblSOBAlpha;
         private System.Windows.Forms.CheckBox chkHACKPain;
+        private System.Windows.Forms.NumericUpDown numClipDist;
+        private System.Windows.Forms.Label lblClipDist;
     }
 }

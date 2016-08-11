@@ -243,5 +243,13 @@ namespace DAEnerys
             Renderer.UpdateView();
             Program.GLControl.Invalidate();
         }
+
+        private void numClipDist_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.ClipDistance = (float)numClipDist.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
     }
 }
