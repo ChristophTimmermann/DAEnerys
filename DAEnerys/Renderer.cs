@@ -572,27 +572,11 @@ namespace DAEnerys
                 AttachTexture(surface, "SOB_badge", BadgeTexture);
             }
 
-            if (SOB_THRUSTERS(CurrentMeshShader))
-            {
-                AttachTexture(surface, "SOB_diffuseOn", mesh.Material.DiffuseTexture);
-                AttachTexture(surface, "SOB_glowOn", mesh.Material.GlowTexture);
-                AttachTexture(surface, "SOB_diffuseOff", mesh.Material.ThrusterOffDiffuseTexture);
-                AttachTexture(surface, "SOB_glowOff", mesh.Material.ThrusterOffGlowTexture);
-                surface.SetVar("SOB_engine", new float[] { ThrusterInterpolation, 0, 0, 0 });
-            }
-            else
-            {
-                AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
-                AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
-                if (SOB_GLOWRGB(CurrentMeshShader))
-                {
-                    AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
-                }
-            }
-
             if (SOB_RESOURCE(CurrentMeshShader))
             {
                 //AttachTexture(surface, "inTexProgress", mesh.Material.???);
+                AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
+                AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
                 //surface.SetVar("inFadeWindow", new float[] { 0.1f, 0.1f, 0.9f });
                 //surface.SetVar("inGlowStyle", new float[] { 1f, 0f, 0f, 0f });
 
@@ -609,6 +593,27 @@ namespace DAEnerys
                 if (SOB_DEBRIS(CurrentMeshShader))
                 {
                     //uniform vec4 inFXInfo[2];
+                }
+            }
+            else
+            {
+                if (SOB_THRUSTERS(CurrentMeshShader))
+                {
+                    AttachTexture(surface, "SOB_diffuseOn", mesh.Material.DiffuseTexture);
+                    AttachTexture(surface, "SOB_glowOn", mesh.Material.GlowTexture);
+                    AttachTexture(surface, "SOB_diffuseOff", mesh.Material.ThrusterOffDiffuseTexture);
+                    AttachTexture(surface, "SOB_glowOff", mesh.Material.ThrusterOffGlowTexture);
+                    surface.SetVar("SOB_engine", new float[] { ThrusterInterpolation, 0, 0, 0 });
+                }
+                else
+                {
+                    AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
+                    AttachTexture(surface, "SOB_glow", mesh.Material.ReflGlowSpecTexture);
+                    if (SOB_GLOWRGB(CurrentMeshShader))
+                    {
+                        AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
+                        AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
+                    }
                 }
             }
 
@@ -635,7 +640,7 @@ namespace DAEnerys
             //if (CurrentMeshShader == "thruster")
             //    surface.SetVar("SOB_surfGlow", new float[] { 1.1f, 0.5f, 0f, 0f });
             //else
-            //    surface.SetVar("SOB_surfGlow", new float[] { 1f, 0.5f, 0f, 0f });
+                surface.SetVar("SOB_surfGlow", new float[] { 1f, 0.5f, 0f, 0f });
             //surface.SetVar("inSurfSpec", new float[] { 1f, 1.5f, 0f, 0f });
             //surface.SetVar("inSurfGloss", new float[] { 0.1f, 75f, 30f, 0f });
             //surface.SetVar("inSurfRefl", new float[] { 0f, 0f, 0f, 0f });

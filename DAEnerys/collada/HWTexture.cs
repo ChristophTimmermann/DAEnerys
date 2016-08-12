@@ -23,80 +23,78 @@ namespace DAEnerys
             Path = path;
             ID = loadImage(path, loadAlpha, sprite);
         }
-
-
-
-        public static HWTexture MakeTeamTexture(string teamTexturePath, string stripeTexturePath, string paintTexturePath)
+        
+        public static HWTexture MakeMultTexture(string TexturePath_A, string TexturePath_B, string TexturePath_C)
         {
-            if (teamTexturePath == "" && stripeTexturePath == "" && stripeTexturePath == "") return null;
-            bool teamexists = File.Exists(teamTexturePath);
-            bool strpexists = File.Exists(stripeTexturePath);
-            bool painexists = File.Exists(paintTexturePath);
-            if (!teamexists && teamTexturePath != "")
-                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + teamTexturePath + "\".");
-            if (!strpexists && stripeTexturePath != "")
-                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + stripeTexturePath + "\".");
-            if (!painexists && paintTexturePath != "")
-                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + paintTexturePath + "\".");
-            if (!teamexists && !strpexists && !painexists)
+            if (TexturePath_A == "" && TexturePath_B == "" && TexturePath_B == "") return null;
+            bool existsA = File.Exists(TexturePath_A);
+            bool existsB = File.Exists(TexturePath_B);
+            bool existsC = File.Exists(TexturePath_C);
+            if (!existsA && TexturePath_A != "")
+                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + TexturePath_A + "\".");
+            if (!existsB && TexturePath_B != "")
+                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + TexturePath_B + "\".");
+            if (!existsC && TexturePath_C != "")
+                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + TexturePath_C + "\".");
+            if (!existsA && !existsB && !existsC)
                 return null;
 
-            bool flipteam = false, flipstrp = false, flippain = false;
-            if (teamexists && System.IO.Path.GetExtension(teamTexturePath).ToLower() != ".tga")
+            bool flipA = false, flipB = false, flipC = false;
+            if (existsA && System.IO.Path.GetExtension(TexturePath_A).ToLower() != ".tga")
             {
-                new Problem(ProblemTypes.WARNING, "The texture \"" + teamTexturePath + "\" is not in TGA-Format.");
-                flipteam = true;
+                new Problem(ProblemTypes.WARNING, "The texture \"" + TexturePath_A + "\" is not in TGA-Format.");
+                flipA = true;
             }
-            if (strpexists && System.IO.Path.GetExtension(stripeTexturePath).ToLower() != ".tga")
+            if (existsB && System.IO.Path.GetExtension(TexturePath_B).ToLower() != ".tga")
             {
-                new Problem(ProblemTypes.WARNING, "The texture \"" + stripeTexturePath + "\" is not in TGA-Format.");
-                flipstrp = true;
+                new Problem(ProblemTypes.WARNING, "The texture \"" + TexturePath_B + "\" is not in TGA-Format.");
+                flipB = true;
             }
-            if (painexists && System.IO.Path.GetExtension(paintTexturePath).ToLower() != ".tga")
+            if (existsC && System.IO.Path.GetExtension(TexturePath_C).ToLower() != ".tga")
             {
-                new Problem(ProblemTypes.WARNING, "The texture \"" + paintTexturePath + "\" is not in TGA-Format.");
-                flippain = true;
+                new Problem(ProblemTypes.WARNING, "The texture \"" + TexturePath_C + "\" is not in TGA-Format.");
+                flipC = true;
             }
 
-            int teamW, teamH;
-            byte[] teamData = GetData(teamexists, teamTexturePath, flipteam, out teamW, out teamH);
+            int widthA, heightA;
+            byte[] aData = GetData(existsA, TexturePath_A, flipA, out widthA, out heightA);
 
-            int strpW, strpH;
-            byte[] strpData = GetData(strpexists, stripeTexturePath, flipstrp, out strpW, out strpH);
+            int widthB, heightB;
+            byte[] bData = GetData(existsB, TexturePath_B, flipB, out widthB, out heightB);
             
-            int painW, painH;
-            byte[] painData = GetData(painexists, paintTexturePath, flippain, out painW, out painH);
+            int widthC, heightC;
+            byte[] cData = GetData(existsC, TexturePath_C, flipC, out widthC, out heightC);
 
 
-            if ((teamW != strpW && teamH != strpH && teamexists && strpexists) ||
-                (teamW != painW && teamH != painH && teamexists && painexists) ||
-                (strpW != painW && strpH != painH && strpexists && painexists))
+            if ((widthA != widthB && heightA != heightB && existsA && existsB) ||
+                (widthA != widthC && heightA != heightC && existsA && existsC) ||
+                (widthB != widthC && heightB != heightC && existsB && existsC))
             { 
-                new Problem(ProblemTypes.ERROR, "The dimensions of the team/stripe/paint textures do not match.");
+                new Problem(ProblemTypes.ERROR, "The dimensions of the multi textures do not match.");
                 return null;
             }
 
-            int width = teamexists ? teamW : (strpexists ? strpW : painW);
-            int height = teamexists ? teamH : (strpexists ? strpH : painH);
+            int width = existsA ? widthA : (existsB ? widthB : widthC);
+            int height = existsA ? heightA : (existsB ? heightB : heightC);
 
-            IntPtr data = WrangleTeamData(width * height * 4, teamData, strpData, painData);
+            IntPtr data = WrangleMultData(width * height * 4, aData, bData, cData);
             int ID = RawLoadImage(width, height, PixelFormat.Rgba, PixelType.Float, data, false, false);
             Marshal.FreeHGlobal(data);
             
-            return new HWTexture("TEAM_STRP_WRANGLE", ID);
+            return new HWTexture("MULT_WRANGLE", ID);
         }
 
-        private static IntPtr WrangleTeamData(int size, byte[] teamData, byte[] strpData, byte[] painData)
+        private static IntPtr WrangleMultData(int size, byte[] aData, byte[] bData, byte[] cData)
         {
-            bool useTeam = teamData.Length > 0;
-            bool useStrp = strpData.Length > 0;
-            bool usePain = painData.Length > 0;
+            bool useA = aData.Length > 0;
+            bool useB = bData.Length > 0;
+            bool useC = cData.Length > 0;
             float[] data = new float[size];
             for (int i = 0; i < size; i += 4)
             {
-                data[i + 0] = (1f - (useTeam ? teamData[i + 3] : 0) / 255f); // dest.R = 1 - team.A
-                data[i + 1] = (1f - (useStrp ? strpData[i + 3] : 0) / 255f); // dest.G = 1 - strp.A
-                data[i + 2] = (1f - (usePain ? painData[i + 3] : 0) / 255f); // dest.B = 1 - pain.A
+                data[i + 0] = (1f - (useA ? aData[i + 3] : 0) / 255f); // dest.R = 1 - srcA.A
+                data[i + 1] = (1f - (useB ? bData[i + 3] : 0) / 255f); // dest.G = 1 - srcB.A
+                data[i + 2] = (1f - (useC ? cData[i + 3] : 0) / 255f); // dest.B = 1 - srcC.A
                 data[i + 3] = 1f; // dest.A = 1
             }
             IntPtr ptr = Marshal.AllocHGlobal(data.Length * sizeof(float));

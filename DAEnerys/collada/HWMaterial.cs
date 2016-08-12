@@ -24,6 +24,7 @@ namespace DAEnerys
 
         public HWTexture DiffuseTexture;
         public HWTexture GlowTexture;
+        public HWTexture ReflGlowSpecTexture;
         public HWTexture ThrusterOffDiffuseTexture;
         public HWTexture ThrusterOffGlowTexture;
         public HWTexture NormalTexture;
@@ -53,6 +54,7 @@ namespace DAEnerys
         {
             string fullName = Name;
             string TeamTexturePath = "", StripeTexturePath = "", PaintTexturePath = "";
+            string ReflTexturePath = "", GlowTexturePath = "", SpecTexturePath = "";
             if (Name.StartsWith("MAT[")) //If material is a homeworld valid material
             {
                 string[] splitted = Name.Split('[');
@@ -120,7 +122,8 @@ namespace DAEnerys
                                             DiffuseTexture = new HWTexture(file);
                                             break;
                                         case "GLOW":
-                                            GlowTexture = new HWTexture(file);
+                                            GlowTexturePath = file;
+                                            GlowTexture = new HWTexture(GlowTexturePath);
                                             break;
                                         case "GLOX":
                                             ThrusterOffGlowTexture = new HWTexture(file);
@@ -131,8 +134,12 @@ namespace DAEnerys
                                         case "NORM":
                                             NormalTexture = new HWTexture(file);
                                             break;
+                                        case "REFL":
+                                            ReflTexturePath = file;
+                                            break;
                                         case "SPEC":
-                                            SpecularTexture = new HWTexture(file);
+                                            SpecTexturePath = file;
+                                            SpecularTexture = new HWTexture(SpecTexturePath);
                                             break;
                                         case "TEAM":
                                             TeamTexturePath = file;
@@ -158,7 +165,8 @@ namespace DAEnerys
                 Program.main.AddMaterial(this);
             }
 
-            TeamTexture = HWTexture.MakeTeamTexture(TeamTexturePath, StripeTexturePath, PaintTexturePath);
+            TeamTexture = HWTexture.MakeMultTexture(TeamTexturePath, StripeTexturePath, PaintTexturePath);
+            ReflGlowSpecTexture = HWTexture.MakeMultTexture(ReflTexturePath, GlowTexturePath, SpecTexturePath);
         }
     }
 
