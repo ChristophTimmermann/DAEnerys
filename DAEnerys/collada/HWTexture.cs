@@ -7,6 +7,19 @@ using DevILSharp;
 
 namespace DAEnerys
 {
+    public enum TexMakeParams
+    {
+        ZERO,
+        ONE,
+        SRC_R,
+        SRC_B,
+        SRC_G,
+        SRC_A,
+        INVSRC_R,
+        INVSRC_B,
+        INVSRC_G,
+        INVSRC_A
+    }
     public class HWTexture
     {
         public int ID = -1;
@@ -23,83 +36,131 @@ namespace DAEnerys
             Path = path;
             ID = loadImage(path, loadAlpha, sprite);
         }
-        
-        public static HWTexture MakeMultTexture(string TexturePath_A, string TexturePath_B, string TexturePath_C)
+
+        public static HWTexture MakeTexture(string name, string path, float r, float g, float b, float a, bool loadAlpha = false)
         {
-            if (TexturePath_A == "" && TexturePath_B == "" && TexturePath_B == "") return null;
-            bool existsA = File.Exists(TexturePath_A);
-            bool existsB = File.Exists(TexturePath_B);
-            bool existsC = File.Exists(TexturePath_C);
-            if (!existsA && TexturePath_A != "")
-                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + TexturePath_A + "\".");
-            if (!existsB && TexturePath_B != "")
-                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + TexturePath_B + "\".");
-            if (!existsC && TexturePath_C != "")
-                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + TexturePath_C + "\".");
-            if (!existsA && !existsB && !existsC)
-                return null;
-
-            bool flipA = false, flipB = false, flipC = false;
-            if (existsA && System.IO.Path.GetExtension(TexturePath_A).ToLower() != ".tga")
+            if (path == "")
             {
-                new Problem(ProblemTypes.WARNING, "The texture \"" + TexturePath_A + "\" is not in TGA-Format.");
-                flipA = true;
+                float[] data = new float[1 * 1 * 4];
+                data[0] = r;
+                data[1] = g;
+                data[2] = b;
+                data[3] = a;
+                GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+                IntPtr ptr = handle.AddrOfPinnedObject();
+                int ID = RawLoadImage(1, 1, PixelFormat.Rgba, PixelType.Float, ptr, false, false);
+                handle.Free();
+                return new HWTexture(name, ID);
             }
-            if (existsB && System.IO.Path.GetExtension(TexturePath_B).ToLower() != ".tga")
+            else
             {
-                new Problem(ProblemTypes.WARNING, "The texture \"" + TexturePath_B + "\" is not in TGA-Format.");
-                flipB = true;
+                return new HWTexture(path, loadAlpha);
             }
-            if (existsC && System.IO.Path.GetExtension(TexturePath_C).ToLower() != ".tga")
-            {
-                new Problem(ProblemTypes.WARNING, "The texture \"" + TexturePath_C + "\" is not in TGA-Format.");
-                flipC = true;
-            }
-
-            int widthA, heightA;
-            byte[] aData = GetData(existsA, TexturePath_A, flipA, out widthA, out heightA);
-
-            int widthB, heightB;
-            byte[] bData = GetData(existsB, TexturePath_B, flipB, out widthB, out heightB);
-            
-            int widthC, heightC;
-            byte[] cData = GetData(existsC, TexturePath_C, flipC, out widthC, out heightC);
-
-
-            if ((widthA != widthB && heightA != heightB && existsA && existsB) ||
-                (widthA != widthC && heightA != heightC && existsA && existsC) ||
-                (widthB != widthC && heightB != heightC && existsB && existsC))
-            { 
-                new Problem(ProblemTypes.ERROR, "The dimensions of the multi textures do not match.");
-                return null;
-            }
-
-            int width = existsA ? widthA : (existsB ? widthB : widthC);
-            int height = existsA ? heightA : (existsB ? heightB : heightC);
-
-            IntPtr data = WrangleMultData(width * height * 4, aData, bData, cData);
-            int ID = RawLoadImage(width, height, PixelFormat.Rgba, PixelType.Float, data, false, false);
-            Marshal.FreeHGlobal(data);
-            
-            return new HWTexture("MULT_WRANGLE", ID);
         }
 
-        private static IntPtr WrangleMultData(int size, byte[] aData, byte[] bData, byte[] cData)
-        {
-            bool useA = aData.Length > 0;
-            bool useB = bData.Length > 0;
-            bool useC = cData.Length > 0;
-            float[] data = new float[size];
-            for (int i = 0; i < size; i += 4)
+        public static HWTexture MakeMultTexture(
+            string name,
+            string SourceR, string SourceG, string SourceB,
+            float DefaultR, float DefaultG, float DefaultB, float DefaultA,
+            bool invertR = false, bool invertG = false, bool invertB = false,
+            bool useAlpha = false
+        ) {
+            if (SourceR == "" && SourceG == "" && SourceB == "")
             {
-                data[i + 0] = (1f - (useA ? aData[i + 3] : 0) / 255f); // dest.R = 1 - srcA.A
-                data[i + 1] = (1f - (useB ? bData[i + 3] : 0) / 255f); // dest.G = 1 - srcB.A
-                data[i + 2] = (1f - (useC ? cData[i + 3] : 0) / 255f); // dest.B = 1 - srcC.A
-                data[i + 3] = 1f; // dest.A = 1
+                float[] data = new float[1 * 1 * 4];
+                data[0] = DefaultR;
+                data[1] = DefaultG;
+                data[2] = DefaultB;
+                data[3] = DefaultA;
+                GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+                IntPtr ptr = handle.AddrOfPinnedObject();
+                int ID = RawLoadImage(1, 1, PixelFormat.Rgba, PixelType.Float, ptr, false, false);
+                handle.Free();
+                return new HWTexture(name, ID);
             }
-            IntPtr ptr = Marshal.AllocHGlobal(data.Length * sizeof(float));
-            Marshal.Copy(data, 0, ptr, data.Length);
-            return ptr;
+            {
+                bool existsA = File.Exists(SourceR);
+                bool existsB = File.Exists(SourceG);
+                bool existsC = File.Exists(SourceB);
+                if (!existsA && SourceR != "")
+                    new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + SourceR + "\".");
+                if (!existsB && SourceG != "")
+                    new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + SourceG + "\".");
+                if (!existsC && SourceB != "")
+                    new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + SourceB + "\".");
+                if (!existsA && !existsB && !existsC)
+                    return null;
+
+                bool flipA = false, flipB = false, flipC = false;
+                if (existsA && System.IO.Path.GetExtension(SourceR).ToLower() != ".tga")
+                {
+                    new Problem(ProblemTypes.WARNING, "The texture \"" + SourceR + "\" is not in TGA-Format.");
+                    flipA = true;
+                }
+                if (existsB && System.IO.Path.GetExtension(SourceG).ToLower() != ".tga")
+                {
+                    new Problem(ProblemTypes.WARNING, "The texture \"" + SourceG + "\" is not in TGA-Format.");
+                    flipB = true;
+                }
+                if (existsC && System.IO.Path.GetExtension(SourceB).ToLower() != ".tga")
+                {
+                    new Problem(ProblemTypes.WARNING, "The texture \"" + SourceB + "\" is not in TGA-Format.");
+                    flipC = true;
+                }
+
+                int widthA, heightA;
+                byte[] aData = GetData(existsA, SourceR, flipA, out widthA, out heightA);
+
+                int widthB, heightB;
+                byte[] bData = GetData(existsB, SourceG, flipB, out widthB, out heightB);
+
+                int widthC, heightC;
+                byte[] cData = GetData(existsC, SourceB, flipC, out widthC, out heightC);
+
+
+                if ((widthA != widthB && heightA != heightB && existsA && existsB) ||
+                    (widthA != widthC && heightA != heightC && existsA && existsC) ||
+                    (widthB != widthC && heightB != heightC && existsB && existsC))
+                {
+                    new Problem(ProblemTypes.ERROR, "The dimensions of the multi textures do not match.");
+                    return null;
+                }
+
+                int width = existsA ? widthA : (existsB ? widthB : widthC);
+                int height = existsA ? heightA : (existsB ? heightB : heightC);
+
+                int size = width * height * 4;
+                bool useA = aData.Length > 0;
+                bool useB = bData.Length > 0;
+                bool useC = cData.Length > 0;
+                float[] data = new float[size];
+                for (int i = 0; i < size; i += 4)
+                {
+                    float valA, valB, valC;
+                    if (useAlpha)
+                    {
+                        valA = useA ? aData[i + 3] / 255f : DefaultR;
+                        valB = useB ? bData[i + 3] / 255f : DefaultG;
+                        valC = useC ? cData[i + 3] / 255f : DefaultB;
+                    }
+                    else
+                    {
+                        valA = useA ? (aData[i + 0] + aData[i + 1] + aData[i + 2] + aData[i + 3]) / (4 * 255f) : DefaultR;
+                        valB = useB ? (bData[i + 0] + bData[i + 1] + bData[i + 2] + bData[i + 3]) / (4 * 255f) : DefaultG;
+                        valC = useC ? (cData[i + 0] + cData[i + 1] + cData[i + 2] + cData[i + 3]) / (4 * 255f) : DefaultB;
+                    }
+
+                    data[i + 0] = invertR ? (1f - valA) : valA;
+                    data[i + 1] = invertG ? (1f - valB) : valB;
+                    data[i + 2] = invertB ? (1f - valC) : valC;
+                    data[i + 3] = DefaultA;
+                }
+                GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+                IntPtr ptr = handle.AddrOfPinnedObject();
+                int ID = RawLoadImage(width, height, PixelFormat.Rgba, PixelType.Float, ptr, false, false);
+                handle.Free();
+                return new HWTexture(name, ID);
+            }
         }
 
         private static byte[] GetData(bool exists, string path, bool flip, out int width, out int height)
@@ -135,9 +196,7 @@ namespace DAEnerys
         {
             int texID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, texID);
-
-            //GL.TexImage2D(TextureTarget.Texture2D, 0, (OpenTK.Graphics.OpenGL.PixelInternalFormat)IL.GetInteger(IntName.ImageFormat), IL.GetInteger(IntName.ImageWidth), IL.GetInteger(IntName.ImageHeight), 0, (OpenTK.Graphics.OpenGL.PixelFormat)IL.GetInteger(IntName.ImageFormat), PixelType.UnsignedByte, IL.GetData());
-
+            
             //Anisotropic filtering
             float maxAniso;
             GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);

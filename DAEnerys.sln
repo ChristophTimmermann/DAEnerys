@@ -46,9 +46,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UseGlobalSettings = True
-		BuildVersion_StartDate = 2000/1/1
-		BuildVersion_AssemblyInfoFilename = DAEnerys\Properties\AssemblyInfo.cs
 		BuildVersion_DetectChanges = False
+		BuildVersion_AssemblyInfoFilename = DAEnerys\Properties\AssemblyInfo.cs
+		BuildVersion_StartDate = 2000/1/1
+		BuildVersion_UseGlobalSettings = True
 	EndGlobalSection
 EndGlobal

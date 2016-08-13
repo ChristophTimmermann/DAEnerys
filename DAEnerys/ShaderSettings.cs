@@ -1,23 +1,12 @@
-﻿using OpenTK;
-using ShaderManifest;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
+using ShaderManifest;
 
 namespace DAEnerys
 {
     public partial class ShaderSettings : Form
     {
-
         private static HashSet<string> ConfigOptions = new HashSet<string>();
 
         internal static void AddConfigOption(string name)
@@ -32,9 +21,24 @@ namespace DAEnerys
 
         public void Init()
         {
+            numExecTime.Value = (decimal)Renderer.Exec;
+            numExecDelta.Value = (decimal)Renderer.ExecDelta;
+            numSimTime.Value = (decimal)Renderer.Sim;
+            numSimDelta.Value = (decimal)Renderer.SimDelta;
+
+            numSOBAlpha.Value = (decimal)Renderer.SOBAlpha;
+            numSOBCloak.Value = (decimal)Renderer.SOBCloak;
+            numSOBClip.Value = (decimal)Renderer.SOBClip;
+            
             numPaintCurve.Value = (decimal)Renderer.PaintCurve;
             numPaintScale.Value = (decimal)Renderer.PaintScale;
             numPaintOffset.Value = (decimal)Renderer.PaintOffset;
+
+            numClipDist.Minimum = (decimal)Renderer.MinClipDistance;
+            numClipDist.Maximum = (decimal)Renderer.MaxClipDistance;
+            numClipDist.Value = (decimal)Renderer.ClipDistance;
+            numClipDist.Increment = (numClipDist.Maximum - numClipDist.Minimum) / 100;
+
             cbxConfigOptions.Items.Clear();
             foreach (string opt in ConfigOptions)
                 cbxConfigOptions.Items.Add(opt);
@@ -250,6 +254,30 @@ namespace DAEnerys
 
             Renderer.UpdateView();
             Program.GLControl.Invalidate();
+        }
+
+        private void chkHACKPain_CheckedChanged(object sender, EventArgs e)
+        {
+            Renderer.HACK_AllIFeelIsPain = chkHACKPain.Checked;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void btnEnterHyperspace_Click(object sender, EventArgs e)
+        {
+            //Manifest.Globals.Set("clipPlane", new float[] { 0, 0, -1, HWScene.CollisionMeshes[0].Mesh.Max.Z });
+            //HyperspaceEffect.Effect.MinBounds = HWScene.Min;
+            //HyperspaceEffect.Effect.MaxBounds = HWScene.Max;
+            //HyperspaceEffect.Effect.Restart();
+        }
+
+        private void btnExitHyperspace_Click(object sender, EventArgs e)
+        {
+            //Manifest.Globals.Set("clipPlane", new float[] { 0, 0, 1, HWScene.CollisionMeshes[0].Mesh.Max.Z });
+            //HyperspaceEffect.Effect.MinBounds = -HWScene.Min;
+            //HyperspaceEffect.Effect.MaxBounds = -HWScene.Max;
+            //HyperspaceEffect.Effect.Restart();
         }
     }
 }

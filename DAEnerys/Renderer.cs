@@ -48,13 +48,16 @@ namespace DAEnerys
         public static float Sim { get; set; } = 0f;
         public static float SimDelta { get; set; } = 0f;
 
+        public static float MinClipDistance { get; set; } = -1000f;
+        public static float MaxClipDistance { get; set; } = 1000f;
         public static float ClipDistance { get; set; } = 1000f;
 
-        public static float SOBAlpha { get; set; } = 1f;
+        public static float SOBAlpha { get; set; } = 0.3f;
         public static float SOBCloak { get; set; } = 0f;
         public static float SOBClip { get; set; } = 0f;
 
-        public static bool HACK_SpecialSauce {
+        public static bool HACK_SpecialSauce
+        {
             get
             {
                 return Config.Get("HACK_SpecialSauce") == 1;
@@ -99,6 +102,18 @@ namespace DAEnerys
         {
             get { return badgeTexture; }
             set { badgeTexture = value; }
+        }
+
+        private static HWTexture blackTexture = null;
+        public static HWTexture BlackTexture
+        {
+            get
+            {
+                if (blackTexture == null)
+                    blackTexture = HWTexture.MakeTexture("default_black", "", 0, 0, 0, 1);
+                return blackTexture;
+            }
+            private set { }
         }
 
 
@@ -272,12 +287,15 @@ namespace DAEnerys
                 {
                     if (mesh.Visible)
                     {
-                        mesh_verts.AddRange(mesh.Vertices);
-                        mesh_normals.AddRange(mesh.Normals);
-                        mesh_tangents.AddRange(mesh.Tangents);
-                        mesh_bitangents.AddRange(mesh.BiTangents);
-                        mesh_uv0.AddRange(mesh.TextureCoords);
-                        mesh_uv1.AddRange(mesh.TextureCoordsUV1);
+                        foreach (HWVertex vtx in mesh.Vertices)
+                        {
+                            mesh_verts.Add(vtx.Position);
+                            mesh_normals.Add(vtx.Normal);
+                            mesh_tangents.Add(vtx.Tangent);
+                            mesh_bitangents.Add(vtx.Binormal);
+                            mesh_uv0.Add(vtx.UV0);
+                            mesh_uv1.Add(vtx.UV1);
+                        }
                         mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount).ToList());
 
                         mesh_vertcount += mesh.VertexCount;
@@ -406,6 +424,10 @@ namespace DAEnerys
 
             foreach (HWMesh mesh in HWScene.Meshes)
             {
+                if (mesh.Name == "SQUARE_MESH")
+                {
+
+                }
                 if (mesh.Visible && !mesh.Translucent)
                     indiceat += DrawHWMesh(mesh, indiceat);
             }
@@ -478,6 +500,12 @@ namespace DAEnerys
             GetError("Pre DrawHWMesh");
             //return mesh.IndiceCount;
             HWTexture texture = null;
+
+            if (mesh.Name == "SQUARE_MESH")
+            {
+
+            }
+
             if (mesh.Material != null)
             {
                 texture = mesh.Material.DiffuseTexture;
@@ -489,7 +517,8 @@ namespace DAEnerys
             GetError("OpenTK Rendering");
 
             CurrentMeshShader = mesh.Material.Shader;
-            if (CurrentMeshShader == "default") CurrentMeshShader = "matte";
+            if (CurrentMeshShader == "default")
+                CurrentMeshShader = "matte";
             Surface surface = Manifest.UseSurface(CurrentMeshShader.ToLower());
 
             //load vertex buffers
@@ -522,10 +551,13 @@ namespace DAEnerys
             surface.SetVar("inLightCore[0]", GetCoreLights());
             Manifest.Globals.Set("gammaScale", new float[] { 0.8625f, 0.8625f, 0.8625f, 0.95f });
             Manifest.Globals.Set("bgAddLight", new float[] { 0f, 1f, 0f, 1f });
-            Manifest.Globals.Set("bgEnvParams", new float[] { 1f, 1f, 1f, 1f });
+            Manifest.Globals.Set("bgEnvParams", new float[] { 1f, 0f, 0f, 0f }); // Env Scale, unused x 3
             Manifest.Globals.Set("bgShipExps", new float[] { 1f, 1f, 1f, 1f });
 
-            Manifest.Globals.Set("clipPlane", new float[] { 0f, 0f, 1f, ClipDistance });   // SOB_USECLIP
+            //float[] clipPlane = Manifest.Globals.Get("clipPlane");
+            //ClipDistance = HyperspaceEffect.Effect.Position.Z;
+            //Manifest.Globals.Set("clipPlane", new float[] { clipPlane[0], clipPlane[1], clipPlane[2], ClipDistance });   // SOB_USECLIP
+            Manifest.Globals.Set("clipPlane", new float[] { 0, 0, -1, ClipDistance });   // SOB_USECLIP
             Manifest.Globals.Set("sobParams", new float[] { SOBAlpha, SOBCloak, SOBClip, 0f });      // Alpha, Cloak, Clip, unused
             Manifest.Globals.Set("lifeParams", new float[] { 1f, 1f, 0f, 0f });     // Life Alpha, Death Ratio, unused x2
 
@@ -601,17 +633,16 @@ namespace DAEnerys
                 {
                     AttachTexture(surface, "SOB_diffuseOn", mesh.Material.DiffuseTexture);
                     AttachTexture(surface, "SOB_glowOn", mesh.Material.GlowTexture);
-                    AttachTexture(surface, "SOB_diffuseOff", mesh.Material.ThrusterOffDiffuseTexture);
-                    AttachTexture(surface, "SOB_glowOff", mesh.Material.ThrusterOffGlowTexture);
+                    AttachTexture(surface, "SOB_diffuseOff", mesh.Material.DiffuseOffTexture);
+                    AttachTexture(surface, "SOB_glowOff", mesh.Material.GlowOffTexture);
                     surface.SetVar("SOB_engine", new float[] { ThrusterInterpolation, 0, 0, 0 });
                 }
                 else
                 {
                     AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
-                    AttachTexture(surface, "SOB_glow", mesh.Material.ReflGlowSpecTexture);
+                    AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
                     if (SOB_GLOWRGB(CurrentMeshShader))
                     {
-                        AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
                         AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
                     }
                 }
@@ -624,8 +655,8 @@ namespace DAEnerys
             }
 
             AttachTexture(surface, "SOB_normal", mesh.Material.NormalTexture);
-            AttachTexture(surface, "inTexEnv0", null);
-            AttachTexture(surface, "inTexEnv1", null);
+            AttachTexture(surface, "inTexEnv0", BlackTexture);
+            AttachTexture(surface, "inTexEnv1", BlackTexture);
 
             if (SOB_TEAM(CurrentMeshShader))
             {
@@ -637,13 +668,13 @@ namespace DAEnerys
                 surface.SetVar("SOB_uieffect", new float[] { 0f, 0f, 0f, 0f });
 
             //surface.SetVar("inSurfDiff", new float[] { 0f, 0.95f, 0f, 0f });
-            //if (CurrentMeshShader == "thruster")
-            //    surface.SetVar("SOB_surfGlow", new float[] { 1.1f, 0.5f, 0f, 0f });
-            //else
-                surface.SetVar("SOB_surfGlow", new float[] { 1f, 0.5f, 0f, 0f });
+            if (CurrentMeshShader == "thruster")
+                surface.SetVar("SOB_surfGlow", new float[] { 1.1f, 0.5f, 0f, 0f });
+            else
+                surface.SetVar("SOB_surfGlow", new float[] { 1.5f, 0.5f, 0f, 0f });
             //surface.SetVar("inSurfSpec", new float[] { 1f, 1.5f, 0f, 0f });
             //surface.SetVar("inSurfGloss", new float[] { 0.1f, 75f, 30f, 0f });
-            //surface.SetVar("inSurfRefl", new float[] { 0f, 0f, 0f, 0f });
+            surface.SetVar("inSurfRefl", new float[] { 0f, 0f, 0f, 0f });
             //surface.SetVar("inSurfFren", new float[] { 3.8f, 1.1f, 2.1f, 0f });
             //surface.SetVar("inSurfPaint", new float[] { 1.8f, -115f, -25f, 0.88f });
             //surface.SetVar("inSurfPeak", new float[] { 0.008f, 0.0035f, 0.5f, 2f });
@@ -655,7 +686,7 @@ namespace DAEnerys
 
             if (SOB_BAYLIGHT(CurrentMeshShader))
                 surface.SetVar("inBayExps", new float[] { 1f, 0.99f, 0.95f, 0.94f });
-            
+
 
             // Draw
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
@@ -865,8 +896,8 @@ namespace DAEnerys
 
         private static float[] GetCoreLights()
         {
-            Vector3 keyLightVec = Program.Camera.Position; // new Vector3(600f, -400f, -300f);
-            Vector3 fillLightVec = new Vector3(-300f, 700f, 500f);
+            Vector3 keyLightVec = new Vector3(1000f, 300f, -100f);
+            Vector3 fillLightVec = new Vector3(-300, -100, 1000);
 
             float[] corelights = new float[7 * 4];
 
@@ -882,13 +913,13 @@ namespace DAEnerys
 
             // Key light diffuse color
             corelights[4 * 2 + 0] = 1f;
-            corelights[4 * 2 + 1] = 1f;
-            corelights[4 * 2 + 2] = 1f;
+            corelights[4 * 2 + 1] = 0.3f;
+            corelights[4 * 2 + 2] = 0.1f;
 
             // Key light specular color
-            corelights[4 * 3 + 0] = 0.2f;
-            corelights[4 * 3 + 1] = 0.2f;
-            corelights[4 * 3 + 2] = 0.2f;
+            corelights[4 * 3 + 0] = 0.5f;
+            corelights[4 * 3 + 1] = 0f;
+            corelights[4 * 3 + 2] = 0f;
 
             // Fill light vector
             corelights[4 * 4 + 0] = fillLightVec.X;
@@ -896,14 +927,14 @@ namespace DAEnerys
             corelights[4 * 4 + 2] = fillLightVec.Z;
 
             // Fill light diffuse color
-            corelights[4 * 5 + 0] = 1f;
-            corelights[4 * 5 + 1] = 1f;
+            corelights[4 * 5 + 0] = 0.3f;
+            corelights[4 * 5 + 1] = 0.1f;
             corelights[4 * 5 + 2] = 1f;
 
             // Fill light specular color
-            corelights[4 * 6 + 0] = 0.2f;
-            corelights[4 * 6 + 1] = 0.2f;
-            corelights[4 * 6 + 2] = 0.2f;
+            corelights[4 * 6 + 0] = 0f;
+            corelights[4 * 6 + 1] = 0f;
+            corelights[4 * 6 + 2] = 0.5f;
 
             return corelights;
         }

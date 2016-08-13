@@ -34,6 +34,7 @@
             this.labelPaintCurve = new System.Windows.Forms.Label();
             this.numPaintCurve = new System.Windows.Forms.NumericUpDown();
             this.gbxPaintStyle = new System.Windows.Forms.GroupBox();
+            this.chkHACKPain = new System.Windows.Forms.CheckBox();
             this.numPaintOffset = new System.Windows.Forms.NumericUpDown();
             this.labelPaintOffset = new System.Windows.Forms.Label();
             this.numPaintScale = new System.Windows.Forms.NumericUpDown();
@@ -58,9 +59,10 @@
             this.lblSOBCloak = new System.Windows.Forms.Label();
             this.numSOBAlpha = new System.Windows.Forms.NumericUpDown();
             this.lblSOBAlpha = new System.Windows.Forms.Label();
-            this.chkHACKPain = new System.Windows.Forms.CheckBox();
             this.numClipDist = new System.Windows.Forms.NumericUpDown();
             this.lblClipDist = new System.Windows.Forms.Label();
+            this.btnEnterHyperspace = new System.Windows.Forms.Button();
+            this.btnExitHyperspace = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numPaintCurve)).BeginInit();
             this.gbxPaintStyle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPaintOffset)).BeginInit();
@@ -139,6 +141,17 @@
             this.gbxPaintStyle.TabIndex = 22;
             this.gbxPaintStyle.TabStop = false;
             this.gbxPaintStyle.Text = "Paint Style";
+            // 
+            // chkHACKPain
+            // 
+            this.chkHACKPain.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkHACKPain.Location = new System.Drawing.Point(16, 96);
+            this.chkHACKPain.Name = "chkHACKPain";
+            this.chkHACKPain.Size = new System.Drawing.Size(208, 17);
+            this.chkHACKPain.TabIndex = 26;
+            this.chkHACKPain.Text = "All I Feel is Pain";
+            this.chkHACKPain.UseVisualStyleBackColor = true;
+            this.chkHACKPain.CheckedChanged += new System.EventHandler(this.chkHACKPain_CheckedChanged);
             // 
             // numPaintOffset
             // 
@@ -427,7 +440,7 @@
             65536});
             this.numSOBCloak.Location = new System.Drawing.Point(152, 48);
             this.numSOBCloak.Maximum = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
             0});
@@ -478,16 +491,6 @@
             this.lblSOBAlpha.TabIndex = 20;
             this.lblSOBAlpha.Text = "SOB Alpha";
             // 
-            // chkHACKPain
-            // 
-            this.chkHACKPain.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkHACKPain.Location = new System.Drawing.Point(16, 96);
-            this.chkHACKPain.Name = "chkHACKPain";
-            this.chkHACKPain.Size = new System.Drawing.Size(208, 17);
-            this.chkHACKPain.TabIndex = 26;
-            this.chkHACKPain.Text = "All I Feel is Pain";
-            this.chkHACKPain.UseVisualStyleBackColor = true;
-            // 
             // numClipDist
             // 
             this.numClipDist.DecimalPlaces = 2;
@@ -526,6 +529,26 @@
             this.lblClipDist.TabIndex = 26;
             this.lblClipDist.Text = "Clip Distance";
             // 
+            // btnEnterHyperspace
+            // 
+            this.btnEnterHyperspace.Location = new System.Drawing.Point(304, 48);
+            this.btnEnterHyperspace.Name = "btnEnterHyperspace";
+            this.btnEnterHyperspace.Size = new System.Drawing.Size(104, 24);
+            this.btnEnterHyperspace.TabIndex = 28;
+            this.btnEnterHyperspace.Text = "Enter Hyperspace";
+            this.btnEnterHyperspace.UseVisualStyleBackColor = true;
+            this.btnEnterHyperspace.Click += new System.EventHandler(this.btnEnterHyperspace_Click);
+            // 
+            // btnExitHyperspace
+            // 
+            this.btnExitHyperspace.Location = new System.Drawing.Point(304, 80);
+            this.btnExitHyperspace.Name = "btnExitHyperspace";
+            this.btnExitHyperspace.Size = new System.Drawing.Size(104, 24);
+            this.btnExitHyperspace.TabIndex = 29;
+            this.btnExitHyperspace.Text = "Exit Hyperspace";
+            this.btnExitHyperspace.UseVisualStyleBackColor = true;
+            this.btnExitHyperspace.Click += new System.EventHandler(this.btnExitHyperspace_Click);
+            // 
             // ShaderSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -533,6 +556,8 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(688, 486);
+            this.Controls.Add(this.btnExitHyperspace);
+            this.Controls.Add(this.btnEnterHyperspace);
             this.Controls.Add(this.numClipDist);
             this.Controls.Add(this.lblClipDist);
             this.Controls.Add(this.gbxSOBParams);
@@ -602,5 +627,7 @@
         private System.Windows.Forms.CheckBox chkHACKPain;
         private System.Windows.Forms.NumericUpDown numClipDist;
         private System.Windows.Forms.Label lblClipDist;
+        private System.Windows.Forms.Button btnEnterHyperspace;
+        private System.Windows.Forms.Button btnExitHyperspace;
     }
 }

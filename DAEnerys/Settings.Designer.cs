@@ -119,7 +119,7 @@
             // 
             this.numericFarClip.DecimalPlaces = 4;
             this.numericFarClip.Increment = new decimal(new int[] {
-            1000,
+            100,
             0,
             0,
             0});

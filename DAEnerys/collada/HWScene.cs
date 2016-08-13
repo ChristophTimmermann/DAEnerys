@@ -40,7 +40,7 @@ namespace DAEnerys
         {
             #region Import
             AssimpContext importer = new AssimpContext();
-            NormalSmoothingAngleConfig config = new NormalSmoothingAngleConfig(66.0f);
+            NormalSmoothingAngleConfig config = new NormalSmoothingAngleConfig(80.0f);
             importer.SetConfig(config);
 
             LogStream logStream = new LogStream(delegate (string msg, string userData)
@@ -54,8 +54,8 @@ namespace DAEnerys
 
             //Blender Homeworld Toolkit fix
             string fixedColladaPath = FixCollada(fileName);
-
-            Collada = importer.ImportFile(fixedColladaPath, PostProcessPreset.TargetRealTimeFast);
+            
+            Collada = importer.ImportFile(fixedColladaPath, PostProcessSteps.Triangulate | PostProcessSteps.GenerateUVCoords | PostProcessSteps.JoinIdenticalVertices | PostProcessSteps.SortByPrimitiveType);
             importer.Dispose();
 
             //Manual parsing
@@ -294,6 +294,9 @@ namespace DAEnerys
             HWNavLight.IconSize = farthest / 55;
             Program.Camera.ClipDistance = farClip;
             Program.Camera.NearClipDistance = nearClip;
+            Renderer.MinClipDistance = Min.Z * 1.2f;
+            Renderer.MaxClipDistance = Max.Z * 1.2f;
+            Renderer.ClipDistance = Renderer.MaxClipDistance;
 
             //Update line vertices
             foreach (HWMarker marker in HWScene.Markers)
@@ -334,10 +337,10 @@ namespace DAEnerys
             {
                 if(material.Shader == "thruster")
                 {
-                    if (material.ThrusterOffDiffuseTexture == null)
+                    if (material.DiffuseOffTexture == null)
                         new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no DIFX texture.");
 
-                    if (material.ThrusterOffGlowTexture == null)
+                    if (material.GlowOffTexture == null)
                         new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no GLOX texture.");
 
                     if (material.DiffuseTexture == null)

@@ -87,7 +87,7 @@ namespace DAEnerys
             Program.Camera.Update();
 
             int visibleNavLights = 0;
-            foreach(HWNavLight navLight in HWScene.NavLights)
+            foreach (HWNavLight navLight in HWScene.NavLights)
             {
                 if (navLight.Visible)
                     visibleNavLights++;
@@ -95,9 +95,20 @@ namespace DAEnerys
                 navLight.Update();
             }
 
+            int visibleEffects = 0;
+            foreach (EditorEffect effect in EditorScene.effects)
+            {
+                if (effect.IsRunning)
+                    visibleEffects++;
+
+                effect.Update();
+            }
+
             //Only update render if it is needed
-            if(visibleNavLights > 0)
+            if (visibleNavLights > 0 || visibleEffects > 0)
                 Program.GLControl.Invalidate();
+            if (visibleEffects > 0)
+                Renderer.UpdateMeshData();
         }
 
         public void glControl_Render(object sender, PaintEventArgs e)
@@ -186,7 +197,7 @@ namespace DAEnerys
             checkNavLightFlagHighEnd.Checked = false;
             selectedNavLight = null;
 
-            foreach(HWDockSegment segment in HWScene.DockSegments)
+            foreach (HWDockSegment segment in HWScene.DockSegments)
             {
                 segment.Icosphere.Color = new Vector3(1, 0, 0);
             }
@@ -227,7 +238,7 @@ namespace DAEnerys
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             DialogResult result = openColladaDialog.ShowDialog();
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 Clear();
                 HWScene.LoadCollada(openColladaDialog.FileName);
@@ -242,7 +253,7 @@ namespace DAEnerys
         private void buttonSave_Click(object sender, EventArgs e)
         {
             DialogResult result = saveColladaDialog.ShowDialog();
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 HWScene.SaveCollada(saveColladaDialog.FileName);
             }
@@ -583,7 +594,7 @@ namespace DAEnerys
                 foreach (HWNavLight navLight in HWScene.NavLights)
                 {
                     if (navLight.Visible)
-                        if(navLight.RenderIcosphere != null)
+                        if (navLight.RenderIcosphere != null)
                             navLight.RenderIcosphere.Visible = true;
                 }
             }
@@ -616,7 +627,7 @@ namespace DAEnerys
             Program.GLControl.Invalidate();
         }
 
-        
+
         public void glControl_MouseDown(object sender, MouseEventArgs e)
         {
             Program.Camera.MouseDown(e);
@@ -643,9 +654,9 @@ namespace DAEnerys
             bool newValue = e.Node.Checked;
 
             //TODO: Optimize
-            foreach(HWJoint joint in HWScene.Joints)
+            foreach (HWJoint joint in HWScene.Joints)
             {
-                if(joint.TreeNode == e.Node)
+                if (joint.TreeNode == e.Node)
                 {
                     joint.EditorJoint.Visible = newValue;
                     break;
@@ -886,14 +897,14 @@ namespace DAEnerys
             //Has to be done with a loop, because of multiple collision meshes with the same name
             foreach (HWCollisionMesh collisionMesh in HWScene.CollisionMeshes)
             {
-                if(collisionMesh.CollisionMeshListItemIndex == listCollisionMeshes.SelectedIndex)
+                if (collisionMesh.CollisionMeshListItemIndex == listCollisionMeshes.SelectedIndex)
                 {
                     selectedCollisionMesh = collisionMesh;
                     break;
                 }
             }
 
-            if(selectedCollisionMesh == null)
+            if (selectedCollisionMesh == null)
             {
                 return;
             }
@@ -1094,7 +1105,7 @@ namespace DAEnerys
 
             if (problem.Type == ProblemTypes.ERROR)
                 row.Cells[0].Style.ForeColor = Color.Red;
-            else if(problem.Type == ProblemTypes.WARNING)
+            else if (problem.Type == ProblemTypes.WARNING)
                 row.Cells[0].Style.ForeColor = Color.DarkOrange;
         }
 
@@ -1102,8 +1113,8 @@ namespace DAEnerys
         {
             bool errors = false;
             bool warnings = false;
-            
-            foreach(Problem problem in Problem.Problems)
+
+            foreach (Problem problem in Problem.Problems)
             {
                 if (problem.Type == ProblemTypes.ERROR)
                     errors = true;
@@ -1111,7 +1122,7 @@ namespace DAEnerys
                     warnings = true;
             }
 
-            if(warnings)
+            if (warnings)
             {
                 buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagYellow;
                 problemsVisible = true;
@@ -1122,8 +1133,8 @@ namespace DAEnerys
                 buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagRed;
                 problemsVisible = true;
             }
-            
-            if(!warnings && !errors)
+
+            if (!warnings && !errors)
             {
                 problemsVisible = false;
                 buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagWhite;
