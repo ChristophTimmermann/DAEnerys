@@ -897,7 +897,7 @@ namespace DAEnerys
         private static float[] GetCoreLights()
         {
             Vector3 keyLightVec = new Vector3(1000f, 300f, -100f);
-            Vector3 fillLightVec = new Vector3(-300, -100, 1000);
+            Vector3 fillLightVec = new Vector3(-300f, -100f, 1000f);
 
             float[] corelights = new float[7 * 4];
 
@@ -913,13 +913,13 @@ namespace DAEnerys
 
             // Key light diffuse color
             corelights[4 * 2 + 0] = 1f;
-            corelights[4 * 2 + 1] = 0.3f;
-            corelights[4 * 2 + 2] = 0.1f;
+            corelights[4 * 2 + 1] = 1f;
+            corelights[4 * 2 + 2] = 1f;
 
             // Key light specular color
-            corelights[4 * 3 + 0] = 0.5f;
-            corelights[4 * 3 + 1] = 0f;
-            corelights[4 * 3 + 2] = 0f;
+            corelights[4 * 3 + 0] = 0.2f;
+            corelights[4 * 3 + 1] = 0.2f;
+            corelights[4 * 3 + 2] = 0.2f;
 
             // Fill light vector
             corelights[4 * 4 + 0] = fillLightVec.X;
@@ -927,14 +927,14 @@ namespace DAEnerys
             corelights[4 * 4 + 2] = fillLightVec.Z;
 
             // Fill light diffuse color
-            corelights[4 * 5 + 0] = 0.3f;
-            corelights[4 * 5 + 1] = 0.1f;
+            corelights[4 * 5 + 0] = 1f;
+            corelights[4 * 5 + 1] = 1f;
             corelights[4 * 5 + 2] = 1f;
 
             // Fill light specular color
-            corelights[4 * 6 + 0] = 0f;
-            corelights[4 * 6 + 1] = 0f;
-            corelights[4 * 6 + 2] = 0.5f;
+            corelights[4 * 6 + 0] = 0.2f;
+            corelights[4 * 6 + 1] = 0.2f;
+            corelights[4 * 6 + 2] = 0.2f;
 
             return corelights;
         }

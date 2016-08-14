@@ -1160,5 +1160,10 @@ namespace DAEnerys
             Program.ShaderSettings.Visible = true;
             Program.ShaderSettings.Init();
         }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            Dump.ADuiePyle();
+        }
     }
 }

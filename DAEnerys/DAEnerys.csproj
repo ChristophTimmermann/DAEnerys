@@ -86,6 +86,7 @@
     <Compile Include="collada\HWEngineMeshLOD.cs" />
     <Compile Include="collada\HWShipMeshLOD.cs" />
     <Compile Include="data\HWNavLightStyle.cs" />
+    <Compile Include="Dump.cs" />
     <Compile Include="editor\EditorEffect.cs" />
     <Compile Include="editor\EditorIcon.cs" />
     <Compile Include="editor\EditorIcosphere.cs" />
@@ -218,7 +219,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
+      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />
