@@ -1163,7 +1163,7 @@ namespace DAEnerys
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            Dump.ADuiePyle();
+            //Dump.ADuiePyle();
         }
     }
 }

@@ -120,15 +120,17 @@ namespace DAEnerys
                 vtx.Color = Colors[i];
                 vtx.UV0 = TextureCoords[i];
                 vtx.UV1 = TextureCoordsUV1[i];
-                // vtx.Tangent = Tangents[i];
-                // vtx.Binormal = BiTangents[i];
+                if (Tangents.Length > 0)
+                    vtx.Tangent = Tangents[i];
+                if (BiTangents.Length > 0)
+                    vtx.Binormal = BiTangents[i];
                 vtxs.Add(vtx);
             }
 
             Vertices = vtxs.ToArray();
             Indices = GetIndices();
 
-            RecalculateNormals();
+            //RecalculateNormals();
             RecalculateTangents();
 
             HWScene.Meshes.Add(this);

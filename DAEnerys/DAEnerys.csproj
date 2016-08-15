@@ -97,8 +97,6 @@
     <Compile Include="editor\EditorMaterial.cs" />
     <Compile Include="editor\EditorLine.cs" />
     <Compile Include="data\HWData.cs" />
-    <Compile Include="effects\HyperspaceEffect.cs" />
-    <Compile Include="effects\TimeArray.cs" />
     <Compile Include="forms\CustomGLControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -112,6 +110,18 @@
     </Compile>
     <Compile Include="Log.cs" />
     <Compile Include="Problem.cs" />
+    <Compile Include="ShaderManifest\Compiler.cs" />
+    <Compile Include="ShaderManifest\Interpreter.cs" />
+    <Compile Include="ShaderManifest\ManifestConfig.cs" />
+    <Compile Include="ShaderManifest\Exceptions.cs" />
+    <Compile Include="ShaderManifest\Log.cs" />
+    <Compile Include="ShaderManifest\Manifest.cs" />
+    <Compile Include="ShaderManifest\Node.cs" />
+    <Compile Include="ShaderManifest\ShaderProgram.cs" />
+    <Compile Include="ShaderManifest\Surface.cs" />
+    <Compile Include="ShaderManifest\SurfaceLayer.cs" />
+    <Compile Include="ShaderManifest\Utils.cs" />
+    <Compile Include="ShaderManifest\Variables.cs" />
     <Compile Include="ShaderSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -209,12 +219,6 @@
     <None Include="resources\FlagThread-NotFlagged,NotHot,NotSelected_10391_16x.png" />
     <None Include="resources\FlagThread-Flagged,NotHot,NotSelected_10392_16x.png" />
     <None Include="resources\flagThread-Yellow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\shadermanifest\ShaderManifest\ShaderManifest.csproj">
-      <Project>{888c4401-a89a-4979-ab54-af0db00197cd}</Project>
-      <Name>ShaderManifest</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -106,7 +106,7 @@
             // 
             this.numPaintCurve.DecimalPlaces = 2;
             this.numPaintCurve.Increment = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
             65536});
@@ -157,7 +157,7 @@
             // 
             this.numPaintOffset.DecimalPlaces = 2;
             this.numPaintOffset.Increment = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
             65536});
@@ -190,7 +190,7 @@
             // 
             this.numPaintScale.DecimalPlaces = 2;
             this.numPaintScale.Increment = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
             65536});
@@ -283,6 +283,7 @@
             // numSimDelta
             // 
             this.numSimDelta.DecimalPlaces = 2;
+            this.numSimDelta.Enabled = false;
             this.numSimDelta.Increment = new decimal(new int[] {
             1,
             0,
@@ -302,6 +303,7 @@
             // lblSimDelta
             // 
             this.lblSimDelta.AutoSize = true;
+            this.lblSimDelta.Enabled = false;
             this.lblSimDelta.Location = new System.Drawing.Point(15, 98);
             this.lblSimDelta.Name = "lblSimDelta";
             this.lblSimDelta.Size = new System.Drawing.Size(52, 13);
@@ -339,6 +341,7 @@
             // numExecDelta
             // 
             this.numExecDelta.DecimalPlaces = 2;
+            this.numExecDelta.Enabled = false;
             this.numExecDelta.Increment = new decimal(new int[] {
             1,
             0,
@@ -358,6 +361,7 @@
             // lblExecDelta
             // 
             this.lblExecDelta.AutoSize = true;
+            this.lblExecDelta.Enabled = false;
             this.lblExecDelta.Location = new System.Drawing.Point(15, 50);
             this.lblExecDelta.Name = "lblExecDelta";
             this.lblExecDelta.Size = new System.Drawing.Size(59, 13);
@@ -367,6 +371,7 @@
             // numExecTime
             // 
             this.numExecTime.DecimalPlaces = 2;
+            this.numExecTime.Enabled = false;
             this.numExecTime.Location = new System.Drawing.Point(152, 24);
             this.numExecTime.Maximum = new decimal(new int[] {
             18000,
@@ -381,6 +386,7 @@
             // lblExecTime
             // 
             this.lblExecTime.AutoSize = true;
+            this.lblExecTime.Enabled = false;
             this.lblExecTime.Location = new System.Drawing.Point(15, 26);
             this.lblExecTime.Name = "lblExecTime";
             this.lblExecTime.Size = new System.Drawing.Size(57, 13);
@@ -440,7 +446,7 @@
             65536});
             this.numSOBCloak.Location = new System.Drawing.Point(152, 48);
             this.numSOBCloak.Maximum = new decimal(new int[] {
-            5,
+            2,
             0,
             0,
             0});
@@ -537,6 +543,7 @@
             this.btnEnterHyperspace.TabIndex = 28;
             this.btnEnterHyperspace.Text = "Enter Hyperspace";
             this.btnEnterHyperspace.UseVisualStyleBackColor = true;
+            this.btnEnterHyperspace.Visible = false;
             this.btnEnterHyperspace.Click += new System.EventHandler(this.btnEnterHyperspace_Click);
             // 
             // btnExitHyperspace
@@ -547,6 +554,7 @@
             this.btnExitHyperspace.TabIndex = 29;
             this.btnExitHyperspace.Text = "Exit Hyperspace";
             this.btnExitHyperspace.UseVisualStyleBackColor = true;
+            this.btnExitHyperspace.Visible = false;
             this.btnExitHyperspace.Click += new System.EventHandler(this.btnExitHyperspace_Click);
             // 
             // ShaderSettings

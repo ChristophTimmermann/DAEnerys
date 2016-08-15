@@ -68,9 +68,9 @@ namespace DAEnerys
             if (SourceR == "" && SourceG == "" && SourceB == "")
             {
                 float[] data = new float[1 * 1 * 4];
-                data[0] = DefaultR;
-                data[1] = DefaultG;
-                data[2] = DefaultB;
+                data[0] = invertR ? (1f - DefaultR) : DefaultR;
+                data[1] = invertG ? (1f - DefaultG) : DefaultG;
+                data[2] = invertB ? (1f - DefaultB) : DefaultB;
                 data[3] = DefaultA;
                 GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
                 IntPtr ptr = handle.AddrOfPinnedObject();
@@ -159,6 +159,7 @@ namespace DAEnerys
                 IntPtr ptr = handle.AddrOfPinnedObject();
                 int ID = RawLoadImage(width, height, PixelFormat.Rgba, PixelType.Float, ptr, false, false);
                 handle.Free();
+                data = null;
                 return new HWTexture(name, ID);
             }
         }

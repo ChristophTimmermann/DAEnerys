@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using ShaderManifest;
+using NewShaderManifest;
 
 namespace DAEnerys
 {
     public partial class ShaderSettings : Form
     {
-        private static HashSet<string> ConfigOptions = new HashSet<string>();
-
-        internal static void AddConfigOption(string name)
-        {
-            ConfigOptions.Add(name);
-        }
-
         public ShaderSettings()
         {
             InitializeComponent();
@@ -29,7 +22,7 @@ namespace DAEnerys
             numSOBAlpha.Value = (decimal)Renderer.SOBAlpha;
             numSOBCloak.Value = (decimal)Renderer.SOBCloak;
             numSOBClip.Value = (decimal)Renderer.SOBClip;
-            
+
             numPaintCurve.Value = (decimal)Renderer.PaintCurve;
             numPaintScale.Value = (decimal)Renderer.PaintScale;
             numPaintOffset.Value = (decimal)Renderer.PaintOffset;
@@ -40,7 +33,7 @@ namespace DAEnerys
             numClipDist.Increment = (numClipDist.Maximum - numClipDist.Minimum) / 100;
 
             cbxConfigOptions.Items.Clear();
-            foreach (string opt in ConfigOptions)
+            foreach (string opt in ManifestConfig.Options.Keys)
                 cbxConfigOptions.Items.Add(opt);
         }
 
@@ -176,15 +169,15 @@ namespace DAEnerys
             if ((string)cbxConfigOptions.SelectedItem == "CFG_Patch_AltHyper")
                 numConfigOption.Maximum = 1;
             else
-                numConfigOption.Maximum = Config.GetMax((string)cbxConfigOptions.SelectedItem);
-            numConfigOption.Value = Config.Get((string)cbxConfigOptions.SelectedItem);
+                numConfigOption.Maximum = ManifestConfig.Options[(string)cbxConfigOptions.SelectedItem].MaxValue;
+            numConfigOption.Value = ManifestConfig.Options[(string)cbxConfigOptions.SelectedItem].Value;
             ignore = false;
         }
 
         private void numConfigOption_ValueChanged(object sender, EventArgs e)
         {
             if (!ignore)
-                Config.Set((string)cbxConfigOptions.SelectedItem, (int)numConfigOption.Value);
+                ManifestConfig.Options[(string)cbxConfigOptions.SelectedItem].Value = (int)numConfigOption.Value;
         }
 
         private void btnReloadShaders_Click(object sender, EventArgs e)
