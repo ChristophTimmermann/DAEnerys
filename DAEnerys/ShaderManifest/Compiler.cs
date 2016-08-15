@@ -8,7 +8,7 @@ namespace NewShaderManifest
 {
     class Compiler
     {
-        private static string DECIMAL = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator; // ugly, dirty, stupid HACK
+        private static string DECIMAL = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator; // ugly, dirty, stupid HACK
         private static Regex rgxIdentifier = new Regex("[a-zA-Z_][a-zA-Z_0-9]*");
         private static Regex rgxNumber = new Regex(@"^[+-]?([0-9]*" + DECIMAL + @"?[0-9]+|[0-9]+" + DECIMAL + "?[0-9]*)([eE][+-]?[0-9]+)?$");
 
