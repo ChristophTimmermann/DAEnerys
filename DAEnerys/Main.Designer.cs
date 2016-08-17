@@ -41,6 +41,7 @@ namespace DAEnerys
             this.buttonHotkeys = new System.Windows.Forms.ToolStripButton();
             this.buttonAbout = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.openColladaDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveColladaDialog = new System.Windows.Forms.SaveFileDialog();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -197,7 +198,8 @@ namespace DAEnerys
             this.buttonSettings,
             this.buttonHotkeys,
             this.buttonAbout,
-            this.toolStripButton1});
+            this.toolStripButton1,
+            this.toolStripButton2});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(1212, 25);
@@ -254,6 +256,16 @@ namespace DAEnerys
             this.toolStripButton1.Text = "toolStripButton1";
             this.toolStripButton1.Visible = false;
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton2.Text = "Shader Settings";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
             // openColladaDialog
             // 
@@ -410,6 +422,118 @@ namespace DAEnerys
             this.tabMaterials.TabIndex = 6;
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
+            // 
+            // groupThrusterStrength
+            // 
+            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
+            this.groupThrusterStrength.Location = new System.Drawing.Point(8, 592);
+            this.groupThrusterStrength.Name = "groupThrusterStrength";
+            this.groupThrusterStrength.Size = new System.Drawing.Size(228, 46);
+            this.groupThrusterStrength.TabIndex = 2;
+            this.groupThrusterStrength.TabStop = false;
+            this.groupThrusterStrength.Text = "Thruster strength";
+            // 
+            // trackBarThrusterStrength
+            // 
+            this.trackBarThrusterStrength.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarThrusterStrength.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
+            this.trackBarThrusterStrength.Maximum = 100;
+            this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
+            this.trackBarThrusterStrength.Size = new System.Drawing.Size(222, 27);
+            this.trackBarThrusterStrength.TabIndex = 0;
+            this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarThrusterStrength.Value = 100;
+            this.trackBarThrusterStrength.Scroll += new System.EventHandler(this.trackBarThrusterStrength_Scroll);
+            // 
+            // groupMaterialTextures
+            // 
+            this.groupMaterialTextures.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupMaterialTextures.Controls.Add(this.listMaterialTextures);
+            this.groupMaterialTextures.Location = new System.Drawing.Point(8, 384);
+            this.groupMaterialTextures.Name = "groupMaterialTextures";
+            this.groupMaterialTextures.Size = new System.Drawing.Size(228, 200);
+            this.groupMaterialTextures.TabIndex = 1;
+            this.groupMaterialTextures.TabStop = false;
+            this.groupMaterialTextures.Text = "Textures";
+            // 
+            // listMaterialTextures
+            // 
+            this.listMaterialTextures.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listMaterialTextures.FormattingEnabled = true;
+            this.listMaterialTextures.Location = new System.Drawing.Point(3, 16);
+            this.listMaterialTextures.Name = "listMaterialTextures";
+            this.listMaterialTextures.Size = new System.Drawing.Size(222, 181);
+            this.listMaterialTextures.TabIndex = 0;
+            // 
+            // panelMaterialsList
+            // 
+            /*this.panelMaterialsList.AutoSize = true;
+            this.panelMaterialsList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panelMaterialsList.Controls.Add(this.label3);
+            this.panelMaterialsList.Controls.Add(this.comboMaterialFormat);
+            this.panelMaterialsList.Controls.Add(this.boxMaterialShader);
+            this.panelMaterialsList.Controls.Add(this.listMaterials);
+            this.panelMaterialsList.Controls.Add(this.label2);
+            this.panelMaterialsList.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelMaterialsList.Location = new System.Drawing.Point(3, 3);
+            this.panelMaterialsList.Name = "panelMaterialsList";
+            this.panelMaterialsList.Size = new System.Drawing.Size(236, 375);
+            this.panelMaterialsList.TabIndex = 0;*/
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(5, 354);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(42, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Format:";
+            // 
+            // comboMaterialFormat
+            // 
+            this.comboMaterialFormat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboMaterialFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
+            this.comboMaterialFormat.Enabled = false;
+            this.comboMaterialFormat.FormattingEnabled = true;
+            this.comboMaterialFormat.Location = new System.Drawing.Point(55, 351);
+            this.comboMaterialFormat.Name = "comboMaterialFormat";
+            this.comboMaterialFormat.Size = new System.Drawing.Size(178, 21);
+            this.comboMaterialFormat.TabIndex = 12;
+            // 
+            // boxMaterialShader
+            // 
+            this.boxMaterialShader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.boxMaterialShader.Location = new System.Drawing.Point(55, 325);
+            this.boxMaterialShader.Name = "boxMaterialShader";
+            this.boxMaterialShader.ReadOnly = true;
+            this.boxMaterialShader.Size = new System.Drawing.Size(178, 20);
+            this.boxMaterialShader.TabIndex = 11;
+            // 
+            // listMaterials
+            // 
+            this.listMaterials.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listMaterials.FormattingEnabled = true;
+            this.listMaterials.Location = new System.Drawing.Point(3, 3);
+            this.listMaterials.Name = "listMaterials";
+            this.listMaterials.Size = new System.Drawing.Size(230, 316);
+            this.listMaterials.TabIndex = 10;
+            this.listMaterials.SelectedIndexChanged += new System.EventHandler(this.listMaterials_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(5, 328);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(44, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Shader:";
             // 
             // tabCollisionMeshes
             // 
@@ -1676,6 +1800,7 @@ namespace DAEnerys
         private System.Windows.Forms.TextBox boxMaterialShader;
         private System.Windows.Forms.ListBox listMaterials;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
     }
 }
 

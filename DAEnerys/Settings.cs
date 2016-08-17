@@ -100,6 +100,7 @@ namespace DAEnerys
         private void numericClipDistance_ValueChanged(object sender, EventArgs e)
         {
             Program.Camera.ClipDistance = (float)numericFarClip.Value;
+            numericNearClip.Maximum = numericFarClip.Value - (decimal)0.0001;
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();
@@ -109,6 +110,7 @@ namespace DAEnerys
         private void numericNearClip_ValueChanged(object sender, EventArgs e)
         {
             Program.Camera.NearClipDistance = (float)numericNearClip.Value;
+            numericFarClip.Minimum = numericNearClip.Value + (decimal)0.0001;
 
             Renderer.UpdateMeshData();
             Renderer.UpdateView();

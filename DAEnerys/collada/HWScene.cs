@@ -40,7 +40,7 @@ namespace DAEnerys
         {
             #region Import
             AssimpContext importer = new AssimpContext();
-            NormalSmoothingAngleConfig config = new NormalSmoothingAngleConfig(66.0f);
+            NormalSmoothingAngleConfig config = new NormalSmoothingAngleConfig(80.0f);
             importer.SetConfig(config);
 
             LogStream logStream = new LogStream(delegate (string msg, string userData)
@@ -55,6 +55,10 @@ namespace DAEnerys
             //Blender Homeworld Toolkit fix
             string fixedColladaPath = FixCollada(fileName);
 
+            //Collada = importer.ImportFile(fixedColladaPath, PostProcessSteps.Triangulate | PostProcessSteps.GenerateUVCoords | PostProcessSteps.JoinIdenticalVertices | PostProcessSteps.SortByPrimitiveType);
+            //Collada = importer.ImportFile(fixedColladaPath,
+            //    ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) &
+            //    (PostProcessPreset.TargetRealTimeFast));
             Collada = importer.ImportFile(fixedColladaPath, PostProcessPreset.TargetRealTimeFast);
             importer.Dispose();
 
@@ -294,6 +298,9 @@ namespace DAEnerys
             HWNavLight.IconSize = farthest / 55;
             Program.Camera.ClipDistance = farClip;
             Program.Camera.NearClipDistance = nearClip;
+            Renderer.MinClipDistance = Min.Z * 1.2f;
+            Renderer.MaxClipDistance = Max.Z * 1.2f;
+            Renderer.ClipDistance = Renderer.MaxClipDistance;
 
             //Update line vertices
             foreach (HWMarker marker in HWScene.Markers)
@@ -307,6 +314,7 @@ namespace DAEnerys
 
         private static void CheckForProblems()
         {
+            #region Dockpaths
             List<string> dockpathNames = new List<string>();
 
             //Check if there are multiple dockpaths with the same name
@@ -325,6 +333,25 @@ namespace DAEnerys
                 {
                     if (!dockpathNames.Contains(link))
                         new Problem(ProblemTypes.WARNING, "The dockpath \"" + dockpath.Name + "\" is linked to the non-existent dockpath \"" + link + "\".");
+                }
+            }
+            #endregion
+
+            foreach(HWMaterial material in Materials)
+            {
+                if(material.Shader == "thruster")
+                {
+                    if (material.DiffuseOffTexture == null)
+                        new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no DIFX texture.");
+
+                    if (material.GlowOffTexture == null)
+                        new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no GLOX texture.");
+
+                    if (material.DiffuseTexture == null)
+                        new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no DIFF texture.");
+
+                    if (material.GlowTexture == null)
+                        new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no GLOW texture.");
                 }
             }
         }

@@ -12,6 +12,7 @@ namespace DAEnerys
         public static List<EditorMesh> meshes = new List<EditorMesh>();
         public static List<EditorMaterial> materials = new List<EditorMaterial>();
         public static List<EditorIcon> icons = new List<EditorIcon>();
+        public static List<EditorEffect> effects = new List<EditorEffect>();
 
         public static void Init()
         {
@@ -34,6 +35,9 @@ namespace DAEnerys
 
             Scene icon = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/icon.obj"), PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorIcon.Mesh = icon.Meshes[0];
+
+            Scene effect = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/square.obj"), PostProcessPreset.TargetRealTimeMaximumQuality);
+            EditorEffect.Mesh = effect.Meshes[0];
 
             importer.Dispose();
             logStream.Detach();

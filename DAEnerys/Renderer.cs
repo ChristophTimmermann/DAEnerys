@@ -1,18 +1,24 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using OpenTK.Graphics.OpenGL;
 using System.Drawing;
-using System.Linq;
-using Assimp;
-using OpenTK.Graphics;
 using System.IO;
+using System.Linq;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+using Assimp;
+using NewShaderManifest;
 
 namespace DAEnerys
 {
+
     static class Renderer
     {
-        static Shader shader;
+        static string ShaderDirectory = Directory.GetCurrentDirectory() + "\\shaders\\hwrm\\";
+        static Dictionary<string, Shader> mesh_shaders = new Dictionary<string, Shader>();
+        static Shader editor_shader;
+        static Shader CurrentShader;
+        static string CurrentMeshShader;
 
         public static HWTexture DefaultTexture;
 
@@ -33,19 +39,85 @@ namespace DAEnerys
             }
         }
 
-        private static Color teamColor = Color.FromArgb(255, 92, 139, 170);
-        public static Color TeamColor
+        public static Color TeamColor { get; set; } = Color.FromArgb(255, 92, 139, 170);
+        public static Color StripeColor { get; set; } = Color.FromArgb(255, 204, 204, 204);
+
+        // VARIABLE SHADER INPUTS
+        public static float Exec { get; set; } = 0f;
+        public static float ExecDelta { get; set; } = 0f;
+        public static float Sim { get; set; } = 0f;
+        public static float SimDelta { get; set; } = 0f;
+
+        public static float MinClipDistance { get; set; } = -1000f;
+        public static float MaxClipDistance { get; set; } = 1000f;
+        public static float ClipDistance { get; set; } = 1000f;
+
+        public static float SOBAlpha { get; set; } = 0.3f;
+        public static float SOBCloak { get; set; } = 0f;
+        public static float SOBClip { get; set; } = 0f;
+
+        public static bool HACK_SpecialSauce
         {
-            get { return teamColor; }
-            set { teamColor = value; }
+            get
+            {
+                return ManifestConfig.Options["HACK_SpecialSauce"].Value == 1;
+            }
+            set
+            {
+                ManifestConfig.Options["HACK_SpecialSauce"].Value = value ? 1 : 0;
+            }
         }
 
-        private static Color stripeColor = Color.FromArgb(255, 204, 204, 204);
-        public static Color StripeColor
+        public static bool HACK_AllIFeelIsPain
         {
-            get { return stripeColor; }
-            set { stripeColor = value; }
+            get
+            {
+                return ManifestConfig.Options["HACK_AllIFeelIsPain"].Value == 1;
+            }
+            set
+            {
+                ManifestConfig.Options["HACK_AllIFeelIsPain"].Value = value ? 1 : 0;
+            }
         }
+
+        public static bool CFG_Patch_AltHyper
+        {
+            get
+            {
+                return ManifestConfig.Options["CFG_Patch_AltHyper"].Value == 1;
+            }
+            set
+            {
+                ManifestConfig.Options["CFG_Patch_AltHyper"].Value = value ? 1 : 0;
+            }
+        }
+
+        public static float PaintCurve { get; set; } = 0f;
+        public static float PaintScale { get; set; } = 2f;
+        public static float PaintOffset { get; set; } = 0f;
+
+
+        private static HWTexture badgeTexture = null;
+        public static HWTexture BadgeTexture
+        {
+            get { return badgeTexture; }
+            set { badgeTexture = value; }
+        }
+
+        private static HWTexture blackTexture = null;
+        public static HWTexture BlackTexture
+        {
+            get
+            {
+                if (blackTexture == null)
+                    blackTexture = HWTexture.MakeTexture("default_black", "", 0, 0, 0, 1);
+                return blackTexture;
+            }
+            private set { }
+        }
+
+
+
 
         public static bool DrawVisualizationsInFront = true;
         public static bool DisableLighting = false;
@@ -71,18 +143,25 @@ namespace DAEnerys
         }
 
         public static float ThrusterInterpolation = 1;
-        
-        static int ibo_elements;
 
-        static Vector3[] vertdata;
-        static Vector3[] coldata;
-        static Vector2[] texcoorddata;
-        static int[] indicedata;
-        static Vector3[] normdata;
-        //static Vector3[] tangentdata;
-        //static Vector3[] bitangentdata;
+        static int editor_pos_buffer = 0;
+        static int editor_col_buffer = 0;
+        static int editor_uv0_buffer = 0;
+        static int editor_ind_buffer = 0;
+        static int mesh_ind_buffer = 0;
+        static int mesh_pos_buffer = 0;
+        static int mesh_nrm_buffer = 0;
+        static int mesh_tan_buffer = 0;
+        static int mesh_bin_buffer = 0;
+        static int mesh_uv0_buffer = 0;
+        static int mesh_uv1_buffer = 0;
 
         public static Matrix4 View = Matrix4.Identity;
+
+        private static void AddMeshShader(string name, Shader shader)
+        {
+            mesh_shaders.Add(name, shader);
+        }
 
         public static void Init()
         {
@@ -92,154 +171,202 @@ namespace DAEnerys
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             GL.Enable(EnableCap.CullFace);
-
             GL.AlphaFunc(AlphaFunction.Greater, 0.05f);
 
             GL.LineWidth(2);
 
-            GL.GenBuffers(1, out ibo_elements);
+            // Gen buffers
+            GL.GenBuffers(1, out editor_pos_buffer);
+            GL.GenBuffers(1, out editor_uv0_buffer);
+            GL.GenBuffers(1, out editor_col_buffer);
+            GL.GenBuffers(1, out editor_ind_buffer);
+            GL.GenBuffers(1, out mesh_pos_buffer);
+            GL.GenBuffers(1, out mesh_nrm_buffer);
+            GL.GenBuffers(1, out mesh_tan_buffer);
+            GL.GenBuffers(1, out mesh_bin_buffer);
+            GL.GenBuffers(1, out mesh_uv0_buffer);
+            GL.GenBuffers(1, out mesh_uv1_buffer);
+            GL.GenBuffers(1, out mesh_ind_buffer);
 
             // Load shaders from file
-            shader = new Shader("vs_lit.glsl", "fs_lit.glsl", true);
+            Manifest.Init(HWData.DataPaths);
+            
+            editor_shader = new Shader("editor.vs", "editor.fs", true);
+
+            //AddMeshShader("ship", new Shader("ship.prog", "ship.vert", "ship.frag", true));
+            //AddMeshShader("thruster", new Shader("thruster.prog", "ship.vert", "ship.frag", true));
+            //AddMeshShader("badge", new Shader("badge.prog", "ship.vert", "ship.frag", true));
+            //AddMeshShader("bay", new Shader("bay.prog", "ship.vert", "ship.frag", true));
+            //UseMeshShader("ship");
 
             //AmbientLight.Enabled = false;
             DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
+            BadgeTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/k76.tga"), true);
 
             if (EnableVSync)
                 GraphicsContext.CurrentContext.SwapInterval = 1;
             else
                 GraphicsContext.CurrentContext.SwapInterval = 0;
 
-            GL.UseProgram(shader.ProgramID);
-            shader.EnableVertexAttribArrays();
-
             //new Light(new Vector4(3, 0, 0, 1), new Vector3(1, 0, 0), 0.01f);
+        }
+
+        private static void UseMeshShader(string name)
+        {
+            CurrentMeshShader = name;
+            if (CurrentShader == null) return;
+            CurrentShader.DisableVertexAttribArrays();
+            if (name == null) return;
+            CurrentShader = mesh_shaders[CurrentMeshShader];
+            GL.UseProgram(CurrentShader.ProgramID);
+            CurrentShader.EnableVertexAttribArrays();
         }
 
         public static void ReloadShaders()
         {
-            shader.DisableVertexAttribArrays();
-            shader.Reload();
-            GL.UseProgram(shader.ProgramID);
-            shader.EnableVertexAttribArrays();
+            editor_shader.Reload();
+            foreach (Shader s in mesh_shaders.Values)
+                s.Reload();
+        }
+
+        private static void BindBufferData(int buffer, Vector2[] data, bool normalized)
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, buffer);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(data.Length * Vector2.SizeInBytes), data, BufferUsageHint.StaticDraw);
+            GetError("BindBufferData");
+        }
+
+        private static void BindBufferData(int buffer, Vector3[] data, bool normalized)
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, buffer);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(data.Length * Vector3.SizeInBytes), data, BufferUsageHint.StaticDraw);
+            GetError("BindBufferData");
+        }
+
+        private static void BindBufferData(int buffer, Vector4[] data, bool normalized)
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, buffer);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(data.Length * Vector4.SizeInBytes), data, BufferUsageHint.StaticDraw);
+            GetError("BindBufferData");
         }
 
         public static void UpdateMeshData()
         {
-            List<Vector3> verts = new List<Vector3>();
-            List<int> inds = new List<int>();
-            List<Vector3> colors = new List<Vector3>();
-            List<Vector2> texcoords = new List<Vector2>();
-            List<Vector3> normals = new List<Vector3>();
-            //List<Vector3> tangents = new List<Vector3>();
-            //List<Vector3> bitangents = new List<Vector3>();
-
-            // Assemble vertex and indice data for all volumes
-            int vertcount = 0;
-
-            //SORT SHIP MESHES
-            List<HWMesh> hwMeshList = new List<HWMesh>();
-            foreach (HWMesh mesh in HWScene.Meshes)
             {
-                if (!mesh.Translucent)
-                    hwMeshList.Add(mesh);
-            }
-            foreach (HWMesh mesh in HWScene.Meshes)
-            {
-                if (mesh.Translucent)
-                    hwMeshList.Add(mesh);
-            }
-            HWScene.Meshes = hwMeshList;
+                // Assemble mesh data
+                List<Vector3> mesh_verts = new List<Vector3>();
+                List<Vector3> mesh_normals = new List<Vector3>();
+                List<Vector3> mesh_tangents = new List<Vector3>();
+                List<Vector3> mesh_bitangents = new List<Vector3>();
+                List<Vector2> mesh_uv0 = new List<Vector2>();
+                List<Vector2> mesh_uv1 = new List<Vector2>();
+                List<int> mesh_inds = new List<int>();
 
-            foreach (HWMesh mesh in HWScene.Meshes)
-            {
-                if (mesh.Visible)
+                // Assemble vertex and indice data for all volumes
+                int mesh_vertcount = 0;
+
+                //SORT SHIP MESHES
+                List<HWMesh> hwMeshList = new List<HWMesh>();
+                foreach (HWMesh mesh in HWScene.Meshes)
                 {
-                    verts.AddRange(mesh.Vertices);
-                    inds.AddRange(mesh.GetIndices(vertcount).ToList());
-                    colors.AddRange(mesh.Colors);
-                    texcoords.AddRange(mesh.TextureCoords);
-                    normals.AddRange(mesh.Normals);
-                    //tangents.AddRange(mesh.Tangents);
-                    //bitangents.AddRange(mesh.BiTangents);
-                    vertcount += mesh.VertexCount;
+                    if (!mesh.Translucent)
+                        hwMeshList.Add(mesh);
                 }
-            }
-
-            //SORT EDITOR MESHES
-            List<EditorMesh> newList = new List<EditorMesh>();
-            foreach(EditorMesh mesh in EditorScene.meshes)
-            {
-                if (mesh.NeverDrawInFront && !mesh.DrawAboveShip)
-                    newList.Add(mesh);
-            }
-            foreach (EditorMesh mesh in EditorScene.meshes)
-            {
-                if (!mesh.NeverDrawInFront && mesh.DrawAboveShip)
-                    newList.Add(mesh);
-            }
-            foreach (EditorMesh mesh in EditorScene.meshes)
-            {
-                if (!mesh.NeverDrawInFront && !mesh.DrawAboveShip)
-                    newList.Add(mesh);
-            }
-            EditorScene.meshes = newList;
-
-            foreach (EditorMesh mesh in EditorScene.meshes)
-            {
-                if (mesh.Visible)
+                foreach (HWMesh mesh in HWScene.Meshes)
                 {
-                    verts.AddRange(mesh.Vertices);
-                    inds.AddRange(mesh.GetIndices(vertcount).ToList());
-                    colors.AddRange(mesh.Colors);
-                    texcoords.AddRange(mesh.TextureCoords);
-                    normals.AddRange(mesh.Normals);
-                    //ADD TANGENTS
-                    vertcount += mesh.VertexCount;
+                    if (mesh.Translucent)
+                        hwMeshList.Add(mesh);
                 }
+                HWScene.Meshes = hwMeshList;
+
+                foreach (HWMesh mesh in HWScene.Meshes)
+                {
+                    if (mesh.Visible)
+                    {
+                        foreach (HWVertex vtx in mesh.Vertices)
+                        {
+                            mesh_verts.Add(vtx.Position);
+                            mesh_normals.Add(vtx.Normal);
+                            mesh_tangents.Add(vtx.Tangent);
+                            mesh_bitangents.Add(vtx.Binormal);
+                            mesh_uv0.Add(vtx.UV0);
+                            mesh_uv1.Add(vtx.UV1);
+                        }
+                        mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount).ToList());
+
+                        mesh_vertcount += mesh.VertexCount;
+                    }
+                }
+
+                Vector3[] vertdata = mesh_verts.ToArray();
+                Vector3[] normdata = mesh_normals.ToArray();
+                Vector3[] tangentdata = mesh_tangents.ToArray();
+                Vector3[] bitangentdata = mesh_bitangents.ToArray();
+                Vector2[] uv0data = mesh_uv0.ToArray();
+                Vector2[] uv1data = mesh_uv1.ToArray();
+                int[] indicedata = mesh_inds.ToArray();
+
+                BindBufferData(mesh_pos_buffer, vertdata, false);
+                BindBufferData(mesh_nrm_buffer, normdata, false);
+                BindBufferData(mesh_tan_buffer, tangentdata, false);
+                BindBufferData(mesh_bin_buffer, bitangentdata, false);
+                BindBufferData(mesh_uv0_buffer, uv0data, false);
+
+                BindBufferData(mesh_uv1_buffer, uv1data, false); // for SOB_BADGE shader
+
+                GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
+                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(int)), indicedata, BufferUsageHint.StaticDraw);
+                GetError("Mesh Buffering");
             }
 
-            vertdata = verts.ToArray();
-            indicedata = inds.ToArray();
-            coldata = colors.ToArray();
-            texcoorddata = texcoords.ToArray();
-            normdata = normals.ToArray();
-            //tangentdata = tangents.ToArray();
-            //bitangentdata = bitangents.ToArray();
-
-            Vector4[] normdataVec4 = new Vector4[normdata.Length];
-            for(int i = 0; i < normdata.Length; i++)
             {
-                normdataVec4[i] = new Vector4(normdata[i], 0);
+                //SORT EDITOR MESHES
+                List<EditorMesh> newList = new List<EditorMesh>();
+                foreach (EditorMesh mesh in EditorScene.meshes)
+                    if (mesh.NeverDrawInFront && !mesh.DrawAboveShip)
+                        newList.Add(mesh);
+
+                foreach (EditorMesh mesh in EditorScene.meshes)
+                    if (!mesh.NeverDrawInFront && mesh.DrawAboveShip)
+                        newList.Add(mesh);
+
+                foreach (EditorMesh mesh in EditorScene.meshes)
+                    if (!mesh.NeverDrawInFront && !mesh.DrawAboveShip)
+                        newList.Add(mesh);
+
+                EditorScene.meshes = newList;
+
+                List<Vector3> editor_verts = new List<Vector3>();
+                List<Vector3> editor_colors = new List<Vector3>();
+                List<Vector2> editor_uv0 = new List<Vector2>();
+                List<int> editor_inds = new List<int>();
+                int editor_vertcount = 0;
+
+                foreach (EditorMesh mesh in EditorScene.meshes)
+                {
+                    if (mesh.Visible)
+                    {
+                        editor_verts.AddRange(mesh.Vertices);
+                        editor_uv0.AddRange(mesh.TextureCoords);
+                        editor_colors.AddRange(mesh.Colors);
+                        editor_inds.AddRange(mesh.GetIndices(editor_vertcount).ToList());
+                        editor_vertcount += mesh.VertexCount;
+                    }
+                }
+                Vector3[] vertdata = editor_verts.ToArray();
+                Vector2[] uv0data = editor_uv0.ToArray();
+                Vector3[] coldata = editor_colors.ToArray();
+                int[] indicedata = editor_inds.ToArray();
+
+                BindBufferData(editor_pos_buffer, vertdata, false);
+                BindBufferData(editor_uv0_buffer, uv0data, false);
+                BindBufferData(editor_col_buffer, coldata, false);
+
+                // Buffer index data
+                GL.BindBuffer(BufferTarget.ElementArrayBuffer, editor_ind_buffer);
+                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(int)), indicedata, BufferUsageHint.StaticDraw);
+                GetError("Editor Buffering");
             }
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vert"));
-            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(vertdata.Length * Vector3.SizeInBytes), vertdata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shader.GetAttribute("vert"), 3, VertexAttribPointerType.Float, false, 0, 0);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertTexCoord"));
-            GL.BufferData<Vector2>(BufferTarget.ArrayBuffer, (IntPtr)(texcoorddata.Length * Vector2.SizeInBytes), texcoorddata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shader.GetAttribute("vertTexCoord"), 2, VertexAttribPointerType.Float, true, 0, 0);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertColor"));
-            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(coldata.Length * Vector3.SizeInBytes), coldata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shader.GetAttribute("vertColor"), 3, VertexAttribPointerType.Float, false, 0, 0);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertNormal"));
-            GL.BufferData<Vector4>(BufferTarget.ArrayBuffer, (IntPtr)(normdataVec4.Length * Vector4.SizeInBytes), normdataVec4, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shader.GetAttribute("vertNormal"), 4, VertexAttribPointerType.Float, true, 0, 0);
-
-            /*GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertTangent"));
-            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(tangentdata.Length * Vector3.SizeInBytes), tangentdata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shader.GetAttribute("vertTangent"), 3, VertexAttribPointerType.Float, true, 0, 0);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("vertBiTangent"));
-            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer, (IntPtr)(bitangentdata.Length * Vector3.SizeInBytes), bitangentdata, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shader.GetAttribute("vertBiTangent"), 3, VertexAttribPointerType.Float, true, 0, 0);*/
-
-            // Buffer index data
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(int)), indicedata, BufferUsageHint.StaticDraw);
 
             GetError("OpenTK Buffering");
         }
@@ -287,45 +414,18 @@ namespace DAEnerys
         public static void Render()
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            
-            //These uniforms are the same for every mesh
-            GL.Uniform1(shader.GetUniform("thrusterInterpolation"), ThrusterInterpolation); //Send thruster interpolation value
-
-            if(DisableLighting)
-                GL.Uniform1(shader.GetUniform("disableLighting"), 1);
-            else
-                GL.Uniform1(shader.GetUniform("disableLighting"), 0);
-
-            Vector3 tColor = new Vector3(teamColor.R, teamColor.G, teamColor.B);
-            Vector3 sColor = new Vector3(stripeColor.R, stripeColor.G, stripeColor.B);
-            GL.Uniform3(shader.GetUniform("teamColor"), ref tColor);
-            GL.Uniform3(shader.GetUniform("stripeColor"), ref sColor);
-
-            GL.Uniform3(shader.GetUniform("cameraPosition"), ref Program.Camera.Position);
-            GL.UniformMatrix4(shader.GetUniform("camera"), false, ref View);
-
-            GL.Uniform1(shader.GetUniform("numLights"), Light.Lights.Count);
-            for (int i = 0; i < Light.Lights.Count; i++)
-            {
-                if(Light.Lights[i].Enabled)
-                    GL.Uniform1(shader.GetUniform("allLights[" + i + "]." + "enabled"), 1);
-                else
-                    GL.Uniform1(shader.GetUniform("allLights[" + i + "]." + "enabled"), 0);
-
-                GL.Uniform4(shader.GetUniform("allLights[" + i + "]." + "position"), ref Light.Lights[i].Position);
-                GL.Uniform3(shader.GetUniform("allLights[" + i + "]." + "intensities"), ref Light.Lights[i].Color);
-                GL.Uniform1(shader.GetUniform("allLights[" + i + "]." + "attenuation"), Light.Lights[i].Attenuation);
-                GL.Uniform1(shader.GetUniform("allLights[" + i + "]." + "ambientCoefficient"), Light.Lights[i].AmbientCoefficient);
-            }
 
             int indiceat = 0;
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+
             foreach (HWMesh mesh in HWScene.Meshes)
             {
-                if (mesh.Visible && !mesh.Translucent)
+                if (mesh.Name == "SQUARE_MESH")
                 {
-                    indiceat += DrawHWMesh(mesh, indiceat);
+
                 }
+                if (mesh.Visible && !mesh.Translucent)
+                    indiceat += DrawHWMesh(mesh, indiceat);
             }
 
             GL.Enable(EnableCap.Blend);
@@ -339,10 +439,20 @@ namespace DAEnerys
             }
             GL.DepthMask(true);
 
+            UseMeshShader(null);
+            CurrentShader = editor_shader;
+            GL.UseProgram(CurrentShader.ProgramID);
+            CurrentShader.LinkAttrib3(editor_pos_buffer, "inPos", false);
+            CurrentShader.LinkAttrib3(editor_col_buffer, "inColor", false);
+            CurrentShader.LinkAttrib2(editor_uv0_buffer, "inUV0", false);
+
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, editor_ind_buffer);
+
+            int editor_indiceat = 0;
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.Visible && mesh.NeverDrawInFront)
-                    indiceat += DrawEditorMesh(mesh, indiceat);
+                    editor_indiceat += DrawEditorMesh(mesh, editor_indiceat);
             }
 
             if (DrawVisualizationsInFront)
@@ -352,16 +462,14 @@ namespace DAEnerys
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.Visible && !mesh.NeverDrawInFront && mesh.DrawAboveShip)
-                    indiceat += DrawEditorMesh(mesh, indiceat);
+                    editor_indiceat += DrawEditorMesh(mesh, editor_indiceat);
             }
 
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.Visible && !mesh.NeverDrawInFront && !mesh.DrawAboveShip)
-                    indiceat += DrawEditorMesh(mesh, indiceat);
+                    editor_indiceat += DrawEditorMesh(mesh, editor_indiceat);
             }
-
-            //shader.DisableVertexAttribArrays();
 
             GL.Disable(EnableCap.AlphaTest);
             GL.Disable(EnableCap.Blend);
@@ -370,149 +478,224 @@ namespace DAEnerys
             Program.GLControl.SwapBuffers();
         }
 
+        private static void AttachTexture(Surface surface, string name, HWTexture tex)
+        {
+            if (tex != null)
+                surface.AssignTexture(name, tex.Path, tex.ID);
+            else
+                surface.AssignTexture(name, "", 0);
+        }
+
+        private static void AttachTexture(Surface surface, string name, string path, int id)
+        {
+            surface.AssignTexture(name, path, id);
+        }
+
         private static int DrawHWMesh(HWMesh mesh, int index)
         {
+            GetError("Pre DrawHWMesh");
+            //return mesh.IndiceCount;
             HWTexture texture = null;
+
+            if (mesh.Material.Shader == "bay")
+            {
+
+            }
+
             if (mesh.Material != null)
+            {
                 texture = mesh.Material.DiffuseTexture;
+                //if (mesh.Material.Shader == "default")
+                //    return mesh.IndiceCount;
+            }
+            else
+                return mesh.IndiceCount;
+            GetError("OpenTK Rendering");
 
-            if (texture != null)
+            CurrentMeshShader = mesh.Material.Shader;
+            if (CurrentMeshShader == "default")
+                CurrentMeshShader = "matte";
+            Surface surface = Manifest.UseSurface(CurrentMeshShader.ToLower());
+            surface.Use();
+
+            //load vertex buffers
+            surface.LinkAttrib(mesh_pos_buffer, "inPos", 3, false);
+            surface.LinkAttrib(mesh_nrm_buffer, "inNorm", 3, false);
+            surface.LinkAttrib(mesh_tan_buffer, "inTan", 3, false);
+            surface.LinkAttrib(mesh_bin_buffer, "inBiNorm", 3, false);
+            surface.LinkAttrib(mesh_uv0_buffer, "inUV0", 2, false);
+            surface.LinkAttrib(mesh_uv1_buffer, "inUV1", 2, false);
+            //surface.LinkAttrib(mesh_uv2_buffer, "inUV2", 2, false);
+
+            // load global vars
+            float[] shiplights;
+            int shiplight_count = GetShipLights(out shiplights);
+
+            Matrix4 model = mesh.ModelMatrix;
+            Matrix4 camera = Program.Camera.GetViewMatrix();
+            Matrix4 projection = Matrix4.Identity;
+            if (!Program.Camera.Orthographic)
+                projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+            else
+                projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+
+            Matrix4 mat_keylight = Matrix4.Identity;
+            Matrix4 mat_altlight = Matrix4.Identity;
+
+            surface["inLightShip[0]"] = shiplights;
+            surface["inLightCore[0]"] = GetCoreLights();
+            Manifest.Globals["timeTable"] = new float[] { Exec, ExecDelta, Sim, SimDelta };
+            Manifest.Globals["lightCounts"] = new int[] { shiplight_count, 7 };
+            Manifest.Globals["gammaScale"] = new float[] { 0.8625f, 0.8625f, 0.8625f, 0.95f };
+            //Manifest.Globals["bgAddLight"] = new float[] { 0f, 0f, 0f, 0f };
+            //Manifest.Globals["bgEnvParams"] = new float[] { 0f, 0f, 0f, 0f }; // Env Scale, unused x 3
+            //Manifest.Globals["bgShipExps"] = new float[] { 1f, 1f, 1f, 1f };
+
+            //float[] clipPlane = Manifest.Globals.Get("clipPlane");
+            //ClipDistance = HyperspaceEffect.Effect.Position.Z;
+            //Manifest.Globals["clipPlane", new float[] { clipPlane[0], clipPlane[1], clipPlane[2], ClipDistance });   // SOB_USECLIP
+            Manifest.Globals["clipPlane"] = new float[] { 0, 0, -1, ClipDistance };   // SOB_USECLIP
+            Manifest.Globals["sobParams"] = new float[] { SOBAlpha, SOBCloak, SOBClip, 0f };      // Alpha, Cloak, Clip, unused
+            //Manifest.Globals["lifeParams"] = new float[] { 1f, 1f, 0f, 0f };     // Life Alpha, Death Ratio, unused x2
+
+            //Manifest.Globals["fogColor"] = new float[] { 0f, 0f, 0f, 0f };       // R, G, B, A
+            //Manifest.Globals["fogWindow"] = new float[] { 10f, 0f, 0f, 0f };     // Near, Min, Far, Max
+
+            if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 1)
             {
-                if (mesh.Material.GlowTexture != null) //Check if the material has a GLOW-Map
-                {
-                    GL.ActiveTexture(TextureUnit.Texture1);
-                    GL.BindTexture(TextureTarget.Texture2D, mesh.Material.GlowTexture.ID);
-                    GL.Uniform1(shader.GetUniform("glowTex"), 1);
-                    GL.Uniform1(shader.GetUniform("emissive"), 1); //Tell shader to use a GLOW map
+                // Light windowing for shadows - Trans/Scale key, Trans/Scale fill
+                Manifest.Globals["shadowTrans"] = new float[] { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
+            }
 
-                    if (mesh.Material.Shader == "shipglow" || mesh.Material.Shader == "shipglow_ns") //If shader with discrete GLOW map
-                        GL.Uniform1(shader.GetUniform("discreteGlow"), 1); //Tell shader that it is a discrete GLOW map
-                    else
-                        GL.Uniform1(shader.GetUniform("discreteGlow"), 0); //Tell shader that it is not a discrete GLOW map
+            Manifest.Globals["modelview"] = model;
+            Manifest.Globals["camera"] = camera;
+            Manifest.Globals["projection"] = projection;
+
+            if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 1)
+                Manifest.Globals["keylight"] = mat_keylight;
+
+            if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 3)
+                Manifest.Globals["keylight"] = mat_altlight;
+
+            // Vertex Shader
+            if (SOB_RESOURCE(CurrentMeshShader))
+            {
+                surface["inFadeInfo"] = new float[] { 0f, 0f };
+                if (SOB_DUALINPUT(CurrentMeshShader))
+                {
+                    surface["inGridDiff"] = new float[] { 1f, 1f, 0f, 0f };
+                    surface["inGridGlow"] = new float[] { 1f, 1f, 0f, 0f };
+                    surface["inGridSpec"] = new float[] { 1f, 1f, 0f, 0f };
+                    surface["inGridNorm"] = new float[] { 1f, 1f, 0f, 0f };
+                }
+            }
+
+            // Fragment Shader
+            if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 1)
+            {
+                AttachTexture(surface, "inTexShadow", null);
+            }
+
+            if (SOB_BADGE(CurrentMeshShader))
+            {
+                AttachTexture(surface, "SOB_badge", BadgeTexture);
+            }
+
+            if (SOB_RESOURCE(CurrentMeshShader))
+            {
+                //AttachTexture(surface, "inTexProgress", mesh.Material.???);
+                AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
+                AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
+                //surface["inFadeWindow", new float[] { 0.1f, 0.1f, 0.9f });
+                //surface["inGlowStyle", new float[] { 1f, 0f, 0f, 0f });
+
+                if (SOB_DUALINPUT(CurrentMeshShader)) // SOB_DUALINPUT
+                {
+                    //surface["inMulDiff0", new float[] { 1f, 1f, 1f, 1f });
+                    //surface["inMulDiff1", new float[] { 1f, 1f, 1f, 1f });
+                    //surface["inMulGlow0", new float[] { 1f, 1f, 1f, 1f });
+                    //surface["inMulGlow1", new float[] { 1f, 1f, 1f, 1f });
+                    //surface["inMulSpec0", new float[] { 1f, 1f, 1f, 1f });
+                    //surface["inMulSpec1", new float[] { 1f, 1f, 1f, 1f });
+                }
+
+                if (SOB_DEBRIS(CurrentMeshShader))
+                {
+                    //uniform vec4 inFXInfo[2];
+                }
+            }
+            else
+            {
+                if (SOB_THRUSTERS(CurrentMeshShader))
+                {
+                    AttachTexture(surface, "SOB_diffuseOn", mesh.Material.DiffuseTexture);
+                    AttachTexture(surface, "SOB_glowOn", mesh.Material.GlowTexture);
+                    AttachTexture(surface, "SOB_diffuseOff", mesh.Material.DiffuseOffTexture);
+                    AttachTexture(surface, "SOB_glowOff", mesh.Material.GlowOffTexture);
+                    surface["SOB_engine"] = new float[] { ThrusterInterpolation, 0, 0, 0 };
                 }
                 else
                 {
-                    GL.Uniform1(shader.GetUniform("glowTex"), 0);
-                    GL.Uniform1(shader.GetUniform("emissive"), 0); //Tell shader to not use a GLOW map
-                }
-
-                if (mesh.Material.Shader == "thruster") //If the mesh material is a thruster
-                {
-                    if (mesh.Material.ThrusterOffDiffuseTexture != null)
+                    AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
+                    AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
+                    if (SOB_GLOWRGB(CurrentMeshShader))
                     {
-                        GL.ActiveTexture(TextureUnit.Texture2);
-                        GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffDiffuseTexture.ID);
-                        GL.Uniform1(shader.GetUniform("thrusterOffDiff"), 2);
+                        AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
                     }
-
-                    if (mesh.Material.ThrusterOffGlowTexture != null)
-                    {
-                        GL.ActiveTexture(TextureUnit.Texture3);
-                        GL.BindTexture(TextureTarget.Texture2D, mesh.Material.ThrusterOffGlowTexture.ID);
-                        GL.Uniform1(shader.GetUniform("thrusterOffGlow"), 3);
-                    }
-
-                    GL.Uniform1(shader.GetUniform("thruster"), 1); //Tell shader to interpolate between thruster textures
                 }
-                else
-                {
-                    GL.Uniform1(shader.GetUniform("thrusterOffDiff"), 0);
-                    GL.Uniform1(shader.GetUniform("thrusterOffGlow"), 0);
-                    GL.Uniform1(shader.GetUniform("thruster"), 0); //Tell shader not to interpolate between thruster textures
-                }
-
-                //--------------------------------------------------------- SPECULAR MAPPING -------------------------------------------------------------//
-                if (mesh.Material.SpecularTexture != null) //Check if the material has a SPEC-Map
-                {
-                    GL.ActiveTexture(TextureUnit.Texture4);
-                    GL.BindTexture(TextureTarget.Texture2D, mesh.Material.SpecularTexture.ID);
-                    GL.Uniform1(shader.GetUniform("specularTex"), 4);
-                    GL.Uniform1(shader.GetUniform("specular"), 1); //Tell shader to use a SPEC map
-                }
-                else
-                {
-                    GL.Uniform1(shader.GetUniform("specularTex"), 0);
-                    GL.Uniform1(shader.GetUniform("specular"), 0); //Tell shader to not use a SPEC map
-                }
-
-                //--------------------------------------------------------- NORMAL MAPPING -------------------------------------------------------------//
-                /*if (mesh.Material.NormalTexture != null) //Check if the material has a NORM-Map
-                {
-                    GL.ActiveTexture(TextureUnit.Texture5);
-                    GL.BindTexture(TextureTarget.Texture2D, mesh.Material.NormalTexture.ID);
-                    GL.Uniform1(shader.GetUniform("normalTex"), 5);
-                    GL.Uniform1(shader.GetUniform("normalMapped"), 1); //Tell shader to use a NORM map
-                }
-                else
-                {
-                    GL.Uniform1(shader.GetUniform("normalTex"), 0);
-                    GL.Uniform1(shader.GetUniform("normalMapped"), 0); //Tell shader to not use a NORM map
-                }*/
-
-                //--------------------------------------------------------- TEAM COLORS MAPPING -------------------------------------------------------------//
-                if (mesh.Material.TeamTexture != null) //Check if the material has a TEAM-Map
-                {
-                    GL.ActiveTexture(TextureUnit.Texture6);
-                    GL.BindTexture(TextureTarget.Texture2D, mesh.Material.TeamTexture.ID);
-                    GL.Uniform1(shader.GetUniform("teamTex"), 6);
-                    GL.Uniform1(shader.GetUniform("team"), 1); //Tell shader to use a TEAM map
-                }
-                else
-                {
-                    GL.Uniform1(shader.GetUniform("teamTex"), 0);
-                    GL.Uniform1(shader.GetUniform("team"), 0); //Tell shader to not use a TEAM map
-                }
-                if (mesh.Material.StripeTexture != null) //Check if the material has a STRP-Map
-                {
-                    GL.ActiveTexture(TextureUnit.Texture7);
-                    GL.BindTexture(TextureTarget.Texture2D, mesh.Material.StripeTexture.ID);
-                    GL.Uniform1(shader.GetUniform("stripeTex"), 7);
-                    GL.Uniform1(shader.GetUniform("stripe"), 1); //Tell shader to use a STRP map
-                }
-                else
-                {
-                    GL.Uniform1(shader.GetUniform("stripeTex"), 0);
-                    GL.Uniform1(shader.GetUniform("stripe"), 0); //Tell shader to not use a SPEC map
-                }
-
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, texture.ID);
-                GL.Uniform1(shader.GetUniform("materialTex"), 0);
-                GL.Uniform1(shader.GetUniform("textured"), 1); //Tell shader to use texture colors
             }
-            else
+
+            if (SOB_TEAMTEX(CurrentMeshShader))
             {
-                GL.Uniform1(shader.GetUniform("textured"), 0); //Tell shader to use vertex colors
-                GL.Uniform1(shader.GetUniform("specular"), 0); //Tell shader to not use a SPEC map
-                GL.Uniform1(shader.GetUniform("team"), 0); //Tell shader to not use a TEAM map
-                GL.Uniform1(shader.GetUniform("stripe"), 0); //Tell shader to not use a STRP map
-                GL.Uniform1(shader.GetUniform("thruster"), 0); //Tell shader not to interpolate between thruster textures
-                GL.Uniform1(shader.GetUniform("emissive"), 0); //Tell shader to not use a GLOW map
+                if (mesh.Material.TeamTexture != null)
+                    AttachTexture(surface, "SOB_team", mesh.Material.TeamTexture);
             }
 
-            if (mesh.Shaded)
+            AttachTexture(surface, "SOB_normal", mesh.Material.NormalTexture);
+            AttachTexture(surface, "inTexEnv0", BlackTexture);
+            AttachTexture(surface, "inTexEnv1", BlackTexture);
+
+            if (SOB_TEAM(CurrentMeshShader))
             {
-                GL.Uniform1(shader.GetUniform("shaded"), 1); //Tell shader to calculate lighting
-
-                GL.Uniform3(shader.GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
-                GL.Uniform1(shader.GetUniform("materialShininess"), mesh.Material.SpecularExponent);
+                surface["SOB_teamCol"] = new float[] { TeamColor.R / 255f, TeamColor.G / 255f, TeamColor.B / 255f, TeamColor.A / 255f };
+                surface["SOB_stripeCol"] = new float[] { StripeColor.R / 255f, StripeColor.G / 255f, StripeColor.B / 255f, StripeColor.A / 255f };
             }
+
+            if (!SOB_DEBRIS(CurrentMeshShader))
+                surface["SOB_uieffect"] = new float[] { 0.5f, 0.5f, 0.5f, 0f };
+
+            //surface["inSurfDiff"] = new float[] { 0f, 0f, 0f, 0f };
+            if (CurrentMeshShader == "thruster")
+                surface["SOB_surfGlow"] = new float[] { 1.1f, 0.5f, 0f, 0f };
             else
-                GL.Uniform1(shader.GetUniform("shaded"), 0); //Tell shader not to calculate lighting
+                surface["SOB_surfGlow"] = new float[] { 1.5f, 0.5f, 0f, 0f };
+            //surface["inSurfSpec"] = new float[] { 0f, 0f, 0f, 0f };
+            //surface["inSurfGloss"] = new float[] { 0f, 0f, 0f, 0f };
+            //surface["inSurfRefl"] = new float[] { 0f, 0f, 0f, 0f };
+            //surface["inSurfFren"] = new float[] { 0f, 0f, 0f, 0f };
+            //surface["inSurfPaint"] = new float[] { 0f, 0f, 0f, 0f };
+            //surface["inSurfPeak"] = new float[] { 0f, 0f, 0f, 0f };
 
-            if (mesh.VertexColored)
-                GL.Uniform1(shader.GetUniform("vertexColored"), 1);
+            //surface["inSurfSpec"] = new float[] { 1f, 1.5f, 0f, 0f };
+            //surface["inSurfFren"] = new float[] { 3.8f, 1.1f, 2.1f, 0f };
+            //surface["inSurfPaint"] = new float[] { 1.8f, -115f, -25f, 0.88f };
+            //surface["inSurfPeak"] = new float[] { 0.008f, 0.0035f, 0.5f, 2f };
+
+            if (HACK_AllIFeelIsPain)
+                surface["inPaintStyle"] = new float[] { 1.0f, 12.0f, 5.0f, 0f };
             else
-                GL.Uniform1(shader.GetUniform("vertexColored"), 0);
+                surface["inPaintStyle"] = new float[] { PaintCurve, PaintScale, PaintOffset, 0f };
 
-            GL.Uniform1(shader.GetUniform("blackIsTransparent"), 0);
-            GL.Uniform1(shader.GetUniform("materialOpacity"), mesh.Material.Opacity);
-            GL.Uniform3(shader.GetUniform("materialDiffuseColor"), ref mesh.Material.DiffuseColor);
+            if (SOB_BAYLIGHT(CurrentMeshShader))
+                surface["inBayExps"] = new float[] { 1f, 0.99f, 0.95f, 0.94f };
 
-            GL.UniformMatrix4(shader.GetUniform("model"), false, ref mesh.ModelMatrix);
-            GL.UniformMatrix4(shader.GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
 
-            GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
+            // Draw
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
+            surface.Draw(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
+
+            GetError("Rendering");
+
             return mesh.IndiceCount;
         }
 
@@ -523,60 +706,76 @@ namespace DAEnerys
             if (mesh.Wireframe)
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 
+            Matrix4 model = mesh.ModelMatrix;
+            Matrix4 camera = Program.Camera.GetViewMatrix();
+            Matrix4 projection = Matrix4.Identity;
+            if (!Program.Camera.Orthographic)
+                projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+            else
+                projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+
+            GetError("OpenTK Rendering");
+            GL.UniformMatrix4(CurrentShader.GetUniform("inMatM"), false, ref model);
+            GetError("OpenTK Rendering");
+            GL.UniformMatrix4(CurrentShader.GetUniform("inMatV"), false, ref camera);
+            GetError("OpenTK Rendering");
+            GL.UniformMatrix4(CurrentShader.GetUniform("inMatP"), false, ref projection);
+
+            GetError("OpenTK Rendering");
             HWTexture texture = null;
             if (mesh.Material != null)
             {
                 texture = mesh.Material.DiffuseTexture;
-                GL.Uniform3(shader.GetUniform("materialDiffuseColor"), ref mesh.Material.DiffuseColor);
-                GL.Uniform1(shader.GetUniform("materialOpacity"), mesh.Material.Opacity);
+                Vector4 diffuse = new Vector4(mesh.Material.DiffuseColor, mesh.Material.Opacity);
+                GL.Uniform4(CurrentShader.GetUniform("matDiffuse"), ref diffuse);
             }
             else
             {
-                GL.Uniform3(shader.GetUniform("materialDiffuseColor"), Vector3.One);
-                GL.Uniform1(shader.GetUniform("materialOpacity"), 1.0f);
+                GL.Uniform4(CurrentShader.GetUniform("matDiffuse"), 1f, 1f, 1f, 1f);
             }
 
             if (texture != null)
             {
+                GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, texture.ID);
-                GL.Uniform1(shader.GetUniform("textured"), 1); //Tell shader to use texture colors
+                GL.Uniform1(CurrentShader.GetUniform("inTexMat"), 0);
+                GL.Uniform1(CurrentShader.GetUniform("isTextured"), 1); //Tell shader to use texture colors
             }
             else
             {
-                GL.Uniform1(shader.GetUniform("textured"), 0); //Tell shader to use vertex colors
+                GL.Uniform1(CurrentShader.GetUniform("isTextured"), 0); //Tell shader to use vertex colors
             }
 
             if (mesh.Shaded)
             {
-                GL.Uniform1(shader.GetUniform("shaded"), 1); //Tell shader to calculate lighting
+                //GL.Uniform4(CurrentShader.GetUniform("shaded", 1); //Tell shader to calculate lighting
 
                 if (mesh.Material != null)
                 {
-                    GL.Uniform1(shader.GetUniform("materialTex"), 0);
-                    GL.Uniform3(shader.GetUniform("materialSpecularColor"), ref mesh.Material.SpecularColor);
-                    GL.Uniform1(shader.GetUniform("materialShininess"), mesh.Material.SpecularExponent);
+                    Vector4 specular = new Vector4(mesh.Material.SpecularColor, mesh.Material.SpecularExponent);
+                    GL.Uniform4(CurrentShader.GetUniform("matSpecular"), ref specular);
                 }
             }
-            else
-                GL.Uniform1(shader.GetUniform("shaded"), 0); //Tell shader not to calculate lighting
-
-            if(mesh.BlackIsTransparent)
-                GL.Uniform1(shader.GetUniform("blackIsTransparent"), 1);
-            else
-                GL.Uniform1(shader.GetUniform("blackIsTransparent"), 0);
+            //else
+            //    GL.Uniform4(CurrentShader.GetUniform("shaded", 0); //Tell shader not to calculate lighting
 
             if (mesh.VertexColored)
-                GL.Uniform1(shader.GetUniform("vertexColored"), 1);
+                GL.Uniform1(CurrentShader.GetUniform("vertexColored"), 1);
             else
-                GL.Uniform1(shader.GetUniform("vertexColored"), 0);
+                GL.Uniform1(CurrentShader.GetUniform("vertexColored"), 0);
 
-            GL.UniformMatrix4(shader.GetUniform("model"), false, ref mesh.ModelMatrix);
-            GL.UniformMatrix4(shader.GetUniform("modelview"), false, ref mesh.ModelViewProjectionMatrix);
+            if (mesh.BlackIsTransparent)
+            {
+                GL.Uniform1(CurrentShader.GetUniform("isNavLight"), 1);
+                //GL.Uniform3(CurrentShader.GetUniform("navColor"), mesh);
+            }
+            else
+                GL.Uniform1(CurrentShader.GetUniform("isNavLight"), 0);
 
             if (mesh.GetType() == typeof(EditorLine))
-                GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
+                GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(int));
             else
-                GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint)); 
+                GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(int));
 
             return mesh.IndiceCount;
         }
@@ -600,6 +799,147 @@ namespace DAEnerys
             ErrorCode code = GL.GetError();
             if (code != ErrorCode.NoError)
                 Log.WriteLine(type + ": " + code);
+        }
+
+        private static bool SOB_BADGE(string shader)
+        {
+            return
+                shader == "badge" ||
+                shader == "badge_glow";
+        }
+
+        private static bool SOB_BAYLIGHT(string shader)
+        {
+            return shader == "bay";
+        }
+
+        private static bool SOB_DUALINPUT(string shader)
+        {
+            return shader == "ore";
+        }
+
+        private static bool SOB_DEBRIS(string shader)
+        {
+            return false;
+        }
+
+        private static bool SOB_GLOWRGB(string shader)
+        {
+            return
+                shader == "badge_glow" ||
+                shader == "ore" ||
+                shader == "salvage" ||
+                shader == "ship_glow";
+        }
+
+        private static bool SOB_RESOURCE(string shader)
+        {
+            return
+                shader == "ore" ||
+                shader == "salvage";
+        }
+
+        private static bool SOB_TEAM(string shader)
+        {
+            return
+                shader == "badge" ||
+                shader == "badge_glow" ||
+                shader == "bay" ||
+                shader == "ship" ||
+                shader == "ship_glow" ||
+                shader == "thruster";
+        }
+
+        private static bool SOB_TEAMTEX(string shader)
+        {
+            return
+                shader.StartsWith("matte") ||
+                SOB_TEAM(shader);
+        }
+
+        private static bool SOB_THRUSTERS(string shader)
+        {
+            return shader == "thruster";
+        }
+
+        private static bool SOB_USECLIP(string shader)
+        {
+            return SOB_TEAM(shader);
+        }
+
+        private static int GetShipLights(out float[] shiplights)
+        {
+            int shipLight = 0;
+            shiplights = new float[96 * 4];
+            foreach (Light l in Light.Lights)
+            {
+                if (l != AmbientLight && l.Enabled)
+                {
+                    // uniform vec4 inLightShip[96];   // Pos/Diff/Spec (or just Pos/Diff) + attenuations in W
+                    shiplights[4 * shipLight + 0] = l.Position.X;
+                    shiplights[4 * shipLight + 1] = l.Position.Y;
+                    shiplights[4 * shipLight + 2] = l.Position.Z;
+                    shiplights[4 * shipLight + 3] = l.Attenuation; // l.ConstantAttenuation
+                    shipLight++;
+                    shiplights[4 * shipLight + 0] = l.Color.X;
+                    shiplights[4 * shipLight + 1] = l.Color.Y;
+                    shiplights[4 * shipLight + 2] = l.Color.Z;
+                    shiplights[4 * shipLight + 3] = l.Attenuation; // l.LinearAttenuation
+                    shipLight++;
+                    shiplights[4 * shipLight + 0] = 0; // l.Specular.X
+                    shiplights[4 * shipLight + 1] = 0; // l.Specular.Y
+                    shiplights[4 * shipLight + 2] = 0; // l.Specular.Z
+                    shiplights[4 * shipLight + 3] = l.Attenuation; // l.QuadraticAttenuation
+                    shipLight++;
+                }
+            }
+            return shipLight / 3;
+        }
+
+        private static float[] GetCoreLights()
+        {
+            Vector3 keyLightVec = Program.Camera.Position; // new Vector3(1000f, 300f, -100f);
+            Vector3 fillLightVec = new Vector3(keyLightVec.X * 1.05f, keyLightVec.Y * 1.2f, keyLightVec.Z * 1.05f);
+            fillLightVec += new Vector3(keyLightVec.Length * 0.1f);
+
+            float[] corelights = new float[7 * 4];
+
+            // ambient
+            corelights[4 * 0 + 0] = AmbientLight.Color.X;
+            corelights[4 * 0 + 1] = AmbientLight.Color.Y;
+            corelights[4 * 0 + 2] = AmbientLight.Color.Z;
+
+            // Key light vector
+            corelights[4 * 1 + 0] = keyLightVec.X;
+            corelights[4 * 1 + 1] = keyLightVec.Y;
+            corelights[4 * 1 + 2] = keyLightVec.Z;
+
+            // Key light diffuse color
+            corelights[4 * 2 + 0] = 1f;
+            corelights[4 * 2 + 1] = 1f;
+            corelights[4 * 2 + 2] = 1f;
+
+            // Key light specular color
+            corelights[4 * 3 + 0] = 1f;
+            corelights[4 * 3 + 1] = 1f;
+            corelights[4 * 3 + 2] = 1f;
+
+            // Fill light vector
+            corelights[4 * 4 + 0] = fillLightVec.X;
+            corelights[4 * 4 + 1] = fillLightVec.Y;
+            corelights[4 * 4 + 2] = fillLightVec.Z;
+
+            // Fill light diffuse color
+            corelights[4 * 5 + 0] = 1f;
+            corelights[4 * 5 + 1] = 1f;
+            corelights[4 * 5 + 2] = 1f;
+
+            // Fill light specular color
+            corelights[4 * 6 + 0] = 1f;
+            corelights[4 * 6 + 1] = 1f;
+            corelights[4 * 6 + 2] = 1f;
+
+            return corelights;
         }
     }
 }

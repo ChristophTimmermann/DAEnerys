@@ -13,6 +13,7 @@ namespace DAEnerys
         //Windows
         public static Main main;
         public static Settings settings;
+        public static ShaderSettings ShaderSettings;
         public static Hotkeys hotkeys;
 
         public static Assembly Assembly = Assembly.GetExecutingAssembly();
@@ -34,6 +35,11 @@ namespace DAEnerys
         [STAThread]
         static void Main(string[] args)
         {
+            string curdir = Directory.GetCurrentDirectory();
+            int y = curdir.ToLower().LastIndexOf("daenerys");
+            int x = curdir.IndexOf("\\", y);
+            curdir = curdir.Substring(0, x);
+            Directory.SetCurrentDirectory(curdir);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
