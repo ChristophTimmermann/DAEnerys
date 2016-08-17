@@ -181,7 +181,7 @@ namespace DAEnerys
             {
                 DiffuseTexture = HWTexture.MakeTexture(Name + "_DIFF", DIFF, 1, 1, 1, 1);
                 GlowTexture = HWTexture.MakeMultTexture(Name + "_GLOW", REFL, GLOW, SPEC, 0, 0, 0, 1);
-                TeamTexture = HWTexture.MakeMultTexture(Name + "_TEAM", TEAM, STRP, PAIN, 0, 0, 0, 1, true, true, true, false);
+                TeamTexture = HWTexture.MakeMultTexture(Name + "_TEAM", TEAM, STRP, PAIN, 0, 0, 0, 1, true, true, true, true);
                 NormalTexture = HWTexture.MakeTexture(Name + "_NORM", NORM, 5, 5, 1, 1);
             }
             else if (InArray(Shader.ToLower(), "mattealpha,mattealpha2s,mattescissor,mattescissor2s,fxMatte_a,fxMatte_s".Split(splitter)))

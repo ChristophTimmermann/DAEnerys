@@ -78,6 +78,7 @@ namespace DAEnerys
                 handle.Free();
                 return new HWTexture(name, ID);
             }
+
             {
                 bool existsA = File.Exists(SourceR);
                 bool existsB = File.Exists(SourceG);
