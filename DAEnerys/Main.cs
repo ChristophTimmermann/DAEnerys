@@ -109,6 +109,8 @@ namespace DAEnerys
                 Program.GLControl.Invalidate();
             if (visibleEffects > 0)
                 Renderer.UpdateMeshData();
+
+            //Rainbow.Update();
         }
 
         public void glControl_Render(object sender, PaintEventArgs e)
