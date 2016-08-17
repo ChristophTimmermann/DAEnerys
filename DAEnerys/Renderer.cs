@@ -727,6 +727,7 @@ namespace DAEnerys
             {
                 texture = mesh.Material.DiffuseTexture;
                 Vector4 diffuse = new Vector4(mesh.Material.DiffuseColor, mesh.Material.Opacity);
+
                 GL.Uniform4(CurrentShader.GetUniform("matDiffuse"), ref diffuse);
             }
             else
@@ -766,11 +767,10 @@ namespace DAEnerys
 
             if (mesh.BlackIsTransparent)
             {
-                GL.Uniform1(CurrentShader.GetUniform("isNavLight"), 1);
-                //GL.Uniform3(CurrentShader.GetUniform("navColor"), mesh);
+                GL.Uniform1(CurrentShader.GetUniform("blackIsTransparent"), 1);
             }
             else
-                GL.Uniform1(CurrentShader.GetUniform("isNavLight"), 0);
+                GL.Uniform1(CurrentShader.GetUniform("blackIsTransparent"), 0);
 
             if (mesh.GetType() == typeof(EditorLine))
                 GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(int));

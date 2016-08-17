@@ -89,17 +89,18 @@ namespace DAEnerys
             //If the navlight has a sprite
             if(Flags.Contains(NavLightFlag.SPRITE))
             {
-                RenderSprite = new EditorIcon(Node.AbsolutePosition, HWData.NavLightSprite);
+                /*RenderSprite = new EditorIcon(Node.AbsolutePosition, HWData.NavLightSprite);
                 RenderSprite.BlackIsTransparent = true;
                 RenderSprite.Size = Size * 1.4f;
                 RenderSprite.NeverDrawInFront = true;
-                RenderSprite.Material.DiffuseColor = Color;
+                RenderSprite.Material.DiffuseColor = Color;*/
             }
 
             Icon = new EditorIcon(Node.AbsolutePosition, EditorIcon.LightbulbTexture);
             Icon.Visible = true;
             Icon.Size = IconSize;
             Icon.DrawAboveShip = true;
+            Icon.VertexColored = false;
             Icon.Material.DiffuseColor = Color;
 
             if (Phase > 0)

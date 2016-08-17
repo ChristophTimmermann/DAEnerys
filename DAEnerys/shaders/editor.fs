@@ -19,33 +19,31 @@ uniform float shininess;
 uniform bool isTextured;
 uniform bool shaded;
 uniform bool vertexColored;
-uniform bool isNavLight;
+uniform bool blackIsTransparent;
 
 out vec4 finalColor;
 
 void main() 
 {
-	vec4 vertexColor = matDiffuse;
-	finalColor = vertexColor;
+	finalColor = matDiffuse;
     
 	if (isTextured)
 	{
 		vec4 texColor = texture(inTexMat, outUV0);
 		
-		//For navlights (billboards)
-		if(isNavLight)
+		vec3 color = matDiffuse.xyz * texColor.xyz;
+		finalColor = vec4(color, texColor.w * matDiffuse.w);
+		
+		//For navlights (the in-game sprite)
+		if(blackIsTransparent)
 		{
-			vec3 navcolor = matDiffuse.xyz * texColor.xyz;
-			float alpha = (navcolor.x + navcolor.y + navcolor.z) / 3.0;
-            finalColor = vec4(navcolor, alpha);
+			float alpha = (finalColor.x + finalColor.y + finalColor.z) / 3.0;
 		}
-        else
-        {
-            finalColor = texColor;
-        }
 	}
-    if (vertexColored) {
-        //finalColor.xyz = finalColor.xyz * outColor;
+	
+	if(vertexColored)
+	{
+		finalColor = vec4(outColor * matDiffuse.xyz, matDiffuse.w);
 	}
 	
 	//final color (after gamma correction)
