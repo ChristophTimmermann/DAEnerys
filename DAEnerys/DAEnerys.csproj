@@ -134,6 +134,9 @@
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="TeamColorButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utilities.cs" />
     <Compile Include="collada\HWMesh.cs" />
     <Compile Include="Light.cs" />
@@ -172,6 +175,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TeamColorButton.resx">
+      <DependentUpon>TeamColorButton.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <EmbeddedResource Include="shaders\fs.glsl" />
@@ -223,7 +229,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
+      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />
