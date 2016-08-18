@@ -65,7 +65,7 @@ namespace DAEnerys
             //Manual parsing
             LoadTextures(fixedColladaPath);
 
-            //File.Delete(fixedColladaPath);
+            File.Delete(fixedColladaPath);
             #endregion
 
             Program.Camera.Zoom = 0; //Set camera zoom to 0 for bounding box calculations to set it
