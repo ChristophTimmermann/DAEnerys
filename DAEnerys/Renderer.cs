@@ -201,7 +201,7 @@ namespace DAEnerys
 
             //AmbientLight.Enabled = false;
             DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
-            BadgeTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/k76.tga"), true);
+            BadgeTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
 
             if (EnableVSync)
                 GraphicsContext.CurrentContext.SwapInterval = 1;

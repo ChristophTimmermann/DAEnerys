@@ -52,6 +52,7 @@ namespace DAEnerys
             main = new Main();
             Settings.LoadSettings();
             Hotkeys.LoadHotkeys();
+
             CreateGLControl();
             Application.Run(main);
         }

@@ -56,6 +56,8 @@ namespace DAEnerys
 
             HWData.ParseDataPaths();
 
+            HWBadge.LoadSavedBadge();
+
             gridProblems.RowTemplate.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             gridProblems.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             gridProblems.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;

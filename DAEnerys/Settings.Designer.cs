@@ -67,6 +67,8 @@ namespace DAEnerys
             this.checkRenderOnTop = new System.Windows.Forms.CheckBox();
             this.labelFSAASamples = new System.Windows.Forms.Label();
             this.comboFSAASamples = new System.Windows.Forms.ComboBox();
+            this.labelBadge = new System.Windows.Forms.Label();
+            this.comboBadge = new System.Windows.Forms.ComboBox();
             this.teamColorButton20 = new DAEnerys.TeamColorButton();
             this.teamColorButton19 = new DAEnerys.TeamColorButton();
             this.teamColorButton18 = new DAEnerys.TeamColorButton();
@@ -488,6 +490,8 @@ namespace DAEnerys
             // 
             this.groupRendering.AutoSize = true;
             this.groupRendering.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupRendering.Controls.Add(this.labelBadge);
+            this.groupRendering.Controls.Add(this.comboBadge);
             this.groupRendering.Controls.Add(this.teamColorButton20);
             this.groupRendering.Controls.Add(this.teamColorButton19);
             this.groupRendering.Controls.Add(this.teamColorButton18);
@@ -527,7 +531,7 @@ namespace DAEnerys
             this.groupRendering.Controls.Add(this.comboFSAASamples);
             this.groupRendering.Location = new System.Drawing.Point(352, 8);
             this.groupRendering.Name = "groupRendering";
-            this.groupRendering.Size = new System.Drawing.Size(343, 303);
+            this.groupRendering.Size = new System.Drawing.Size(343, 330);
             this.groupRendering.TabIndex = 18;
             this.groupRendering.TabStop = false;
             this.groupRendering.Text = "Rendering";
@@ -640,6 +644,25 @@ namespace DAEnerys
             this.comboFSAASamples.Name = "comboFSAASamples";
             this.comboFSAASamples.Size = new System.Drawing.Size(232, 21);
             this.comboFSAASamples.TabIndex = 19;
+            // 
+            // labelBadge
+            // 
+            this.labelBadge.AutoSize = true;
+            this.labelBadge.Location = new System.Drawing.Point(7, 293);
+            this.labelBadge.Name = "labelBadge";
+            this.labelBadge.Size = new System.Drawing.Size(38, 13);
+            this.labelBadge.TabIndex = 125;
+            this.labelBadge.Text = "Badge";
+            // 
+            // comboBadge
+            // 
+            this.comboBadge.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBadge.FormattingEnabled = true;
+            this.comboBadge.Location = new System.Drawing.Point(104, 290);
+            this.comboBadge.Name = "comboBadge";
+            this.comboBadge.Size = new System.Drawing.Size(232, 21);
+            this.comboBadge.TabIndex = 124;
+            this.comboBadge.SelectedIndexChanged += new System.EventHandler(this.comboBadge_SelectedIndexChanged);
             // 
             // teamColorButton20
             // 
@@ -1039,5 +1062,7 @@ namespace DAEnerys
         private TeamColorButton teamColorButton18;
         private TeamColorButton teamColorButton17;
         private TeamColorButton teamColorButton16;
+        private System.Windows.Forms.Label labelBadge;
+        private System.Windows.Forms.ComboBox comboBadge;
     }
 }

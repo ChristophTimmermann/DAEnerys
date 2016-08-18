@@ -1,6 +1,6 @@
-﻿using OpenTK;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -11,6 +11,7 @@ namespace DAEnerys
         public static List<string> DataPaths = new List<string>();
 
         public static List<HWNavLightStyle> NavLightStyles = new List<HWNavLightStyle>();
+        public static List<HWBadge> Badges = new List<HWBadge>();
 
         public static HWTexture NavLightSprite;
 
@@ -61,6 +62,19 @@ namespace DAEnerys
                 if (File.Exists(spritePath))
                 {
                     NavLightSprite = new HWTexture(spritePath, false, true);
+                }
+
+                //Parse badges
+                string badgesPath = Path.Combine(dataPath, "badges/");
+
+                //Check if badges folder exists
+                if (Directory.Exists(badgesPath))
+                {
+                    string[] files = Directory.GetFiles(badgesPath, "*.tga");
+                    foreach (string file in files)
+                    {
+                        ParseBadge(file);
+                    }
                 }
             }
 
@@ -201,6 +215,11 @@ namespace DAEnerys
                 existingStyle.NoSelfLight = noSelfLight;
                 existingStyle.LinkThrust = linkThrust;
             }
+        }
+
+        private static void ParseBadge(string path)
+        {
+            new HWBadge(Path.GetFileNameWithoutExtension(path), path);
         }
     }
 }

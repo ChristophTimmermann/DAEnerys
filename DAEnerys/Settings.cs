@@ -63,6 +63,18 @@ namespace DAEnerys
 
             listDataPaths.Items.Clear();
             listDataPaths.Items.AddRange(HWData.DataPaths.ToArray());
+
+            foreach(HWBadge badge in HWData.Badges)
+            {
+                comboBadge.Items.Add(badge.Name).ToString();
+            }
+
+            if (HWBadge.BadgeNames.Keys.Contains(SavedBadge))
+            {
+                comboBadge.SelectedItem = SavedBadge;
+                comboBadge_SelectedIndexChanged(this, EventArgs.Empty);
+            }
+
         }
 
         private void numericJointSize_ValueChanged(object sender, EventArgs e)
@@ -206,6 +218,7 @@ namespace DAEnerys
                 new XElement("ambientColor", ambientColor.ToArgb()),
                 new XElement("teamColor", SavedTeamColor.ToArgb()),
                 new XElement("stripeColor", SavedStripeColor.ToArgb()),
+                new XElement("badge", SavedBadge),
                 new XElement("fieldOfView", MathHelper.RadiansToDegrees(Program.Camera.FieldOfView)),
                 new XElement("fsaaSamples", Program.FSAASamples),
                 new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront),
@@ -222,6 +235,7 @@ namespace DAEnerys
 
         public static Color SavedTeamColor = Color.FromArgb(0, 127, 255);
         public static Color SavedStripeColor = Color.SpringGreen;
+        public static string SavedBadge = "";
 
         public static void LoadSettings()
         {
@@ -262,6 +276,10 @@ namespace DAEnerys
                             int.TryParse(element.Value, out aRGB);
                             SavedStripeColor = Color.FromArgb(aRGB);
                             Renderer.StripeColor = Color.FromArgb(aRGB);
+                            break;
+                        case "badge":
+                            string badge = element.Value;
+                            SavedBadge = badge;
                             break;
                         case "fieldOfView":
                             double fov = 1.22f;
@@ -374,6 +392,13 @@ namespace DAEnerys
             Color save = Renderer.TeamColor;
             buttonTeamColor.BackColor = Renderer.TeamColor = Renderer.StripeColor;
             buttonStripeColor.BackColor = Renderer.StripeColor = save;
+            Program.GLControl.Invalidate();
+        }
+
+        private void comboBadge_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SavedBadge = (string)comboBadge.SelectedItem;
+            Renderer.BadgeTexture = HWBadge.BadgeNames[(string)comboBadge.SelectedItem].Texture;
             Program.GLControl.Invalidate();
         }
     }

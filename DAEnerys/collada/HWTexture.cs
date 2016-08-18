@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 using DevILSharp;
+using System.Drawing;
 
 namespace DAEnerys
 {
@@ -269,6 +270,34 @@ namespace DAEnerys
         public static void Close()
         {
             IL.ShutDown();
+        }
+
+        public static Bitmap LoadToBitmap(string path)
+        {
+            bool exists = File.Exists(path);
+
+            if (!exists)
+            {
+                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + path + "\".");
+                return null;
+            }
+
+            int img = IL.GenImage();
+            IL.BindImage(img);
+            IL.LoadImage(path);
+
+            IL.ConvertImage(ChannelFormat.BGRA, ChannelType.UnsignedByte);
+
+            int imageWidth = IL.GetInteger(IntName.ImageWidth);
+            int imageHeight = IL.GetInteger(IntName.ImageHeight);
+
+            Bitmap bitmap = new Bitmap(imageWidth, imageHeight, 4, System.Drawing.Imaging.PixelFormat.Format32bppArgb, IL.GetData());
+            bitmap.LockBits(new Rectangle(0, 0, imageWidth, imageHeight), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            IL.DeleteImage(img);
+            IL.BindImage(0);
+
+            return bitmap;
         }
     }
 }
