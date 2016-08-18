@@ -75,10 +75,12 @@ namespace NewShaderManifest
             //Programs.Clear();
 
             string path = GetDataPath(@"shaders\master.manifest");
-            if (path != null)
+            if (!string.IsNullOrEmpty(path))
                 Load(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
             else
-                Console.WriteLine(@"Unable to locate shader config file: shaders\master.manifest");
+                Log.WriteLine(@"Unable to locate shader config file: shaders\master.manifest");
+
+            Log.Close();
         }
 
         private static void Load(StreamReader sr)

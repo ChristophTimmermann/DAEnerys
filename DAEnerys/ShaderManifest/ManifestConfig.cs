@@ -45,7 +45,7 @@ namespace NewShaderManifest
         internal static void Load()
         {
             string path = GetDataPath(@"shaders\dev_config.manifest");
-            if (path != null)
+            if (!string.IsNullOrEmpty(path))
                 Load(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
             else
                 Console.WriteLine(@"Unable to locate shader config file: shaders\dev_config.manifest");

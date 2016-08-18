@@ -14,8 +14,15 @@ namespace NewShaderManifest
             stream = new StreamWriter(new FileStream(Path.Combine(PATH, "manifest.log"), FileMode.Create, FileAccess.Write, FileShare.Read));
         }
 
+        public static void Reopen()
+        {
+            if (stream == null)
+                stream = new StreamWriter(new FileStream(Path.Combine(PATH, "manifest.log"), FileMode.Append, FileAccess.Write, FileShare.Read));
+        }
+
         public static void WriteLine(string line)
         {
+            if (stream == null) Reopen();
             Console.WriteLine(line);
             stream.WriteLine(line);
         }
@@ -23,6 +30,7 @@ namespace NewShaderManifest
         public static void Close()
         {
             stream.Close();
+            stream = null;
         }
     }
 }
