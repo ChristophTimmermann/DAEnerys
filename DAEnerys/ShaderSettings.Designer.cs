@@ -576,7 +576,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ShaderSettings";
-            this.Text = "Settings";
+            this.Text = "Shader Settings";
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.numPaintCurve)).EndInit();
             this.gbxPaintStyle.ResumeLayout(false);
