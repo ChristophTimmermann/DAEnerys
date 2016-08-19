@@ -285,7 +285,7 @@ namespace DAEnerys
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1212, 755);
+            this.splitContainer1.Size = new System.Drawing.Size(1212, 708);
             this.splitContainer1.SplitterDistance = 250;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -305,7 +305,7 @@ namespace DAEnerys
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(250, 755);
+            this.tabControl.Size = new System.Drawing.Size(250, 708);
             this.tabControl.TabIndex = 0;
             // 
             // tabShipMeshes
@@ -316,7 +316,7 @@ namespace DAEnerys
             this.tabShipMeshes.Location = new System.Drawing.Point(4, 58);
             this.tabShipMeshes.Name = "tabShipMeshes";
             this.tabShipMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabShipMeshes.Size = new System.Drawing.Size(242, 693);
+            this.tabShipMeshes.Size = new System.Drawing.Size(242, 646);
             this.tabShipMeshes.TabIndex = 0;
             this.tabShipMeshes.Text = "Ship Meshes";
             this.tabShipMeshes.UseVisualStyleBackColor = true;
@@ -328,7 +328,7 @@ namespace DAEnerys
             this.groupShipMeshLODs.Controls.Add(this.listShipMeshLODs);
             this.groupShipMeshLODs.Location = new System.Drawing.Point(3, 471);
             this.groupShipMeshLODs.Name = "groupShipMeshLODs";
-            this.groupShipMeshLODs.Size = new System.Drawing.Size(235, 217);
+            this.groupShipMeshLODs.Size = new System.Drawing.Size(218, 217);
             this.groupShipMeshLODs.TabIndex = 1;
             this.groupShipMeshLODs.TabStop = false;
             this.groupShipMeshLODs.Text = "Level of detail(s)";
@@ -340,7 +340,7 @@ namespace DAEnerys
             this.listShipMeshLODs.FormattingEnabled = true;
             this.listShipMeshLODs.Location = new System.Drawing.Point(3, 16);
             this.listShipMeshLODs.Name = "listShipMeshLODs";
-            this.listShipMeshLODs.Size = new System.Drawing.Size(229, 198);
+            this.listShipMeshLODs.Size = new System.Drawing.Size(212, 198);
             this.listShipMeshLODs.TabIndex = 0;
             this.listShipMeshLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listShipMeshLODs_ItemCheck);
             // 
@@ -353,7 +353,7 @@ namespace DAEnerys
             this.panelShipMesh.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelShipMesh.Location = new System.Drawing.Point(3, 3);
             this.panelShipMesh.Name = "panelShipMesh";
-            this.panelShipMesh.Size = new System.Drawing.Size(236, 462);
+            this.panelShipMesh.Size = new System.Drawing.Size(219, 462);
             this.panelShipMesh.TabIndex = 0;
             // 
             // checkShipMeshDoScar
@@ -374,7 +374,7 @@ namespace DAEnerys
             this.listShipMeshes.FormattingEnabled = true;
             this.listShipMeshes.Location = new System.Drawing.Point(3, 3);
             this.listShipMeshes.Name = "listShipMeshes";
-            this.listShipMeshes.Size = new System.Drawing.Size(230, 407);
+            this.listShipMeshes.Size = new System.Drawing.Size(213, 407);
             this.listShipMeshes.TabIndex = 10;
             this.listShipMeshes.SelectedIndexChanged += new System.EventHandler(this.listShipMeshes_SelectedIndexChanged);
             // 
@@ -396,7 +396,7 @@ namespace DAEnerys
             this.comboShipMeshParent.FormattingEnabled = true;
             this.comboShipMeshParent.Location = new System.Drawing.Point(53, 412);
             this.comboShipMeshParent.Name = "comboShipMeshParent";
-            this.comboShipMeshParent.Size = new System.Drawing.Size(180, 21);
+            this.comboShipMeshParent.Size = new System.Drawing.Size(163, 21);
             this.comboShipMeshParent.TabIndex = 8;
             // 
             // tabMaterials
@@ -1392,7 +1392,7 @@ namespace DAEnerys
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.gridProblems);
-            this.splitContainer2.Size = new System.Drawing.Size(958, 755);
+            this.splitContainer2.Size = new System.Drawing.Size(958, 708);
             this.splitContainer2.SplitterDistance = 680;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -1436,7 +1436,7 @@ namespace DAEnerys
             this.gridProblems.RowTemplate.Height = 500;
             this.gridProblems.RowTemplate.ReadOnly = true;
             this.gridProblems.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridProblems.Size = new System.Drawing.Size(274, 755);
+            this.gridProblems.Size = new System.Drawing.Size(274, 708);
             this.gridProblems.TabIndex = 0;
             this.gridProblems.SelectionChanged += new System.EventHandler(this.gridProblems_SelectionChanged);
             // 
@@ -1497,7 +1497,7 @@ namespace DAEnerys
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1212, 780);
+            this.ClientSize = new System.Drawing.Size(1212, 733);
             this.Controls.Add(this.buttonProblems);
             this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.comboPerspectiveOrtho);
