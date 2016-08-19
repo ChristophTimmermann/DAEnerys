@@ -253,8 +253,8 @@ namespace DAEnerys
 
                 foreach (HWMesh mesh in HWScene.Meshes)
                 {
-                    if (mesh.Visible)
-                    {
+                    //if (mesh.Visible)
+                    //{
                         foreach (HWVertex vtx in mesh.Vertices)
                         {
                             mesh_verts.Add(vtx.Position);
@@ -267,7 +267,7 @@ namespace DAEnerys
                         mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount).ToList());
 
                         mesh_vertcount += mesh.VertexCount;
-                    }
+                    //}
                 }
 
                 Vector3[] vertdata = mesh_verts.ToArray();
@@ -393,7 +393,8 @@ namespace DAEnerys
                     indiceat += DrawHWMesh(mesh, indiceat);
 
             GL.Enable(EnableCap.Blend);
-            
+            GL.Enable(EnableCap.DepthTest);
+
             GL.DepthMask(true);
             
             GL.UseProgram(editor_shader.ProgramID);
