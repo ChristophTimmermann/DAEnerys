@@ -1065,7 +1065,7 @@ namespace DAEnerys
 
         private void buttonAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(this, "DAEnerys b" + BUILD + "\n\nDeveloped by Christoph (PayDay) Timmermann and\nradar3301 (aka. ajlsunrise33)\nwith help from the Gearbox forums.\n\nEditor icons made by SumoChick.\n\nUses\n - OpenTK\n - Assimp\n - Assimp.NET\n - FSharp\n - DevIL\n - DevILSharp", "DAEnerys", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, "DAEnerys b" + BUILD + "\n\nDeveloped by Christoph (PayDay) Timmermann and\nradar3301 (aka. ajlsunrise33)\nwith help from the Gearbox forums.\n\nEditor icons made by SumoChick.\n\nUses\n - OpenTK\n - Assimp\n - Assimp.NET\n - FSharp\n - DevIL\n - DevILSharp\n - AlphaColorDialog", "DAEnerys", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         //Perspective-Orthographic combobox

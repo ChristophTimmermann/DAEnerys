@@ -20,14 +20,8 @@ namespace DAEnerys
             Mesh = mesh;
             LOD = lod;
 
-            Mesh.Shaded = false;
             Mesh.Translucent = true;
-            Mesh.VertexColored = false;
-
-            //Hiigaran engine color
-            Mesh.Material.DiffuseTexture = null;
-            Mesh.Material.DiffuseColor = new Vector3(0.27f, 0.47f, 0.69f) * 2;
-            Mesh.Material.Opacity = 0.25f;
+            Mesh.Material.Shader = "fx_eng_glowbasic";
         }
     }
 }

@@ -42,6 +42,8 @@ namespace DAEnerys
         public static Color TeamColor { get; set; } = Color.FromArgb(255, 92, 139, 170);
         public static Color StripeColor { get; set; } = Color.FromArgb(255, 204, 204, 204);
 
+        public static Color EngineGlowColor { get; set; } = Color.FromArgb(64, 69, 120, 176);
+
         // VARIABLE SHADER INPUTS
         public static float Exec { get; set; } = 0f;
         public static float ExecDelta { get; set; } = 0f;
@@ -262,11 +264,12 @@ namespace DAEnerys
                 List<Vector2> mesh_uv1 = new List<Vector2>();
                 List<int> mesh_inds = new List<int>();
 
-                // Assemble vertex and indice data for all volumes
+                // Assemble vertex and index data for all volumes
                 int mesh_vertcount = 0;
 
                 //SORT SHIP MESHES
                 List<HWMesh> hwMeshList = new List<HWMesh>();
+
                 foreach (HWMesh mesh in HWScene.Meshes)
                 {
                     if (!mesh.Translucent)
@@ -416,7 +419,6 @@ namespace DAEnerys
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             int indiceat = 0;
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             foreach (HWMesh mesh in HWScene.Meshes)
             {
@@ -448,6 +450,8 @@ namespace DAEnerys
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, editor_ind_buffer);
 
+            GL.Enable(EnableCap.AlphaTest);
+
             int editor_indiceat = 0;
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
@@ -458,7 +462,6 @@ namespace DAEnerys
             if (DrawVisualizationsInFront)
                 GL.Clear(ClearBufferMask.DepthBufferBit);
 
-            GL.Enable(EnableCap.AlphaTest);
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.Visible && !mesh.NeverDrawInFront && mesh.DrawAboveShip)
@@ -661,6 +664,11 @@ namespace DAEnerys
                 surface["SOB_stripeCol"] = new float[] { StripeColor.R / 255f, StripeColor.G / 255f, StripeColor.B / 255f, StripeColor.A / 255f };
             }
 
+            if (SOB_GLOWCOL(CurrentMeshShader)) //For engine glows
+            {
+                surface["SOB_glowCol"] = new float[] { EngineGlowColor.R / 255f, EngineGlowColor.G / 255f, EngineGlowColor.B / 255f, EngineGlowColor.A / 255f * ThrusterInterpolation };
+            }
+
             if (!SOB_DEBRIS(CurrentMeshShader))
                 surface["SOB_uieffect"] = new float[] { 0.5f, 0.5f, 0.5f, 0f };
 
@@ -688,7 +696,6 @@ namespace DAEnerys
 
             if (SOB_BAYLIGHT(CurrentMeshShader))
                 surface["inBayExps"] = new float[] { 1f, 0.99f, 0.95f, 0.94f };
-
 
             // Draw
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
@@ -830,6 +837,12 @@ namespace DAEnerys
                 shader == "ore" ||
                 shader == "salvage" ||
                 shader == "ship_glow";
+        }
+
+        private static bool SOB_GLOWCOL(string shader) //Not sure if this is right, it's for engine glows
+        {
+            return
+                shader == "fx_eng_glowbasic";
         }
 
         private static bool SOB_RESOURCE(string shader)

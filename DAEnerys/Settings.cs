@@ -39,6 +39,9 @@ namespace DAEnerys
             buttonStripeColor.BackColor = SavedStripeColor;
             teamColorButtonCustom.SetColors(SavedTeamColor, SavedStripeColor);
 
+            buttonEngineColor.BackColor = Color.FromArgb(255, SavedEngineColor.R, SavedEngineColor.G, SavedEngineColor.B); //The button colors look weird when the alpha is set too
+            engineColorButtonCustom.SetColor(SavedEngineColor);
+
             numericFOV.Value = (int)Math.Round(MathHelper.RadiansToDegrees(Program.Camera.FieldOfView));
             numericIconSize.Value = (decimal)HWNavLight.IconSize;
 
@@ -219,6 +222,7 @@ namespace DAEnerys
                 new XElement("teamColor", SavedTeamColor.ToArgb()),
                 new XElement("stripeColor", SavedStripeColor.ToArgb()),
                 new XElement("badge", SavedBadge),
+                new XElement("engineColor", SavedEngineColor.ToArgb()),
                 new XElement("fieldOfView", MathHelper.RadiansToDegrees(Program.Camera.FieldOfView)),
                 new XElement("fsaaSamples", Program.FSAASamples),
                 new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront),
@@ -236,6 +240,7 @@ namespace DAEnerys
         public static Color SavedTeamColor = Color.FromArgb(0, 127, 255);
         public static Color SavedStripeColor = Color.SpringGreen;
         public static string SavedBadge = "";
+        public static Color SavedEngineColor = Color.FromArgb(64, 69, 120, 176);
 
         public static void LoadSettings()
         {
@@ -280,6 +285,12 @@ namespace DAEnerys
                         case "badge":
                             string badge = element.Value;
                             SavedBadge = badge;
+                            break;
+                        case "engineColor":
+                            aRGB = 0;
+                            int.TryParse(element.Value, out aRGB);
+                            SavedEngineColor = Color.FromArgb(aRGB);
+                            Renderer.EngineGlowColor = Color.FromArgb(aRGB);
                             break;
                         case "fieldOfView":
                             double fov = 1.22f;
@@ -351,7 +362,6 @@ namespace DAEnerys
         private void buttonTeamColor_Click(object sender, EventArgs e)
         {
             colorDialog.Color = buttonTeamColor.BackColor;
-            colorDialog.FullOpen = true;
             DialogResult result = colorDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -367,7 +377,6 @@ namespace DAEnerys
         private void buttonStripeColor_Click(object sender, EventArgs e)
         {
             colorDialog.Color = buttonStripeColor.BackColor;
-            colorDialog.FullOpen = true;
             DialogResult result = colorDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -399,6 +408,30 @@ namespace DAEnerys
         {
             SavedBadge = (string)comboBadge.SelectedItem;
             Renderer.BadgeTexture = HWBadge.BadgeNames[(string)comboBadge.SelectedItem].Texture;
+            Program.GLControl.Invalidate();
+        }
+
+        private void buttonEngineColor_Click(object sender, EventArgs e)
+        {
+            colorDialogAlpha.Color = Renderer.EngineGlowColor;
+            DialogResult result = colorDialogAlpha.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Renderer.EngineGlowColor = colorDialogAlpha.Color;
+                buttonEngineColor.BackColor = Color.FromArgb(255, colorDialogAlpha.Color.R, colorDialogAlpha.Color.G, colorDialogAlpha.Color.B); //The button colors look weird when the alpha is set too
+                SavedEngineColor = colorDialogAlpha.Color;
+                engineColorButtonCustom.SetColor(Renderer.EngineGlowColor);
+
+                Program.GLControl.Invalidate();
+            }
+        }
+
+        private void buttonEngineColorPreset_Click(object sender, EventArgs e)
+        {
+            Color presetColor = ((EngineColorButton)sender).EngineColor;
+
+            buttonEngineColor.BackColor = Color.FromArgb(255, presetColor.R, presetColor.G, presetColor.B); //The button colors look weird when the alpha is set too
+            Renderer.EngineGlowColor = presetColor;
             Program.GLControl.Invalidate();
         }
     }

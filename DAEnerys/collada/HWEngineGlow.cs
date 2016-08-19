@@ -49,19 +49,16 @@ namespace DAEnerys
                 foreach(HWEngineGlowLOD engineGlowLOD in engineGlow.LOD0Meshes)
                 {
                     engineGlowLOD.Mesh.Scale.Z = Renderer.ThrusterInterpolation;
-                    engineGlowLOD.Mesh.Material.Opacity = Renderer.ThrusterInterpolation / 4;
                 }
 
                 foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD1Meshes)
                 {
                     engineGlowLOD.Mesh.Scale.Z = Renderer.ThrusterInterpolation;
-                    engineGlowLOD.Mesh.Material.Opacity = Renderer.ThrusterInterpolation / 4;
                 }
 
                 foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD2Meshes)
                 {
                     engineGlowLOD.Mesh.Scale.Z = Renderer.ThrusterInterpolation;
-                    engineGlowLOD.Mesh.Material.Opacity = Renderer.ThrusterInterpolation / 4;
                 }
             }
         }

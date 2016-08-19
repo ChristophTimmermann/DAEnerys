@@ -81,9 +81,9 @@
     <Compile Include="collada\HWJoint.cs" />
     <Compile Include="collada\HWMarker.cs" />
     <Compile Include="collada\HWNavLight.cs" />
-    <Compile Include="collada\HWEngineMesh.cs" />
+    <Compile Include="collada\HWEngineGlow.cs" />
     <Compile Include="collada\HWShipMesh.cs" />
-    <Compile Include="collada\HWEngineMeshLOD.cs" />
+    <Compile Include="collada\HWEngineGlowLOD.cs" />
     <Compile Include="collada\HWShipMeshLOD.cs" />
     <Compile Include="data\HWBadge.cs" />
     <Compile Include="data\HWNavLightStyle.cs" />
@@ -98,8 +98,17 @@
     <Compile Include="editor\EditorMaterial.cs" />
     <Compile Include="editor\EditorLine.cs" />
     <Compile Include="data\HWData.cs" />
+    <Compile Include="forms\AlphaColorDialog.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="forms\AlphaColorPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="forms\CustomGLControl.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\EngineColorButton.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="FPSCounter.cs" />
     <Compile Include="ActionKey.cs" />
@@ -136,7 +145,7 @@
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="TeamColorButton.cs">
+    <Compile Include="forms\TeamColorButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Utilities.cs" />
@@ -155,6 +164,9 @@
     <Compile Include="collada\HWScene.cs" />
     <Compile Include="collada\HWTexture.cs" />
     <Compile Include="Shader.cs" />
+    <EmbeddedResource Include="forms\EngineColorButton.resx">
+      <DependentUpon>EngineColorButton.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Hotkeys.resx">
       <DependentUpon>Hotkeys.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,7 +190,7 @@
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TeamColorButton.resx">
+    <EmbeddedResource Include="forms\TeamColorButton.resx">
       <DependentUpon>TeamColorButton.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -211,7 +223,6 @@
     <None Include="resources\joint.ply">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="resources\k76.tga" />
     <None Include="resources\lightbulb.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
