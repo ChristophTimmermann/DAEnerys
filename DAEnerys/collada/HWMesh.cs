@@ -131,7 +131,7 @@ namespace DAEnerys
             Indices = GetIndices();
 
             //RecalculateNormals();
-            RecalculateTangents();
+            //RecalculateTangents();
 
             HWScene.Meshes.Add(this);
         }

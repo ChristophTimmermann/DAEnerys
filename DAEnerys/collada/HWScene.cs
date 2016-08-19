@@ -55,11 +55,9 @@ namespace DAEnerys
             //Blender Homeworld Toolkit fix
             string fixedColladaPath = FixCollada(fileName);
 
-            //Collada = importer.ImportFile(fixedColladaPath, PostProcessSteps.Triangulate | PostProcessSteps.GenerateUVCoords | PostProcessSteps.JoinIdenticalVertices | PostProcessSteps.SortByPrimitiveType);
-            //Collada = importer.ImportFile(fixedColladaPath,
-            //    ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) &
-            //    (PostProcessPreset.TargetRealTimeFast));
-            Collada = importer.ImportFile(fixedColladaPath, PostProcessPreset.TargetRealTimeFast);
+            Collada = importer.ImportFile(fixedColladaPath,
+                ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) &
+                (PostProcessPreset.TargetRealTimeFast));
             importer.Dispose();
 
             //Manual parsing
