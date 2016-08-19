@@ -211,6 +211,9 @@
     <EmbeddedResource Include="shaders\vs_lit.glsl" />
     <EmbeddedResource Include="shaders\vs_norm.glsl" />
     <EmbeddedResource Include="shaders\vs_tex.glsl" />
+    <None Include="resources\daenerys.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="resources\square.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

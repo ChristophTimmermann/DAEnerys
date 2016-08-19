@@ -239,7 +239,7 @@ namespace DAEnerys
 
         public static Color SavedTeamColor = Color.FromArgb(0, 127, 255);
         public static Color SavedStripeColor = Color.SpringGreen;
-        public static string SavedBadge = "";
+        public static string SavedBadge = "daenerys";
         public static Color SavedEngineColor = Color.FromArgb(64, 69, 120, 176);
 
         public static void LoadSettings()

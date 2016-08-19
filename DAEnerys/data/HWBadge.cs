@@ -9,6 +9,8 @@ namespace DAEnerys
     {
         public static Dictionary<string, HWBadge> BadgeNames = new Dictionary<string, HWBadge>();
 
+        public static HWBadge DefaultBadge;
+
         public static void LoadSavedBadge()
         {
             if (Settings.SavedBadge.Length == 0)

@@ -203,7 +203,9 @@ namespace DAEnerys
 
             //AmbientLight.Enabled = false;
             DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
-            BadgeTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
+
+            HWBadge.DefaultBadge = new HWBadge("daenerys", Path.Combine(Program.EXECUTABLE_PATH, @"resources/daenerys.tga"));
+            BadgeTexture = HWBadge.DefaultBadge.Texture;
 
             if (EnableVSync)
                 GraphicsContext.CurrentContext.SwapInterval = 1;
