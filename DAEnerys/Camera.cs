@@ -13,7 +13,7 @@ namespace DAEnerys
 
         public float NearClipDistance = 0.01f;
         public float ClipDistance = 1000;
-        public float FieldOfView = 1.22f;
+        public float FieldOfView = 0.9599f;
 
         public float MinZoom = 0.01f;
         public float MaxZoom = 5.0f;

@@ -150,16 +150,16 @@
   <data name="toolStripButton2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIUSURBVFhHvVerksJAEOQT7hPuE+4TrvBUYXEn8KBRKCw/
-        QNVJJAIPGoXBHx4Rw0Mu07np1GTZQJY8uqorZHdnujO72SwdH5fLZXq9Xldy/ZOrCxF9wq38nsu1nyTJ
-        h4ZXhy8Gnk6nlKE+w72YGftmbrfbt7RP9fY1mHAwGLhutxsk+kajkVssFm632/lGUKHf8/n8hattU4nn
-        YMDhcHDL5dJNJhPX6/WCRixns5nbbDY5I6CtXikTMnBvE5Dr9To1ExK3RHVoBFfcD4fDOBMA506CcoaO
-        x2P6tCFxS38K3zJBiJlPCRoLszcDRrAOrMgreibKL0wLMfNjjaDMIbEQURUaQIU15XtARWgiJBYi14bE
-        xk1BEWIM4Ok5Hq+opqiGGANgrRXAU8QasFWotH2reIJE2LBCYkXkzok1pOni4IuX2SUtsYcgVrjXlOVR
-        VZxUA3HT8Eoc92hncjK0T5hp6Gv653hXnPR3THxFtW+uEsWIFE8wXkOzzQrbto2BIbRL/1aHhlFFnBCR
-        dNu2HzC+jujTYY+oQxzAtwNj/CponNNhedQlTrAKdi1o7KOBusUBrgUcap4aaEIcwHlCY7KcvNchzYkT
-        EpOerHis0zz/BpoWBzgNOOjmDLQhDuAERI3ca4ik7GhKnNA8lqusEa6aFAfkifF3jjlRgWmwAk2IF8Jf
-        A6hEa+KENWHYjjjhmWhJvNO5A+JRf0NtFWGUAAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAISSURBVFhHvVarksJAEOQT7hPuE+4TrvBUYXEn8KBRKCw/
+        QNVJJAIPGoXBHx4RE0Au07lparJsIEseXdUVkt2Z7sxuhu34OJ/P08vlskrT9E+uLkSMybyt/J7LtZ8k
+        yYeGV4cvBp5Op4yhMcO9mBn7Zq7X6zdeSm9fgwkHg4HrdrtBYmw0GrnFYuF2u51vxIngr1TpC1f7TCWe
+        gwGHw8Etl0s3mUxcr9cLGrGczWZus9nkjIC2eqVMyMS9TUCu1+vMTEjcEtWhEVxxPxwO40wAXDsJyhk6
+        Ho/Z24bELf0lfMsEIWY+JWhsvwwYwT6wIq/omSi/MS3EzI81gjKHxEJEVWgAFdaU7wEVoYmQWIjcG9FL
+        UIQYA3h7zscnqimqIcYAWGsF8BaxBmwVKrVvFU+QCA0rJFZEdk7sIU0XB1+8TJe0RA9BrHCvKcujqjip
+        BuKW4ZU47vGcyclQnzDL0Nf0z/GuOOl3TPyL6thcJYoRKZ5gvobemxXato2BITyX8a1ODaOKOCHPsrZt
+        /8D4OWJMpz2iDnEA/x2Y41dB45xOy6MucQJvirl2L2jso4G6xQHuBRxqnhpoQhzAeUJj7jl5r1OaEyck
+        JjtZ8Vinef4NNC0OcBlw0M0ZaEMcwAmIGrnPEEk50JQ4oXksV/eHcNWkOIDORz1Q7qfBCjQhXggktyZQ
+        idbECWvCsB1xwjPRknincwP0xH8rgHkrfQAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="buttonHotkeys.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
