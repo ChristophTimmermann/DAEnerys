@@ -237,37 +237,34 @@ namespace DAEnerys
                 int mesh_vertcount = 0;
 
                 //SORT SHIP MESHES
-                //List<HWMesh> hwMeshList = new List<HWMesh>();
-
-                //foreach (HWMesh mesh in HWScene.Meshes)
-                //{
-                //    if (!mesh.Translucent)
-                //        hwMeshList.Add(mesh);
-                //}
-                //foreach (HWMesh mesh in HWScene.Meshes)
-                //{
-                //    if (mesh.Translucent)
-                //        hwMeshList.Add(mesh);
-                //}
-                //HWScene.Meshes = hwMeshList;
+                List<HWMesh> hwMeshList = new List<HWMesh>();
 
                 foreach (HWMesh mesh in HWScene.Meshes)
                 {
-                    //if (mesh.Visible)
-                    //{
-                        foreach (HWVertex vtx in mesh.Vertices)
-                        {
-                            mesh_verts.Add(vtx.Position);
-                            mesh_normals.Add(vtx.Normal);
-                            mesh_tangents.Add(vtx.Tangent);
-                            mesh_bitangents.Add(vtx.Binormal);
-                            mesh_uv0.Add(vtx.UV0);
-                            mesh_uv1.Add(vtx.UV1);
-                        }
-                        mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount).ToList());
+                    if (!mesh.Translucent)
+                        hwMeshList.Add(mesh);
+                }
+                foreach (HWMesh mesh in HWScene.Meshes)
+                {
+                    if (mesh.Translucent)
+                        hwMeshList.Add(mesh);
+                }
+                HWScene.Meshes = hwMeshList;
 
-                        mesh_vertcount += mesh.VertexCount;
-                    //}
+                foreach (HWMesh mesh in hwMeshList)
+                {
+                    foreach (HWVertex vtx in mesh.Vertices)
+                    {
+                        mesh_verts.Add(vtx.Position);
+                        mesh_normals.Add(vtx.Normal);
+                        mesh_tangents.Add(vtx.Tangent);
+                        mesh_bitangents.Add(vtx.Binormal);
+                        mesh_uv0.Add(vtx.UV0);
+                        mesh_uv1.Add(vtx.UV1);
+                    }
+                    mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount).ToList());
+
+                    mesh_vertcount += mesh.VertexCount;
                 }
 
                 Vector3[] vertdata = mesh_verts.ToArray();
@@ -390,13 +387,20 @@ namespace DAEnerys
             int indiceat = 0;
 
             foreach (HWMesh mesh in HWScene.Meshes)
+                if(!mesh.Translucent)
                     indiceat += DrawHWMesh(mesh, indiceat);
 
+            GL.DepthMask(false);
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.DepthTest);
 
+            foreach (HWMesh mesh in HWScene.Meshes)
+                if(mesh.Translucent)
+                    indiceat += DrawHWMesh(mesh, indiceat);
+
+            GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
-            
+
             GL.UseProgram(editor_shader.ProgramID);
             editor_shader.LinkAttrib3(editor_pos_buffer, "inPos", false);
             editor_shader.LinkAttrib3(editor_col_buffer, "inColor", false);
