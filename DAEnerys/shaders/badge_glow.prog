@@ -1,9 +1,0 @@
-#version 330
-#define SOB_TEAM
-#define SOB_TEAMTEX
-#define SOB_BADGE
-#define SOB_GLOWRGB
-#define SOB_LIGHT_HQ
-#define SOB_POST_B0R0
-#define SOB_USECLIP
-#define SOB_USENOISE

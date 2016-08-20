@@ -63,7 +63,13 @@ namespace NewShaderManifest
         {
             if (!IsInitialized) throw new ManifestNotInitializedException();
             if (HODAliases.ContainsKey(name)) name = HODAliases[name];
-            if (!AvailableSurfaces.Contains(name)) throw new SurfaceNotAvailableException(name);
+            if (!AvailableSurfaces.Contains(name))
+            {
+                // throw new SurfaceNotAvailableException(name);
+                name = "daenerys_default";
+                if (!LoadedSurfaces.ContainsKey(name))
+                    LoadDefaultShader();
+            }
             if (!LoadedSurfaces.ContainsKey(name))
                 SurfaceLoader.LoadSurface(name);
             return LoadedSurfaces[name];
@@ -78,7 +84,10 @@ namespace NewShaderManifest
             if (!string.IsNullOrEmpty(path))
                 Load(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
             else
+            {
                 Log.WriteLine(@"Unable to locate shader config file: shaders\master.manifest");
+                LoadDefaultShader();
+            }
 
             Log.Close();
         }
@@ -188,6 +197,12 @@ namespace NewShaderManifest
             string pref = args[2];
 
             HODAliases[shad] = surf;
+        }
+
+        private static void LoadDefaultShader()
+        {
+            ProgramLoader.LoadDefaultProgram(); 
+            SurfaceLoader.LoadDefaultSurface();
         }
     }
 }

@@ -8,6 +8,14 @@ namespace NewShaderManifest
 {
     public class ConfigOption
     {
+        private static ConfigOption NewDefaultConfigOption()
+        {
+            ConfigOption opt = new ConfigOption(0);
+            opt.MaxValue = 0;
+            return opt;
+        }
+
+        public static ConfigOption DEFAULT = NewDefaultConfigOption();
         private int _Value;
         public int DefaultValue { get; internal set; }
         public int MaxValue { get; internal set; } = int.MaxValue;
@@ -36,9 +44,25 @@ namespace NewShaderManifest
         }
     }
 
+    public class ConfigOptions : Dictionary<string, ConfigOption>
+    {
+        public new ConfigOption this[string key]
+        {
+            get
+            {
+                if (!ContainsKey(key)) return ConfigOption.DEFAULT;
+                return base[key];
+            }
+            set
+            {
+                base[key] = value;
+            }
+        }
+    }
+
     public static class ManifestConfig
     {
-        public static Dictionary<string, ConfigOption> Options = new Dictionary<string, ConfigOption>();
+        public static ConfigOptions Options = new ConfigOptions();
         internal static List<string> UserOptions = new List<string>();
         internal static List<string> ProgOptions = new List<string>();
 
@@ -48,7 +72,7 @@ namespace NewShaderManifest
             if (!string.IsNullOrEmpty(path))
                 Load(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
             else
-                Console.WriteLine(@"Unable to locate shader config file: shaders\dev_config.manifest");
+                Log.WriteLine(@"Unable to locate shader config file: shaders\dev_config.manifest");
         }
 
         private static void Load(StreamReader sr)

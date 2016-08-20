@@ -254,6 +254,7 @@ namespace NewShaderManifest
             DeathScissor,
             NonKeyword
         }
+        private static bool DefaultSurfaceLoaded = false;
 
         private static Surface Surface;
 
@@ -263,7 +264,7 @@ namespace NewShaderManifest
             string filename = @"shaders\gl_surf\" + name + ".surf";
             string path = GetDataPath(filename);
             if (string.IsNullOrEmpty(path))
-                Console.WriteLine(@"Unable to locate surface: " + filename);
+                Log.WriteLine(@"Unable to locate surface: " + filename);
             else
             {
                 Parse(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
@@ -401,10 +402,17 @@ namespace NewShaderManifest
             if (str == "program")
             {
                 CurrentLayer.ProgramName = args.PopFirst();
-                if (!Manifest.AvailablePrograms.Contains(CurrentLayer.ProgramName))
-                    Log.WriteLine("Program " + CurrentLayer.ProgramName + " is not available.");
+                if (CurrentLayer.ProgramName == "daenerys_default")
+                {
+                    CurrentLayer.Program = ShaderProgram.DefaultProgram;
+                }
                 else
-                    CurrentLayer.Program = Manifest.GetProgram(CurrentLayer.ProgramName);
+                {
+                    if (!Manifest.AvailablePrograms.Contains(CurrentLayer.ProgramName))
+                        Log.WriteLine("Program " + CurrentLayer.ProgramName + " is not available.");
+                    else
+                        CurrentLayer.Program = Manifest.GetProgram(CurrentLayer.ProgramName);
+                }
             }
             else if (str == "blendOps")
             {
@@ -522,6 +530,19 @@ namespace NewShaderManifest
             {
                 throw new SurfaceParseException("Unrecognized layer operation: " + str);
             }
+        }
+
+        internal static void LoadDefaultSurface()
+        {
+            if (DefaultSurfaceLoaded) return;
+
+            Surface = new Surface();
+            string path = Path.Combine(DAEnerys.Program.EXECUTABLE_PATH, @"shaders\default.surf");
+            Parse(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
+            Surface.Useable = true;
+            Manifest.AvailableSurfaces.Add("daenerys_default");
+            Manifest.LoadedSurfaces["daenerys_default"] = Surface;
+            DefaultSurfaceLoaded = true;
         }
     }
 

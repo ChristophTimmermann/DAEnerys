@@ -194,10 +194,6 @@
       <DependentUpon>TeamColorButton.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <EmbeddedResource Include="shaders\fs.glsl" />
-    <EmbeddedResource Include="shaders\fs_lit.glsl" />
-    <EmbeddedResource Include="shaders\fs_norm.glsl" />
-    <EmbeddedResource Include="shaders\fs_tex.glsl" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -207,10 +203,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="shaders\vs.glsl" />
-    <EmbeddedResource Include="shaders\vs_lit.glsl" />
-    <EmbeddedResource Include="shaders\vs_norm.glsl" />
-    <EmbeddedResource Include="shaders\vs_tex.glsl" />
     <None Include="resources\daenerys.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -232,20 +224,41 @@
     <None Include="resources\missing.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="shaders\default.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\default.surf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\default.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\editor.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="shaders\editor.vs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DAEnerys.ico" />
-    <None Include="resources\FlagThread-NotFlagged,NotHot,NotSelected_10391_16x.png" />
-    <None Include="resources\FlagThread-Flagged,NotHot,NotSelected_10392_16x.png" />
-    <None Include="resources\flagThread-Yellow.png" />
+    <None Include="resources\FlagThread-NotFlagged,NotHot,NotSelected_10391_16x.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\FlagThread-Flagged,NotHot,NotSelected_10392_16x.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\flagThread-Yellow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
+      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

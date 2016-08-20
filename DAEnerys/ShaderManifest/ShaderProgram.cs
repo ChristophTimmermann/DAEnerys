@@ -29,6 +29,8 @@ namespace NewShaderManifest
             public ActiveUniformType type;
         }
 
+        internal static ShaderProgram DefaultProgram = null;
+
         public int ProgramID { get; private set; } = -1;
         public int VShaderID { get; private set; } = -1;
         public int GShaderID { get; private set; } = -1;
@@ -307,6 +309,7 @@ namespace NewShaderManifest
 
     internal static class ProgramLoader
     {
+        private static bool DefaultProgramLoaded = false;
         private static Interpreter interpreter;
         internal static ShaderProgram Program;
 
@@ -584,6 +587,31 @@ namespace NewShaderManifest
                     return ManifestConfig.Options.ContainsKey(left) || ProcessorDefines.ContainsKey(left);
             }
             throw new Exception();
+        }
+
+        internal static void LoadDefaultProgram()
+        {
+            if (DefaultProgramLoaded) return;
+
+            string vPath = Path.Combine(DAEnerys.Program.EXECUTABLE_PATH, @"shaders\default.vert");
+            string fPath = Path.Combine(DAEnerys.Program.EXECUTABLE_PATH, @"shaders\default.frag");
+            ShaderProgram.DefaultProgram = new ShaderProgram("daenerys_default");
+            StreamReader vReader = new StreamReader(
+                new FileStream(vPath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            StreamReader fReader = new StreamReader(
+                new FileStream(fPath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            ShaderProgram.DefaultProgram.VertShader = vReader.ReadToEnd();
+            ShaderProgram.DefaultProgram.FragShader = fReader.ReadToEnd();
+            vReader.Dispose();
+            fReader.Dispose();
+            ShaderProgram.DefaultProgram.UniformMap.Add("modelview", "inMatM");
+            ShaderProgram.DefaultProgram.UniformMap.Add("camera", "inMatV");
+            ShaderProgram.DefaultProgram.UniformMap.Add("projection", "inMatP");
+
+            ShaderProgram.DefaultProgram.Compile();
+            Manifest.AvailablePrograms.Add("daenerys_default");
+            Manifest.LoadedPrograms["daenerys_default"] = ShaderProgram.DefaultProgram;
+            DefaultProgramLoaded = true;
         }
     }
 }

@@ -174,8 +174,7 @@ namespace DAEnerys
                     }
                 }
             }
-
-            reader.Close();
+            
             reader.Dispose();
         }
         private static string FixCollada(string path)
