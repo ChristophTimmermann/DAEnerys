@@ -134,6 +134,7 @@ namespace DAEnerys
 
         private void buttonAmbientColor_Click(object sender, EventArgs e)
         {
+            colorDialog.Color = buttonAmbientColor.BackColor;
             DialogResult result = colorDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -146,6 +147,7 @@ namespace DAEnerys
 
         private void buttonBackgroundColor_Click(object sender, EventArgs e)
         {
+            colorDialog.Color = buttonBackgroundColor.BackColor;
             DialogResult result = colorDialog.ShowDialog();
             if (result == DialogResult.OK)
             {

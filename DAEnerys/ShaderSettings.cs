@@ -274,5 +274,22 @@ namespace DAEnerys
             //HyperspaceEffect.Effect.MaxBounds = -HWScene.Max;
             //HyperspaceEffect.Effect.Restart();
         }
+
+
+        private void numLifeAlpha_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.LifeAlpha = (float)numLifeAlpha.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
+
+        private void numDeathRatio_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.DeathRatio = (float)numDeathRatio.Value;
+
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
+        }
     }
 }

@@ -80,8 +80,10 @@ namespace NewShaderManifest
                 dest = UniformMap[dest];
             if (!Uniforms.ContainsKey(dest))
             {
-                //Log.WriteLine("Program does not contain uniform '" + dest + "'");
-                return;
+                if (Uniforms.ContainsKey(dest + "[0]"))
+                    dest = dest + "[0]";
+                else
+                    return;
             }
             if (var is float[])
             {

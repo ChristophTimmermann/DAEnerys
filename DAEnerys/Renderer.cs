@@ -37,22 +37,29 @@ namespace DAEnerys
 
         public static Color TeamColor { get; set; } = Color.FromArgb(255, 92, 139, 170);
         public static Color StripeColor { get; set; } = Color.FromArgb(255, 204, 204, 204);
-
-        public static Color EngineGlowColor { get; set; } = Color.FromArgb(64, 69, 120, 176);
+        public static Color EngineGlowColor { get; set; } = Color.FromArgb(255, 66, 120, 163);
 
         // VARIABLE SHADER INPUTS
+        //timeTable
         public static float Exec { get; set; } = 0f;
         public static float ExecDelta { get; set; } = 0f;
         public static float Sim { get; set; } = 0f;
         public static float SimDelta { get; set; } = 0f;
 
-        public static float MinClipDistance { get; set; } = -1000f;
-        public static float MaxClipDistance { get; set; } = 1000f;
-        public static float ClipDistance { get; set; } = 1000f;
-
+        //sobParams
         public static float SOBAlpha { get; set; } = 0.3f;
         public static float SOBCloak { get; set; } = 0f;
         public static float SOBClip { get; set; } = 0f;
+
+        //lifeParams
+        public static float LifeAlpha { get; set; } = 1f;
+        public static float DeathRatio { get; set; } = 1f;
+
+        public static Color FogColor { get; set; } = Color.FromArgb(0, 255, 255, 255);
+
+        public static float MinClipDistance { get; set; } = -1000f;
+        public static float MaxClipDistance { get; set; } = 1000f;
+        public static float ClipDistance { get; set; } = 1000f;
 
         public static bool HACK_SpecialSauce
         {
@@ -383,24 +390,26 @@ namespace DAEnerys
 
             int indiceat = 0;
 
+            UpdateManifestGlobals();
+
             foreach (HWMesh mesh in HWScene.Meshes)
                 if (!mesh.Translucent)
                     indiceat += DrawHWMesh(mesh, indiceat);
-            
+
             GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
 
             foreach (HWMesh mesh in HWScene.Meshes)
                 if (mesh.Translucent)
                     indiceat += DrawHWMesh(mesh, indiceat);
-            
+
             GL.UseProgram(editor_shader.ProgramID);
             editor_shader.LinkAttrib3(editor_pos_buffer, "inPos", false);
             editor_shader.LinkAttrib3(editor_col_buffer, "inColor", false);
             editor_shader.LinkAttrib2(editor_uv0_buffer, "inUV0", false);
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, editor_ind_buffer);
-            
+
             int editor_indiceat = 0;
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
@@ -430,6 +439,56 @@ namespace DAEnerys
             Program.GLControl.SwapBuffers();
         }
 
+        private static void UpdateManifestGlobals()
+        {
+            Manifest.Globals["timeTable"] = new float[] { Exec, ExecDelta, Sim, SimDelta };
+            //Manifest.Globals["bgAddLight"] = new float[] { 0f, 0f, 0f, 0f };
+            //Manifest.Globals["bgEnvParams"] = new float[] { 0f, 0f, 0f, 0f }; // Env Scale, unused x 3
+            //Manifest.Globals["bgBackExps"] = new float[] { 1f, 1f, 1f, 1f };
+            //Manifest.Globals["bgShipExps"] = new float[] { 1f, 1f, 1f, 1f };
+
+            Manifest.Globals["sobParams"] = new float[] { SOBAlpha, SOBCloak, SOBClip, 0f };    // Alpha, Cloak, Clip, unused
+            Manifest.Globals["lifeParams"] = new float[] { LifeAlpha, DeathRatio, 0f, 0f };     // Life Alpha, Death Ratio, unused x2
+
+            Manifest.Globals["fogColor"] = new float[] { FogColor.R / 255f, FogColor.G / 255f, FogColor.B / 255f, FogColor.A / 255f };
+            Manifest.Globals["fogWindow"] = new float[] { 0f, 0f, 10000f, 1f }; // Near, Min, Far, Max
+
+            Manifest.Globals["shadowTrans"] = new float[] {
+                0f, 0f, 0f, 0f, // keylight Trans
+                0f, 0f, 0f, 0f, // keylight Scale
+                0f, 0f, 0f, 0f, // filllight Trans
+                0f, 0f, 0f, 0f // filllight Scale
+            };
+
+            Manifest.Globals["scarInfo"] = new float[] { 0, 0, 0, 0 };   // SOB_USECLIP
+
+            float[] shiplights;
+            int shiplight_count = GetShipLights(out shiplights);
+            Manifest.Globals["lightCounts"] = new int[] { shiplight_count, 7 };
+            Manifest.Globals["lightShip"] = shiplights;
+            Manifest.Globals["lightCore"] = GetCoreLights();
+
+            Manifest.Globals["fxInfo"] = new float[] {
+                0f, 0f, 0f, 0f, // R, G, B, A
+                0f, 0f, 0f, 0f, // Alpha/Add, Scale, 0, 0
+            };
+
+            Manifest.Globals["clipPlane"] = new float[] { 0, 0, 1, ClipDistance };   // SOB_USECLIP
+
+            Manifest.Globals["gammaScale"] = new float[] { 0.8625f, 0.8625f, 0.8625f, 0.95f };
+            
+            //Not manifest globals, but still the same across all surfaces.
+            Matrix4 camera = Program.Camera.GetViewMatrix();
+            Matrix4 projection = Matrix4.Identity;
+            if (!Program.Camera.Orthographic)
+                projection = Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+            else
+                projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+
+            Manifest.Globals["camera"] = camera;
+            Manifest.Globals["projection"] = projection;
+        }
+
         private static void AttachTexture(Surface surface, string name, HWTexture tex)
         {
             if (tex != null)
@@ -455,7 +514,6 @@ namespace DAEnerys
                 if (shader == "default")
                     shader = "matte";
 
-
                 Surface surface = Manifest.UseSurface(shader.ToLower());
                 surface.Use();
 
@@ -467,107 +525,27 @@ namespace DAEnerys
                 surface.LinkAttrib(mesh_uv0_buffer, "inUV0", 2, false);
                 surface.LinkAttrib(mesh_uv1_buffer, "inUV1", 2, false);
                 //surface.LinkAttrib(mesh_uv2_buffer, "inUV2", 2, false);
-
-                // load global vars
-                float[] shiplights;
-                int shiplight_count = GetShipLights(out shiplights);
-
-                Matrix4 model = mesh.ModelMatrix;
-                Matrix4 camera = Program.Camera.GetViewMatrix();
-                Matrix4 projection = Matrix4.Identity;
-                if (!Program.Camera.Orthographic)
-                    projection = Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
-                else
-                    projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+                
+                surface["modelview"] = mesh.ModelMatrix;
 
                 Matrix4 mat_keylight = Matrix4.Identity;
                 Matrix4 mat_altlight = Matrix4.Identity;
 
-                surface["inLightShip[0]"] = shiplights;
-                surface["inLightCore[0]"] = GetCoreLights();
-                Manifest.Globals["timeTable"] = new float[] { Exec, ExecDelta, Sim, SimDelta };
-                Manifest.Globals["lightCounts"] = new int[] { shiplight_count, 7 };
-                Manifest.Globals["gammaScale"] = new float[] { 0.8625f, 0.8625f, 0.8625f, 0.95f };
-                //Manifest.Globals["bgAddLight"] = new float[] { 0f, 0f, 0f, 0f };
-                //Manifest.Globals["bgEnvParams"] = new float[] { 0f, 0f, 0f, 0f }; // Env Scale, unused x 3
-                //Manifest.Globals["bgShipExps"] = new float[] { 1f, 1f, 1f, 1f };
-
-                //float[] clipPlane = Manifest.Globals.Get("clipPlane");
-                //ClipDistance = HyperspaceEffect.Effect.Position.Z;
-                //Manifest.Globals["clipPlane", new float[] { clipPlane[0], clipPlane[1], clipPlane[2], ClipDistance });   // SOB_USECLIP
-                Manifest.Globals["clipPlane"] = new float[] { 0, 0, -1, ClipDistance };   // SOB_USECLIP
-                Manifest.Globals["sobParams"] = new float[] { SOBAlpha, SOBCloak, SOBClip, 0f };      // Alpha, Cloak, Clip, unused
-                Manifest.Globals["lifeParams"] = new float[] { 1f, ThrusterInterpolation, 0f, 0f };     // Life Alpha, Death Ratio, unused x2
-
-                //Manifest.Globals["fogColor"] = new float[] { 0f, 0f, 0f, 0f };       // R, G, B, A
-                //Manifest.Globals["fogWindow"] = new float[] { 10f, 0f, 0f, 0f };     // Near, Min, Far, Max
-
                 if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 1)
                 {
-                    // Light windowing for shadows - Trans/Scale key, Trans/Scale fill
-                    Manifest.Globals["shadowTrans"] = new float[] { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
-                }
-
-                Manifest.Globals["modelview"] = model;
-                Manifest.Globals["camera"] = camera;
-                Manifest.Globals["projection"] = projection;
-
-                if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 1)
-                    Manifest.Globals["keylight"] = mat_keylight;
-
-                if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 3)
-                    Manifest.Globals["keylight"] = mat_altlight;
-
-                // Vertex Shader
-                if (SOB_RESOURCE(shader))
-                {
-                    surface["inFadeInfo"] = new float[] { 0f, 0f };
-                    if (SOB_DUALINPUT(shader))
-                    {
-                        surface["inGridDiff"] = new float[] { 1f, 1f, 0f, 0f };
-                        surface["inGridGlow"] = new float[] { 1f, 1f, 0f, 0f };
-                        surface["inGridSpec"] = new float[] { 1f, 1f, 0f, 0f };
-                        surface["inGridNorm"] = new float[] { 1f, 1f, 0f, 0f };
-                    }
-                }
-
-                // Fragment Shader
-                if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 1)
-                {
+                    surface["keylight"] = mat_keylight;
                     AttachTexture(surface, "inTexShadow", null);
                 }
 
+                if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 3)
+                    surface["altlight"] = mat_altlight;
+                
                 if (SOB_BADGE(shader))
                 {
                     AttachTexture(surface, "SOB_badge", BadgeTexture);
                 }
 
-                if (SOB_RESOURCE(shader))
-                {
-                    AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
-                    AttachTexture(surface, "inTexProgress", mesh.Material.ProgressTexture);
-                    AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
-                    AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
-                    surface["SOB_fadeInfo"] = new float[] { ThrusterInterpolation, ThrusterInterpolation };
-                    //surface["inFadeWindow", new float[] { 0.1f, 0.1f, 0.9f });
-                    //surface["inGlowStyle", new float[] { 1f, 0f, 0f, 0f });
-
-                    if (SOB_DUALINPUT(shader)) // SOB_DUALINPUT
-                    {
-                        //surface["inMulDiff0", new float[] { 1f, 1f, 1f, 1f });
-                        //surface["inMulDiff1", new float[] { 1f, 1f, 1f, 1f });
-                        //surface["inMulGlow0", new float[] { 1f, 1f, 1f, 1f });
-                        //surface["inMulGlow1", new float[] { 1f, 1f, 1f, 1f });
-                        //surface["inMulSpec0", new float[] { 1f, 1f, 1f, 1f });
-                        //surface["inMulSpec1", new float[] { 1f, 1f, 1f, 1f });
-                    }
-
-                    if (SOB_DEBRIS(shader))
-                    {
-                        //uniform vec4 inFXInfo[2];
-                    }
-                }
-                else if (SOB_THRUSTERS(shader))
+                if (SOB_THRUSTERS(shader))
                 {
                     AttachTexture(surface, "SOB_diffuseOn", mesh.Material.DiffuseTexture);
                     AttachTexture(surface, "SOB_glowOn", mesh.Material.GlowTexture);
@@ -580,15 +558,41 @@ namespace DAEnerys
                     AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
                     AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
                     if (SOB_GLOWRGB(shader))
-                    {
                         AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
+                }
+
+                if (SOB_RESOURCE(shader))
+                {
+                    AttachTexture(surface, "SOB_progress", mesh.Material.ProgressTexture);
+                    //surface["SOB_fadeInfo"] = new float[] { 1f, 1f };
+                    //surface["SOB_fadeWindow"] = new float[] { 0.2f, 0.0f, 1.0f };
+                    //surface["SOB_glowStyle"] = new float[] { 1f, 0f, 0f, 0f }; // Fade Delta Mult Glow, Fade Burn Glow?
+
+                    if (SOB_DUALINPUT(shader)) // SOB_DUALINPUT
+                    {
+                        // Grid - Scale UV for 0, Offset UV for 1
+                        surface["SOB_gridDiff"] = new float[] { 0.5f, 1f, 0.5f, 0f };
+                        surface["SOB_gridGlow"] = new float[] { 0.5f, 1f, 0.5f, 0f };
+                        surface["SOB_gridSpec"] = new float[] { 0.5f, 1f, 0.5f, 0f };
+                        surface["SOB_gridNorm"] = new float[] { 0.5f, 1f, 0.5f, 0f };
+
+                        //surface["SOB_mulDiff0"] = new float[] { 1f, 1f, 1f, 1f };
+                        //surface["SOB_mulDiff1"] = new float[] { 1f, 1f, 1f, 1f };
+                        //surface["SOB_mulGlow0"] = new float[] { 1f, 1f, 1f, 1f };
+                        //surface["SOB_mulGlow1"] = new float[] { 1f, 1f, 1f, 1f };
+                        //surface["SOB_mulSpec0"] = new float[] { 1f, 1f, 1f, 1f };
+                        //surface["SOB_mulSpec1"] = new float[] { 1f, 1f, 1f, 1f };
+                    }
+
+                    if (SOB_DEBRIS(shader))
+                    {
+                        //uniform vec4 inFXInfo[2];
                     }
                 }
 
                 if (SOB_TEAMTEX(shader))
                 {
-                    if (mesh.Material.TeamTexture != null)
-                        AttachTexture(surface, "SOB_team", mesh.Material.TeamTexture);
+                    AttachTexture(surface, "SOB_team", mesh.Material.TeamTexture);
                 }
 
                 AttachTexture(surface, "SOB_normal", mesh.Material.NormalTexture);
@@ -610,10 +614,10 @@ namespace DAEnerys
                     surface["SOB_uieffect"] = new float[] { 0.5f, 0.5f, 0.5f, 0f };
 
                 //surface["inSurfDiff"] = new float[] { 0f, 0f, 0f, 0f };
-                if (shader == "thruster")
-                    surface["SOB_surfGlow"] = new float[] { 1.1f, 0.5f, 0f, 0f };
-                else
-                    surface["SOB_surfGlow"] = new float[] { 1.5f, 0.5f, 0f, 0f };
+                //if (shader == "thruster")
+                //    surface["SOB_surfGlow"] = new float[] { 1.1f, 0.5f, 0f, 0f };
+                //else
+                //    surface["SOB_surfGlow"] = new float[] { 1.5f, 0.5f, 0f, 0f };
                 //surface["inSurfSpec"] = new float[] { 0f, 0f, 0f, 0f };
                 //surface["inSurfGloss"] = new float[] { 0f, 0f, 0f, 0f };
                 //surface["inSurfRefl"] = new float[] { 0f, 0f, 0f, 0f };
@@ -660,11 +664,11 @@ namespace DAEnerys
                     projection = Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
                 else
                     projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
-                
+
                 GL.UniformMatrix4(editor_shader.GetUniform("inMatM"), false, ref model);
                 GL.UniformMatrix4(editor_shader.GetUniform("inMatV"), false, ref camera);
                 GL.UniformMatrix4(editor_shader.GetUniform("inMatP"), false, ref projection);
-                
+
                 HWTexture texture = null;
                 if (mesh.Material != null)
                 {
@@ -816,11 +820,11 @@ namespace DAEnerys
 
         private static int GetShipLights(out float[] shiplights)
         {
-            int shipLight = 0;
+            int shipLight = 0, shipLightCount = 0;
             shiplights = new float[96 * 4];
             foreach (Light l in Light.Lights)
             {
-                if (l != AmbientLight && l.Enabled)
+                if (l != AmbientLight && l.Enabled && l.Color.Length != 0)
                 {
                     // uniform vec4 inLightShip[96];   // Pos/Diff/Spec (or just Pos/Diff) + attenuations in W
                     shiplights[4 * shipLight + 0] = l.Position.X;
@@ -838,9 +842,11 @@ namespace DAEnerys
                     shiplights[4 * shipLight + 2] = 0; // l.Specular.Z
                     shiplights[4 * shipLight + 3] = l.Attenuation; // l.QuadraticAttenuation
                     shipLight++;
+                    shipLightCount++;
+                    if (shipLightCount == 32) break;
                 }
             }
-            return shipLight / 3;
+            return shipLightCount;
         }
 
         private static float[] GetCoreLights()
