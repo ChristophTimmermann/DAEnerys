@@ -134,7 +134,7 @@ namespace NewShaderManifest
                 }
                 else if (key == "clipPlane0")
                 {
-                    Protect[key] = GL.IsEnabled(EnableCap.ClipPlane0);
+                    //Protect[key] = GL.IsEnabled(EnableCap.ClipPlane0);
                 }
                 else if (key == "colorWrite")
                 {
@@ -187,10 +187,10 @@ namespace NewShaderManifest
                 }
                 else if (key == "clipPlane0")
                 {
-                    if ((bool)Protect[key])
+                    /*if ((bool)Protect[key])
                         GL.Enable(EnableCap.ClipPlane0);
                     else
-                        GL.Disable(EnableCap.ClipPlane0);
+                        GL.Disable(EnableCap.ClipPlane0);*/
                 }
                 else if (key == "colorWrite")
                 {
