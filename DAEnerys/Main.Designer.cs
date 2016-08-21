@@ -328,7 +328,7 @@ namespace DAEnerys
             this.groupShipMeshLODs.Controls.Add(this.listShipMeshLODs);
             this.groupShipMeshLODs.Location = new System.Drawing.Point(3, 471);
             this.groupShipMeshLODs.Name = "groupShipMeshLODs";
-            this.groupShipMeshLODs.Size = new System.Drawing.Size(218, 217);
+            this.groupShipMeshLODs.Size = new System.Drawing.Size(236, 172);
             this.groupShipMeshLODs.TabIndex = 1;
             this.groupShipMeshLODs.TabStop = false;
             this.groupShipMeshLODs.Text = "Level of detail(s)";
@@ -340,7 +340,7 @@ namespace DAEnerys
             this.listShipMeshLODs.FormattingEnabled = true;
             this.listShipMeshLODs.Location = new System.Drawing.Point(3, 16);
             this.listShipMeshLODs.Name = "listShipMeshLODs";
-            this.listShipMeshLODs.Size = new System.Drawing.Size(212, 198);
+            this.listShipMeshLODs.Size = new System.Drawing.Size(230, 153);
             this.listShipMeshLODs.TabIndex = 0;
             this.listShipMeshLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listShipMeshLODs_ItemCheck);
             // 
@@ -353,7 +353,7 @@ namespace DAEnerys
             this.panelShipMesh.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelShipMesh.Location = new System.Drawing.Point(3, 3);
             this.panelShipMesh.Name = "panelShipMesh";
-            this.panelShipMesh.Size = new System.Drawing.Size(219, 462);
+            this.panelShipMesh.Size = new System.Drawing.Size(236, 462);
             this.panelShipMesh.TabIndex = 0;
             // 
             // checkShipMeshDoScar
@@ -374,7 +374,7 @@ namespace DAEnerys
             this.listShipMeshes.FormattingEnabled = true;
             this.listShipMeshes.Location = new System.Drawing.Point(3, 3);
             this.listShipMeshes.Name = "listShipMeshes";
-            this.listShipMeshes.Size = new System.Drawing.Size(213, 407);
+            this.listShipMeshes.Size = new System.Drawing.Size(230, 407);
             this.listShipMeshes.TabIndex = 10;
             this.listShipMeshes.SelectedIndexChanged += new System.EventHandler(this.listShipMeshes_SelectedIndexChanged);
             // 
@@ -396,7 +396,7 @@ namespace DAEnerys
             this.comboShipMeshParent.FormattingEnabled = true;
             this.comboShipMeshParent.Location = new System.Drawing.Point(53, 412);
             this.comboShipMeshParent.Name = "comboShipMeshParent";
-            this.comboShipMeshParent.Size = new System.Drawing.Size(163, 21);
+            this.comboShipMeshParent.Size = new System.Drawing.Size(180, 21);
             this.comboShipMeshParent.TabIndex = 8;
             // 
             // tabMaterials
@@ -412,7 +412,7 @@ namespace DAEnerys
             this.tabMaterials.Location = new System.Drawing.Point(4, 58);
             this.tabMaterials.Name = "tabMaterials";
             this.tabMaterials.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMaterials.Size = new System.Drawing.Size(242, 693);
+            this.tabMaterials.Size = new System.Drawing.Size(242, 646);
             this.tabMaterials.TabIndex = 6;
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
@@ -522,7 +522,7 @@ namespace DAEnerys
             this.tabCollisionMeshes.Location = new System.Drawing.Point(4, 58);
             this.tabCollisionMeshes.Name = "tabCollisionMeshes";
             this.tabCollisionMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCollisionMeshes.Size = new System.Drawing.Size(242, 693);
+            this.tabCollisionMeshes.Size = new System.Drawing.Size(242, 646);
             this.tabCollisionMeshes.TabIndex = 5;
             this.tabCollisionMeshes.Text = "Collision Meshes";
             this.tabCollisionMeshes.UseVisualStyleBackColor = true;
@@ -579,7 +579,7 @@ namespace DAEnerys
             this.tabJoints.Location = new System.Drawing.Point(4, 58);
             this.tabJoints.Name = "tabJoints";
             this.tabJoints.Padding = new System.Windows.Forms.Padding(3);
-            this.tabJoints.Size = new System.Drawing.Size(242, 693);
+            this.tabJoints.Size = new System.Drawing.Size(242, 646);
             this.tabJoints.TabIndex = 1;
             this.tabJoints.Text = "Joints";
             this.tabJoints.UseVisualStyleBackColor = true;
@@ -590,7 +590,7 @@ namespace DAEnerys
             this.jointsTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.jointsTree.Location = new System.Drawing.Point(3, 3);
             this.jointsTree.Name = "jointsTree";
-            this.jointsTree.Size = new System.Drawing.Size(236, 687);
+            this.jointsTree.Size = new System.Drawing.Size(236, 640);
             this.jointsTree.TabIndex = 0;
             this.jointsTree.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.jointsTree_AfterCheck);
             // 
@@ -599,7 +599,7 @@ namespace DAEnerys
             this.tabMarkers.Controls.Add(this.splitTabMarkers);
             this.tabMarkers.Location = new System.Drawing.Point(4, 58);
             this.tabMarkers.Name = "tabMarkers";
-            this.tabMarkers.Size = new System.Drawing.Size(242, 693);
+            this.tabMarkers.Size = new System.Drawing.Size(242, 646);
             this.tabMarkers.TabIndex = 2;
             this.tabMarkers.Text = "Markers";
             this.tabMarkers.UseVisualStyleBackColor = true;
@@ -618,8 +618,8 @@ namespace DAEnerys
             // splitTabMarkers.Panel2
             // 
             this.splitTabMarkers.Panel2.Controls.Add(this.checkboxDrawMarkers);
-            this.splitTabMarkers.Size = new System.Drawing.Size(242, 693);
-            this.splitTabMarkers.SplitterDistance = 650;
+            this.splitTabMarkers.Size = new System.Drawing.Size(242, 646);
+            this.splitTabMarkers.SplitterDistance = 605;
             this.splitTabMarkers.TabIndex = 0;
             // 
             // listBoxMarkers
@@ -628,7 +628,7 @@ namespace DAEnerys
             this.listBoxMarkers.FormattingEnabled = true;
             this.listBoxMarkers.Location = new System.Drawing.Point(0, 0);
             this.listBoxMarkers.Name = "listBoxMarkers";
-            this.listBoxMarkers.Size = new System.Drawing.Size(242, 650);
+            this.listBoxMarkers.Size = new System.Drawing.Size(242, 605);
             this.listBoxMarkers.TabIndex = 2;
             // 
             // checkboxDrawMarkers
@@ -652,7 +652,7 @@ namespace DAEnerys
             this.tabDockpaths.Controls.Add(this.panelDockpathList);
             this.tabDockpaths.Location = new System.Drawing.Point(4, 58);
             this.tabDockpaths.Name = "tabDockpaths";
-            this.tabDockpaths.Size = new System.Drawing.Size(242, 693);
+            this.tabDockpaths.Size = new System.Drawing.Size(242, 646);
             this.tabDockpaths.TabIndex = 3;
             this.tabDockpaths.Text = "Dockpaths";
             this.tabDockpaths.UseVisualStyleBackColor = true;
@@ -667,7 +667,7 @@ namespace DAEnerys
             this.groupDockpathFlags.Controls.Add(this.checkDockpathExit);
             this.groupDockpathFlags.Location = new System.Drawing.Point(4, 169);
             this.groupDockpathFlags.Name = "groupDockpathFlags";
-            this.groupDockpathFlags.Size = new System.Drawing.Size(235, 64);
+            this.groupDockpathFlags.Size = new System.Drawing.Size(218, 64);
             this.groupDockpathFlags.TabIndex = 12;
             this.groupDockpathFlags.TabStop = false;
             this.groupDockpathFlags.Text = "Flags";
@@ -677,7 +677,7 @@ namespace DAEnerys
             this.checkDockpathAjar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathAjar.AutoSize = true;
             this.checkDockpathAjar.Enabled = false;
-            this.checkDockpathAjar.Location = new System.Drawing.Point(176, 42);
+            this.checkDockpathAjar.Location = new System.Drawing.Point(159, 42);
             this.checkDockpathAjar.Name = "checkDockpathAjar";
             this.checkDockpathAjar.Size = new System.Drawing.Size(44, 17);
             this.checkDockpathAjar.TabIndex = 11;
@@ -690,7 +690,7 @@ namespace DAEnerys
             this.checkDockpathLatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathLatch.AutoSize = true;
             this.checkDockpathLatch.Enabled = false;
-            this.checkDockpathLatch.Location = new System.Drawing.Point(176, 19);
+            this.checkDockpathLatch.Location = new System.Drawing.Point(159, 19);
             this.checkDockpathLatch.Name = "checkDockpathLatch";
             this.checkDockpathLatch.Size = new System.Drawing.Size(53, 17);
             this.checkDockpathLatch.TabIndex = 10;
@@ -734,7 +734,7 @@ namespace DAEnerys
             this.groupDockpathSegments.Controls.Add(this.trackBarDockpathSegments);
             this.groupDockpathSegments.Location = new System.Drawing.Point(3, 453);
             this.groupDockpathSegments.Name = "groupDockpathSegments";
-            this.groupDockpathSegments.Size = new System.Drawing.Size(235, 237);
+            this.groupDockpathSegments.Size = new System.Drawing.Size(218, 237);
             this.groupDockpathSegments.TabIndex = 3;
             this.groupDockpathSegments.TabStop = false;
             this.groupDockpathSegments.Text = "Segments";
@@ -753,7 +753,7 @@ namespace DAEnerys
             this.groupDockpathSegmentFlags.Controls.Add(this.checkDockpathSegmentFlagQueue);
             this.groupDockpathSegmentFlags.Location = new System.Drawing.Point(3, 122);
             this.groupDockpathSegmentFlags.Name = "groupDockpathSegmentFlags";
-            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(226, 111);
+            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(209, 111);
             this.groupDockpathSegmentFlags.TabIndex = 11;
             this.groupDockpathSegmentFlags.TabStop = false;
             this.groupDockpathSegmentFlags.Text = "Flags";
@@ -763,7 +763,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagClip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClip.AutoSize = true;
             this.checkDockpathSegmentFlagClip.Enabled = false;
-            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(119, 89);
+            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(102, 89);
             this.checkDockpathSegmentFlagClip.Name = "checkDockpathSegmentFlagClip";
             this.checkDockpathSegmentFlagClip.Size = new System.Drawing.Size(72, 17);
             this.checkDockpathSegmentFlagClip.TabIndex = 27;
@@ -788,7 +788,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagCheck.AutoSize = true;
             this.checkDockpathSegmentFlagCheck.Enabled = false;
-            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(119, 66);
+            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(102, 66);
             this.checkDockpathSegmentFlagCheck.Name = "checkDockpathSegmentFlagCheck";
             this.checkDockpathSegmentFlagCheck.Size = new System.Drawing.Size(95, 17);
             this.checkDockpathSegmentFlagCheck.TabIndex = 25;
@@ -813,7 +813,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClose.AutoSize = true;
             this.checkDockpathSegmentFlagClose.Enabled = false;
-            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(119, 42);
+            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(102, 42);
             this.checkDockpathSegmentFlagClose.Name = "checkDockpathSegmentFlagClose";
             this.checkDockpathSegmentFlagClose.Size = new System.Drawing.Size(102, 17);
             this.checkDockpathSegmentFlagClose.TabIndex = 23;
@@ -838,7 +838,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagPlayer.AutoSize = true;
             this.checkDockpathSegmentFlagPlayer.Enabled = false;
-            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(119, 19);
+            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(102, 19);
             this.checkDockpathSegmentFlagPlayer.Name = "checkDockpathSegmentFlagPlayer";
             this.checkDockpathSegmentFlagPlayer.Size = new System.Drawing.Size(101, 17);
             this.checkDockpathSegmentFlagPlayer.TabIndex = 22;
@@ -883,7 +883,7 @@ namespace DAEnerys
             this.boxDockpathSegmentSpeed.Location = new System.Drawing.Point(77, 96);
             this.boxDockpathSegmentSpeed.Name = "boxDockpathSegmentSpeed";
             this.boxDockpathSegmentSpeed.ReadOnly = true;
-            this.boxDockpathSegmentSpeed.Size = new System.Drawing.Size(155, 20);
+            this.boxDockpathSegmentSpeed.Size = new System.Drawing.Size(138, 20);
             this.boxDockpathSegmentSpeed.TabIndex = 8;
             // 
             // boxDockpathSegmentTolerance
@@ -893,7 +893,7 @@ namespace DAEnerys
             this.boxDockpathSegmentTolerance.Location = new System.Drawing.Point(77, 70);
             this.boxDockpathSegmentTolerance.Name = "boxDockpathSegmentTolerance";
             this.boxDockpathSegmentTolerance.ReadOnly = true;
-            this.boxDockpathSegmentTolerance.Size = new System.Drawing.Size(155, 20);
+            this.boxDockpathSegmentTolerance.Size = new System.Drawing.Size(138, 20);
             this.boxDockpathSegmentTolerance.TabIndex = 7;
             // 
             // trackBarDockpathSegments
@@ -903,7 +903,7 @@ namespace DAEnerys
             this.trackBarDockpathSegments.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarDockpathSegments.Location = new System.Drawing.Point(8, 16);
             this.trackBarDockpathSegments.Name = "trackBarDockpathSegments";
-            this.trackBarDockpathSegments.Size = new System.Drawing.Size(224, 45);
+            this.trackBarDockpathSegments.Size = new System.Drawing.Size(207, 45);
             this.trackBarDockpathSegments.TabIndex = 3;
             this.trackBarDockpathSegments.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBarDockpathSegments.Scroll += new System.EventHandler(this.trackBarDockpathSegments_Scroll);
@@ -915,7 +915,7 @@ namespace DAEnerys
             this.groupDockpathLinks.Controls.Add(this.listDockpathLinks);
             this.groupDockpathLinks.Location = new System.Drawing.Point(4, 346);
             this.groupDockpathLinks.Name = "groupDockpathLinks";
-            this.groupDockpathLinks.Size = new System.Drawing.Size(235, 101);
+            this.groupDockpathLinks.Size = new System.Drawing.Size(218, 101);
             this.groupDockpathLinks.TabIndex = 2;
             this.groupDockpathLinks.TabStop = false;
             this.groupDockpathLinks.Text = "Links";
@@ -927,7 +927,7 @@ namespace DAEnerys
             this.listDockpathLinks.FormattingEnabled = true;
             this.listDockpathLinks.Location = new System.Drawing.Point(3, 16);
             this.listDockpathLinks.Name = "listDockpathLinks";
-            this.listDockpathLinks.Size = new System.Drawing.Size(229, 82);
+            this.listDockpathLinks.Size = new System.Drawing.Size(212, 82);
             this.listDockpathLinks.TabIndex = 11;
             // 
             // groupDockpathFamilies
@@ -937,7 +937,7 @@ namespace DAEnerys
             this.groupDockpathFamilies.Controls.Add(this.listDockpathFamilies);
             this.groupDockpathFamilies.Location = new System.Drawing.Point(4, 239);
             this.groupDockpathFamilies.Name = "groupDockpathFamilies";
-            this.groupDockpathFamilies.Size = new System.Drawing.Size(235, 101);
+            this.groupDockpathFamilies.Size = new System.Drawing.Size(218, 101);
             this.groupDockpathFamilies.TabIndex = 1;
             this.groupDockpathFamilies.TabStop = false;
             this.groupDockpathFamilies.Text = "Families";
@@ -949,7 +949,7 @@ namespace DAEnerys
             this.listDockpathFamilies.FormattingEnabled = true;
             this.listDockpathFamilies.Location = new System.Drawing.Point(3, 16);
             this.listDockpathFamilies.Name = "listDockpathFamilies";
-            this.listDockpathFamilies.Size = new System.Drawing.Size(229, 82);
+            this.listDockpathFamilies.Size = new System.Drawing.Size(212, 82);
             this.listDockpathFamilies.TabIndex = 11;
             // 
             // panelDockpathList
@@ -959,7 +959,7 @@ namespace DAEnerys
             this.panelDockpathList.Controls.Add(this.dockpathList);
             this.panelDockpathList.Location = new System.Drawing.Point(4, 4);
             this.panelDockpathList.Name = "panelDockpathList";
-            this.panelDockpathList.Size = new System.Drawing.Size(235, 159);
+            this.panelDockpathList.Size = new System.Drawing.Size(218, 159);
             this.panelDockpathList.TabIndex = 0;
             // 
             // dockpathList
@@ -968,7 +968,7 @@ namespace DAEnerys
             this.dockpathList.FormattingEnabled = true;
             this.dockpathList.Location = new System.Drawing.Point(0, 0);
             this.dockpathList.Name = "dockpathList";
-            this.dockpathList.Size = new System.Drawing.Size(235, 159);
+            this.dockpathList.Size = new System.Drawing.Size(218, 159);
             this.dockpathList.TabIndex = 7;
             this.dockpathList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.dockpathList_ItemCheck);
             this.dockpathList.SelectedIndexChanged += new System.EventHandler(this.dockpathList_SelectedIndexChanged);
@@ -982,7 +982,7 @@ namespace DAEnerys
             this.tabNavLights.Controls.Add(this.panelNavLightList);
             this.tabNavLights.Location = new System.Drawing.Point(4, 58);
             this.tabNavLights.Name = "tabNavLights";
-            this.tabNavLights.Size = new System.Drawing.Size(242, 693);
+            this.tabNavLights.Size = new System.Drawing.Size(242, 646);
             this.tabNavLights.TabIndex = 7;
             this.tabNavLights.Text = "NavLights";
             this.tabNavLights.UseVisualStyleBackColor = true;
@@ -995,7 +995,7 @@ namespace DAEnerys
             this.groupNavLightPreview.Controls.Add(this.checkNavLightDrawRadius);
             this.groupNavLightPreview.Location = new System.Drawing.Point(8, 642);
             this.groupNavLightPreview.Name = "groupNavLightPreview";
-            this.groupNavLightPreview.Size = new System.Drawing.Size(226, 48);
+            this.groupNavLightPreview.Size = new System.Drawing.Size(226, 1);
             this.groupNavLightPreview.TabIndex = 14;
             this.groupNavLightPreview.TabStop = false;
             this.groupNavLightPreview.Text = "Preview";
@@ -1253,7 +1253,7 @@ namespace DAEnerys
             this.tabEngineGlows.Location = new System.Drawing.Point(4, 58);
             this.tabEngineGlows.Name = "tabEngineGlows";
             this.tabEngineGlows.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEngineGlows.Size = new System.Drawing.Size(242, 693);
+            this.tabEngineGlows.Size = new System.Drawing.Size(242, 646);
             this.tabEngineGlows.TabIndex = 8;
             this.tabEngineGlows.Text = "Engine Glows";
             this.tabEngineGlows.UseVisualStyleBackColor = true;
@@ -1265,7 +1265,7 @@ namespace DAEnerys
             this.groupEngineGlowLODs.Controls.Add(this.listEngineGlowLODs);
             this.groupEngineGlowLODs.Location = new System.Drawing.Point(3, 471);
             this.groupEngineGlowLODs.Name = "groupEngineGlowLODs";
-            this.groupEngineGlowLODs.Size = new System.Drawing.Size(235, 219);
+            this.groupEngineGlowLODs.Size = new System.Drawing.Size(218, 219);
             this.groupEngineGlowLODs.TabIndex = 1;
             this.groupEngineGlowLODs.TabStop = false;
             this.groupEngineGlowLODs.Text = "Level of detail(s)";
@@ -1277,7 +1277,7 @@ namespace DAEnerys
             this.listEngineGlowLODs.FormattingEnabled = true;
             this.listEngineGlowLODs.Location = new System.Drawing.Point(3, 16);
             this.listEngineGlowLODs.Name = "listEngineGlowLODs";
-            this.listEngineGlowLODs.Size = new System.Drawing.Size(229, 200);
+            this.listEngineGlowLODs.Size = new System.Drawing.Size(212, 200);
             this.listEngineGlowLODs.TabIndex = 0;
             this.listEngineGlowLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineGlowLODs_ItemCheck);
             // 
@@ -1290,7 +1290,7 @@ namespace DAEnerys
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(236, 462);
+            this.panel2.Size = new System.Drawing.Size(219, 462);
             this.panel2.TabIndex = 0;
             // 
             // listEngineGlows
@@ -1300,7 +1300,7 @@ namespace DAEnerys
             this.listEngineGlows.FormattingEnabled = true;
             this.listEngineGlows.Location = new System.Drawing.Point(3, 3);
             this.listEngineGlows.Name = "listEngineGlows";
-            this.listEngineGlows.Size = new System.Drawing.Size(230, 420);
+            this.listEngineGlows.Size = new System.Drawing.Size(213, 420);
             this.listEngineGlows.TabIndex = 10;
             this.listEngineGlows.SelectedIndexChanged += new System.EventHandler(this.listEngineGlows_SelectedIndexChanged);
             // 
@@ -1322,7 +1322,7 @@ namespace DAEnerys
             this.comboEngineGlowParent.FormattingEnabled = true;
             this.comboEngineGlowParent.Location = new System.Drawing.Point(53, 438);
             this.comboEngineGlowParent.Name = "comboEngineGlowParent";
-            this.comboEngineGlowParent.Size = new System.Drawing.Size(180, 21);
+            this.comboEngineGlowParent.Size = new System.Drawing.Size(163, 21);
             this.comboEngineGlowParent.TabIndex = 8;
             // 
             // tabEngineShapes
@@ -1332,7 +1332,7 @@ namespace DAEnerys
             this.tabEngineShapes.Location = new System.Drawing.Point(4, 58);
             this.tabEngineShapes.Name = "tabEngineShapes";
             this.tabEngineShapes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEngineShapes.Size = new System.Drawing.Size(242, 693);
+            this.tabEngineShapes.Size = new System.Drawing.Size(242, 646);
             this.tabEngineShapes.TabIndex = 9;
             this.tabEngineShapes.Text = "Engine Shapes";
             this.tabEngineShapes.UseVisualStyleBackColor = true;
