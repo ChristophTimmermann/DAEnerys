@@ -658,7 +658,6 @@
             this.Name = "ShaderSettings";
             this.Text = "Shader Settings";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.ShaderSettings_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numPaintCurve)).EndInit();
             this.gbxPaintStyle.ResumeLayout(false);
             this.gbxPaintStyle.PerformLayout();
