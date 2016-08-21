@@ -144,6 +144,7 @@ namespace NewShaderManifest
                 tokens.Add(new token(Symbol.EndOfLine, "", curline));
             }
             tokens.Add(new token(Symbol.EndOfFile, "", curline));
+            input.Dispose();
         }
 
         void next()
@@ -422,15 +423,7 @@ namespace NewShaderManifest
 
         internal static Node CompileSource(FileStream input)
         {
-            try
-            {
-                return new Compiler().__compile(input);
-            }
-            finally
-            {
-                if (input != null)
-                    input.Close();
-            }
+            return new Compiler().__compile(input);
         }
     }
 }

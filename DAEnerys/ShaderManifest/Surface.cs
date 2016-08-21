@@ -254,7 +254,6 @@ namespace NewShaderManifest
             DeathScissor,
             NonKeyword
         }
-        private static bool DefaultSurfaceLoaded = false;
 
         private static Surface Surface;
 
@@ -438,11 +437,11 @@ namespace NewShaderManifest
                 string val = args[0];
                 if (val == "0" || val == "false")
                 {
-                    CurrentLayer.AddGLOp("Disable", EnableCap.DepthTest);
+                    CurrentLayer.AddGLOp("DepthMask", false);
                 }
                 else if (val == "1" || val == "true")
                 {
-                    CurrentLayer.AddGLOp("Enable", EnableCap.DepthTest);
+                    CurrentLayer.AddGLOp("DepthMask", true);
                 }
                 else
                 {
@@ -534,15 +533,12 @@ namespace NewShaderManifest
 
         internal static void LoadDefaultSurface()
         {
-            if (DefaultSurfaceLoaded) return;
-
             Surface = new Surface();
             string path = Path.Combine(DAEnerys.Program.EXECUTABLE_PATH, @"shaders\default.surf");
             Parse(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
             Surface.Useable = true;
             Manifest.AvailableSurfaces.Add("daenerys_default");
             Manifest.LoadedSurfaces["daenerys_default"] = Surface;
-            DefaultSurfaceLoaded = true;
         }
     }
 

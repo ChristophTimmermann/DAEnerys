@@ -94,6 +94,10 @@ namespace NewShaderManifest
                 {
                     GL.Disable((EnableCap)value);
                 }
+                else if (key == "DepthMask")
+                {
+                    GL.DepthMask((bool)value);
+                }
                 else if (key == "DepthFunc")
                 {
                     GL.DepthFunc((DepthFunction)value);

@@ -61,11 +61,6 @@ namespace DAEnerys
             Reload();
         }
 
-        ~Shader()
-        {
-            //Delete();
-        }
-
         public void Reload()
         {
             int pID, vsID, fsID;
@@ -147,7 +142,6 @@ namespace DAEnerys
                     string file = progcode + "\n" + sr.ReadToEnd();
                     shaderID = LoadShader(file, type);
                 }
-                sr.Close();
             }
             return shaderID;
         }

@@ -113,7 +113,7 @@ namespace DAEnerys
             }
             private set { }
         }
-        
+
         public static bool DrawVisualizationsInFront = true;
         public static bool DisableLighting = false;
 
@@ -193,7 +193,7 @@ namespace DAEnerys
             else
                 GraphicsContext.CurrentContext.SwapInterval = 0;
         }
-        
+
         public static void ReloadShaders()
         {
             editor_shader.Reload();
@@ -237,37 +237,34 @@ namespace DAEnerys
                 int mesh_vertcount = 0;
 
                 //SORT SHIP MESHES
-                //List<HWMesh> hwMeshList = new List<HWMesh>();
-
-                //foreach (HWMesh mesh in HWScene.Meshes)
-                //{
-                //    if (!mesh.Translucent)
-                //        hwMeshList.Add(mesh);
-                //}
-                //foreach (HWMesh mesh in HWScene.Meshes)
-                //{
-                //    if (mesh.Translucent)
-                //        hwMeshList.Add(mesh);
-                //}
-                //HWScene.Meshes = hwMeshList;
+                List<HWMesh> hwMeshList = new List<HWMesh>();
 
                 foreach (HWMesh mesh in HWScene.Meshes)
                 {
-                    //if (mesh.Visible)
-                    //{
-                        foreach (HWVertex vtx in mesh.Vertices)
-                        {
-                            mesh_verts.Add(vtx.Position);
-                            mesh_normals.Add(vtx.Normal);
-                            mesh_tangents.Add(vtx.Tangent);
-                            mesh_bitangents.Add(vtx.Binormal);
-                            mesh_uv0.Add(vtx.UV0);
-                            mesh_uv1.Add(vtx.UV1);
-                        }
-                        mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount).ToList());
+                    if (!mesh.Translucent)
+                        hwMeshList.Add(mesh);
+                }
+                foreach (HWMesh mesh in HWScene.Meshes)
+                {
+                    if (mesh.Translucent)
+                        hwMeshList.Add(mesh);
+                }
+                HWScene.Meshes = hwMeshList;
 
-                        mesh_vertcount += mesh.VertexCount;
-                    //}
+                foreach (HWMesh mesh in HWScene.Meshes)
+                {
+                    foreach (HWVertex vtx in mesh.Vertices)
+                    {
+                        mesh_verts.Add(vtx.Position);
+                        mesh_normals.Add(vtx.Normal);
+                        mesh_tangents.Add(vtx.Tangent);
+                        mesh_bitangents.Add(vtx.Binormal);
+                        mesh_uv0.Add(vtx.UV0);
+                        mesh_uv1.Add(vtx.UV1);
+                    }
+                    mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount).ToList());
+
+                    mesh_vertcount += mesh.VertexCount;
                 }
 
                 Vector3[] vertdata = mesh_verts.ToArray();
@@ -316,14 +313,11 @@ namespace DAEnerys
 
                 foreach (EditorMesh mesh in EditorScene.meshes)
                 {
-                    if (mesh.Visible)
-                    {
-                        editor_verts.AddRange(mesh.Vertices);
-                        editor_uv0.AddRange(mesh.TextureCoords);
-                        editor_colors.AddRange(mesh.Colors);
-                        editor_inds.AddRange(mesh.GetIndices(editor_vertcount).ToList());
-                        editor_vertcount += mesh.VertexCount;
-                    }
+                    editor_verts.AddRange(mesh.Vertices);
+                    editor_uv0.AddRange(mesh.TextureCoords);
+                    editor_colors.AddRange(mesh.Colors);
+                    editor_inds.AddRange(mesh.GetIndices(editor_vertcount).ToList());
+                    editor_vertcount += mesh.VertexCount;
                 }
                 Vector3[] vertdata = editor_verts.ToArray();
                 Vector2[] uv0data = editor_uv0.ToArray();
@@ -390,12 +384,15 @@ namespace DAEnerys
             int indiceat = 0;
 
             foreach (HWMesh mesh in HWScene.Meshes)
+                if (!mesh.Translucent)
                     indiceat += DrawHWMesh(mesh, indiceat);
-
+            
+            GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
-            GL.Enable(EnableCap.DepthTest);
 
-            GL.DepthMask(true);
+            foreach (HWMesh mesh in HWScene.Meshes)
+                if (mesh.Translucent)
+                    indiceat += DrawHWMesh(mesh, indiceat);
             
             GL.UseProgram(editor_shader.ProgramID);
             editor_shader.LinkAttrib3(editor_pos_buffer, "inPos", false);
@@ -403,13 +400,11 @@ namespace DAEnerys
             editor_shader.LinkAttrib2(editor_uv0_buffer, "inUV0", false);
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, editor_ind_buffer);
-
-            GL.Enable(EnableCap.AlphaTest);
-
+            
             int editor_indiceat = 0;
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
-                if (mesh.Visible && mesh.NeverDrawInFront)
+                if (mesh.NeverDrawInFront)
                     editor_indiceat += DrawEditorMesh(mesh, editor_indiceat);
             }
 
@@ -418,13 +413,13 @@ namespace DAEnerys
 
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
-                if (mesh.Visible && !mesh.NeverDrawInFront && mesh.DrawAboveShip)
+                if (!mesh.NeverDrawInFront && mesh.DrawAboveShip)
                     editor_indiceat += DrawEditorMesh(mesh, editor_indiceat);
             }
 
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
-                if (mesh.Visible && !mesh.NeverDrawInFront && !mesh.DrawAboveShip)
+                if (!mesh.NeverDrawInFront && !mesh.DrawAboveShip)
                     editor_indiceat += DrawEditorMesh(mesh, editor_indiceat);
             }
 
@@ -502,7 +497,7 @@ namespace DAEnerys
                 //Manifest.Globals["clipPlane", new float[] { clipPlane[0], clipPlane[1], clipPlane[2], ClipDistance });   // SOB_USECLIP
                 Manifest.Globals["clipPlane"] = new float[] { 0, 0, -1, ClipDistance };   // SOB_USECLIP
                 Manifest.Globals["sobParams"] = new float[] { SOBAlpha, SOBCloak, SOBClip, 0f };      // Alpha, Cloak, Clip, unused
-                                                                                                      //Manifest.Globals["lifeParams"] = new float[] { 1f, 1f, 0f, 0f };     // Life Alpha, Death Ratio, unused x2
+                Manifest.Globals["lifeParams"] = new float[] { 1f, ThrusterInterpolation, 0f, 0f };     // Life Alpha, Death Ratio, unused x2
 
                 //Manifest.Globals["fogColor"] = new float[] { 0f, 0f, 0f, 0f };       // R, G, B, A
                 //Manifest.Globals["fogWindow"] = new float[] { 10f, 0f, 0f, 0f };     // Near, Min, Far, Max
@@ -549,9 +544,11 @@ namespace DAEnerys
 
                 if (SOB_RESOURCE(shader))
                 {
-                    //AttachTexture(surface, "inTexProgress", mesh.Material.???);
+                    AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
+                    AttachTexture(surface, "inTexProgress", mesh.Material.ProgressTexture);
                     AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
                     AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
+                    surface["SOB_fadeInfo"] = new float[] { ThrusterInterpolation, ThrusterInterpolation };
                     //surface["inFadeWindow", new float[] { 0.1f, 0.1f, 0.9f });
                     //surface["inGlowStyle", new float[] { 1f, 0f, 0f, 0f });
 
@@ -570,24 +567,21 @@ namespace DAEnerys
                         //uniform vec4 inFXInfo[2];
                     }
                 }
+                else if (SOB_THRUSTERS(shader))
+                {
+                    AttachTexture(surface, "SOB_diffuseOn", mesh.Material.DiffuseTexture);
+                    AttachTexture(surface, "SOB_glowOn", mesh.Material.GlowTexture);
+                    AttachTexture(surface, "SOB_diffuseOff", mesh.Material.DiffuseOffTexture);
+                    AttachTexture(surface, "SOB_glowOff", mesh.Material.GlowOffTexture);
+                    surface["SOB_engine"] = new float[] { ThrusterInterpolation, 0, 0, 0 };
+                }
                 else
                 {
-                    if (SOB_THRUSTERS(shader))
+                    AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
+                    AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
+                    if (SOB_GLOWRGB(shader))
                     {
-                        AttachTexture(surface, "SOB_diffuseOn", mesh.Material.DiffuseTexture);
-                        AttachTexture(surface, "SOB_glowOn", mesh.Material.GlowTexture);
-                        AttachTexture(surface, "SOB_diffuseOff", mesh.Material.DiffuseOffTexture);
-                        AttachTexture(surface, "SOB_glowOff", mesh.Material.GlowOffTexture);
-                        surface["SOB_engine"] = new float[] { ThrusterInterpolation, 0, 0, 0 };
-                    }
-                    else
-                    {
-                        AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
-                        AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
-                        if (SOB_GLOWRGB(shader))
-                        {
-                            AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
-                        }
+                        AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
                     }
                 }
 
@@ -643,7 +637,7 @@ namespace DAEnerys
                 // Draw
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
                 surface.Draw(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
-                
+
                 GetError("Post DrawHWMesh");
             }
 
@@ -652,82 +646,78 @@ namespace DAEnerys
 
         private static int DrawEditorMesh(EditorMesh mesh, int index)
         {
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-
-            if (mesh.Wireframe)
-                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-
-            Matrix4 model = mesh.ModelMatrix;
-            Matrix4 camera = Program.Camera.GetViewMatrix();
-            Matrix4 projection = Matrix4.Identity;
-            if (!Program.Camera.Orthographic)
-                projection = Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
-            else
-                projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
-
-            GetError("OpenTK Rendering");
-            GL.UniformMatrix4(editor_shader.GetUniform("inMatM"), false, ref model);
-            GetError("OpenTK Rendering");
-            GL.UniformMatrix4(editor_shader.GetUniform("inMatV"), false, ref camera);
-            GetError("OpenTK Rendering");
-            GL.UniformMatrix4(editor_shader.GetUniform("inMatP"), false, ref projection);
-
-            GetError("OpenTK Rendering");
-            HWTexture texture = null;
-            if (mesh.Material != null)
+            if (mesh.Visible)
             {
-                texture = mesh.Material.DiffuseTexture;
-                Vector4 diffuse = new Vector4(mesh.Material.DiffuseColor, mesh.Material.Opacity);
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
-                GL.Uniform4(editor_shader.GetUniform("matDiffuse"), ref diffuse);
-            }
-            else
-            {
-                GL.Uniform4(editor_shader.GetUniform("matDiffuse"), 1f, 1f, 1f, 1f);
-            }
+                if (mesh.Wireframe)
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 
-            if (texture != null)
-            {
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, texture.ID);
-                GL.Uniform1(editor_shader.GetUniform("inTexMat"), 0);
-                GL.Uniform1(editor_shader.GetUniform("isTextured"), 1); //Tell shader to use texture colors
-            }
-            else
-            {
-                GL.Uniform1(editor_shader.GetUniform("isTextured"), 0); //Tell shader to use vertex colors
-            }
-
-            if (mesh.Shaded)
-            {
-                //GL.Uniform4(CurrentShader.GetUniform("shaded", 1); //Tell shader to calculate lighting
-
+                Matrix4 model = mesh.ModelMatrix;
+                Matrix4 camera = Program.Camera.GetViewMatrix();
+                Matrix4 projection = Matrix4.Identity;
+                if (!Program.Camera.Orthographic)
+                    projection = Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, (float)Program.GLControl.Width / (float)Program.GLControl.Height, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+                else
+                    projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+                
+                GL.UniformMatrix4(editor_shader.GetUniform("inMatM"), false, ref model);
+                GL.UniformMatrix4(editor_shader.GetUniform("inMatV"), false, ref camera);
+                GL.UniformMatrix4(editor_shader.GetUniform("inMatP"), false, ref projection);
+                
+                HWTexture texture = null;
                 if (mesh.Material != null)
                 {
-                    Vector4 specular = new Vector4(mesh.Material.SpecularColor, mesh.Material.SpecularExponent);
-                    GL.Uniform4(editor_shader.GetUniform("matSpecular"), ref specular);
+                    texture = mesh.Material.DiffuseTexture;
+                    Vector4 diffuse = new Vector4(mesh.Material.DiffuseColor, mesh.Material.Opacity);
+
+                    GL.Uniform4(editor_shader.GetUniform("matDiffuse"), ref diffuse);
                 }
+                else
+                {
+                    GL.Uniform4(editor_shader.GetUniform("matDiffuse"), 1f, 1f, 1f, 1f);
+                }
+
+                if (texture != null)
+                {
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    GL.BindTexture(TextureTarget.Texture2D, texture.ID);
+                    GL.Uniform1(editor_shader.GetUniform("inTexMat"), 0);
+                    GL.Uniform1(editor_shader.GetUniform("isTextured"), 1); //Tell shader to use texture colors
+                }
+                else
+                {
+                    GL.Uniform1(editor_shader.GetUniform("isTextured"), 0); //Tell shader to use vertex colors
+                }
+
+                if (mesh.Shaded)
+                {
+                    //GL.Uniform4(CurrentShader.GetUniform("shaded", 1); //Tell shader to calculate lighting
+
+                    if (mesh.Material != null)
+                    {
+                        Vector4 specular = new Vector4(mesh.Material.SpecularColor, mesh.Material.SpecularExponent);
+                        GL.Uniform4(editor_shader.GetUniform("matSpecular"), ref specular);
+                    }
+                }
+                //else
+                //    GL.Uniform4(CurrentShader.GetUniform("shaded", 0); //Tell shader not to calculate lighting
+
+                if (mesh.VertexColored)
+                    GL.Uniform1(editor_shader.GetUniform("vertexColored"), 1);
+                else
+                    GL.Uniform1(editor_shader.GetUniform("vertexColored"), 0);
+
+                if (mesh.BlackIsTransparent)
+                    GL.Uniform1(editor_shader.GetUniform("blackIsTransparent"), 1);
+                else
+                    GL.Uniform1(editor_shader.GetUniform("blackIsTransparent"), 0);
+
+                if (mesh.GetType() == typeof(EditorLine))
+                    GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(int));
+                else
+                    GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(int));
             }
-            //else
-            //    GL.Uniform4(CurrentShader.GetUniform("shaded", 0); //Tell shader not to calculate lighting
-
-            if (mesh.VertexColored)
-                GL.Uniform1(editor_shader.GetUniform("vertexColored"), 1);
-            else
-                GL.Uniform1(editor_shader.GetUniform("vertexColored"), 0);
-
-            if (mesh.BlackIsTransparent)
-            {
-                GL.Uniform1(editor_shader.GetUniform("blackIsTransparent"), 1);
-            }
-            else
-                GL.Uniform1(editor_shader.GetUniform("blackIsTransparent"), 0);
-
-            if (mesh.GetType() == typeof(EditorLine))
-                GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(int));
-            else
-                GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(int));
-
             return mesh.IndiceCount;
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace NewShaderManifest
 {
+    [Serializable]
     public class Variables : Dictionary<string, dynamic>
     {
         public Variables() : base() { }

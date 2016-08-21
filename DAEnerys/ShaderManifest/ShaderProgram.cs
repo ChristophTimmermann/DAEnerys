@@ -591,11 +591,17 @@ namespace NewShaderManifest
 
         internal static void LoadDefaultProgram()
         {
-            if (DefaultProgramLoaded) return;
-
+            if (!DefaultProgramLoaded)
+            {
+                ShaderProgram.DefaultProgram = new ShaderProgram("daenerys_default");
+                ShaderProgram.DefaultProgram.Locals.Add("inTexDiff", 0);
+                ShaderProgram.DefaultProgram.Locals.Add("inTexTeam", 2);
+                ShaderProgram.DefaultProgram.UniformMap.Add("modelview", "inMatM");
+                ShaderProgram.DefaultProgram.UniformMap.Add("camera", "inMatV");
+                ShaderProgram.DefaultProgram.UniformMap.Add("projection", "inMatP");
+            }
             string vPath = Path.Combine(DAEnerys.Program.EXECUTABLE_PATH, @"shaders\default.vert");
             string fPath = Path.Combine(DAEnerys.Program.EXECUTABLE_PATH, @"shaders\default.frag");
-            ShaderProgram.DefaultProgram = new ShaderProgram("daenerys_default");
             StreamReader vReader = new StreamReader(
                 new FileStream(vPath, FileMode.Open, FileAccess.Read, FileShare.Read));
             StreamReader fReader = new StreamReader(
@@ -604,9 +610,6 @@ namespace NewShaderManifest
             ShaderProgram.DefaultProgram.FragShader = fReader.ReadToEnd();
             vReader.Dispose();
             fReader.Dispose();
-            ShaderProgram.DefaultProgram.UniformMap.Add("modelview", "inMatM");
-            ShaderProgram.DefaultProgram.UniformMap.Add("camera", "inMatV");
-            ShaderProgram.DefaultProgram.UniformMap.Add("projection", "inMatP");
 
             ShaderProgram.DefaultProgram.Compile();
             Manifest.AvailablePrograms.Add("daenerys_default");

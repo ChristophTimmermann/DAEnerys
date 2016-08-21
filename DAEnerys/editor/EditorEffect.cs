@@ -15,11 +15,14 @@ namespace DAEnerys
 
     public class EditorEffect : EditorMesh
     {
+        private float _width = 1f;
+        private float _height = 1f;
+
         public static Assimp.Mesh Mesh;
         public Vector3 Position;
 
-        public float Width { get; set; } = 1f;
-        public float Height { get; set; } = 1f;
+        public float Width { get { return _width; } set { _width = value; } }
+        public float Height { get { return _height; } set { _height = value; } }
         public Vector2 Size {
             get
             {

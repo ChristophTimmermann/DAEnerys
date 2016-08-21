@@ -44,6 +44,7 @@ namespace NewShaderManifest
         }
     }
 
+    [Serializable]
     public class ConfigOptions : Dictionary<string, ConfigOption>
     {
         public new ConfigOption this[string key]

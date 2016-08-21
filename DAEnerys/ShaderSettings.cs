@@ -183,6 +183,8 @@ namespace DAEnerys
         private void btnReloadShaders_Click(object sender, EventArgs e)
         {
             Manifest.ReloadManifest();
+            Renderer.UpdateView();
+            Program.GLControl.Invalidate();
         }
 
         private void numExecTime_ValueChanged(object sender, EventArgs e)
