@@ -112,13 +112,13 @@ namespace DAEnerys
                 }
 
                 int widthA, heightA;
-                byte[] aData = GetData(existsA, SourceR, flipA, out widthA, out heightA);
+                byte[,] aData = GetData(existsA, SourceR, flipA, out widthA, out heightA);
 
                 int widthB, heightB;
-                byte[] bData = GetData(existsB, SourceG, flipB, out widthB, out heightB);
+                byte[,] bData = GetData(existsB, SourceG, flipB, out widthB, out heightB);
 
                 int widthC, heightC;
-                byte[] cData = GetData(existsC, SourceB, flipC, out widthC, out heightC);
+                byte[,] cData = GetData(existsC, SourceB, flipC, out widthC, out heightC);
 
 
                 if ((widthA != widthB && heightA != heightB && existsA && existsB) ||
@@ -129,48 +129,58 @@ namespace DAEnerys
                     return null;
                 }
 
+                byte byteDefaultR = (byte)Math.Round(DefaultR * 255);
+                byte byteDefaultG = (byte)Math.Round(DefaultG * 255);
+                byte byteDefaultB = (byte)Math.Round(DefaultB * 255);
+                byte byteDefaultA = (byte)Math.Round(DefaultA * 255);
+
                 int width = existsA ? widthA : (existsB ? widthB : widthC);
                 int height = existsA ? heightA : (existsB ? heightB : heightC);
 
-                int size = width * height * 4;
+                int size = width * 4;
                 bool useA = aData.Length > 0;
                 bool useB = bData.Length > 0;
                 bool useC = cData.Length > 0;
-                float[] data = new float[size];
-                for (int i = 0; i < size; i += 4)
-                {
-                    float valA, valB, valC;
-                    if (useAlpha)
-                    {
-                        valA = useA ? aData[i + 3] / 255f : DefaultR;
-                        valB = useB ? bData[i + 3] / 255f : DefaultG;
-                        valC = useC ? cData[i + 3] / 255f : DefaultB;
-                    }
-                    else
-                    {
-                        valA = useA ? (aData[i + 0] + aData[i + 1] + aData[i + 2] + aData[i + 3]) / (4 * 255f) : DefaultR;
-                        valB = useB ? (bData[i + 0] + bData[i + 1] + bData[i + 2] + bData[i + 3]) / (4 * 255f) : DefaultG;
-                        valC = useC ? (cData[i + 0] + cData[i + 1] + cData[i + 2] + cData[i + 3]) / (4 * 255f) : DefaultB;
-                    }
 
-                    data[i + 0] = invertR ? (1f - valA) : valA;
-                    data[i + 1] = invertG ? (1f - valB) : valB;
-                    data[i + 2] = invertB ? (1f - valC) : valC;
-                    data[i + 3] = DefaultA;
+                byte[,] data = new byte[height, size];
+
+                for (int y = 0; y < height; y++)
+                {
+                    for (int i = 0; i < size; i += 4)
+                    {
+                        byte valA, valB, valC;
+                        if (useAlpha)
+                        {
+                            valA = useA ? aData[y, i + 3] : byteDefaultR;
+                            valB = useB ? bData[y, i + 3] : byteDefaultG;
+                            valC = useC ? cData[y, i + 3] : byteDefaultB;
+                        }
+                        else
+                        {
+                            valA = useA ? (byte)((aData[y, i + 0] + aData[y, i + 1] + aData[y, i + 2] + aData[y, i + 3]) / 4) : byteDefaultR;
+                            valB = useB ? (byte)((bData[y, i + 0] + bData[y, i + 1] + bData[y, i + 2] + bData[y, i + 3]) / 4) : byteDefaultG;
+                            valC = useC ? (byte)((cData[y, i + 0] + cData[y, i + 1] + cData[y, i + 2] + cData[y, i + 3]) / 4) : byteDefaultB;
+                        }
+
+                        data[y, i + 0] = invertR ? (byte)(255 - valA) : valA;
+                        data[y, i + 1] = invertG ? (byte)(255 - valB) : valB;
+                        data[y, i + 2] = invertB ? (byte)(255 - valC) : valC;
+                        data[y, i + 3] = byteDefaultA;
+                    }
                 }
+
                 GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
                 IntPtr ptr = handle.AddrOfPinnedObject();
-                int ID = RawLoadImage(width, height, PixelFormat.Rgba, PixelType.Float, ptr, false, false);
+                int ID = RawLoadImage(width, height, PixelFormat.Rgba, PixelType.UnsignedByte, ptr, false, false);
                 handle.Free();
                 data = null;
                 return new HWTexture(name, ID);
             }
         }
 
-        private static byte[] GetData(bool exists, string path, bool flip, out int width, out int height)
+        private static byte[,] GetData(bool exists, string path, bool flip, out int width, out int height)
         {
-            IntPtr dataPtr;
-            byte[] data = new byte[0];
+            byte[,] data = new byte[0, 0];
 
             PixelFormat PF = 0;
             width = 0; height = 0;
@@ -189,16 +199,16 @@ namespace DAEnerys
                     new Problem(ProblemTypes.WARNING, "The texture \"" + path + "\" does not have a power-of-2 dimension.");
                 PF = (PixelFormat)IL.GetInteger(IntName.ImageFormat);
 
-                dataPtr = IL.GetData();
+                int rowSize = width * 4;
+
                 long ptr = IL.GetData().ToInt64();
+                data = new byte[height, rowSize];
 
-                data = new byte[width * height * 4];
-
-                int offset = 0;
                 for (int i = 0; i < height; i++)
                 {
-                    Marshal.Copy(new IntPtr(ptr), data, offset, width * 4);
-                    offset += width * 4;
+                    byte[] row = new byte[rowSize];
+                    Marshal.Copy(new IntPtr(ptr), row, 0, rowSize);
+                    Buffer.BlockCopy(row, 0, data, i * rowSize, rowSize);
                     ptr += width * 4;
                 }
 
