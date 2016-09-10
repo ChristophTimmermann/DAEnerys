@@ -173,6 +173,24 @@ namespace DAEnerys
                         new HWImage(name, path);
                     }
                 }
+
+                //Check for problems with texture names in diffuse slots (Crashes HODOR without any information)
+                if (reader.Name == "diffuse")
+                {
+                    reader.ReadToDescendant("texture");
+                    string name = "";
+
+                    if (reader.Name == "texture")
+                    {
+                        name = reader.GetAttribute("texture").Replace("-image", "");
+                    }
+
+                    if (name.Length > 0)
+                    {
+                        if (!name.StartsWith("IMG[") || !name.EndsWith("]"))
+                            new Problem(ProblemTypes.ERROR, "Diffuse texture \"" + name + "\" has the wrong name format. This will most likely crash HODOR.");
+                    }
+                }
             }
             
             reader.Dispose();

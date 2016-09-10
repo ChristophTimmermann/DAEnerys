@@ -23,7 +23,7 @@ namespace DAEnerys
             {
                 string[] splitted = name.Split('[');
                 int end = -1;
-                
+
                 for (int i = 0; i < splitted.Length; i++)
                 {
                     if (i != 0)
@@ -44,7 +44,7 @@ namespace DAEnerys
                         else if (splitted[i - 1].EndsWith("FMT")) //Format
                         {
                             string formatString = splitted[i].Substring(0, end);
-                            switch(formatString)
+                            switch (formatString)
                             {
                                 case "DXT1":
                                     Format = ImageFormat.DXT1;
