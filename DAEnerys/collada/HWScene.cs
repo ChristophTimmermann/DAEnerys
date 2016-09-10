@@ -187,7 +187,7 @@ namespace DAEnerys
 
                     if (name.Length > 0)
                     {
-                        if (!name.StartsWith("IMG[") || !name.EndsWith("]"))
+                        if (!name.StartsWith("IMG[")) //Not a very good check (I guess)...
                             new Problem(ProblemTypes.ERROR, "Diffuse texture \"" + name + "\" has the wrong name format. This will most likely crash HODOR.");
                     }
                 }
