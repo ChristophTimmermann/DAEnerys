@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 using DevILSharp;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace DAEnerys
 {
@@ -170,6 +171,7 @@ namespace DAEnerys
         {
             IntPtr dataPtr;
             byte[] data = new byte[0];
+
             PixelFormat PF = 0;
             width = 0; height = 0;
             if (exists)
@@ -186,9 +188,20 @@ namespace DAEnerys
                 if ((((int)LogW) != LogW) || (((int)LogH) != LogH))
                     new Problem(ProblemTypes.WARNING, "The texture \"" + path + "\" does not have a power-of-2 dimension.");
                 PF = (PixelFormat)IL.GetInteger(IntName.ImageFormat);
+
                 dataPtr = IL.GetData();
+                long ptr = IL.GetData().ToInt64();
+
                 data = new byte[width * height * 4];
-                Marshal.Copy(dataPtr, data, 0, width * height * 4);
+
+                int offset = 0;
+                for (int i = 0; i < height; i++)
+                {
+                    Marshal.Copy(new IntPtr(ptr), data, offset, width * 4);
+                    offset += width * 4;
+                    ptr += width * 4;
+                }
+
                 IL.DeleteImage(img);
                 IL.BindImage(0);
             }
