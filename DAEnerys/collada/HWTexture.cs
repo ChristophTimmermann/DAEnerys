@@ -203,10 +203,10 @@ namespace DAEnerys
 
                 long ptr = IL.GetData().ToInt64();
                 data = new byte[height, rowSize];
+                byte[] row = new byte[rowSize];
 
                 for (int i = 0; i < height; i++)
                 {
-                    byte[] row = new byte[rowSize];
                     Marshal.Copy(new IntPtr(ptr), row, 0, rowSize);
                     Buffer.BlockCopy(row, 0, data, i * rowSize, rowSize);
                     ptr += width * 4;
