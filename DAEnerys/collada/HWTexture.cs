@@ -129,10 +129,10 @@ namespace DAEnerys
                     return null;
                 }
 
-                byte byteDefaultR = (byte)Math.Round(DefaultR * 255);
-                byte byteDefaultG = (byte)Math.Round(DefaultG * 255);
-                byte byteDefaultB = (byte)Math.Round(DefaultB * 255);
-                byte byteDefaultA = (byte)Math.Round(DefaultA * 255);
+                byte byteDefaultR = (byte)(DefaultR * 255);
+                byte byteDefaultG = (byte)(DefaultG * 255);
+                byte byteDefaultB = (byte)(DefaultB * 255);
+                byte byteDefaultA = (byte)(DefaultA * 255);
 
                 int width = existsA ? widthA : (existsB ? widthB : widthC);
                 int height = existsA ? heightA : (existsB ? heightB : heightC);
@@ -209,7 +209,7 @@ namespace DAEnerys
                 {
                     Marshal.Copy(new IntPtr(ptr), row, 0, rowSize);
                     Buffer.BlockCopy(row, 0, data, i * rowSize, rowSize);
-                    ptr += width * 4;
+                    ptr += rowSize;
                 }
 
                 IL.DeleteImage(img);
