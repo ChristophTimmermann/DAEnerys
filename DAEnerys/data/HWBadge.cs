@@ -19,7 +19,7 @@ namespace DAEnerys
                 {
                     Settings.SavedBadge = HWData.Badges[0].Name;
                     Renderer.BadgeTexture = HWData.Badges[0].Texture;
-                    Program.GLControl.Invalidate();
+                    Renderer.Invalidate();
                 }
 
                 return;
@@ -35,7 +35,7 @@ namespace DAEnerys
                 {
                     Settings.SavedBadge = HWData.Badges[0].Name;
                     Renderer.BadgeTexture = HWData.Badges[0].Texture;
-                    Program.GLControl.Invalidate();
+                    Renderer.Invalidate();
                 }
             }
         }

@@ -14,7 +14,7 @@ namespace DAEnerys
 {
     public partial class Main : Form
     {
-        int BUILD = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build;
+        public int BUILD = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build;
 
         public bool Loaded = false;
         HWDockpath selectedDockpath;
@@ -34,6 +34,7 @@ namespace DAEnerys
         public bool DrawNavLightRadius;
 
         private bool problemsVisible;
+        private bool ignoreShipMeshDoScarCheck;
 
         public Main()
         {
@@ -71,9 +72,9 @@ namespace DAEnerys
                     HWScene.LoadCollada(Program.OPEN_PATH);
                     this.Text = "DAEnerys - " + Program.OPEN_PATH;
 
-                    Renderer.UpdateMeshData();
-                    Renderer.UpdateView();
-                    Program.GLControl.Invalidate();
+                    Renderer.InvalidateMeshData();
+                    Renderer.InvalidateView();
+                    Renderer.Invalidate();
                 }
         }
 
@@ -108,9 +109,9 @@ namespace DAEnerys
 
             //Only update render if it is needed
             if (visibleNavLights > 0 || visibleEffects > 0)
-                Program.GLControl.Invalidate();
+                Renderer.Invalidate();
             if (visibleEffects > 0)
-                Renderer.UpdateMeshData();
+                Renderer.InvalidateMeshData();
 
             //Rainbow.Update();
         }
@@ -130,8 +131,8 @@ namespace DAEnerys
                 return;
 
             Renderer.Resize();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void Clear()
@@ -231,9 +232,9 @@ namespace DAEnerys
 
             this.Text = "DAEnerys";
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         //--------------------------------------------------------------------------------------------------------------//
@@ -248,9 +249,9 @@ namespace DAEnerys
                 HWScene.LoadCollada(openColladaDialog.FileName);
                 this.Text = "DAEnerys - " + openColladaDialog.FileName;
 
-                Renderer.UpdateMeshData();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateMeshData();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
         }
 
@@ -342,9 +343,9 @@ namespace DAEnerys
 
             trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
         private void dockpathList_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -492,9 +493,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         //--------------------------------- NAVLIGHTS ---------------------------------//
@@ -518,9 +519,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
         private void navLightList_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -611,9 +612,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void checkboxDrawMarkers_CheckedChanged(object sender, EventArgs e)
@@ -626,9 +627,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
 
@@ -658,7 +659,7 @@ namespace DAEnerys
             bool newValue = e.Node.Checked;
 
             //TODO: Optimize
-            foreach (HWJoint joint in HWScene.Joints)
+            foreach (HWJoint joint in HWJoint.Joints)
             {
                 if (joint.TreeNode == e.Node)
                 {
@@ -667,9 +668,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void buttonSettings_Click(object sender, EventArgs e)
@@ -702,7 +703,13 @@ namespace DAEnerys
         private void listShipMeshes_SelectedIndexChanged(object sender, EventArgs e)
         {
             listShipMeshLODs.Items.Clear(); //Clear LOD list
+
+            ignoreShipMeshDoScarCheck = true;
             checkShipMeshDoScar.Checked = false; //Reset do scar checkbox
+            ignoreShipMeshDoScarCheck = false;
+            checkShipMeshDoScar.Enabled = false; //Disable do scar checkbox
+
+            comboShipMeshParent.Enabled = false; //Disable parent combo box
 
             HWShipMesh selectedShipMesh = null;
             if (listShipMeshes.SelectedItem != null)
@@ -716,6 +723,10 @@ namespace DAEnerys
                 if (selectedShipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
                     checkShipMeshDoScar.Checked = true;
 
+                ignoreShipMeshDoScarCheck = true;
+                checkShipMeshDoScar.Enabled = true; //Enable do scar checkbox
+                ignoreShipMeshDoScarCheck = false;
+
                 //Select parent joint in combo box
                 if (selectedShipMesh.Parent != null) //If ship mesh has a parent joint
                 {
@@ -725,6 +736,8 @@ namespace DAEnerys
                 else
                     comboShipMeshParent.SelectedIndex = 0; //Select root joint in combo box
 
+                comboShipMeshParent.Enabled = true; //Enable parent combo box
+
                 //Fill LOD list
                 if (selectedShipMesh.LOD0Meshes.Count > 0) //If ship mesh has an LOD0
                     listShipMeshLODs.Items.Add("LOD 0");
@@ -732,6 +745,8 @@ namespace DAEnerys
                     listShipMeshLODs.Items.Add("LOD 1");
                 if (selectedShipMesh.LOD2Meshes.Count > 0) //If ship mesh has an LOD2
                     listShipMeshLODs.Items.Add("LOD 2");
+                if (selectedShipMesh.LOD3Meshes.Count > 0) //If ship mesh has an LOD3
+                    listShipMeshLODs.Items.Add("LOD 3");
 
                 //Check LOD checkboxes if visible
                 if (selectedShipMesh.LOD0Meshes.Count > 0)
@@ -748,6 +763,11 @@ namespace DAEnerys
                 {
                     if (selectedShipMesh.LOD2Meshes[0].Mesh.Visible)
                         listShipMeshLODs.SetItemChecked(2, true);
+                }
+                if (selectedShipMesh.LOD3Meshes.Count > 0)
+                {
+                    if (selectedShipMesh.LOD3Meshes[0].Mesh.Visible)
+                        listShipMeshLODs.SetItemChecked(3, true);
                 }
             }
         }
@@ -792,11 +812,45 @@ namespace DAEnerys
                         }
                         break;
                     }
+                case 3:
+                    {
+                        foreach (HWShipMeshLOD shipMeshLOD in selectedShipMesh.LOD3Meshes)
+                        {
+                            shipMeshLOD.Mesh.Visible = visible;
+                        }
+                        break;
+                    }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+        private void comboShipMeshParent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+            {
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+            }
+
+            HWJoint newParent = HWJoint.GetByName((string)comboShipMeshParent.SelectedItem);
+            selectedShipMesh.Parent = newParent;
+        }
+        private void checkShipMeshDoScar_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignoreShipMeshDoScarCheck)
+                return;
+
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+            {
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+            }
+
+            selectedShipMesh.Tags.Remove(ShipMeshTag.DOSCAR);
+            if (checkShipMeshDoScar.Checked)
+                selectedShipMesh.Tags.Add(ShipMeshTag.DOSCAR);
         }
         //--------------------------------- ENGINE GLOW MESHES ---------------------------------//
         private void listEngineGlows_SelectedIndexChanged(object sender, EventArgs e)
@@ -827,6 +881,8 @@ namespace DAEnerys
                     listEngineGlowLODs.Items.Add("LOD 1");
                 if (selectedEngineGlow.LOD2Meshes.Count > 0) //If engine glow has an LOD2
                     listEngineGlowLODs.Items.Add("LOD 2");
+                if (selectedEngineGlow.LOD3Meshes.Count > 0) //If engine glow has an LOD3
+                    listEngineGlowLODs.Items.Add("LOD 3");
 
                 //Check LOD checkboxes if visible
                 if (selectedEngineGlow.LOD0Meshes.Count > 0)
@@ -843,6 +899,11 @@ namespace DAEnerys
                 {
                     if (selectedEngineGlow.LOD2Meshes[0].Mesh.Visible)
                         listEngineGlowLODs.SetItemChecked(2, true);
+                }
+                if (selectedEngineGlow.LOD3Meshes.Count > 0)
+                {
+                    if (selectedEngineGlow.LOD3Meshes[0].Mesh.Visible)
+                        listEngineGlowLODs.SetItemChecked(3, true);
                 }
             }
         }
@@ -887,11 +948,19 @@ namespace DAEnerys
                         }
                         break;
                     }
+                case 3:
+                    {
+                        foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LOD3Meshes)
+                        {
+                            engineGlowLOD.Mesh.Visible = visible;
+                        }
+                        break;
+                    }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         //--------------------------------- COLLISION MESHES ---------------------------------//
@@ -949,9 +1018,9 @@ namespace DAEnerys
 
                 selectedCollisionMesh.Mesh.Visible = visible;
 
-                Renderer.UpdateMeshData();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateMeshData();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
         }
 
@@ -1008,9 +1077,9 @@ namespace DAEnerys
 
                 selectedEngineShape.Mesh.Visible = visible;
 
-                Renderer.UpdateMeshData();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateMeshData();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
         }
 
@@ -1059,8 +1128,8 @@ namespace DAEnerys
             Renderer.ThrusterInterpolation = (float)trackBarThrusterStrength.Value / 100;
             HWEngineGlow.UpdateEngineStrength();
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void buttonAbout_Click(object sender, EventArgs e)
@@ -1155,7 +1224,7 @@ namespace DAEnerys
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             Renderer.ReloadShaders();
-            Program.GLControl.Invalidate();
+            Renderer.Invalidate();
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)

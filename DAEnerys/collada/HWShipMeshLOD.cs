@@ -19,6 +19,10 @@ namespace DAEnerys
             ShipMesh = shipMesh;
             Mesh = mesh;
             LOD = lod;
+            Mesh.LOD = lod;
+
+            if (shipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
+                Mesh.DoScars = true;
 
             if (lod == 0)
                 CalculateBoundingBox();

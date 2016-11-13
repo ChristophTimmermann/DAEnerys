@@ -89,8 +89,8 @@ namespace DAEnerys
                     this.Zoom = perspectiveZoom;
 
                 Program.main.UpdatePerspectiveOrthoCombo();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
             else if (ActionKey.IsDown(Action.VIEW_FRONT))
             {
@@ -98,8 +98,8 @@ namespace DAEnerys
                 angles.Y = (float)Math.PI;
 
                 UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
             else if (ActionKey.IsDown(Action.VIEW_BACK))
             {
@@ -107,8 +107,8 @@ namespace DAEnerys
                 angles.Y = 0;
 
                 UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
             else if (ActionKey.IsDown(Action.VIEW_LEFT))
             {
@@ -116,8 +116,8 @@ namespace DAEnerys
                 angles.Y = (float)-Math.PI / 2;
 
                 UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
             else if (ActionKey.IsDown(Action.VIEW_RIGHT))
             {
@@ -125,8 +125,8 @@ namespace DAEnerys
                 angles.Y = (float)Math.PI / 2;
 
                 UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
             else if (ActionKey.IsDown(Action.VIEW_TOP))
             {
@@ -136,8 +136,8 @@ namespace DAEnerys
                 angles.X = (float)Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
 
                 UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
             else if (ActionKey.IsDown(Action.VIEW_BOTTOM))
             {
@@ -147,8 +147,8 @@ namespace DAEnerys
                 angles.X = (float)Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
 
                 UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
             else if (ActionKey.IsDown(Action.CAM_RESET))
             {
@@ -162,8 +162,8 @@ namespace DAEnerys
                 this.orthographicSize = 16;
 
                 UpdatePosition();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
                 Program.main.UpdatePerspectiveOrthoCombo();
             }
         }
@@ -190,8 +190,8 @@ namespace DAEnerys
 
                     angles.X = (float)Utilities.Clamp(angles.X, Math.PI - Math.PI / 2, (Math.PI + Math.PI / 2) - 0.000001f);
 
-                    Renderer.UpdateView();
-                    Program.GLControl.Invalidate();
+                    Renderer.InvalidateView();
+                    Renderer.Invalidate();
                 }
 
                 if (!this.Orthographic)
@@ -210,14 +210,14 @@ namespace DAEnerys
 
             if (lastZoom != zoom)
             {
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
 
             if (lastOrthographicSize != orthographicSize)
             {
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
 
             lastPos = position;

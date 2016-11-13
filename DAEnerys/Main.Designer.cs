@@ -37,6 +37,7 @@ namespace DAEnerys
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
+            this.buttonSave = new System.Windows.Forms.ToolStripButton();
             this.buttonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.buttonHotkeys = new System.Windows.Forms.ToolStripButton();
@@ -47,13 +48,12 @@ namespace DAEnerys
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabShipMeshes = new System.Windows.Forms.TabPage();
-            this.groupShipMeshLODs = new System.Windows.Forms.GroupBox();
-            this.listShipMeshLODs = new System.Windows.Forms.CheckedListBox();
-            this.panelShipMesh = new System.Windows.Forms.Panel();
             this.checkShipMeshDoScar = new System.Windows.Forms.CheckBox();
             this.listShipMeshes = new System.Windows.Forms.ListBox();
             this.labelShipMeshParent = new System.Windows.Forms.Label();
             this.comboShipMeshParent = new System.Windows.Forms.ComboBox();
+            this.groupShipMeshLODs = new System.Windows.Forms.GroupBox();
+            this.listShipMeshLODs = new System.Windows.Forms.CheckedListBox();
             this.tabMaterials = new System.Windows.Forms.TabPage();
             this.groupThrusterStrength = new System.Windows.Forms.GroupBox();
             this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
@@ -149,7 +149,6 @@ namespace DAEnerys
             this.tabControl.SuspendLayout();
             this.tabShipMeshes.SuspendLayout();
             this.groupShipMeshLODs.SuspendLayout();
-            this.panelShipMesh.SuspendLayout();
             this.tabMaterials.SuspendLayout();
             this.groupThrusterStrength.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
@@ -195,6 +194,7 @@ namespace DAEnerys
             this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buttonOpen,
+            this.buttonSave,
             this.buttonSettings,
             this.toolStripButton2,
             this.buttonHotkeys,
@@ -214,6 +214,15 @@ namespace DAEnerys
             this.buttonOpen.Size = new System.Drawing.Size(56, 22);
             this.buttonOpen.Text = "Open";
             this.buttonOpen.Click += new System.EventHandler(this.buttonOpen_Click);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Image = ((System.Drawing.Image)(resources.GetObject("buttonSave.Image")));
+            this.buttonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(51, 22);
+            this.buttonSave.Text = "Save";
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // buttonSettings
             // 
@@ -311,8 +320,11 @@ namespace DAEnerys
             // tabShipMeshes
             // 
             this.tabShipMeshes.AutoScroll = true;
+            this.tabShipMeshes.Controls.Add(this.checkShipMeshDoScar);
+            this.tabShipMeshes.Controls.Add(this.listShipMeshes);
+            this.tabShipMeshes.Controls.Add(this.labelShipMeshParent);
+            this.tabShipMeshes.Controls.Add(this.comboShipMeshParent);
             this.tabShipMeshes.Controls.Add(this.groupShipMeshLODs);
-            this.tabShipMeshes.Controls.Add(this.panelShipMesh);
             this.tabShipMeshes.Location = new System.Drawing.Point(4, 58);
             this.tabShipMeshes.Name = "tabShipMeshes";
             this.tabShipMeshes.Padding = new System.Windows.Forms.Padding(3);
@@ -321,12 +333,57 @@ namespace DAEnerys
             this.tabShipMeshes.Text = "Ship Meshes";
             this.tabShipMeshes.UseVisualStyleBackColor = true;
             // 
+            // checkShipMeshDoScar
+            // 
+            this.checkShipMeshDoScar.AutoSize = true;
+            this.checkShipMeshDoScar.Enabled = false;
+            this.checkShipMeshDoScar.Location = new System.Drawing.Point(9, 238);
+            this.checkShipMeshDoScar.Name = "checkShipMeshDoScar";
+            this.checkShipMeshDoScar.Size = new System.Drawing.Size(79, 17);
+            this.checkShipMeshDoScar.TabIndex = 15;
+            this.checkShipMeshDoScar.Text = "Allow scars";
+            this.checkShipMeshDoScar.UseVisualStyleBackColor = true;
+            this.checkShipMeshDoScar.CheckedChanged += new System.EventHandler(this.checkShipMeshDoScar_CheckedChanged);
+            // 
+            // listShipMeshes
+            // 
+            this.listShipMeshes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listShipMeshes.FormattingEnabled = true;
+            this.listShipMeshes.Location = new System.Drawing.Point(6, 6);
+            this.listShipMeshes.Name = "listShipMeshes";
+            this.listShipMeshes.Size = new System.Drawing.Size(230, 199);
+            this.listShipMeshes.TabIndex = 14;
+            this.listShipMeshes.SelectedIndexChanged += new System.EventHandler(this.listShipMeshes_SelectedIndexChanged);
+            // 
+            // labelShipMeshParent
+            // 
+            this.labelShipMeshParent.AutoSize = true;
+            this.labelShipMeshParent.Location = new System.Drawing.Point(6, 214);
+            this.labelShipMeshParent.Name = "labelShipMeshParent";
+            this.labelShipMeshParent.Size = new System.Drawing.Size(44, 13);
+            this.labelShipMeshParent.TabIndex = 13;
+            this.labelShipMeshParent.Text = "Parent: ";
+            // 
+            // comboShipMeshParent
+            // 
+            this.comboShipMeshParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboShipMeshParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboShipMeshParent.Enabled = false;
+            this.comboShipMeshParent.FormattingEnabled = true;
+            this.comboShipMeshParent.Location = new System.Drawing.Point(56, 211);
+            this.comboShipMeshParent.Name = "comboShipMeshParent";
+            this.comboShipMeshParent.Size = new System.Drawing.Size(180, 21);
+            this.comboShipMeshParent.TabIndex = 12;
+            this.comboShipMeshParent.SelectedIndexChanged += new System.EventHandler(this.comboShipMeshParent_SelectedIndexChanged);
+            // 
             // groupShipMeshLODs
             // 
             this.groupShipMeshLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupShipMeshLODs.Controls.Add(this.listShipMeshLODs);
-            this.groupShipMeshLODs.Location = new System.Drawing.Point(3, 471);
+            this.groupShipMeshLODs.Location = new System.Drawing.Point(3, 261);
             this.groupShipMeshLODs.Name = "groupShipMeshLODs";
             this.groupShipMeshLODs.Size = new System.Drawing.Size(236, 172);
             this.groupShipMeshLODs.TabIndex = 1;
@@ -344,61 +401,6 @@ namespace DAEnerys
             this.listShipMeshLODs.TabIndex = 0;
             this.listShipMeshLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listShipMeshLODs_ItemCheck);
             // 
-            // panelShipMesh
-            // 
-            this.panelShipMesh.Controls.Add(this.checkShipMeshDoScar);
-            this.panelShipMesh.Controls.Add(this.listShipMeshes);
-            this.panelShipMesh.Controls.Add(this.labelShipMeshParent);
-            this.panelShipMesh.Controls.Add(this.comboShipMeshParent);
-            this.panelShipMesh.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelShipMesh.Location = new System.Drawing.Point(3, 3);
-            this.panelShipMesh.Name = "panelShipMesh";
-            this.panelShipMesh.Size = new System.Drawing.Size(236, 462);
-            this.panelShipMesh.TabIndex = 0;
-            // 
-            // checkShipMeshDoScar
-            // 
-            this.checkShipMeshDoScar.AutoSize = true;
-            this.checkShipMeshDoScar.Enabled = false;
-            this.checkShipMeshDoScar.Location = new System.Drawing.Point(6, 439);
-            this.checkShipMeshDoScar.Name = "checkShipMeshDoScar";
-            this.checkShipMeshDoScar.Size = new System.Drawing.Size(79, 17);
-            this.checkShipMeshDoScar.TabIndex = 11;
-            this.checkShipMeshDoScar.Text = "Allow scars";
-            this.checkShipMeshDoScar.UseVisualStyleBackColor = true;
-            // 
-            // listShipMeshes
-            // 
-            this.listShipMeshes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listShipMeshes.FormattingEnabled = true;
-            this.listShipMeshes.Location = new System.Drawing.Point(3, 3);
-            this.listShipMeshes.Name = "listShipMeshes";
-            this.listShipMeshes.Size = new System.Drawing.Size(230, 407);
-            this.listShipMeshes.TabIndex = 10;
-            this.listShipMeshes.SelectedIndexChanged += new System.EventHandler(this.listShipMeshes_SelectedIndexChanged);
-            // 
-            // labelShipMeshParent
-            // 
-            this.labelShipMeshParent.AutoSize = true;
-            this.labelShipMeshParent.Location = new System.Drawing.Point(3, 415);
-            this.labelShipMeshParent.Name = "labelShipMeshParent";
-            this.labelShipMeshParent.Size = new System.Drawing.Size(44, 13);
-            this.labelShipMeshParent.TabIndex = 9;
-            this.labelShipMeshParent.Text = "Parent: ";
-            // 
-            // comboShipMeshParent
-            // 
-            this.comboShipMeshParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboShipMeshParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboShipMeshParent.Enabled = false;
-            this.comboShipMeshParent.FormattingEnabled = true;
-            this.comboShipMeshParent.Location = new System.Drawing.Point(53, 412);
-            this.comboShipMeshParent.Name = "comboShipMeshParent";
-            this.comboShipMeshParent.Size = new System.Drawing.Size(180, 21);
-            this.comboShipMeshParent.TabIndex = 8;
-            // 
             // tabMaterials
             // 
             this.tabMaterials.AutoScroll = true;
@@ -412,7 +414,7 @@ namespace DAEnerys
             this.tabMaterials.Location = new System.Drawing.Point(4, 58);
             this.tabMaterials.Name = "tabMaterials";
             this.tabMaterials.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMaterials.Size = new System.Drawing.Size(242, 646);
+            this.tabMaterials.Size = new System.Drawing.Size(242, 694);
             this.tabMaterials.TabIndex = 6;
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
@@ -500,9 +502,9 @@ namespace DAEnerys
             this.listMaterials.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listMaterials.FormattingEnabled = true;
-            this.listMaterials.Location = new System.Drawing.Point(3, 3);
+            this.listMaterials.Location = new System.Drawing.Point(6, 6);
             this.listMaterials.Name = "listMaterials";
-            this.listMaterials.Size = new System.Drawing.Size(235, 316);
+            this.listMaterials.Size = new System.Drawing.Size(229, 316);
             this.listMaterials.TabIndex = 19;
             this.listMaterials.SelectedIndexChanged += new System.EventHandler(this.listMaterials_SelectedIndexChanged);
             // 
@@ -522,7 +524,7 @@ namespace DAEnerys
             this.tabCollisionMeshes.Location = new System.Drawing.Point(4, 58);
             this.tabCollisionMeshes.Name = "tabCollisionMeshes";
             this.tabCollisionMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCollisionMeshes.Size = new System.Drawing.Size(242, 646);
+            this.tabCollisionMeshes.Size = new System.Drawing.Size(242, 694);
             this.tabCollisionMeshes.TabIndex = 5;
             this.tabCollisionMeshes.Text = "Collision Meshes";
             this.tabCollisionMeshes.UseVisualStyleBackColor = true;
@@ -1517,9 +1519,8 @@ namespace DAEnerys
             this.splitContainer1.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tabShipMeshes.ResumeLayout(false);
+            this.tabShipMeshes.PerformLayout();
             this.groupShipMeshLODs.ResumeLayout(false);
-            this.panelShipMesh.ResumeLayout(false);
-            this.panelShipMesh.PerformLayout();
             this.tabMaterials.ResumeLayout(false);
             this.tabMaterials.PerformLayout();
             this.groupThrusterStrength.ResumeLayout(false);
@@ -1588,11 +1589,6 @@ namespace DAEnerys
         private System.Windows.Forms.TabPage tabShipMeshes;
         private System.Windows.Forms.GroupBox groupShipMeshLODs;
         private System.Windows.Forms.CheckedListBox listShipMeshLODs;
-        private System.Windows.Forms.Panel panelShipMesh;
-        private System.Windows.Forms.CheckBox checkShipMeshDoScar;
-        private System.Windows.Forms.ListBox listShipMeshes;
-        private System.Windows.Forms.Label labelShipMeshParent;
-        private System.Windows.Forms.ComboBox comboShipMeshParent;
         private System.Windows.Forms.TabPage tabMaterials;
         private System.Windows.Forms.TabPage tabCollisionMeshes;
         private System.Windows.Forms.Panel panel1;
@@ -1682,6 +1678,11 @@ namespace DAEnerys
         private System.Windows.Forms.ListBox listMaterials;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton buttonSave;
+        private System.Windows.Forms.CheckBox checkShipMeshDoScar;
+        private System.Windows.Forms.ListBox listShipMeshes;
+        private System.Windows.Forms.Label labelShipMeshParent;
+        private System.Windows.Forms.ComboBox comboShipMeshParent;
     }
 }
 

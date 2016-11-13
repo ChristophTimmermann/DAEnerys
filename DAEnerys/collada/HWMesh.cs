@@ -2,6 +2,7 @@
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -34,9 +35,38 @@ namespace DAEnerys
     {
         private static bool goblinWarningShown;
 
-        public HWNode Parent;
+        private HWNode parent;
+        public HWNode Parent
+        {
+            get { return parent; }
+            set { parent = value; value.Name = FormattedName; Renderer.InvalidateView(); Renderer.Invalidate(); }
+        }
 
         public string Name;
+        public string FormattedName
+        {
+            get
+            {
+                if (Prefix == "")
+                    return Name;
+
+                string lod = "";
+                if (LOD != -1)
+                    lod = "_LOD[" + LOD + "]";
+
+                string tags = "";
+                if (DoScars)
+                    tags = "_TAGS[DoScar]";
+
+                return Prefix + "[" + Name + "]" + lod + tags;
+            }
+        }
+        public int LOD = -1;
+
+        private bool doScars = false;
+        public bool DoScars { get { return doScars; } set { doScars = value; Parent.Name = FormattedName; } }
+        public string Prefix = "";
+
         public bool Visible = false;
         public bool Shaded = true;
         public bool Translucent = false;
@@ -44,7 +74,6 @@ namespace DAEnerys
         public Vector3 Scale = Vector3.One;
 
         public Matrix4 ModelMatrix;
-        public Matrix4 ViewProjectionMatrix = Matrix4.Identity;
         public Matrix4 ModelViewProjectionMatrix = Matrix4.Identity;
 
         public HWVertex[] Vertices;
@@ -54,6 +83,11 @@ namespace DAEnerys
 
         public int VertexCount { get { return mesh.VertexCount; } }
         public int IndiceCount { get { return Indices.Length; } }
+        public int FaceCount { get { return mesh.FaceCount; } }
+        public int TextureCoordinateChannelCount { get { return mesh.TextureCoordinateChannelCount; } }
+        public List<Face> Faces { get { return mesh.Faces; } }
+
+        public int AnimationCount { get { return mesh.MeshAnimationAttachmentCount; } }
 
         private bool MinMaxSet = false;
         private Vector3 _max, _min;
@@ -116,7 +150,8 @@ namespace DAEnerys
             {
                 HWVertex vtx = new HWVertex();
                 vtx.Position = Positions[i];
-                vtx.Normal = Normals[i];
+                if(Normals.Length - 1 >= i)
+                    vtx.Normal = Normals[i];
                 vtx.Color = Colors[i];
                 vtx.UV0 = TextureCoords[i];
                 vtx.UV1 = TextureCoordsUV1[i];
@@ -130,8 +165,8 @@ namespace DAEnerys
             Vertices = vtxs.ToArray();
             Indices = GetIndices();
 
-            //RecalculateNormals();
-            //RecalculateTangents();
+            if(Normals.Length == 0)
+                RecalculateNormals();
 
             HWScene.Meshes.Add(this);
         }
@@ -143,7 +178,7 @@ namespace DAEnerys
             {
                 string name = "";
                 int lod = 0;
-                List<ShipMeshTag> tags = new List<ShipMeshTag>();
+                ObservableCollection<ShipMeshTag> tags = new ObservableCollection<ShipMeshTag>();
 
                 string[] splitted = Parent.Name.Split('[');
                 int end = -1;
@@ -174,6 +209,8 @@ namespace DAEnerys
                 }
 
                 HWJoint parentJoint = null;
+                Name = name;
+                Prefix = "MULT";
 
                 if (Parent.Parent != null)
                 {
@@ -232,6 +269,9 @@ namespace DAEnerys
                     }
                 }
 
+                Name = name;
+                Prefix = "COL";
+
                 HWJoint parentJoint = null;
 
                 if (Parent.Parent != null)
@@ -266,6 +306,9 @@ namespace DAEnerys
                         }
                     }
                 }
+
+                Name = name;
+                Prefix = "GLOW";
 
                 HWJoint parentJoint = null;
 
@@ -315,6 +358,9 @@ namespace DAEnerys
                         }
                     }
                 }
+
+                Name = name;
+                Prefix = "ETSH";
 
                 HWJoint parentJoint = null;
 
@@ -438,21 +484,13 @@ namespace DAEnerys
         /// </summary>
         public void CalculateModelMatrix()
         {
-            //ModelMatrix = Matrix4.CreateScale(Scale) * Matrix4.CreateFromQuaternion(Parent.AbsoluteRotation) * Matrix4.CreateTranslation(Parent.AbsolutePosition);
             ModelMatrix = Matrix4.CreateScale(Scale);
 
-            //ModelMatrix *= Matrix4.CreateRotationX((float)Math.PI / 2);
+            if(Parent != null)
+                if (Parent.Parent != null) //Ignore first parent
+                    ModelMatrix *= Parent.WorldMatrix;
 
-            //if(Name.StartsWith("COL"))
-            //ModelMatrix *= Matrix4.CreateFromQuaternion(Parent.AbsoluteRotation.Inverted());
-
-            if (Parent.Parent != null) //Ignore first parent
-                ModelMatrix *= Parent.Parent.WorldMatrix;
-
-            //ModelMatrix *= Matrix4.CreateTranslation(Parent.AbsolutePosition);
-
-            //if (Scale != Vector3.One)
-            //ModelMatrix = Matrix4.CreateScale(Scale);
+            ModelViewProjectionMatrix = ModelMatrix * Renderer.ViewProjection;
         }
 
         private void RecalculateNormals()

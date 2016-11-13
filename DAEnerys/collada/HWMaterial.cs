@@ -9,9 +9,25 @@ namespace DAEnerys
 {
     public class HWMaterial
     {
-        public string Name;
+        public string Name = string.Empty;
+        public int Suffix = -1;
         public string Shader = "default";
+        public bool Valid = true;
         public ImageFormat Format = ImageFormat.DXT1;
+
+        public string FormattedName
+        {
+            get
+            {
+                if (Suffix == -1)
+                    return Name;
+
+                if(Suffix <= 1)
+                    return "MAT[" + Name + "]_SHD[" + Shader + "]";
+                else
+                    return "MAT[" + Name + "]_SHD[" + Shader + "]_" + Suffix;
+            }
+        }
 
         public Vector3 DiffuseColor = new Vector3(1);
         public Vector3 SpecularColor = new Vector3(1);
@@ -70,6 +86,8 @@ namespace DAEnerys
             
             if (Name.StartsWith("MAT[")) //If material is a homeworld valid material
             {
+                Suffix = 1;
+
                 string[] splitted = Name.Split('[');
                 int end = -1;
 
@@ -97,6 +115,8 @@ namespace DAEnerys
                     if(image.Path.Replace("file://", "") == DiffuseMap)
                     {
                         Format = image.Format;
+                        Images.Add(image);
+                        image.Material = this;
 
                         //Search for other images in the diffuse image folder
                         string diffuseName = Path.GetFileNameWithoutExtension(image.Path);
@@ -163,9 +183,14 @@ namespace DAEnerys
                                             break;
                                     }
 
-                                    HWImage newImage = new HWImage(fileName, file);
-                                    newImage.Material = this;
-                                    Images.Add(newImage);
+                                    if (suffix != "DIFF")
+                                    {
+                                        HWImage newImage = new HWImage(fileName, file);
+                                        newImage.Material = this;
+                                        Images.Add(newImage);
+                                    }
+                                    else
+                                        image.Name = fileName;
                                 }
                             }
                         }

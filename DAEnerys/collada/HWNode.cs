@@ -9,18 +9,38 @@ namespace DAEnerys
 {
     public class HWNode
     {
-        public static HWNode[] Roots = new HWNode[5];
+        public static HWNode[] Roots = new HWNode[6];
+        public static HWNode RootLOD0;
+        public static HWNode RootLOD1;
+        public static HWNode RootLOD2;
+        public static HWNode RootLOD3;
+        public static HWNode RootINFO;
+        public static HWNode RootCOL;
 
-        public List<HWNode> children = new List<HWNode>();
-        public List<HWMesh> meshes = new List<HWMesh>();
+        public List<HWNode> Children = new List<HWNode>();
+        public List<HWMesh> Meshes = new List<HWMesh>();
 
-        public HWNode Parent;
+        private HWNode parent;
+        public HWNode Parent { get { return parent; } set { if(parent != null) parent.Children.Remove(this); parent = value; if(parent != null) parent.Children.Add(this); CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } }
         public string Name;
         public Matrix4 WorldMatrix = Matrix4.Identity;
+        public Matrix4 RelativeWorldMatrix = Matrix4.Identity;
 
         public Vector3 AbsolutePosition { get { return Vector3.TransformPosition(Vector3.Zero, WorldMatrix); } }
         public OpenTK.Quaternion AbsoluteRotation;
         public Vector3 AbsoluteScale { get { return WorldMatrix.ExtractScale(); } }
+
+        public Vector3 RelativePosition { get { return Vector3.TransformPosition(Vector3.Zero, RelativeWorldMatrix); } }
+        public Vector3 RelativeRotation
+        {
+            get
+            {
+                Vector3 rotation = Vector3.Zero;
+                float angle = 0;
+                RelativeWorldMatrix.ExtractRotation().ToAxisAngle(out rotation, out angle);
+                return rotation * angle;
+            }
+        }
 
         public HWJoint Joint;
         public HWMarker Marker;
@@ -34,13 +54,12 @@ namespace DAEnerys
         {
             HWScene.Nodes.Add(this);
             this.node = node;
-            this.Parent = parent;
-
             Name = node.Name;
 
             WorldMatrix = new Matrix4(node.Transform.A1, node.Transform.B1, node.Transform.C1, node.Transform.D1, node.Transform.A2, node.Transform.B2, node.Transform.C2, node.Transform.D2, node.Transform.A3, node.Transform.B3, node.Transform.C3, node.Transform.D3, node.Transform.A4, node.Transform.B4, node.Transform.C4, node.Transform.D4);
+            RelativeWorldMatrix = WorldMatrix;
 
-            CalculateWorldMatrix();
+            this.Parent = parent;
 
             if (Name.StartsWith("ROOT_LOD")) //If node is a root LOD node
             {
@@ -55,8 +74,38 @@ namespace DAEnerys
                     bool success = int.TryParse(lodString, out lod);
 
                     if (success)
+                    {
                         Roots[lod] = this;
+
+                        switch (lod)
+                        {
+                            case 0:
+                                RootLOD0 = this;
+                                break;
+                            case 1:
+                                RootLOD1 = this;
+                                break;
+                            case 2:
+                                RootLOD2 = this;
+                                break;
+                            case 3:
+                                RootLOD3 = this;
+                                break;
+                        }
+                    }
                 }
+            }
+
+            if (Name.StartsWith("ROOT_COL")) //If node is a root COL node
+            {
+                Roots[4] = this;
+                RootCOL = this;
+            }
+
+            if (Name.StartsWith("ROOT_INFO")) //If node is a root INFO node
+            {
+                Roots[5] = this;
+                RootINFO = this;
             }
 
             if (Name.StartsWith("JNT")) //If node is a joint
@@ -285,14 +334,13 @@ namespace DAEnerys
             foreach(Node childNode in node.Children)
             {
                 HWNode newChild = new HWNode(childNode, this);
-                children.Add(newChild);
             }
         }
 
         public void AddMesh(HWMesh mesh)
         {
             mesh.Parent = this;
-            meshes.Add(mesh);
+            Meshes.Add(mesh);
         }
 
         /// <summary>
@@ -300,6 +348,8 @@ namespace DAEnerys
         /// </summary>
         public void CalculateWorldMatrix()
         {
+            WorldMatrix = RelativeWorldMatrix;
+
             if (Parent != null)
                 WorldMatrix *= Parent.WorldMatrix;
 

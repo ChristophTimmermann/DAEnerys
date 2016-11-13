@@ -19,6 +19,7 @@ namespace DAEnerys
             GlowMesh = glowMesh;
             Mesh = mesh;
             LOD = lod;
+            Mesh.LOD = lod;
 
             Mesh.Translucent = true;
             Mesh.Material.Shader = "fx_eng_glowbasic";
