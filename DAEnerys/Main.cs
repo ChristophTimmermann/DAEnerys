@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using OpenTK.Graphics.OpenGL;
-using Assimp;
 using OpenTK;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Drawing.Imaging;
 using OpenTK.Graphics;
+using Assimp;
+using System.Linq;
 
 namespace DAEnerys
 {
@@ -23,6 +21,10 @@ namespace DAEnerys
 
         public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
         public Dictionary<HWJoint, object> ShipMeshParentComboItems = new Dictionary<HWJoint, object>();
+        private Label[] ShipMeshLODMaterialLabels = new Label[MAX_MATERIALS_ON_MESH];
+        private ComboBox[] ShipMeshLODMaterialComboBoxes = new ComboBox[MAX_MATERIALS_ON_MESH];
+        private HWShipMesh selectedShipMesh;
+        private int selectedShipMeshLOD;
 
         public Dictionary<object, HWEngineGlow> EngineGlowListItems = new Dictionary<object, HWEngineGlow>();
         public Dictionary<HWJoint, object> EngineGlowParentComboItems = new Dictionary<HWJoint, object>();
@@ -36,6 +38,8 @@ namespace DAEnerys
 
         private bool problemsVisible;
         private bool ignoreShipMeshDoScarCheck;
+
+        const int MAX_MATERIALS_ON_MESH = 8;
 
         public Main()
         {
@@ -63,6 +67,26 @@ namespace DAEnerys
             gridProblems.RowTemplate.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             gridProblems.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             gridProblems.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            //Create ship mesh lod material selection
+            for(int i = 0; i < MAX_MATERIALS_ON_MESH; i++)
+            {
+                ShipMeshLODMaterialLabels[i] = new Label();
+                ShipMeshLODMaterialLabels[i].Parent = groupShipMeshLODMaterials;
+                ShipMeshLODMaterialLabels[i].Location = new Point(6, 25 + i * 27);
+                ShipMeshLODMaterialLabels[i].Text = "#" + i;
+                ShipMeshLODMaterialLabels[i].AutoSize = true;
+                ShipMeshLODMaterialLabels[i].Visible = false;
+
+                ShipMeshLODMaterialComboBoxes[i] = new ComboBox();
+                ShipMeshLODMaterialComboBoxes[i].Parent = groupShipMeshLODMaterials;
+                ShipMeshLODMaterialComboBoxes[i].Location = new Point(38, 22 + i * 27);
+                ShipMeshLODMaterialComboBoxes[i].Size = new Size(192, 21);
+                ShipMeshLODMaterialComboBoxes[i].DropDownStyle = ComboBoxStyle.DropDownList;
+                ShipMeshLODMaterialComboBoxes[i].Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+                ShipMeshLODMaterialComboBoxes[i].SelectedIndexChanged += new EventHandler(OnShipMeshLODMaterialChanged);
+                ShipMeshLODMaterialComboBoxes[i].Visible = false;
+            }
 
             Clear();
 
@@ -145,6 +169,15 @@ namespace DAEnerys
             listShipMeshLODs.Items.Clear();
             ShipMeshListItems.Clear();
             ShipMeshParentComboItems.Clear();
+
+            foreach (Label label in ShipMeshLODMaterialLabels)
+                label.Visible = false;
+
+            foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+            {
+                comboBox.Items.Clear();
+                comboBox.Visible = false;
+            }
 
             listEngineGlows.Items.Clear();
             comboEngineGlowParent.Items.Clear();
@@ -716,7 +749,11 @@ namespace DAEnerys
 
             comboShipMeshParent.Enabled = false; //Disable parent combo box
 
-            HWShipMesh selectedShipMesh = null;
+            foreach (Label label in ShipMeshLODMaterialLabels)
+                label.Visible = false;
+            foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+                comboBox.Visible = false;
+
             if (listShipMeshes.SelectedItem != null)
             {
                 selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
@@ -758,6 +795,8 @@ namespace DAEnerys
                 {
                     if (selectedShipMesh.LOD0Meshes[0].Mesh.Visible)
                         listShipMeshLODs.SetItemChecked(0, true);
+
+                    listShipMeshLODs.SelectedIndex = 0;
                 }
                 if (selectedShipMesh.LOD1Meshes.Count > 0)
                 {
@@ -860,6 +899,81 @@ namespace DAEnerys
             if (checkShipMeshDoScar.Checked)
                 selectedShipMesh.Tags.Add(ShipMeshTag.DOSCAR);
         }
+        private void listShipMeshLODs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (Label label in ShipMeshLODMaterialLabels)
+                label.Visible = false;
+            foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+                comboBox.Visible = false;
+
+            selectedShipMeshLOD = listShipMeshLODs.SelectedIndex;
+            List<HWShipMeshLOD> lodMeshes = new List<HWShipMeshLOD>();
+            switch (selectedShipMeshLOD)
+            {
+                case 0:
+                    lodMeshes = selectedShipMesh.LOD0Meshes;
+                    break;
+                case 1:
+                    lodMeshes = selectedShipMesh.LOD1Meshes;
+                    break;
+                case 2:
+                    lodMeshes = selectedShipMesh.LOD2Meshes;
+                    break;
+                case 3:
+                    lodMeshes = selectedShipMesh.LOD3Meshes;
+                    break;
+            }
+
+            int materialCount = 0;
+            foreach (HWShipMeshLOD lodMesh in lodMeshes)
+                if (lodMesh.Mesh.Material != null)
+                    materialCount++;
+
+            for(int i = 0; i < materialCount; i++)
+            {
+                ShipMeshLODMaterialLabels[i].Visible = true;
+                ShipMeshLODMaterialComboBoxes[i].Visible = true;
+
+                ShipMeshLODMaterialComboBoxes[i].SelectedItem = lodMeshes[i].Mesh.Material.MaterialListItem;
+            }
+        }
+        private void OnShipMeshLODMaterialChanged(object sender, EventArgs e)
+        {
+            int materialIndex = -1;
+            for (int i = 0; i < MAX_MATERIALS_ON_MESH; i++)
+                if (sender == ShipMeshLODMaterialComboBoxes[i])
+                {
+                    materialIndex = i;
+                    break;
+                }
+
+            if (materialIndex == -1)
+                return;
+
+            List<HWShipMeshLOD> lodMeshes = new List<HWShipMeshLOD>();
+            switch (selectedShipMeshLOD)
+            {
+                case 0:
+                    lodMeshes = selectedShipMesh.LOD0Meshes;
+                    break;
+                case 1:
+                    lodMeshes = selectedShipMesh.LOD1Meshes;
+                    break;
+                case 2:
+                    lodMeshes = selectedShipMesh.LOD2Meshes;
+                    break;
+                case 3:
+                    lodMeshes = selectedShipMesh.LOD3Meshes;
+                    break;
+            }
+
+            int selectedIndex = ShipMeshLODMaterialComboBoxes[materialIndex].SelectedIndex;
+
+            if (selectedIndex != -1)
+                lodMeshes[materialIndex].Mesh.Material = MaterialListItems.Values.ElementAt(selectedIndex);
+            else
+                ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem = lodMeshes[materialIndex].Mesh.Material.MaterialListItem;
+        }
         private void buttonShipMeshLODExport_Click(object sender, EventArgs e)
         {
             HWShipMesh selectedShipMesh = null;
@@ -895,6 +1009,52 @@ namespace DAEnerys
             if (result == DialogResult.OK)
             {
                 ObjExporter.ExportToFile(saveObjDialog.FileName, meshes);
+            }
+        }
+        private void buttonShipMeshLODImport_Click(object sender, EventArgs e)
+        {
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+
+            List<HWShipMeshLOD> meshes = new List<HWShipMeshLOD>();
+            switch (listShipMeshLODs.SelectedIndex)
+            {
+                case 0:
+                    meshes = selectedShipMesh.LOD0Meshes;
+                    break;
+                case 1:
+                    meshes = selectedShipMesh.LOD1Meshes;
+                    break;
+                case 2:
+                    meshes = selectedShipMesh.LOD2Meshes;
+                    break;
+                case 3:
+                    meshes = selectedShipMesh.LOD3Meshes;
+                    break;
+            }
+
+            if (meshes.Count == 0)
+                return;
+
+            DialogResult result = openObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Mesh[] newMeshes = ObjImporter.ImportFromFile(openObjDialog.FileName);
+                for(int i = 0; i < meshes.Count; i++)
+                {
+                    if (newMeshes.Length - 1 >= i)
+                    {
+                        meshes[i].Mesh.SetMesh(newMeshes[i]);
+                        meshes[i].CalculateBoundingBox();
+                    }
+                    else //Remove old mesh
+                    {
+                        meshes[i].Destroy();
+                    }
+                }
+
+                HWScene.CalibrateSettings();
             }
         }
         //--------------------------------- ENGINE GLOW MESHES ---------------------------------//
@@ -1162,6 +1322,9 @@ namespace DAEnerys
             {
                 object item = material.Name;
                 listMaterials.Items.Add(item);
+
+                foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+                    comboBox.Items.Add(item);
 
                 material.MaterialListItem = item;
                 MaterialListItems.Add(item, material);

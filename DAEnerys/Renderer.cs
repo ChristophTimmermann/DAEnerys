@@ -6,7 +6,6 @@ using System.Linq;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using Assimp;
 using NewShaderManifest;
 
 namespace DAEnerys
@@ -232,7 +231,7 @@ namespace DAEnerys
             GetError("BindBufferData");
         }
 
-        public static void UpdateMeshData()
+        private static void UpdateMeshData()
         {
             if (!MeshDataInvalid)
                 return;
@@ -351,8 +350,7 @@ namespace DAEnerys
 
             GetError("OpenTK Buffering");
         }
-
-        public static void UpdateView()
+        private static void UpdateView()
         {
             if (!ViewInvalid)
                 return;
@@ -771,7 +769,7 @@ namespace DAEnerys
         {
             return
                 shader == "badge" ||
-                shader == "badge_glow";
+                shader == "badgeglow";
         }
 
         private static bool SOB_BAYLIGHT(string shader)
@@ -792,10 +790,10 @@ namespace DAEnerys
         private static bool SOB_GLOWRGB(string shader)
         {
             return
-                shader == "badge_glow" ||
+                shader == "badgeglow" ||
                 shader == "ore" ||
                 shader == "salvage" ||
-                shader == "ship_glow";
+                shader == "shipglow";
         }
 
         private static bool SOB_GLOWCOL(string shader)
@@ -815,10 +813,10 @@ namespace DAEnerys
         {
             return
                 shader == "badge" ||
-                shader == "badge_glow" ||
+                shader == "badgeglow" ||
                 shader == "bay" ||
                 shader == "ship" ||
-                shader == "ship_glow" ||
+                shader == "shipglow" ||
                 shader == "thruster";
         }
 

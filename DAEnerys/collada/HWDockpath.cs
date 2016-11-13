@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using OpenTK;
 using System.Drawing;
 
 namespace DAEnerys

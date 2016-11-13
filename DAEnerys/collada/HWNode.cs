@@ -1,8 +1,6 @@
 ﻿using OpenTK;
 using System.Collections.Generic;
 using Assimp;
-using System.Windows.Forms;
-using System.Linq;
 using System;
 
 namespace DAEnerys

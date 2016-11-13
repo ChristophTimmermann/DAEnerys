@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace DAEnerys
 {
@@ -79,7 +78,8 @@ namespace DAEnerys
         public HWVertex[] Vertices;
         public int[] Indices;
 
-        public HWMaterial Material = new HWMaterial();
+        private HWMaterial material = new HWMaterial();
+        public HWMaterial Material { get { return material; } set { material = value; Renderer.Invalidate(); } }
 
         public int VertexCount { get { return mesh.VertexCount; } }
         public int IndiceCount { get { return Indices.Length; } }
@@ -137,6 +137,13 @@ namespace DAEnerys
             this.mesh = mesh;
             Name = mesh.Name;
 
+            GetData();
+
+            HWScene.Meshes.Add(this);
+        }
+
+        public void GetData()
+        {
             List<HWVertex> vtxs = new List<HWVertex>();
             Vector3[] Positions = GetVertices();
             Vector3[] Normals = GetNormals();
@@ -150,7 +157,7 @@ namespace DAEnerys
             {
                 HWVertex vtx = new HWVertex();
                 vtx.Position = Positions[i];
-                if(Normals.Length - 1 >= i)
+                if (Normals.Length - 1 >= i)
                     vtx.Normal = Normals[i];
                 vtx.Color = Colors[i];
                 vtx.UV0 = TextureCoords[i];
@@ -165,10 +172,16 @@ namespace DAEnerys
             Vertices = vtxs.ToArray();
             Indices = GetIndices();
 
-            if(Normals.Length == 0)
+            if (Normals.Length <= 0)
                 RecalculateNormals();
+        }
 
-            HWScene.Meshes.Add(this);
+        public void SetMesh(Mesh mesh)
+        {
+            this.mesh = mesh;
+            GetData();
+            Renderer.InvalidateMeshData();
+            Renderer.Invalidate();
         }
 
         public void ParseMesh()
@@ -373,6 +386,11 @@ namespace DAEnerys
                 HWEngineShape newEngineShape = new HWEngineShape(this, parentJoint, name);
             }
             #endregion
+        }
+
+        public void Destroy()
+        {
+            HWScene.Meshes.Remove(this);
         }
 
         public Vector3[] GetVertices()

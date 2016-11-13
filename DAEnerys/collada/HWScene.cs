@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
-using System.Xml.Linq;
 
 namespace DAEnerys
 {
@@ -55,9 +54,7 @@ namespace DAEnerys
             //Blender Homeworld Toolkit fix
             string fixedColladaPath = FixCollada(fileName);
 
-            Collada = importer.ImportFile(fixedColladaPath,
-                ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) &
-                (PostProcessPreset.TargetRealTimeFast));
+            Collada = importer.ImportFile(fixedColladaPath, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
             importer.Dispose();
 
             //Manual parsing
@@ -281,7 +278,7 @@ namespace DAEnerys
             return "colladaBlenderFix.dae";
         }
 
-        private static void CalibrateSettings()
+        public static void CalibrateSettings()
         {
             float volume = (-Min.X + Max.X) * (-Min.Y + Max.Y) * (-Min.Z + Max.Z);
             List<float> values = new List<float>();

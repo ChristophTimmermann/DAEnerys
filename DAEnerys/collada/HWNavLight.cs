@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using OpenTK;
-using System.Drawing;
-using System;
-using System.Reflection;
 
 namespace DAEnerys
 {

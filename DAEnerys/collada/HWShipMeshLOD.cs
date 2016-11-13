@@ -1,9 +1,4 @@
 ﻿using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAEnerys
 {
@@ -28,7 +23,31 @@ namespace DAEnerys
                 CalculateBoundingBox();
         }
 
-        private void CalculateBoundingBox()
+        public void Destroy()
+        {
+            Mesh.Destroy();
+            Mesh = null;
+
+            ShipMesh.Meshes.Remove(this);
+            switch (LOD)
+            {
+                case 0:
+                    ShipMesh.LOD0Meshes.Remove(this);
+                    break;
+                case 1:
+                    ShipMesh.LOD1Meshes.Remove(this);
+                    break;
+                case 2:
+                    ShipMesh.LOD2Meshes.Remove(this);
+                    break;
+                case 3:
+                    ShipMesh.LOD3Meshes.Remove(this);
+                    break;
+            }
+            ShipMesh = null;
+        }
+        
+        public void CalculateBoundingBox()
         {
             Vector3 min = Vector3.Zero;
             Vector3 max = Vector3.Zero;
