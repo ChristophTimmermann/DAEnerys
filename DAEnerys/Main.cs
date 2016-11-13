@@ -15,6 +15,7 @@ namespace DAEnerys
     public partial class Main : Form
     {
         public int BUILD = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build;
+        public string OpenedFile = "";
 
         public bool Loaded = false;
         HWDockpath selectedDockpath;
@@ -70,7 +71,8 @@ namespace DAEnerys
                 if (File.Exists(Program.OPEN_PATH))
                 {
                     HWScene.LoadCollada(Program.OPEN_PATH);
-                    this.Text = "DAEnerys - " + Program.OPEN_PATH;
+                    this.Text = Program.OPEN_PATH + " - DAEnerys";
+                    OpenedFile = Path.GetFileNameWithoutExtension(Program.OPEN_PATH);
 
                     Renderer.InvalidateMeshData();
                     Renderer.InvalidateView();
@@ -247,7 +249,8 @@ namespace DAEnerys
             {
                 Clear();
                 HWScene.LoadCollada(openColladaDialog.FileName);
-                this.Text = "DAEnerys - " + openColladaDialog.FileName;
+                this.Text = openColladaDialog.FileName + " - DAEnerys";
+                OpenedFile = Path.GetFileNameWithoutExtension(openColladaDialog.FileName);
 
                 Renderer.InvalidateMeshData();
                 Renderer.InvalidateView();
@@ -261,6 +264,8 @@ namespace DAEnerys
             if (result == DialogResult.OK)
             {
                 HWScene.SaveCollada(saveColladaDialog.FileName);
+                this.Text = saveColladaDialog.FileName + " - DAEnerys";
+                OpenedFile = Path.GetFileNameWithoutExtension(saveColladaDialog.FileName);
             }
         }
 
@@ -848,9 +853,49 @@ namespace DAEnerys
                 selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
             }
 
+            if (selectedShipMesh == null)
+                return;
+
             selectedShipMesh.Tags.Remove(ShipMeshTag.DOSCAR);
             if (checkShipMeshDoScar.Checked)
                 selectedShipMesh.Tags.Add(ShipMeshTag.DOSCAR);
+        }
+        private void buttonShipMeshLODExport_Click(object sender, EventArgs e)
+        {
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+
+            List<HWMesh> meshes = new List<HWMesh>();
+            switch (listShipMeshLODs.SelectedIndex)
+            {
+                case 0:
+                    foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LOD0Meshes)
+                        meshes.Add(lodMesh.Mesh);
+                    break;
+                case 1:
+                    foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LOD1Meshes)
+                        meshes.Add(lodMesh.Mesh);
+                    break;
+                case 2:
+                    foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LOD2Meshes)
+                        meshes.Add(lodMesh.Mesh);
+                    break;
+                case 3:
+                    foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LOD3Meshes)
+                        meshes.Add(lodMesh.Mesh);
+                    break;
+            }
+
+            if (meshes.Count == 0)
+                return;
+
+            saveObjDialog.FileName = OpenedFile + "_" + meshes[0].Name + "_LOD" + listShipMeshLODs.SelectedIndex;
+            DialogResult result = saveObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                ObjExporter.ExportToFile(saveObjDialog.FileName, meshes);
+            }
         }
         //--------------------------------- ENGINE GLOW MESHES ---------------------------------//
         private void listEngineGlows_SelectedIndexChanged(object sender, EventArgs e)

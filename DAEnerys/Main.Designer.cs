@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
             this.buttonSave = new System.Windows.Forms.ToolStripButton();
@@ -141,6 +141,8 @@ namespace DAEnerys
             this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
             this.labelFPS = new System.Windows.Forms.Label();
             this.buttonProblems = new System.Windows.Forms.Button();
+            this.buttonShipMeshLODExport = new System.Windows.Forms.Button();
+            this.saveObjDialog = new System.Windows.Forms.SaveFileDialog();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -220,8 +222,8 @@ namespace DAEnerys
             this.buttonSave.Image = ((System.Drawing.Image)(resources.GetObject("buttonSave.Image")));
             this.buttonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(51, 22);
-            this.buttonSave.Text = "Save";
+            this.buttonSave.Size = new System.Drawing.Size(65, 22);
+            this.buttonSave.Text = "Save as";
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // buttonSettings
@@ -273,11 +275,12 @@ namespace DAEnerys
             // openColladaDialog
             // 
             this.openColladaDialog.Filter = "COLLADA-Files|*.dae|All files|*.*";
+            this.openColladaDialog.Title = "Open DAE-file...";
             // 
             // saveColladaDialog
             // 
             this.saveColladaDialog.DefaultExt = "dae";
-            this.saveColladaDialog.Filter = "COLLADA-Files|*.dae|All files|*.*";
+            this.saveColladaDialog.Title = "Save DAE-file...";
             // 
             // splitContainer1
             // 
@@ -382,10 +385,11 @@ namespace DAEnerys
             // 
             this.groupShipMeshLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupShipMeshLODs.Controls.Add(this.buttonShipMeshLODExport);
             this.groupShipMeshLODs.Controls.Add(this.listShipMeshLODs);
             this.groupShipMeshLODs.Location = new System.Drawing.Point(3, 261);
             this.groupShipMeshLODs.Name = "groupShipMeshLODs";
-            this.groupShipMeshLODs.Size = new System.Drawing.Size(236, 172);
+            this.groupShipMeshLODs.Size = new System.Drawing.Size(236, 291);
             this.groupShipMeshLODs.TabIndex = 1;
             this.groupShipMeshLODs.TabStop = false;
             this.groupShipMeshLODs.Text = "Level of detail(s)";
@@ -393,11 +397,11 @@ namespace DAEnerys
             // listShipMeshLODs
             // 
             this.listShipMeshLODs.CheckOnClick = true;
-            this.listShipMeshLODs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listShipMeshLODs.Dock = System.Windows.Forms.DockStyle.Top;
             this.listShipMeshLODs.FormattingEnabled = true;
             this.listShipMeshLODs.Location = new System.Drawing.Point(3, 16);
             this.listShipMeshLODs.Name = "listShipMeshLODs";
-            this.listShipMeshLODs.Size = new System.Drawing.Size(230, 153);
+            this.listShipMeshLODs.Size = new System.Drawing.Size(230, 169);
             this.listShipMeshLODs.TabIndex = 0;
             this.listShipMeshLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listShipMeshLODs_ItemCheck);
             // 
@@ -1404,9 +1408,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -1414,14 +1418,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle7;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -1430,9 +1434,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -1445,9 +1449,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle6;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -1494,6 +1498,21 @@ namespace DAEnerys
             this.buttonProblems.TabIndex = 8;
             this.buttonProblems.UseVisualStyleBackColor = false;
             this.buttonProblems.Click += new System.EventHandler(this.buttonProblems_Click);
+            // 
+            // buttonShipMeshLODExport
+            // 
+            this.buttonShipMeshLODExport.Location = new System.Drawing.Point(3, 191);
+            this.buttonShipMeshLODExport.Name = "buttonShipMeshLODExport";
+            this.buttonShipMeshLODExport.Size = new System.Drawing.Size(107, 23);
+            this.buttonShipMeshLODExport.TabIndex = 1;
+            this.buttonShipMeshLODExport.Text = "Export to OBJ";
+            this.buttonShipMeshLODExport.UseVisualStyleBackColor = true;
+            this.buttonShipMeshLODExport.Click += new System.EventHandler(this.buttonShipMeshLODExport_Click);
+            // 
+            // saveObjDialog
+            // 
+            this.saveObjDialog.DefaultExt = "obj";
+            this.saveObjDialog.Title = "Save OBJ-file...";
             // 
             // Main
             // 
@@ -1683,6 +1702,8 @@ namespace DAEnerys
         private System.Windows.Forms.ListBox listShipMeshes;
         private System.Windows.Forms.Label labelShipMeshParent;
         private System.Windows.Forms.ComboBox comboShipMeshParent;
+        private System.Windows.Forms.Button buttonShipMeshLODExport;
+        private System.Windows.Forms.SaveFileDialog saveObjDialog;
     }
 }
 
