@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 
 namespace DAEnerys
 {
@@ -49,26 +50,20 @@ namespace DAEnerys
         
         public void CalculateBoundingBox()
         {
-            Vector3 min = Vector3.Zero;
-            Vector3 max = Vector3.Zero;
-
-            foreach(Vector3 vertex in Mesh.GetVertices())
+            Vector3 min = new Vector3(float.MaxValue);
+            Vector3 max = new Vector3(-float.MaxValue);
+            Mesh.CalculateModelMatrix();
+            foreach (Vector3 vertex in Mesh.GetVertices())
             {
-                Vector3 computedVertex = Vector3.Add(vertex * Mesh.Parent.AbsoluteScale, Mesh.Parent.AbsolutePosition);
+                Vector3 computedVertex = (Mesh.ModelMatrix * Matrix4.CreateTranslation(vertex)).ExtractTranslation();
                 //Vector3 computedVertex = Vector3.Add(vertex, Mesh.Parent.AbsolutePosition);
-                if (computedVertex.X < min.X)
-                    min.X = computedVertex.X;
-                if (computedVertex.Y < min.Y)
-                    min.Y = computedVertex.Y;
-                if (computedVertex.Z < min.Z)
-                    min.Z = computedVertex.Z;
+                min.X = Math.Min(min.X, computedVertex.X);
+                min.Y = Math.Min(min.Y, computedVertex.Y);
+                min.Z = Math.Min(min.Z, computedVertex.Z);
 
-                if (computedVertex.X > max.X)
-                    max.X = computedVertex.X;
-                if (computedVertex.Y > max.Y)
-                    max.Y = computedVertex.Y;
-                if (computedVertex.Z > max.Z)
-                    max.Z = computedVertex.Z;
+                max.X = Math.Max(max.X, computedVertex.X);
+                max.Y = Math.Max(max.Y, computedVertex.Y);
+                max.Z = Math.Max(max.Z, computedVertex.Z);
             }
 
             if (min.X < HWScene.Min.X)
