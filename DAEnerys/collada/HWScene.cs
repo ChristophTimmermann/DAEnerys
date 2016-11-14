@@ -278,7 +278,7 @@ namespace DAEnerys
             return "colladaBlenderFix.dae";
         }
 
-        public static void CalibrateSettings()
+        public static void CalibrateSettings(bool setZoom = true)
         {
             float volume = (-Min.X + Max.X) * (-Min.Y + Max.Y) * (-Min.Z + Max.Z);
             List<float> values = new List<float>();
@@ -310,7 +310,8 @@ namespace DAEnerys
 
             Program.Camera.MinZoom = farthest / 40;
             Program.Camera.MaxZoom = farthest * 40;
-            Program.Camera.Zoom = farthest * 2f;
+            if(setZoom)
+                Program.Camera.Zoom = farthest * 2f;
             Program.Camera.ZoomSpeed = farthest * 10;
             Program.Camera.CalculatedZoom = Program.Camera.Zoom;
 

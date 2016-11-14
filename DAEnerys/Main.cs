@@ -883,6 +883,7 @@ namespace DAEnerys
 
             HWJoint newParent = HWJoint.GetByName((string)comboShipMeshParent.SelectedItem);
             selectedShipMesh.Parent = newParent;
+            HWScene.CalibrateSettings(false);
         }
         private void checkShipMeshDoScar_CheckedChanged(object sender, EventArgs e)
         {
