@@ -14,7 +14,7 @@ namespace DAEnerys
             int materialCount = 0;
             foreach (HWMesh mesh in meshes)
                 if (mesh.Material != null)
-                    if (mesh.Material.DiffuseMap != string.Empty)
+                    if (mesh.Material.DiffusePath != string.Empty)
                         materialCount++;
 
             #region OBJ-file
@@ -65,7 +65,7 @@ namespace DAEnerys
             int indexOffset = 0;
             foreach (HWMesh mesh in meshes)
             {
-                if (mesh.Material != null && mesh.Material.DiffuseMap != string.Empty)
+                if (mesh.Material != null && mesh.Material.DiffusePath != string.Empty)
                     file.AppendLine("usemtl " + mesh.Material.Name);
                 else
                     file.AppendLine("usemtl");
@@ -93,11 +93,11 @@ namespace DAEnerys
             file.AppendLine("# Materials");
             foreach(HWMesh mesh in meshes)
             {
-                if (mesh.Material == null || mesh.Material.DiffuseMap == string.Empty)
+                if (mesh.Material == null || mesh.Material.DiffusePath == string.Empty)
                     continue;
 
                 file.AppendLine("newmtl " + mesh.Material.Name);
-                file.AppendLine("\tmap_Kd " + mesh.Material.DiffuseMap);
+                file.AppendLine("\tmap_Kd " + mesh.Material.DiffusePath);
             }
 
             file.AppendLine("# <EOF>");
