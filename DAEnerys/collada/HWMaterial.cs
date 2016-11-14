@@ -19,7 +19,7 @@ namespace DAEnerys
                 if (Suffix == -1)
                     return Name;
 
-                if(Suffix <= 1)
+                if (Suffix <= 1)
                     return "MAT[" + Name + "]_SHD[" + Shader + "]";
                 else
                     return "MAT[" + Name + "]_SHD[" + Shader + "]_" + Suffix;
@@ -127,7 +127,7 @@ namespace DAEnerys
                             continue;
 
                         string diffusePrefix = diffuseName.Remove(underspaceIndex);
-                        
+
                         string absolutePath = Path.Combine(HWScene.ColladaPath, image.Path.Replace("file://", ""));
                         absolutePath = Path.GetDirectoryName(absolutePath);
 
@@ -138,6 +138,10 @@ namespace DAEnerys
                         foreach (string file in files)
                         {
                             string fileName = Path.GetFileNameWithoutExtension(file);
+                            string extension = Path.GetExtension(file).ToLower();
+                            if (extension != ".tga" && extension != ".png" && extension != ".jpg" && extension != ".dds")
+                                continue;
+                            
                             int fileUnderspaceIndex = fileName.LastIndexOf('_');
                             if (fileUnderspaceIndex != -1)
                             {
