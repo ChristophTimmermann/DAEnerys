@@ -31,16 +31,17 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
             this.buttonSave = new System.Windows.Forms.ToolStripButton();
             this.buttonSettings = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.buttonShaderSettings = new System.Windows.Forms.ToolStripButton();
             this.buttonHotkeys = new System.Windows.Forms.ToolStripButton();
+            this.buttonCheckForUpdates = new System.Windows.Forms.ToolStripButton();
             this.buttonAbout = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.openColladaDialog = new System.Windows.Forms.OpenFileDialog();
@@ -53,6 +54,7 @@ namespace DAEnerys
             this.labelShipMeshParent = new System.Windows.Forms.Label();
             this.comboShipMeshParent = new System.Windows.Forms.ComboBox();
             this.groupShipMeshLODs = new System.Windows.Forms.GroupBox();
+            this.groupShipMeshLODMaterials = new System.Windows.Forms.GroupBox();
             this.buttonShipMeshLODImport = new System.Windows.Forms.Button();
             this.buttonShipMeshLODExport = new System.Windows.Forms.Button();
             this.listShipMeshLODs = new System.Windows.Forms.CheckedListBox();
@@ -145,7 +147,6 @@ namespace DAEnerys
             this.buttonProblems = new System.Windows.Forms.Button();
             this.saveObjDialog = new System.Windows.Forms.SaveFileDialog();
             this.openObjDialog = new System.Windows.Forms.OpenFileDialog();
-            this.groupShipMeshLODMaterials = new System.Windows.Forms.GroupBox();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -201,8 +202,9 @@ namespace DAEnerys
             this.buttonOpen,
             this.buttonSave,
             this.buttonSettings,
-            this.toolStripButton2,
+            this.buttonShaderSettings,
             this.buttonHotkeys,
+            this.buttonCheckForUpdates,
             this.buttonAbout,
             this.toolStripButton1});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
@@ -238,14 +240,14 @@ namespace DAEnerys
             this.buttonSettings.Text = "Settings";
             this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
             // 
-            // toolStripButton2
+            // buttonShaderSettings
             // 
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(108, 22);
-            this.toolStripButton2.Text = "Shader Settings";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.buttonShaderSettings.Image = ((System.Drawing.Image)(resources.GetObject("buttonShaderSettings.Image")));
+            this.buttonShaderSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonShaderSettings.Name = "buttonShaderSettings";
+            this.buttonShaderSettings.Size = new System.Drawing.Size(108, 22);
+            this.buttonShaderSettings.Text = "Shader Settings";
+            this.buttonShaderSettings.Click += new System.EventHandler(this.buttonShaderSettings_Click);
             // 
             // buttonHotkeys
             // 
@@ -255,6 +257,15 @@ namespace DAEnerys
             this.buttonHotkeys.Size = new System.Drawing.Size(70, 22);
             this.buttonHotkeys.Text = "Hotkeys";
             this.buttonHotkeys.Click += new System.EventHandler(this.buttonHotkeys_Click);
+            // 
+            // buttonCheckForUpdates
+            // 
+            this.buttonCheckForUpdates.Image = ((System.Drawing.Image)(resources.GetObject("buttonCheckForUpdates.Image")));
+            this.buttonCheckForUpdates.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonCheckForUpdates.Name = "buttonCheckForUpdates";
+            this.buttonCheckForUpdates.Size = new System.Drawing.Size(123, 22);
+            this.buttonCheckForUpdates.Text = "Check for updates";
+            this.buttonCheckForUpdates.Click += new System.EventHandler(this.buttonCheckForUpdates_Click);
             // 
             // buttonAbout
             // 
@@ -398,6 +409,15 @@ namespace DAEnerys
             this.groupShipMeshLODs.TabIndex = 1;
             this.groupShipMeshLODs.TabStop = false;
             this.groupShipMeshLODs.Text = "Level of detail(s)";
+            // 
+            // groupShipMeshLODMaterials
+            // 
+            this.groupShipMeshLODMaterials.Location = new System.Drawing.Point(3, 130);
+            this.groupShipMeshLODMaterials.Name = "groupShipMeshLODMaterials";
+            this.groupShipMeshLODMaterials.Size = new System.Drawing.Size(233, 297);
+            this.groupShipMeshLODMaterials.TabIndex = 3;
+            this.groupShipMeshLODMaterials.TabStop = false;
+            this.groupShipMeshLODMaterials.Text = "Assigned materials";
             // 
             // buttonShipMeshLODImport
             // 
@@ -1437,9 +1457,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -1447,14 +1467,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle7;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -1463,9 +1483,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -1478,9 +1498,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle6;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -1537,15 +1557,6 @@ namespace DAEnerys
             // 
             this.openObjDialog.Filter = "OBJ-Files|*.obj|All files|*.*";
             this.openObjDialog.Title = "Open OBJ-file...";
-            // 
-            // groupShipMeshLODMaterials
-            // 
-            this.groupShipMeshLODMaterials.Location = new System.Drawing.Point(3, 130);
-            this.groupShipMeshLODMaterials.Name = "groupShipMeshLODMaterials";
-            this.groupShipMeshLODMaterials.Size = new System.Drawing.Size(233, 297);
-            this.groupShipMeshLODMaterials.TabIndex = 3;
-            this.groupShipMeshLODMaterials.TabStop = false;
-            this.groupShipMeshLODMaterials.Text = "Assigned materials";
             // 
             // Main
             // 
@@ -1729,7 +1740,7 @@ namespace DAEnerys
         private System.Windows.Forms.TextBox boxMaterialShader;
         private System.Windows.Forms.ListBox listMaterials;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton buttonCheckForUpdates;
         private System.Windows.Forms.ToolStripButton buttonSave;
         private System.Windows.Forms.CheckBox checkShipMeshDoScar;
         private System.Windows.Forms.ListBox listShipMeshes;
@@ -1740,6 +1751,7 @@ namespace DAEnerys
         private System.Windows.Forms.Button buttonShipMeshLODImport;
         private System.Windows.Forms.OpenFileDialog openObjDialog;
         private System.Windows.Forms.GroupBox groupShipMeshLODMaterials;
+        private System.Windows.Forms.ToolStripButton buttonShaderSettings;
     }
 }
 

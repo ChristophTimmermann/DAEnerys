@@ -181,6 +181,7 @@ namespace DAEnerys
             this.mesh = mesh;
             GetData();
             Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
             Renderer.Invalidate();
         }
 
@@ -250,7 +251,6 @@ namespace DAEnerys
                 }
 
                 HWShipMeshLOD newLOD = new HWShipMeshLOD(newShipMesh, this, lod);
-                newShipMesh.AddLODMesh(newLOD);
             }
             #endregion
             #region GoblinMesh

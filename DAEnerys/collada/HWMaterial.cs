@@ -139,6 +139,10 @@ namespace DAEnerys
                         foreach(string file in files)
                         {
                             string fileName = Path.GetFileNameWithoutExtension(file);
+                            string extension = Path.GetExtension(file).ToLower();
+                            if (extension != ".tga" && extension != ".png" && extension != ".jpg" && extension != ".dds")
+                                continue;
+
                             int fileUnderspaceIndex = fileName.LastIndexOf('_');
                             if (fileUnderspaceIndex != -1)
                             {
@@ -177,6 +181,30 @@ namespace DAEnerys
                                             break;
                                         case "PAIN":
                                             PAIN = file;
+                                            break;
+                                        case "PROG":
+                                            PROG = file;
+                                            break;
+                                        case "NOIZ":
+                                            NOIZ = file;
+                                            break;
+                                        case "REFX":
+                                            REFX = file;
+                                            break;
+                                        case "SPEX":
+                                            SPEX = file;
+                                            break;
+                                        case "WARP":
+                                            WARP = file;
+                                            break;
+                                        case "CLD1":
+                                            CLD1 = file;
+                                            break;
+                                        case "CLD2":
+                                            CLD2 = file;
+                                            break;
+                                        case "CLD3":
+                                            CLD3 = file;
                                             break;
                                     }
 

@@ -72,6 +72,7 @@ namespace DAEnerys
                 comboBadge_SelectedIndexChanged(this, EventArgs.Empty);
             }
 
+            checkCheckForUpdates.Checked = Updater.CheckForUpdatesOnStart;
         }
 
         private void numericJointSize_ValueChanged(object sender, EventArgs e)
@@ -223,7 +224,8 @@ namespace DAEnerys
                 new XElement("fsaaSamples", Program.FSAASamples),
                 new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront),
                 new XElement("enableVSync", Renderer.EnableVSync),
-                new XElement("disableLighting", Renderer.DisableLighting));
+                new XElement("disableLighting", Renderer.DisableLighting),
+                new XElement("checkForUpdatesOnStart", Updater.CheckForUpdatesOnStart));
 
             foreach (string dataPath in HWData.DataPaths)
             {
@@ -312,6 +314,11 @@ namespace DAEnerys
                             bool disableLighting = false;
                             bool.TryParse(element.Value, out disableLighting);
                             Renderer.DisableLighting = disableLighting;
+                            break;
+                        case "checkForUpdatesOnStart":
+                            bool checkForUpdatesOnStart = false;
+                            bool.TryParse(element.Value, out checkForUpdatesOnStart);
+                            Updater.CheckForUpdatesOnStart = checkForUpdatesOnStart;
                             break;
                         case "dataPath":
                             HWData.DataPaths.Add(element.Value);
@@ -429,6 +436,11 @@ namespace DAEnerys
             buttonEngineColor.BackColor = Color.FromArgb(255, presetColor.R, presetColor.G, presetColor.B); //The button colors look weird when the alpha is set too
             Renderer.EngineGlowColor = presetColor;
             Renderer.Invalidate();
+        }
+
+        private void checkCheckForUpdates_CheckedChanged(object sender, EventArgs e)
+        {
+            Updater.CheckForUpdatesOnStart = checkCheckForUpdates.Checked;
         }
     }
 }

@@ -295,11 +295,14 @@ namespace DAEnerys
             float markerSize = 1;
             if (BiggestMesh != null)
             {
-                jointSize = farthest / 60 / BiggestMesh.Mesh.Parent.AbsoluteScale.X;
-                jointSize = Math.Max(jointSize, 0.3f);
+                if (BiggestMesh.Mesh != null)
+                {
+                    jointSize = farthest / 60 / BiggestMesh.Mesh.Parent.AbsoluteScale.X;
+                    jointSize = Math.Max(jointSize, 0.3f);
 
-                markerSize = farthest / 65 / BiggestMesh.Mesh.Parent.AbsoluteScale.X;
-                markerSize = Math.Max(markerSize, 0.01f);
+                    markerSize = farthest / 65 / BiggestMesh.Mesh.Parent.AbsoluteScale.X;
+                    markerSize = Math.Max(markerSize, 0.01f);
+                }
             }
 
             float farClip = farthest * 64;

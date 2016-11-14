@@ -155,7 +155,7 @@
         COxTEinzafYcUpD/83E6BG1Djir/7ZhM/gCzEVBoFWn/gAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="toolStripButton2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="buttonShaderSettings.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIOSURBVFhHvVarksJAEOQT7hPuE+4TrvBUYXEn8KBRKCw/
@@ -178,6 +178,22 @@
         E2ZCS4Mjq+jz/sbQnpnQ0vjbwDl3mef5Hkju9CME0RN3jVOXiLhtW19VVRST6anVgDr5BhgWReHLsoxE
         Mv3WQENkC5RoDVSkBhpJA3a0xLMniHegJuTtHVgjka0RBg0iSCJurAG1hkjWCDf8sAb0VpQUKhB0XRcN
         yPQyOobwBV719yXTyyiBLPsBlUuok9oE5yoAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="buttonCheckForUpdates.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI0SURBVFhH1Ze/TgJBEMZ5FB/BZ6AnsaQ0UkuNVCQaekps
+        JeEZpIBGamq1VRuK04Q/5bq/decyd+zBETw3TvIl7M7MN7Mzc8tdraysVqvz9Xrds5htNhsTAjpssPVu
+        p8t2u7205It8sBJY4OtpjhfrfKZPu1wuzXg8Nt1u1zQaDVOv1zNgDx022IofHHB52nJinS6scyKB+/3+
+        TsBDwEclksDp6feLL7lznE6nwdOWBb5wCN/BlviTO+PBYLBD2LpqmdvbO/e7fd02n8mXA7/ZQ4eN9gFw
+        CW9hJeiTNXBlzwdvNptm/jR3wUYPI7c3eZykCfCbPXSsscVHc6gkkuBMMCwYUDLt2OncmPe3jzQYJ6S0
+        shawh07W+OCruaQdxPJhf0T6ztDonkOgg0Aa2gcSTCer9wHcMpiZebAb7jnX004J82SUFt1weJ/ZB+yh
+        k1YJ4NDtIAaxiOmCc2uxQWZiFCICRUHAvuREJ5AquBvT9qPHggtEG1UJYhGT2OnwcYuFjKsAsXwCM/rv
+        Fnr4Xp5fd8oI5HkP6QA6fT9owCn8xJK4aQKiBCECcEoCQMcoTIDsQs5AbrmQDqD7/wmAkDOotAXRhjD6
+        Y8hlwCLaRRT9KkbsIt6fERLj79iWP/tmJMMY5YUEif5KhlAWb7STBOCElb2Uisg8AEqmZ+JY4CtlB5nX
+        sH3iKxHnw0SEPjEsnsCRcYFwi4Wqwh46bFRgN3CFPS8jviV//3GaF24te5pf/jyv1b4Bb9SWfiyX1wkA
+        AAAASUVORK5CYII=
 </value>
   </data>
   <data name="buttonAbout.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

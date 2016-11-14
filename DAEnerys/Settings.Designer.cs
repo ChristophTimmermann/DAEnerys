@@ -62,15 +62,6 @@ namespace DAEnerys
             this.labelFSAASamples = new System.Windows.Forms.Label();
             this.comboFSAASamples = new System.Windows.Forms.ComboBox();
             this.groupRace = new System.Windows.Forms.GroupBox();
-            this.labelEngineColor = new System.Windows.Forms.Label();
-            this.buttonEngineColor = new System.Windows.Forms.Button();
-            this.labelBadge = new System.Windows.Forms.Label();
-            this.comboBadge = new System.Windows.Forms.ComboBox();
-            this.buttonTeamColorSwap = new System.Windows.Forms.Button();
-            this.buttonStripeColor = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.buttonTeamColor = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.engineColorButton5 = new DAEnerys.EngineColorButton();
             this.engineColorButton4 = new DAEnerys.EngineColorButton();
             this.engineColorButton3 = new DAEnerys.EngineColorButton();
@@ -78,6 +69,10 @@ namespace DAEnerys
             this.engineColorButtonCustom = new DAEnerys.EngineColorButton();
             this.engineColorButton1 = new DAEnerys.EngineColorButton();
             this.engineColorButton0 = new DAEnerys.EngineColorButton();
+            this.labelEngineColor = new System.Windows.Forms.Label();
+            this.buttonEngineColor = new System.Windows.Forms.Button();
+            this.labelBadge = new System.Windows.Forms.Label();
+            this.comboBadge = new System.Windows.Forms.ComboBox();
             this.teamColorButton20 = new DAEnerys.TeamColorButton();
             this.teamColorButton19 = new DAEnerys.TeamColorButton();
             this.teamColorButton18 = new DAEnerys.TeamColorButton();
@@ -88,6 +83,7 @@ namespace DAEnerys
             this.teamColorButton13 = new DAEnerys.TeamColorButton();
             this.teamColorButton12 = new DAEnerys.TeamColorButton();
             this.teamColorButton11 = new DAEnerys.TeamColorButton();
+            this.buttonTeamColorSwap = new System.Windows.Forms.Button();
             this.teamColorButtonCustom = new DAEnerys.TeamColorButton();
             this.teamColorButtonDefault = new DAEnerys.TeamColorButton();
             this.teamColorButton10 = new DAEnerys.TeamColorButton();
@@ -100,9 +96,15 @@ namespace DAEnerys
             this.teamColorButton3 = new DAEnerys.TeamColorButton();
             this.teamColorButton2 = new DAEnerys.TeamColorButton();
             this.teamColorButton1 = new DAEnerys.TeamColorButton();
+            this.buttonStripeColor = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.buttonTeamColor = new System.Windows.Forms.Button();
             this.teamColorButton0 = new DAEnerys.TeamColorButton();
+            this.label3 = new System.Windows.Forms.Label();
             this.colorDialogAlpha = new Opulos.Core.UI.AlphaColorDialog();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.groupUpdates = new System.Windows.Forms.GroupBox();
+            this.checkCheckForUpdates = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -115,6 +117,7 @@ namespace DAEnerys
             this.groupDataPaths.SuspendLayout();
             this.groupRendering.SuspendLayout();
             this.groupRace.SuspendLayout();
+            this.groupUpdates.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelJointSize
@@ -622,95 +625,6 @@ namespace DAEnerys
             this.groupRace.TabStop = false;
             this.groupRace.Text = "Race";
             // 
-            // labelEngineColor
-            // 
-            this.labelEngineColor.AutoSize = true;
-            this.labelEngineColor.Location = new System.Drawing.Point(8, 175);
-            this.labelEngineColor.Name = "labelEngineColor";
-            this.labelEngineColor.Size = new System.Drawing.Size(66, 13);
-            this.labelEngineColor.TabIndex = 157;
-            this.labelEngineColor.Text = "Engine color";
-            // 
-            // buttonEngineColor
-            // 
-            this.buttonEngineColor.BackColor = System.Drawing.Color.Red;
-            this.buttonEngineColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonEngineColor.Location = new System.Drawing.Point(76, 171);
-            this.buttonEngineColor.Name = "buttonEngineColor";
-            this.buttonEngineColor.Size = new System.Drawing.Size(261, 20);
-            this.buttonEngineColor.TabIndex = 156;
-            this.buttonEngineColor.UseVisualStyleBackColor = false;
-            this.buttonEngineColor.Click += new System.EventHandler(this.buttonEngineColor_Click);
-            // 
-            // labelBadge
-            // 
-            this.labelBadge.AutoSize = true;
-            this.labelBadge.Location = new System.Drawing.Point(8, 147);
-            this.labelBadge.Name = "labelBadge";
-            this.labelBadge.Size = new System.Drawing.Size(38, 13);
-            this.labelBadge.TabIndex = 155;
-            this.labelBadge.Text = "Badge";
-            // 
-            // comboBadge
-            // 
-            this.comboBadge.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBadge.FormattingEnabled = true;
-            this.comboBadge.Location = new System.Drawing.Point(76, 144);
-            this.comboBadge.Name = "comboBadge";
-            this.comboBadge.Size = new System.Drawing.Size(261, 21);
-            this.comboBadge.TabIndex = 154;
-            this.comboBadge.SelectedIndexChanged += new System.EventHandler(this.comboBadge_SelectedIndexChanged);
-            // 
-            // buttonTeamColorSwap
-            // 
-            this.buttonTeamColorSwap.Location = new System.Drawing.Point(270, 69);
-            this.buttonTeamColorSwap.Name = "buttonTeamColorSwap";
-            this.buttonTeamColorSwap.Size = new System.Drawing.Size(66, 22);
-            this.buttonTeamColorSwap.TabIndex = 143;
-            this.buttonTeamColorSwap.Text = "Swap";
-            this.buttonTeamColorSwap.UseVisualStyleBackColor = true;
-            this.buttonTeamColorSwap.Click += new System.EventHandler(this.buttonTeamColorSwap_Click);
-            // 
-            // buttonStripeColor
-            // 
-            this.buttonStripeColor.BackColor = System.Drawing.Color.Red;
-            this.buttonStripeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonStripeColor.Location = new System.Drawing.Point(76, 43);
-            this.buttonStripeColor.Name = "buttonStripeColor";
-            this.buttonStripeColor.Size = new System.Drawing.Size(261, 20);
-            this.buttonStripeColor.TabIndex = 129;
-            this.buttonStripeColor.UseVisualStyleBackColor = false;
-            this.buttonStripeColor.Click += new System.EventHandler(this.buttonStripeColor_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 47);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 128;
-            this.label2.Text = "Stripe color";
-            // 
-            // buttonTeamColor
-            // 
-            this.buttonTeamColor.BackColor = System.Drawing.Color.Red;
-            this.buttonTeamColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonTeamColor.Location = new System.Drawing.Point(76, 19);
-            this.buttonTeamColor.Name = "buttonTeamColor";
-            this.buttonTeamColor.Size = new System.Drawing.Size(261, 20);
-            this.buttonTeamColor.TabIndex = 127;
-            this.buttonTeamColor.UseVisualStyleBackColor = false;
-            this.buttonTeamColor.Click += new System.EventHandler(this.buttonTeamColor_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 23);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(60, 13);
-            this.label3.TabIndex = 126;
-            this.label3.Text = "Team color";
-            // 
             // engineColorButton5
             // 
             this.engineColorButton5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(54)))), ((int)(((byte)(23)))));
@@ -794,6 +708,45 @@ namespace DAEnerys
             this.engineColorButton0.UsePreset = DAEnerys.EngineColorButton.PresetColors.Hiigaran;
             this.engineColorButton0.UseVisualStyleBackColor = false;
             this.engineColorButton0.Click += new System.EventHandler(this.buttonEngineColorPreset_Click);
+            // 
+            // labelEngineColor
+            // 
+            this.labelEngineColor.AutoSize = true;
+            this.labelEngineColor.Location = new System.Drawing.Point(8, 175);
+            this.labelEngineColor.Name = "labelEngineColor";
+            this.labelEngineColor.Size = new System.Drawing.Size(66, 13);
+            this.labelEngineColor.TabIndex = 157;
+            this.labelEngineColor.Text = "Engine color";
+            // 
+            // buttonEngineColor
+            // 
+            this.buttonEngineColor.BackColor = System.Drawing.Color.Red;
+            this.buttonEngineColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonEngineColor.Location = new System.Drawing.Point(76, 171);
+            this.buttonEngineColor.Name = "buttonEngineColor";
+            this.buttonEngineColor.Size = new System.Drawing.Size(261, 20);
+            this.buttonEngineColor.TabIndex = 156;
+            this.buttonEngineColor.UseVisualStyleBackColor = false;
+            this.buttonEngineColor.Click += new System.EventHandler(this.buttonEngineColor_Click);
+            // 
+            // labelBadge
+            // 
+            this.labelBadge.AutoSize = true;
+            this.labelBadge.Location = new System.Drawing.Point(8, 147);
+            this.labelBadge.Name = "labelBadge";
+            this.labelBadge.Size = new System.Drawing.Size(38, 13);
+            this.labelBadge.TabIndex = 155;
+            this.labelBadge.Text = "Badge";
+            // 
+            // comboBadge
+            // 
+            this.comboBadge.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBadge.FormattingEnabled = true;
+            this.comboBadge.Location = new System.Drawing.Point(76, 144);
+            this.comboBadge.Name = "comboBadge";
+            this.comboBadge.Size = new System.Drawing.Size(261, 21);
+            this.comboBadge.TabIndex = 154;
+            this.comboBadge.SelectedIndexChanged += new System.EventHandler(this.comboBadge_SelectedIndexChanged);
             // 
             // teamColorButton20
             // 
@@ -924,6 +877,16 @@ namespace DAEnerys
             this.teamColorButton11.UsePreset = DAEnerys.TeamColorButton.PresetColors.TanisDefense;
             this.teamColorButton11.UseVisualStyleBackColor = false;
             this.teamColorButton11.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
+            // 
+            // buttonTeamColorSwap
+            // 
+            this.buttonTeamColorSwap.Location = new System.Drawing.Point(270, 69);
+            this.buttonTeamColorSwap.Name = "buttonTeamColorSwap";
+            this.buttonTeamColorSwap.Size = new System.Drawing.Size(66, 22);
+            this.buttonTeamColorSwap.TabIndex = 143;
+            this.buttonTeamColorSwap.Text = "Swap";
+            this.buttonTeamColorSwap.UseVisualStyleBackColor = true;
+            this.buttonTeamColorSwap.Click += new System.EventHandler(this.buttonTeamColorSwap_Click);
             // 
             // teamColorButtonCustom
             // 
@@ -1081,6 +1044,37 @@ namespace DAEnerys
             this.teamColorButton1.UseVisualStyleBackColor = false;
             this.teamColorButton1.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
             // 
+            // buttonStripeColor
+            // 
+            this.buttonStripeColor.BackColor = System.Drawing.Color.Red;
+            this.buttonStripeColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonStripeColor.Location = new System.Drawing.Point(76, 43);
+            this.buttonStripeColor.Name = "buttonStripeColor";
+            this.buttonStripeColor.Size = new System.Drawing.Size(261, 20);
+            this.buttonStripeColor.TabIndex = 129;
+            this.buttonStripeColor.UseVisualStyleBackColor = false;
+            this.buttonStripeColor.Click += new System.EventHandler(this.buttonStripeColor_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 47);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(60, 13);
+            this.label2.TabIndex = 128;
+            this.label2.Text = "Stripe color";
+            // 
+            // buttonTeamColor
+            // 
+            this.buttonTeamColor.BackColor = System.Drawing.Color.Red;
+            this.buttonTeamColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonTeamColor.Location = new System.Drawing.Point(76, 19);
+            this.buttonTeamColor.Name = "buttonTeamColor";
+            this.buttonTeamColor.Size = new System.Drawing.Size(261, 20);
+            this.buttonTeamColor.TabIndex = 127;
+            this.buttonTeamColor.UseVisualStyleBackColor = false;
+            this.buttonTeamColor.Click += new System.EventHandler(this.buttonTeamColor_Click);
+            // 
             // teamColorButton0
             // 
             this.teamColorButton0.BackColor = System.Drawing.Color.DarkGray;
@@ -1093,6 +1087,15 @@ namespace DAEnerys
             this.teamColorButton0.UsePreset = DAEnerys.TeamColorButton.PresetColors.Kushan;
             this.teamColorButton0.UseVisualStyleBackColor = false;
             this.teamColorButton0.Click += new System.EventHandler(this.buttonTeamColorPreset_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 23);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(60, 13);
+            this.label3.TabIndex = 126;
+            this.label3.Text = "Team color";
             // 
             // colorDialogAlpha
             // 
@@ -1107,6 +1110,29 @@ namespace DAEnerys
             this.colorDialog.FullOpen = true;
             this.colorDialog.SolidColorOnly = true;
             // 
+            // groupUpdates
+            // 
+            this.groupUpdates.AutoSize = true;
+            this.groupUpdates.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupUpdates.Controls.Add(this.checkCheckForUpdates);
+            this.groupUpdates.Location = new System.Drawing.Point(8, 466);
+            this.groupUpdates.Name = "groupUpdates";
+            this.groupUpdates.Size = new System.Drawing.Size(163, 55);
+            this.groupUpdates.TabIndex = 21;
+            this.groupUpdates.TabStop = false;
+            this.groupUpdates.Text = "Updates";
+            // 
+            // checkCheckForUpdates
+            // 
+            this.checkCheckForUpdates.AutoSize = true;
+            this.checkCheckForUpdates.Location = new System.Drawing.Point(6, 19);
+            this.checkCheckForUpdates.Name = "checkCheckForUpdates";
+            this.checkCheckForUpdates.Size = new System.Drawing.Size(151, 17);
+            this.checkCheckForUpdates.TabIndex = 0;
+            this.checkCheckForUpdates.Text = "Check for updates on start";
+            this.checkCheckForUpdates.UseVisualStyleBackColor = true;
+            this.checkCheckForUpdates.CheckedChanged += new System.EventHandler(this.checkCheckForUpdates_CheckedChanged);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1114,6 +1140,7 @@ namespace DAEnerys
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(803, 640);
+            this.Controls.Add(this.groupUpdates);
             this.Controls.Add(this.groupRace);
             this.Controls.Add(this.groupRendering);
             this.Controls.Add(this.groupDataPaths);
@@ -1141,6 +1168,8 @@ namespace DAEnerys
             this.groupRendering.PerformLayout();
             this.groupRace.ResumeLayout(false);
             this.groupRace.PerformLayout();
+            this.groupUpdates.ResumeLayout(false);
+            this.groupUpdates.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1222,5 +1251,7 @@ namespace DAEnerys
         private EngineColorButton engineColorButton2;
         private Opulos.Core.UI.AlphaColorDialog colorDialogAlpha;
         private System.Windows.Forms.ColorDialog colorDialog;
+        private System.Windows.Forms.GroupBox groupUpdates;
+        private System.Windows.Forms.CheckBox checkCheckForUpdates;
     }
 }

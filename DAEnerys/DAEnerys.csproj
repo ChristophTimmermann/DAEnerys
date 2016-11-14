@@ -151,6 +151,13 @@
     <Compile Include="forms\TeamColorButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Updater.cs" />
+    <Compile Include="UpdateWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateWindow.Designer.cs">
+      <DependentUpon>UpdateWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities.cs" />
     <Compile Include="collada\HWMesh.cs" />
     <Compile Include="Light.cs" />
@@ -195,6 +202,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="forms\TeamColorButton.resx">
       <DependentUpon>TeamColorButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateWindow.resx">
+      <DependentUpon>UpdateWindow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -261,7 +271,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

@@ -90,6 +90,9 @@ namespace DAEnerys
 
             Clear();
 
+            if(Updater.CheckForUpdatesOnStart)
+                Updater.CheckForUpdates();
+
             //Open DAE from arguments
             if (Program.OPEN_PATH != null)
                 if (File.Exists(Program.OPEN_PATH))
@@ -1041,12 +1044,24 @@ namespace DAEnerys
             if (result == DialogResult.OK)
             {
                 Mesh[] newMeshes = ObjImporter.ImportFromFile(openObjDialog.FileName);
+                if (newMeshes.Length > meshes.Count)
+                {
+                    for (int i = newMeshes.Length - (newMeshes.Length - meshes.Count); i < newMeshes.Length; i++)
+                    {
+                        HWMesh newMesh = new HWMesh(newMeshes[i]);
+                        newMesh.Parent = meshes[0].Mesh.Parent;
+                        HWShipMeshLOD newLOD = new HWShipMeshLOD(selectedShipMesh, newMesh, listShipMeshLODs.SelectedIndex);
+                    }
+                }
+
                 for(int i = 0; i < meshes.Count; i++)
                 {
                     if (newMeshes.Length - 1 >= i)
                     {
+                        HWMaterial material = meshes[i].Mesh.Material;
                         meshes[i].Mesh.SetMesh(newMeshes[i]);
                         meshes[i].CalculateBoundingBox();
+                        meshes[i].Mesh.Material = material;
                     }
                     else //Remove old mesh
                     {
@@ -1054,6 +1069,7 @@ namespace DAEnerys
                     }
                 }
 
+                listShipMeshLODs_SelectedIndexChanged(listShipMeshLODs, EventArgs.Empty);
                 HWScene.CalibrateSettings();
             }
         }
@@ -1435,7 +1451,7 @@ namespace DAEnerys
             Renderer.Invalidate();
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void buttonShaderSettings_Click(object sender, EventArgs e)
         {
             if (Program.ShaderSettings != null) return;
             Program.ShaderSettings = new ShaderSettings();
@@ -1446,6 +1462,11 @@ namespace DAEnerys
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             //Dump.ADuiePyle();
+        }
+
+        private void buttonCheckForUpdates_Click(object sender, EventArgs e)
+        {
+            Updater.CheckForUpdatesManually();
         }
     }
 }

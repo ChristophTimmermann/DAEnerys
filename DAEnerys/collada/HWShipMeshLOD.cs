@@ -16,6 +16,8 @@ namespace DAEnerys
             LOD = lod;
             Mesh.LOD = lod;
 
+            ShipMesh.AddLODMesh(this);
+
             if (shipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
                 Mesh.DoScars = true;
 

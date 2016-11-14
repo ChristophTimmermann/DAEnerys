@@ -134,7 +134,7 @@ namespace NewShaderManifest
                 }
                 else if (key == "clipPlane0")
                 {
-                    //Protect[key] = GL.IsEnabled(EnableCap.ClipPlane0);
+                    Protect[key] = GL.IsEnabled(EnableCap.ClipPlane0);
                 }
                 else if (key == "colorWrite")
                 {
