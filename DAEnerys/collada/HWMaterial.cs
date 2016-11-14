@@ -31,7 +31,7 @@ namespace DAEnerys
         public float SpecularExponent = 10;
         public float Opacity = 1.0f;
 
-        public string DiffuseMap = "";
+        public string DiffusePath = "";
 
         public object MaterialListItem;
 
@@ -69,18 +69,19 @@ namespace DAEnerys
         public void Parse()
         {
             string fullName = Name;
-            string DIFF = "";
-            string GLOW = "", SPEC = "", REFL = "";
-            string TEAM = "", STRP = "", PAIN = "";
-            string NORM = "";
-            string PROG = "";
-            string DIFX = "";
-            string GLOX = "", SPEX = "", REFX = "";
-            string CLD1 = "", CLD2 = "", CLD3 = "";
-            string WARP = "";
-            string MASK = "";
-            string NOIZ = "";
-            
+            Dictionary<string, string> paths = new Dictionary<string, string>();
+            paths.Add("DIFF", "");
+            paths.Add("GLOW", ""); paths.Add("SPEC", ""); paths.Add("REFL", "");
+            paths.Add("TEAM", ""); paths.Add("STRP", ""); paths.Add("PAIN", "");
+            paths.Add("NORM", "");
+            paths.Add("PROG", "");
+            paths.Add("DIFX", "");
+            paths.Add("GLOX", ""); paths.Add("SPEX", ""); paths.Add("REFX", "");
+            paths.Add("CLD1", ""); paths.Add("CLD2", ""); paths.Add("CLD3", "");
+            paths.Add("WARP", "");
+            paths.Add("MASK", "");
+            paths.Add("NOIZ", "");
+
             if (Name.StartsWith("MAT[")) //If material is a homeworld valid material
             {
                 Suffix = 1;
@@ -93,10 +94,12 @@ namespace DAEnerys
                     if (i != 0)
                     {
                         end = splitted[i].IndexOf(']');
-                        if (end < 0) {
+                        if (end < 0)
+                        {
                             Problem.Problems.Add(new Problem(ProblemTypes.ERROR,
                                 "Material parsing error: '" + fullName + "' has an invalid name format."));
-                        } else if (splitted[i - 1].EndsWith("MAT")) //Name
+                        }
+                        else if (splitted[i - 1].EndsWith("MAT")) //Name
                         {
                             Name = splitted[i].Substring(0, end);
                         }
@@ -107,9 +110,9 @@ namespace DAEnerys
                     }
                 }
 
-                foreach(HWImage image in HWScene.Images)
+                foreach (HWImage image in HWScene.Images)
                 {
-                    if(image.Path.Replace("file://", "") == DiffuseMap)
+                    if (image.Path.Replace("file://", "") == DiffusePath)
                     {
                         Format = image.Format;
                         Images.Add(image);
@@ -124,11 +127,7 @@ namespace DAEnerys
                             continue;
 
                         string diffusePrefix = diffuseName.Remove(underspaceIndex);
-
-                        //string diffusePath = new Uri(image.Path).LocalPath;
-                        //string diffusePath = Path.GetFullPath(image.Path);
-                        //diffusePath = diffusePath.Remove(0, 2);
-
+                        
                         string absolutePath = Path.Combine(HWScene.ColladaPath, image.Path.Replace("file://", ""));
                         absolutePath = Path.GetDirectoryName(absolutePath);
 
@@ -136,13 +135,9 @@ namespace DAEnerys
                             continue;
 
                         string[] files = Directory.GetFiles(absolutePath);
-                        foreach(string file in files)
+                        foreach (string file in files)
                         {
                             string fileName = Path.GetFileNameWithoutExtension(file);
-                            string extension = Path.GetExtension(file).ToLower();
-                            if (extension != ".tga" && extension != ".png" && extension != ".jpg" && extension != ".dds")
-                                continue;
-
                             int fileUnderspaceIndex = fileName.LastIndexOf('_');
                             if (fileUnderspaceIndex != -1)
                             {
@@ -150,62 +145,9 @@ namespace DAEnerys
                                 string prefix = fileName.Remove(fileUnderspaceIndex);
                                 if (prefix == diffusePrefix)
                                 {
-                                    switch(suffix)
+                                    if (paths.ContainsKey(suffix))
                                     {
-                                        case "DIFF":
-                                            DIFF = file;
-                                            break;
-                                        case "GLOW":
-                                            GLOW = file;
-                                            break;
-                                        case "GLOX":
-                                            GLOX = file;
-                                            break;
-                                        case "DIFX":
-                                            DIFX = file;
-                                            break;
-                                        case "NORM":
-                                            NORM = file;
-                                            break;
-                                        case "REFL":
-                                            REFL = file;
-                                            break;
-                                        case "SPEC":
-                                            SPEC = file;
-                                            break;
-                                        case "TEAM":
-                                            TEAM = file;
-                                            break;
-                                        case "STRP":
-                                            STRP = file;
-                                            break;
-                                        case "PAIN":
-                                            PAIN = file;
-                                            break;
-                                        case "PROG":
-                                            PROG = file;
-                                            break;
-                                        case "NOIZ":
-                                            NOIZ = file;
-                                            break;
-                                        case "REFX":
-                                            REFX = file;
-                                            break;
-                                        case "SPEX":
-                                            SPEX = file;
-                                            break;
-                                        case "WARP":
-                                            WARP = file;
-                                            break;
-                                        case "CLD1":
-                                            CLD1 = file;
-                                            break;
-                                        case "CLD2":
-                                            CLD2 = file;
-                                            break;
-                                        case "CLD3":
-                                            CLD3 = file;
-                                            break;
+                                        paths[suffix] = file;
                                     }
 
                                     if (suffix != "DIFF")
@@ -225,6 +167,18 @@ namespace DAEnerys
 
                 Program.main.AddMaterial(this);
             }
+
+            string DIFF = paths["DIFF"];
+            string REFL = paths["REFL"]; string GLOW = paths["GLOW"]; string SPEC = paths["SPEC"];
+            string TEAM = paths["TEAM"]; string STRP = paths["STRP"]; string PAIN = paths["PAIN"];
+            string NORM = paths["NORM"];
+            string PROG = paths["PROG"];
+            string DIFX = paths["DIFX"];
+            string REFX = paths["REFX"]; string GLOX = paths["GLOX"]; string SPEX = paths["SPEX"];
+            string CLD1 = paths["CLD1"]; string CLD2 = paths["CLD2"]; string CLD3 = paths["CLD3"];
+            string WARP = paths["WARP"];
+            string MASK = paths["MASK"];
+            string NOIZ = paths["NOIZ"];
 
             char[] splitter = new char[] { ',' };
             if (InArray(Shader.ToLower(), "ship,matte,matte2s,monolith,megalith,fxMatte,badge".Split(splitter)))
@@ -345,7 +299,7 @@ namespace DAEnerys
                 else if (Name == "black")
                     DiffuseTexture = HWTexture.MakeTexture(Name + "_DIFF", "", 0, 0, 0, 1);
                 else
-                    DiffuseTexture = HWTexture.MakeTexture(Name + "_DIFF", DIFF, 1, 1, 1, 1, true);
+                    DiffuseTexture = HWTexture.MakeTexture(Name + "_DIFF", "", 0.5f, 0.5f, 0.5f, 1f);
             }
         }
 

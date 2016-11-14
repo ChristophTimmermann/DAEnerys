@@ -141,7 +141,7 @@ namespace DAEnerys
                 if (!newMaterial.Name.StartsWith("MAT["))
                     newMaterial.Valid = false;
 
-                newMaterial.DiffuseMap = material.TextureDiffuse.FilePath; 
+                newMaterial.DiffusePath = material.TextureDiffuse.FilePath; 
 
                 newMaterial.Parse();
                 Log.WriteLine("Material '" + material.Name + "' added.");
