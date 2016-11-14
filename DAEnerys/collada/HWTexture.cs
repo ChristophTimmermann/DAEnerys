@@ -9,19 +9,6 @@ using System.Collections.Generic;
 
 namespace DAEnerys
 {
-    public enum TexMakeParams
-    {
-        ZERO,
-        ONE,
-        SRC_R,
-        SRC_B,
-        SRC_G,
-        SRC_A,
-        INVSRC_R,
-        INVSRC_B,
-        INVSRC_G,
-        INVSRC_A
-    }
     public class HWTexture
     {
         public int ID = -1;
@@ -41,16 +28,21 @@ namespace DAEnerys
 
         public static HWTexture MakeTexture(string name, string path, float r, float g, float b, float a, bool loadAlpha = false)
         {
+            return MakeTexture(name, path, (byte)(255 * r), (byte)(255 * g), (byte)(255 * b), (byte)(255 * a), loadAlpha);
+        }
+
+        private static HWTexture MakeTexture(string name, string path, byte r, byte g, byte b, byte a, bool loadAlpha = false)
+        {
             if (path == "")
             {
-                float[] data = new float[1 * 1 * 4];
+                byte[] data = new byte[1 * 1 * 4];
                 data[0] = r;
                 data[1] = g;
                 data[2] = b;
                 data[3] = a;
                 GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
                 IntPtr ptr = handle.AddrOfPinnedObject();
-                int ID = RawLoadImage(1, 1, PixelFormat.Rgba, PixelType.Float, ptr, false, false);
+                int ID = RawLoadImage(1, 1, PixelFormat.Rgba, PixelType.UnsignedByte, ptr, false, false);
                 handle.Free();
                 return new HWTexture(name, ID);
             }
@@ -66,17 +58,35 @@ namespace DAEnerys
             float DefaultR, float DefaultG, float DefaultB, float DefaultA,
             bool invertR = false, bool invertG = false, bool invertB = false,
             bool useAlpha = false
-        ) {
+        )
+        {
+            return MakeMultTexture(
+                name,
+                SourceR, SourceG, SourceB,
+                (byte)(DefaultR * 255), (byte)(DefaultG * 255), (byte)(DefaultB * 255), (byte)(DefaultA * 255),
+                invertR, invertG, invertB,
+                useAlpha
+            );
+        }
+
+        private static HWTexture MakeMultTexture(
+            string name,
+            string SourceR, string SourceG, string SourceB,
+            byte DefaultR, byte DefaultG, byte DefaultB, byte DefaultA,
+            bool invertR = false, bool invertG = false, bool invertB = false,
+            bool useAlpha = false
+        )
+        {
             if (SourceR == "" && SourceG == "" && SourceB == "")
             {
-                float[] data = new float[1 * 1 * 4];
-                data[0] = invertR ? (1f - DefaultR) : DefaultR;
-                data[1] = invertG ? (1f - DefaultG) : DefaultG;
-                data[2] = invertB ? (1f - DefaultB) : DefaultB;
+                byte[] data = new byte[1 * 1 * 4];
+                data[0] = invertR ? (byte)(255 - DefaultR) : DefaultR;
+                data[1] = invertG ? (byte)(255 - DefaultG) : DefaultG;
+                data[2] = invertB ? (byte)(255 - DefaultB) : DefaultB;
                 data[3] = DefaultA;
                 GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
                 IntPtr ptr = handle.AddrOfPinnedObject();
-                int ID = RawLoadImage(1, 1, PixelFormat.Rgba, PixelType.Float, ptr, false, false);
+                int ID = RawLoadImage(1, 1, PixelFormat.Rgba, PixelType.UnsignedByte, ptr, false, false);
                 handle.Free();
                 return new HWTexture(name, ID);
             }
@@ -129,11 +139,6 @@ namespace DAEnerys
                     return null;
                 }
 
-                byte byteDefaultR = (byte)(DefaultR * 255);
-                byte byteDefaultG = (byte)(DefaultG * 255);
-                byte byteDefaultB = (byte)(DefaultB * 255);
-                byte byteDefaultA = (byte)(DefaultA * 255);
-
                 int width = existsA ? widthA : (existsB ? widthB : widthC);
                 int height = existsA ? heightA : (existsB ? heightB : heightC);
 
@@ -151,21 +156,21 @@ namespace DAEnerys
                         byte valA, valB, valC;
                         if (useAlpha)
                         {
-                            valA = useA ? aData[y, i + 3] : byteDefaultR;
-                            valB = useB ? bData[y, i + 3] : byteDefaultG;
-                            valC = useC ? cData[y, i + 3] : byteDefaultB;
+                            valA = useA ? aData[y, i + 3] : DefaultR;
+                            valB = useB ? bData[y, i + 3] : DefaultG;
+                            valC = useC ? cData[y, i + 3] : DefaultB;
                         }
                         else
                         {
-                            valA = useA ? (byte)((aData[y, i + 0] + aData[y, i + 1] + aData[y, i + 2] + aData[y, i + 3]) / 4) : byteDefaultR;
-                            valB = useB ? (byte)((bData[y, i + 0] + bData[y, i + 1] + bData[y, i + 2] + bData[y, i + 3]) / 4) : byteDefaultG;
-                            valC = useC ? (byte)((cData[y, i + 0] + cData[y, i + 1] + cData[y, i + 2] + cData[y, i + 3]) / 4) : byteDefaultB;
+                            valA = useA ? (byte)((aData[y, i + 0] + aData[y, i + 1] + aData[y, i + 2]) * aData[y, i + 3] / 765) : DefaultR;
+                            valB = useB ? (byte)((bData[y, i + 0] + bData[y, i + 1] + bData[y, i + 2]) * bData[y, i + 3] / 765) : DefaultG;
+                            valC = useC ? (byte)((cData[y, i + 0] + cData[y, i + 1] + cData[y, i + 2]) * cData[y, i + 3] / 765) : DefaultB;
                         }
 
                         data[y, i + 0] = invertR ? (byte)(255 - valA) : valA;
                         data[y, i + 1] = invertG ? (byte)(255 - valB) : valB;
                         data[y, i + 2] = invertB ? (byte)(255 - valC) : valC;
-                        data[y, i + 3] = byteDefaultA;
+                        data[y, i + 3] = DefaultA;
                     }
                 }
 
@@ -222,7 +227,7 @@ namespace DAEnerys
         {
             int texID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, texID);
-            
+
             //Anisotropic filtering
             float maxAniso;
             GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
