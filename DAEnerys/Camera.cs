@@ -228,7 +228,7 @@ namespace DAEnerys
 
         private void UpdatePosition()
         {
-            Position = LookAt + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix4.CreateRotationX(angles.X) * Matrix4.CreateRotationY(angles.Y));
+            Position = LookAt + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix3.CreateRotationX(angles.X) * Matrix3.CreateRotationY(angles.Y));
         }
 
         public Matrix4 GetViewMatrix()
