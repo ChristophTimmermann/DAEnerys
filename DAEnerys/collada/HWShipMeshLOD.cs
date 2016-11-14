@@ -57,7 +57,7 @@ namespace DAEnerys
             Mesh.CalculateModelMatrix();
             foreach (Vector3 vertex in Mesh.GetVertices())
             {
-                Vector3 computedVertex = (Mesh.ModelMatrix * Matrix4.CreateTranslation(vertex)).ExtractTranslation();
+                Vector3 computedVertex = (Matrix4.CreateTranslation(vertex) * Mesh.ModelMatrix).ExtractTranslation();
                 //Vector3 computedVertex = Vector3.Add(vertex, Mesh.Parent.AbsolutePosition);
                 min.X = Math.Min(min.X, computedVertex.X);
                 min.Y = Math.Min(min.Y, computedVertex.Y);
