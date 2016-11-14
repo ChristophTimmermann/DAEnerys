@@ -1,8 +1,6 @@
 ﻿using OpenTK;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 
 namespace DAEnerys
 {
@@ -146,7 +144,7 @@ namespace DAEnerys
             timer.Stop();
             timer.Reset();
             state = EffectState.Stopped;
-            Renderer.UpdateView();
+            Renderer.InvalidateView();
         }
 
         public virtual void Pause()
@@ -166,7 +164,7 @@ namespace DAEnerys
             if (state == EffectState.Running)
             {
                 __Update();
-                Renderer.UpdateView();
+                Renderer.InvalidateView();
             }
         }
 

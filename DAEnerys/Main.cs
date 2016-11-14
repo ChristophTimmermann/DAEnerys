@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using OpenTK.Graphics.OpenGL;
-using Assimp;
 using OpenTK;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Drawing.Imaging;
 using OpenTK.Graphics;
+using Assimp;
+using System.Linq;
 
 namespace DAEnerys
 {
     public partial class Main : Form
     {
-        int BUILD = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build;
+        public int BUILD = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build;
+        public string OpenedFile = "";
 
         public bool Loaded = false;
         HWDockpath selectedDockpath;
@@ -22,6 +21,10 @@ namespace DAEnerys
 
         public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
         public Dictionary<HWJoint, object> ShipMeshParentComboItems = new Dictionary<HWJoint, object>();
+        private Label[] ShipMeshLODMaterialLabels = new Label[MAX_MATERIALS_ON_MESH];
+        private ComboBox[] ShipMeshLODMaterialComboBoxes = new ComboBox[MAX_MATERIALS_ON_MESH];
+        private HWShipMesh selectedShipMesh;
+        private int selectedShipMeshLOD;
 
         public Dictionary<object, HWEngineGlow> EngineGlowListItems = new Dictionary<object, HWEngineGlow>();
         public Dictionary<HWJoint, object> EngineGlowParentComboItems = new Dictionary<HWJoint, object>();
@@ -34,6 +37,9 @@ namespace DAEnerys
         public bool DrawNavLightRadius;
 
         private bool problemsVisible;
+        private bool ignoreShipMeshDoScarCheck;
+
+        const int MAX_MATERIALS_ON_MESH = 8;
 
         public Main()
         {
@@ -62,6 +68,26 @@ namespace DAEnerys
             gridProblems.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             gridProblems.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
+            //Create ship mesh lod material selection
+            for(int i = 0; i < MAX_MATERIALS_ON_MESH; i++)
+            {
+                ShipMeshLODMaterialLabels[i] = new Label();
+                ShipMeshLODMaterialLabels[i].Parent = groupShipMeshLODMaterials;
+                ShipMeshLODMaterialLabels[i].Location = new Point(6, 25 + i * 27);
+                ShipMeshLODMaterialLabels[i].Text = "#" + i;
+                ShipMeshLODMaterialLabels[i].AutoSize = true;
+                ShipMeshLODMaterialLabels[i].Visible = false;
+
+                ShipMeshLODMaterialComboBoxes[i] = new ComboBox();
+                ShipMeshLODMaterialComboBoxes[i].Parent = groupShipMeshLODMaterials;
+                ShipMeshLODMaterialComboBoxes[i].Location = new Point(38, 22 + i * 27);
+                ShipMeshLODMaterialComboBoxes[i].Size = new Size(192, 21);
+                ShipMeshLODMaterialComboBoxes[i].DropDownStyle = ComboBoxStyle.DropDownList;
+                ShipMeshLODMaterialComboBoxes[i].Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+                ShipMeshLODMaterialComboBoxes[i].SelectedIndexChanged += new EventHandler(OnShipMeshLODMaterialChanged);
+                ShipMeshLODMaterialComboBoxes[i].Visible = false;
+            }
+
             Clear();
 
             //Open DAE from arguments
@@ -69,11 +95,12 @@ namespace DAEnerys
                 if (File.Exists(Program.OPEN_PATH))
                 {
                     HWScene.LoadCollada(Program.OPEN_PATH);
-                    this.Text = "DAEnerys - " + Program.OPEN_PATH;
+                    this.Text = Program.OPEN_PATH + " - DAEnerys";
+                    OpenedFile = Path.GetFileNameWithoutExtension(Program.OPEN_PATH);
 
-                    Renderer.UpdateMeshData();
-                    Renderer.UpdateView();
-                    Program.GLControl.Invalidate();
+                    Renderer.InvalidateMeshData();
+                    Renderer.InvalidateView();
+                    Renderer.Invalidate();
                 }
         }
 
@@ -108,9 +135,9 @@ namespace DAEnerys
 
             //Only update render if it is needed
             if (visibleNavLights > 0 || visibleEffects > 0)
-                Program.GLControl.Invalidate();
+                Renderer.Invalidate();
             if (visibleEffects > 0)
-                Renderer.UpdateMeshData();
+                Renderer.InvalidateMeshData();
 
             //Rainbow.Update();
         }
@@ -130,8 +157,8 @@ namespace DAEnerys
                 return;
 
             Renderer.Resize();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void Clear()
@@ -142,6 +169,15 @@ namespace DAEnerys
             listShipMeshLODs.Items.Clear();
             ShipMeshListItems.Clear();
             ShipMeshParentComboItems.Clear();
+
+            foreach (Label label in ShipMeshLODMaterialLabels)
+                label.Visible = false;
+
+            foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+            {
+                comboBox.Items.Clear();
+                comboBox.Visible = false;
+            }
 
             listEngineGlows.Items.Clear();
             comboEngineGlowParent.Items.Clear();
@@ -231,9 +267,9 @@ namespace DAEnerys
 
             this.Text = "DAEnerys";
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         //--------------------------------------------------------------------------------------------------------------//
@@ -246,11 +282,12 @@ namespace DAEnerys
             {
                 Clear();
                 HWScene.LoadCollada(openColladaDialog.FileName);
-                this.Text = "DAEnerys - " + openColladaDialog.FileName;
+                this.Text = openColladaDialog.FileName + " - DAEnerys";
+                OpenedFile = Path.GetFileNameWithoutExtension(openColladaDialog.FileName);
 
-                Renderer.UpdateMeshData();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateMeshData();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
         }
 
@@ -260,6 +297,8 @@ namespace DAEnerys
             if (result == DialogResult.OK)
             {
                 HWScene.SaveCollada(saveColladaDialog.FileName);
+                this.Text = saveColladaDialog.FileName + " - DAEnerys";
+                OpenedFile = Path.GetFileNameWithoutExtension(saveColladaDialog.FileName);
             }
         }
 
@@ -342,9 +381,9 @@ namespace DAEnerys
 
             trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
         private void dockpathList_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -492,9 +531,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         //--------------------------------- NAVLIGHTS ---------------------------------//
@@ -518,9 +557,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
         private void navLightList_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -611,9 +650,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void checkboxDrawMarkers_CheckedChanged(object sender, EventArgs e)
@@ -626,9 +665,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
 
@@ -658,7 +697,7 @@ namespace DAEnerys
             bool newValue = e.Node.Checked;
 
             //TODO: Optimize
-            foreach (HWJoint joint in HWScene.Joints)
+            foreach (HWJoint joint in HWJoint.Joints)
             {
                 if (joint.TreeNode == e.Node)
                 {
@@ -667,9 +706,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void buttonSettings_Click(object sender, EventArgs e)
@@ -702,9 +741,19 @@ namespace DAEnerys
         private void listShipMeshes_SelectedIndexChanged(object sender, EventArgs e)
         {
             listShipMeshLODs.Items.Clear(); //Clear LOD list
-            checkShipMeshDoScar.Checked = false; //Reset do scar checkbox
 
-            HWShipMesh selectedShipMesh = null;
+            ignoreShipMeshDoScarCheck = true;
+            checkShipMeshDoScar.Checked = false; //Reset do scar checkbox
+            ignoreShipMeshDoScarCheck = false;
+            checkShipMeshDoScar.Enabled = false; //Disable do scar checkbox
+
+            comboShipMeshParent.Enabled = false; //Disable parent combo box
+
+            foreach (Label label in ShipMeshLODMaterialLabels)
+                label.Visible = false;
+            foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+                comboBox.Visible = false;
+
             if (listShipMeshes.SelectedItem != null)
             {
                 selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
@@ -716,6 +765,10 @@ namespace DAEnerys
                 if (selectedShipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
                     checkShipMeshDoScar.Checked = true;
 
+                ignoreShipMeshDoScarCheck = true;
+                checkShipMeshDoScar.Enabled = true; //Enable do scar checkbox
+                ignoreShipMeshDoScarCheck = false;
+
                 //Select parent joint in combo box
                 if (selectedShipMesh.Parent != null) //If ship mesh has a parent joint
                 {
@@ -725,6 +778,8 @@ namespace DAEnerys
                 else
                     comboShipMeshParent.SelectedIndex = 0; //Select root joint in combo box
 
+                comboShipMeshParent.Enabled = true; //Enable parent combo box
+
                 //Fill LOD list
                 if (selectedShipMesh.LOD0Meshes.Count > 0) //If ship mesh has an LOD0
                     listShipMeshLODs.Items.Add("LOD 0");
@@ -732,12 +787,16 @@ namespace DAEnerys
                     listShipMeshLODs.Items.Add("LOD 1");
                 if (selectedShipMesh.LOD2Meshes.Count > 0) //If ship mesh has an LOD2
                     listShipMeshLODs.Items.Add("LOD 2");
+                if (selectedShipMesh.LOD3Meshes.Count > 0) //If ship mesh has an LOD3
+                    listShipMeshLODs.Items.Add("LOD 3");
 
                 //Check LOD checkboxes if visible
                 if (selectedShipMesh.LOD0Meshes.Count > 0)
                 {
                     if (selectedShipMesh.LOD0Meshes[0].Mesh.Visible)
                         listShipMeshLODs.SetItemChecked(0, true);
+
+                    listShipMeshLODs.SelectedIndex = 0;
                 }
                 if (selectedShipMesh.LOD1Meshes.Count > 0)
                 {
@@ -748,6 +807,11 @@ namespace DAEnerys
                 {
                     if (selectedShipMesh.LOD2Meshes[0].Mesh.Visible)
                         listShipMeshLODs.SetItemChecked(2, true);
+                }
+                if (selectedShipMesh.LOD3Meshes.Count > 0)
+                {
+                    if (selectedShipMesh.LOD3Meshes[0].Mesh.Visible)
+                        listShipMeshLODs.SetItemChecked(3, true);
                 }
             }
         }
@@ -792,11 +856,206 @@ namespace DAEnerys
                         }
                         break;
                     }
+                case 3:
+                    {
+                        foreach (HWShipMeshLOD shipMeshLOD in selectedShipMesh.LOD3Meshes)
+                        {
+                            shipMeshLOD.Mesh.Visible = visible;
+                        }
+                        break;
+                    }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+        private void comboShipMeshParent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+            {
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+            }
+
+            HWJoint newParent = HWJoint.GetByName((string)comboShipMeshParent.SelectedItem);
+            selectedShipMesh.Parent = newParent;
+        }
+        private void checkShipMeshDoScar_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignoreShipMeshDoScarCheck)
+                return;
+
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+            {
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+            }
+
+            if (selectedShipMesh == null)
+                return;
+
+            selectedShipMesh.Tags.Remove(ShipMeshTag.DOSCAR);
+            if (checkShipMeshDoScar.Checked)
+                selectedShipMesh.Tags.Add(ShipMeshTag.DOSCAR);
+        }
+        private void listShipMeshLODs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (Label label in ShipMeshLODMaterialLabels)
+                label.Visible = false;
+            foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+                comboBox.Visible = false;
+
+            selectedShipMeshLOD = listShipMeshLODs.SelectedIndex;
+            List<HWShipMeshLOD> lodMeshes = new List<HWShipMeshLOD>();
+            switch (selectedShipMeshLOD)
+            {
+                case 0:
+                    lodMeshes = selectedShipMesh.LOD0Meshes;
+                    break;
+                case 1:
+                    lodMeshes = selectedShipMesh.LOD1Meshes;
+                    break;
+                case 2:
+                    lodMeshes = selectedShipMesh.LOD2Meshes;
+                    break;
+                case 3:
+                    lodMeshes = selectedShipMesh.LOD3Meshes;
+                    break;
+            }
+
+            int materialCount = 0;
+            foreach (HWShipMeshLOD lodMesh in lodMeshes)
+                if (lodMesh.Mesh.Material != null)
+                    materialCount++;
+
+            for(int i = 0; i < materialCount; i++)
+            {
+                ShipMeshLODMaterialLabels[i].Visible = true;
+                ShipMeshLODMaterialComboBoxes[i].Visible = true;
+
+                ShipMeshLODMaterialComboBoxes[i].SelectedItem = lodMeshes[i].Mesh.Material.MaterialListItem;
+            }
+        }
+        private void OnShipMeshLODMaterialChanged(object sender, EventArgs e)
+        {
+            int materialIndex = -1;
+            for (int i = 0; i < MAX_MATERIALS_ON_MESH; i++)
+                if (sender == ShipMeshLODMaterialComboBoxes[i])
+                {
+                    materialIndex = i;
+                    break;
+                }
+
+            if (materialIndex == -1)
+                return;
+
+            List<HWShipMeshLOD> lodMeshes = new List<HWShipMeshLOD>();
+            switch (selectedShipMeshLOD)
+            {
+                case 0:
+                    lodMeshes = selectedShipMesh.LOD0Meshes;
+                    break;
+                case 1:
+                    lodMeshes = selectedShipMesh.LOD1Meshes;
+                    break;
+                case 2:
+                    lodMeshes = selectedShipMesh.LOD2Meshes;
+                    break;
+                case 3:
+                    lodMeshes = selectedShipMesh.LOD3Meshes;
+                    break;
+            }
+
+            int selectedIndex = ShipMeshLODMaterialComboBoxes[materialIndex].SelectedIndex;
+
+            if (selectedIndex != -1)
+                lodMeshes[materialIndex].Mesh.Material = MaterialListItems.Values.ElementAt(selectedIndex);
+            else
+                ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem = lodMeshes[materialIndex].Mesh.Material.MaterialListItem;
+        }
+        private void buttonShipMeshLODExport_Click(object sender, EventArgs e)
+        {
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+
+            List<HWMesh> meshes = new List<HWMesh>();
+            switch (listShipMeshLODs.SelectedIndex)
+            {
+                case 0:
+                    foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LOD0Meshes)
+                        meshes.Add(lodMesh.Mesh);
+                    break;
+                case 1:
+                    foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LOD1Meshes)
+                        meshes.Add(lodMesh.Mesh);
+                    break;
+                case 2:
+                    foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LOD2Meshes)
+                        meshes.Add(lodMesh.Mesh);
+                    break;
+                case 3:
+                    foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LOD3Meshes)
+                        meshes.Add(lodMesh.Mesh);
+                    break;
+            }
+
+            if (meshes.Count == 0)
+                return;
+
+            saveObjDialog.FileName = OpenedFile + "_" + meshes[0].Name + "_LOD" + listShipMeshLODs.SelectedIndex;
+            DialogResult result = saveObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                ObjExporter.ExportToFile(saveObjDialog.FileName, meshes);
+            }
+        }
+        private void buttonShipMeshLODImport_Click(object sender, EventArgs e)
+        {
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+
+            List<HWShipMeshLOD> meshes = new List<HWShipMeshLOD>();
+            switch (listShipMeshLODs.SelectedIndex)
+            {
+                case 0:
+                    meshes = selectedShipMesh.LOD0Meshes;
+                    break;
+                case 1:
+                    meshes = selectedShipMesh.LOD1Meshes;
+                    break;
+                case 2:
+                    meshes = selectedShipMesh.LOD2Meshes;
+                    break;
+                case 3:
+                    meshes = selectedShipMesh.LOD3Meshes;
+                    break;
+            }
+
+            if (meshes.Count == 0)
+                return;
+
+            DialogResult result = openObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Mesh[] newMeshes = ObjImporter.ImportFromFile(openObjDialog.FileName);
+                for(int i = 0; i < meshes.Count; i++)
+                {
+                    if (newMeshes.Length - 1 >= i)
+                    {
+                        meshes[i].Mesh.SetMesh(newMeshes[i]);
+                        meshes[i].CalculateBoundingBox();
+                    }
+                    else //Remove old mesh
+                    {
+                        meshes[i].Destroy();
+                    }
+                }
+
+                HWScene.CalibrateSettings();
+            }
         }
         //--------------------------------- ENGINE GLOW MESHES ---------------------------------//
         private void listEngineGlows_SelectedIndexChanged(object sender, EventArgs e)
@@ -827,6 +1086,8 @@ namespace DAEnerys
                     listEngineGlowLODs.Items.Add("LOD 1");
                 if (selectedEngineGlow.LOD2Meshes.Count > 0) //If engine glow has an LOD2
                     listEngineGlowLODs.Items.Add("LOD 2");
+                if (selectedEngineGlow.LOD3Meshes.Count > 0) //If engine glow has an LOD3
+                    listEngineGlowLODs.Items.Add("LOD 3");
 
                 //Check LOD checkboxes if visible
                 if (selectedEngineGlow.LOD0Meshes.Count > 0)
@@ -843,6 +1104,11 @@ namespace DAEnerys
                 {
                     if (selectedEngineGlow.LOD2Meshes[0].Mesh.Visible)
                         listEngineGlowLODs.SetItemChecked(2, true);
+                }
+                if (selectedEngineGlow.LOD3Meshes.Count > 0)
+                {
+                    if (selectedEngineGlow.LOD3Meshes[0].Mesh.Visible)
+                        listEngineGlowLODs.SetItemChecked(3, true);
                 }
             }
         }
@@ -887,11 +1153,19 @@ namespace DAEnerys
                         }
                         break;
                     }
+                case 3:
+                    {
+                        foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LOD3Meshes)
+                        {
+                            engineGlowLOD.Mesh.Visible = visible;
+                        }
+                        break;
+                    }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         //--------------------------------- COLLISION MESHES ---------------------------------//
@@ -949,9 +1223,9 @@ namespace DAEnerys
 
                 selectedCollisionMesh.Mesh.Visible = visible;
 
-                Renderer.UpdateMeshData();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateMeshData();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
         }
 
@@ -1008,9 +1282,9 @@ namespace DAEnerys
 
                 selectedEngineShape.Mesh.Visible = visible;
 
-                Renderer.UpdateMeshData();
-                Renderer.UpdateView();
-                Program.GLControl.Invalidate();
+                Renderer.InvalidateMeshData();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
         }
 
@@ -1049,6 +1323,9 @@ namespace DAEnerys
                 object item = material.Name;
                 listMaterials.Items.Add(item);
 
+                foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+                    comboBox.Items.Add(item);
+
                 material.MaterialListItem = item;
                 MaterialListItems.Add(item, material);
             }
@@ -1059,8 +1336,8 @@ namespace DAEnerys
             Renderer.ThrusterInterpolation = (float)trackBarThrusterStrength.Value / 100;
             HWEngineGlow.UpdateEngineStrength();
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void buttonAbout_Click(object sender, EventArgs e)
@@ -1155,7 +1432,7 @@ namespace DAEnerys
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             Renderer.ReloadShaders();
-            Program.GLControl.Invalidate();
+            Renderer.Invalidate();
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)

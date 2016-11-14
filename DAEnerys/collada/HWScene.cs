@@ -28,7 +28,6 @@ namespace DAEnerys
         public static List<HWMaterial> Materials = new List<HWMaterial>();
         public static List<HWImage> Images = new List<HWImage>();
         public static List<HWNode> Nodes = new List<HWNode>();
-        public static List<HWJoint> Joints = new List<HWJoint>();
         public static List<HWMarker> Markers = new List<HWMarker>();
         public static List<HWDockpath> Dockpaths = new List<HWDockpath>();
         public static List<HWDockSegment> DockSegments = new List<HWDockSegment>();
@@ -55,9 +54,7 @@ namespace DAEnerys
             //Blender Homeworld Toolkit fix
             string fixedColladaPath = FixCollada(fileName);
 
-            Collada = importer.ImportFile(fixedColladaPath,
-                ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) &
-                (PostProcessPreset.TargetRealTimeFast));
+            Collada = importer.ImportFile(fixedColladaPath, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
             importer.Dispose();
 
             //Manual parsing
@@ -109,9 +106,9 @@ namespace DAEnerys
             HWEngineGlow.UpdateEngineStrength();
             Program.main.UpdateProblems(); 
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
             logStream.Detach();
         }
 
@@ -121,10 +118,13 @@ namespace DAEnerys
             {
                 HWMesh newMesh = new HWMesh(mesh);
 
-                if(!mesh.Name.StartsWith("COL")) //Don't put textures on collision meshes
-                    if (!mesh.Name.StartsWith("ETSH")) //Don't put textures on engine shapes
-                        if (mesh.TextureCoordinateChannelCount > 0)
-                            newMesh.Material = HWScene.Materials[mesh.MaterialIndex];
+                if(Materials[mesh.MaterialIndex] != null)
+                    if(Materials[mesh.MaterialIndex].Valid)
+                        if (!mesh.Name.StartsWith("COL")) //Don't put textures on collision meshes
+                            if (!mesh.Name.StartsWith("ETSH")) //Don't put textures on engine shapes
+                                if (!mesh.Name.StartsWith("GLOW")) //Don't put textures on engine glows
+                                    if (mesh.TextureCoordinateChannelCount > 0)
+                                    newMesh.Material = Materials[mesh.MaterialIndex];
 
                 Log.WriteLine("Mesh '" + mesh.Name + "' added.");
             }
@@ -137,6 +137,9 @@ namespace DAEnerys
                 HWMaterial newMaterial = new HWMaterial();
 
                 newMaterial.Name = material.Name;
+
+                if (!newMaterial.Name.StartsWith("MAT["))
+                    newMaterial.Valid = false;
 
                 newMaterial.DiffuseMap = material.TextureDiffuse.FilePath; 
 
@@ -275,7 +278,7 @@ namespace DAEnerys
             return "colladaBlenderFix.dae";
         }
 
-        private static void CalibrateSettings()
+        public static void CalibrateSettings()
         {
             float volume = (-Min.X + Max.X) * (-Min.Y + Max.Y) * (-Min.Z + Max.Z);
             List<float> values = new List<float>();
@@ -373,25 +376,8 @@ namespace DAEnerys
 
         public static void SaveCollada(string path)
         {
-            AssimpContext exporter = new AssimpContext();
-
-            /*LogStream logStream = new LogStream(delegate (string msg, string userData) 
-            {
-                Console.WriteLine(msg);
-            });
-            logStream.Attach();*/
-
-            Console.WriteLine(exporter.IsExportFormatSupported(".dae"));
-
-            bool success = exporter.ExportFile(Collada, path, ".dae");
-            if (success)
-                Console.WriteLine("Successfully exported to \"" + path + "\".");
-            else
-                Console.WriteLine("Failed to export.");
-
-            Console.WriteLine(Assimp.Unmanaged.AssimpLibrary.Instance.GetErrorString());
-
-            exporter.Dispose();
+            Exporter.ExportToFile(path);
+            Log.WriteLine("Successfully exported to \"" + path + "\".");
         }
 
         public static void Clear()
@@ -411,9 +397,18 @@ namespace DAEnerys
             EngineShapes.Clear();
             Materials.Clear();
             Images.Clear();
+
             Nodes.Clear();
+            HWNode.Roots = new HWNode[6];
+            HWNode.RootLOD0 = null;
+            HWNode.RootLOD1 = null;
+            HWNode.RootLOD2 = null;
+            HWNode.RootLOD3 = null;
+            HWNode.RootCOL = null;
+            HWNode.RootINFO = null;
+
             RenderTextures.Clear();
-            Joints.Clear();
+            HWJoint.Joints.Clear();
             Markers.Clear();
             Dockpaths.Clear();
             DockSegments.Clear();

@@ -1,11 +1,4 @@
-﻿using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAEnerys
+﻿namespace DAEnerys
 {
     public class HWEngineGlowLOD
     {
@@ -19,6 +12,7 @@ namespace DAEnerys
             GlowMesh = glowMesh;
             Mesh = mesh;
             LOD = lod;
+            Mesh.LOD = lod;
 
             Mesh.Translucent = true;
             Mesh.Material.Shader = "fx_eng_glowbasic";

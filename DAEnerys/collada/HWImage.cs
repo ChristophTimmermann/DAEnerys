@@ -1,15 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAEnerys
+﻿namespace DAEnerys
 {
     public class HWImage
     {
         public string Name = "";
+        public int Suffix = 1;
+        public string ColladaName = "";
         public string Path = "";
+
+        public string FormattedName
+        {
+            get
+            {
+                if(Suffix <= 1)
+                    return "IMG[" + ColladaName + "]_FMT[" + Format + "]";
+                else
+                    return "IMG[" + ColladaName + "]_FMT[" + Format + "]_" + Suffix;
+            }
+        }
+
         public ImageFormat Format = ImageFormat.DXT1;
 
         public HWMaterial Material;
@@ -62,6 +70,7 @@ namespace DAEnerys
                         }
                     }
                 }
+                ColladaName = Name;
             }
 
             HWScene.Images.Add(this);

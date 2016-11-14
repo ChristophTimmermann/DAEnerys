@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="collada\Exporter.cs" />
     <Compile Include="collada\HWEngineShape.cs" />
     <Compile Include="collada\HWDockpath.cs" />
     <Compile Include="collada\HWDockSegment.cs" />
@@ -119,6 +120,8 @@
       <DependentUpon>Hotkeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Log.cs" />
+    <Compile Include="ObjExporter.cs" />
+    <Compile Include="ObjImporter.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="Rainbow.cs" />
     <Compile Include="ShaderManifest\Compiler.cs" />

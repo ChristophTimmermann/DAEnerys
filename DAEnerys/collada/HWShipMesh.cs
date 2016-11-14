@@ -1,28 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DAEnerys
 {
     public class HWShipMesh
     {
-        public HWJoint Parent;
+        private HWJoint parent;
+        public HWJoint Parent
+        {
+            get { return parent; }
+            set
+            {
+                parent = value;
+                if (value != null)
+                    foreach (HWShipMeshLOD mesh in Meshes)
+                        mesh.Mesh.Parent.Parent = value.Node;
+                else
+                    foreach (HWShipMeshLOD mesh in Meshes)
+                        mesh.Mesh.Parent.Parent = HWNode.Roots[mesh.LOD];
+            }
+        }
         public string Name;
-        public List<ShipMeshTag> Tags = new List<ShipMeshTag>();
 
+        public ObservableCollection<ShipMeshTag> Tags = new ObservableCollection<ShipMeshTag>();
+
+        public List<HWShipMeshLOD> Meshes = new List<HWShipMeshLOD>();
         public List<HWShipMeshLOD> LOD0Meshes = new List<HWShipMeshLOD>();
         public List<HWShipMeshLOD> LOD1Meshes = new List<HWShipMeshLOD>();
         public List<HWShipMeshLOD> LOD2Meshes = new List<HWShipMeshLOD>();
+        public List<HWShipMeshLOD> LOD3Meshes = new List<HWShipMeshLOD>();
 
         public object ShipMeshListItem;
 
-        public HWShipMesh(HWJoint parent, string name, List<ShipMeshTag> tags)
+        public HWShipMesh(HWJoint parent, string name, ObservableCollection<ShipMeshTag> tags)
         {
             Parent = parent;
             Name = name;
             Tags = tags;
+            Tags.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(TagsChanged);
 
             HWScene.ShipMeshes.Add(this);
             Program.main.AddShipMesh(this);
@@ -30,6 +45,8 @@ namespace DAEnerys
 
         public void AddLODMesh(HWShipMeshLOD lodMesh)
         {
+            Meshes.Add(lodMesh);
+
             switch(lodMesh.LOD)
             {
                 case 0:
@@ -41,7 +58,20 @@ namespace DAEnerys
                 case 2:
                     LOD2Meshes.Add(lodMesh);
                     break;
+                case 3:
+                    LOD3Meshes.Add(lodMesh);
+                    break;
             }
+        }
+
+        private void TagsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            bool doScar = false;
+            if (Tags.Contains(ShipMeshTag.DOSCAR))
+                doScar = true;
+
+            foreach (HWShipMeshLOD mesh in Meshes)
+                mesh.Mesh.DoScars = doScar;
         }
     }
 

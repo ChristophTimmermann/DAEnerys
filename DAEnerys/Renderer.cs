@@ -6,7 +6,6 @@ using System.Linq;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using Assimp;
 using NewShaderManifest;
 
 namespace DAEnerys
@@ -15,6 +14,9 @@ namespace DAEnerys
     static class Renderer
     {
         static Shader editor_shader;
+
+        public static bool ViewInvalid = false;
+        public static bool MeshDataInvalid = false;
 
         public static HWTexture DefaultTexture;
 
@@ -30,7 +32,7 @@ namespace DAEnerys
                 if (Program.main.Loaded)
                 {
                     GL.ClearColor(value);
-                    Program.GLControl.Invalidate();
+                    Renderer.Invalidate();
                 }
             }
         }
@@ -159,6 +161,7 @@ namespace DAEnerys
         static int mesh_uv1_buffer = 0;
 
         public static Matrix4 View = Matrix4.Identity;
+        public static Matrix4 ViewProjection = Matrix4.Identity;
 
         public static void Init()
         {
@@ -228,8 +231,12 @@ namespace DAEnerys
             GetError("BindBufferData");
         }
 
-        public static void UpdateMeshData()
+        private static void UpdateMeshData()
         {
+            if (!MeshDataInvalid)
+                return;
+            MeshDataInvalid = false;
+
             {
                 // Assemble mesh data
                 List<Vector3> mesh_verts = new List<Vector3>();
@@ -343,14 +350,22 @@ namespace DAEnerys
 
             GetError("OpenTK Buffering");
         }
-
-        public static void UpdateView()
+        private static void UpdateView()
         {
+            if (!ViewInvalid)
+                return;
+            ViewInvalid = false;
+
             View = Program.Camera.GetViewMatrix();
             AmbientLight.Position = new Vector4(Program.Camera.Position, 0);
             float aspectRatio = (float)Program.GLControl.Width / (float)Program.GLControl.Height;
             float aspectRatioWidthOrtho = (float)(Program.GLControl.Width / Program.Camera.OrthographicSize);
             float aspectRatioHeightOrtho = (float)(Program.GLControl.Height / Program.Camera.OrthographicSize);
+
+            if (!Program.Camera.Orthographic)
+                ViewProjection = View * Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, aspectRatio, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
+            else
+                ViewProjection = View * Matrix4.CreateOrthographic(aspectRatioWidthOrtho, aspectRatioHeightOrtho, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
 
             // Update model view matrices
             foreach (HWMesh mesh in HWScene.Meshes)
@@ -358,13 +373,6 @@ namespace DAEnerys
                 if (mesh.Visible)
                 {
                     mesh.CalculateModelMatrix();
-
-                    if (!Program.Camera.Orthographic)
-                        mesh.ViewProjectionMatrix = View * Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, aspectRatio, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
-                    else
-                        mesh.ViewProjectionMatrix = View * Matrix4.CreateOrthographic(aspectRatioWidthOrtho, aspectRatioHeightOrtho, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
-
-                    mesh.ModelViewProjectionMatrix = mesh.ModelMatrix * mesh.ViewProjectionMatrix;
                 }
             }
 
@@ -373,19 +381,15 @@ namespace DAEnerys
                 if (mesh.Visible)
                 {
                     mesh.CalculateModelMatrix();
-
-                    if (!Program.Camera.Orthographic)
-                        mesh.ViewProjectionMatrix = View * Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, aspectRatio, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
-                    else
-                        mesh.ViewProjectionMatrix = View * Matrix4.CreateOrthographic(aspectRatioWidthOrtho, aspectRatioHeightOrtho, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
-
-                    mesh.ModelViewProjectionMatrix = mesh.ModelMatrix * mesh.ViewProjectionMatrix;
                 }
             }
         }
 
         public static void Render()
         {
+            UpdateMeshData();
+            UpdateView();
+
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             int indiceat = 0;
@@ -739,6 +743,21 @@ namespace DAEnerys
             GL.LoadMatrix(ref projection);
         }
 
+        public static void Invalidate()
+        {
+            Program.GLControl.Invalidate();
+        }
+
+        public static void InvalidateView()
+        {
+            ViewInvalid = true;
+        }
+
+        public static void InvalidateMeshData()
+        {
+            MeshDataInvalid = true;
+        }
+
         private static void GetError(string type)
         {
             ErrorCode code = GL.GetError();
@@ -750,7 +769,7 @@ namespace DAEnerys
         {
             return
                 shader == "badge" ||
-                shader == "badge_glow";
+                shader == "badgeglow";
         }
 
         private static bool SOB_BAYLIGHT(string shader)
@@ -771,13 +790,13 @@ namespace DAEnerys
         private static bool SOB_GLOWRGB(string shader)
         {
             return
-                shader == "badge_glow" ||
+                shader == "badgeglow" ||
                 shader == "ore" ||
                 shader == "salvage" ||
-                shader == "ship_glow";
+                shader == "shipglow";
         }
 
-        private static bool SOB_GLOWCOL(string shader) //Not sure if this is right, it's for engine glows
+        private static bool SOB_GLOWCOL(string shader)
         {
             return
                 shader == "fx_eng_glowbasic";
@@ -794,10 +813,10 @@ namespace DAEnerys
         {
             return
                 shader == "badge" ||
-                shader == "badge_glow" ||
+                shader == "badgeglow" ||
                 shader == "bay" ||
                 shader == "ship" ||
-                shader == "ship_glow" ||
+                shader == "shipglow" ||
                 shader == "thruster";
         }
 

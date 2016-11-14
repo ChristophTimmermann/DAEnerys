@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DAEnerys
 {
@@ -14,6 +10,7 @@ namespace DAEnerys
         public List<HWEngineGlowLOD> LOD0Meshes = new List<HWEngineGlowLOD>();
         public List<HWEngineGlowLOD> LOD1Meshes = new List<HWEngineGlowLOD>();
         public List<HWEngineGlowLOD> LOD2Meshes = new List<HWEngineGlowLOD>();
+        public List<HWEngineGlowLOD> LOD3Meshes = new List<HWEngineGlowLOD>();
 
         public object EngineGlowListItem;
 
@@ -37,6 +34,9 @@ namespace DAEnerys
                     LOD1Meshes.Add(lodMesh);
                     break;
                 case 2:
+                    LOD2Meshes.Add(lodMesh);
+                    break;
+                case 3:
                     LOD2Meshes.Add(lodMesh);
                     break;
             }

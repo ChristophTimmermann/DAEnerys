@@ -1,0 +1,108 @@
+﻿using Assimp;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Text;
+
+namespace DAEnerys
+{
+    public static class ObjExporter
+    {
+        public static void ExportToFile(string path, List<HWMesh> meshes)
+        {
+            int materialCount = 0;
+            foreach (HWMesh mesh in meshes)
+                if (mesh.Material != null)
+                    if (mesh.Material.DiffuseMap != string.Empty)
+                        materialCount++;
+
+            #region OBJ-file
+            StringBuilder file = new StringBuilder();
+            file.AppendLine("# DAEnerys b" + Program.main.BUILD);
+            file.AppendLine("# OBJ File: \"" + meshes[0].Name + "\"");
+            file.AppendLine("# Created " + DateTime.Now.ToLongDateString() + " at " + DateTime.Now.ToLongTimeString());
+            file.AppendLine("#");
+
+            //Materials
+            if (materialCount > 0)
+            {
+                file.AppendLine("# Materials");
+                file.AppendLine("mtllib " + Path.ChangeExtension(Path.GetFileName(path), "mtl"));
+            }
+
+            //Object
+            file.AppendLine("# Objects");
+            file.AppendLine("o " + meshes[0].Name);
+
+            //Vertices
+            file.AppendLine("# Vertices");
+            foreach (HWMesh mesh in meshes)
+                foreach (HWVertex vertex in mesh.Vertices)
+                    file.AppendLine("v " + vertex.Position.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Z.ToString(CultureInfo.InvariantCulture));
+
+            //Texture coordinates
+            foreach (HWMesh mesh in meshes)
+            {
+                if (mesh.TextureCoordinateChannelCount > 0)
+                {
+                    file.AppendLine("# Texture coordinates");
+                    foreach (HWVertex vertex in mesh.Vertices)
+                        file.AppendLine("vt " + (vertex.UV0.X).ToString(CultureInfo.InvariantCulture) + " " + vertex.UV0.Y.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+
+            //Normals
+            file.AppendLine("# Normals");
+            foreach (HWMesh mesh in meshes)
+                foreach (HWVertex vertex in mesh.Vertices)
+                    file.AppendLine("vn " + vertex.Normal.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Z.ToString(CultureInfo.InvariantCulture));
+                
+
+            //Faces
+            file.AppendLine("# Faces");
+
+            int indexOffset = 0;
+            foreach (HWMesh mesh in meshes)
+            {
+                if (mesh.Material != null && mesh.Material.DiffuseMap != string.Empty)
+                    file.AppendLine("usemtl " + mesh.Material.Name);
+                else
+                    file.AppendLine("usemtl");
+
+                foreach (Face face in mesh.Faces)
+                    file.AppendLine("f " + (face.Indices[0] + 1 + indexOffset) + "/" + (face.Indices[0] + 1 + indexOffset) + " " + (face.Indices[1] + 1 + indexOffset) + "/" + (face.Indices[1] + 1 + indexOffset) + " " + (face.Indices[2] + 1 + indexOffset) + "/" + (face.Indices[2] + 1 + indexOffset));
+
+                indexOffset += mesh.VertexCount;
+            }
+
+            file.AppendLine("# <EOF>");
+            File.WriteAllText(path, file.ToString());
+            #endregion
+
+            if (materialCount == 0)
+                return;
+
+            #region MTL-file
+            file = new StringBuilder();
+            file.AppendLine("# DAEnerys b" + Program.main.BUILD);
+            file.AppendLine("# MTL File: \"" + meshes[0].Name + "\"");
+            file.AppendLine("# Created " + DateTime.Now.ToLongDateString() + " at " + DateTime.Now.ToLongTimeString());
+            file.AppendLine("#");
+
+            file.AppendLine("# Materials");
+            foreach(HWMesh mesh in meshes)
+            {
+                if (mesh.Material == null || mesh.Material.DiffuseMap == string.Empty)
+                    continue;
+
+                file.AppendLine("newmtl " + mesh.Material.Name);
+                file.AppendLine("\tmap_Kd " + mesh.Material.DiffuseMap);
+            }
+
+            file.AppendLine("# <EOF>");
+            File.WriteAllText(Path.ChangeExtension(path, "mtl"), file.ToString());
+            #endregion
+        }
+    }
+}

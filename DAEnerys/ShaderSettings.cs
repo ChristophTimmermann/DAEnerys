@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using NewShaderManifest;
 
@@ -141,24 +140,24 @@ namespace DAEnerys
         {
             Renderer.PaintCurve = (float)numPaintCurve.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numPaintScale_ValueChanged(object sender, EventArgs e)
         {
             Renderer.PaintScale = (float)numPaintScale.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numPaintOffset_ValueChanged(object sender, EventArgs e)
         {
             Renderer.PaintOffset = (float)numPaintOffset.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private bool ignore = false;
@@ -183,80 +182,80 @@ namespace DAEnerys
         private void btnReloadShaders_Click(object sender, EventArgs e)
         {
             Manifest.ReloadManifest();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numExecTime_ValueChanged(object sender, EventArgs e)
         {
             Renderer.Exec = (float)numExecTime.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numExecDelta_ValueChanged(object sender, EventArgs e)
         {
             Renderer.ExecDelta = (float)numExecDelta.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numSimTime_ValueChanged(object sender, EventArgs e)
         {
             Renderer.Sim = (float)numSimTime.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numSimDelta_ValueChanged(object sender, EventArgs e)
         {
             Renderer.SimDelta = (float)numSimDelta.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numSOBAlpha_ValueChanged(object sender, EventArgs e)
         {
             Renderer.SOBAlpha = (float)numSOBAlpha.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numSOBCloak_ValueChanged(object sender, EventArgs e)
         {
             Renderer.SOBCloak = (float)numSOBCloak.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numSOBClip_ValueChanged(object sender, EventArgs e)
         {
             Renderer.SOBClip = (float)numSOBClip.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numClipDist_ValueChanged(object sender, EventArgs e)
         {
             Renderer.ClipDistance = (float)numClipDist.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void chkHACKPain_CheckedChanged(object sender, EventArgs e)
         {
             Renderer.HACK_AllIFeelIsPain = chkHACKPain.Checked;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void btnEnterHyperspace_Click(object sender, EventArgs e)
@@ -280,16 +279,16 @@ namespace DAEnerys
         {
             Renderer.LifeAlpha = (float)numLifeAlpha.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numDeathRatio_ValueChanged(object sender, EventArgs e)
         {
             Renderer.DeathRatio = (float)numDeathRatio.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
     }
 }

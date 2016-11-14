@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 using DevILSharp;
 using System.Drawing;
-using System.Collections.Generic;
 
 namespace DAEnerys
 {

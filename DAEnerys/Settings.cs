@@ -1,15 +1,9 @@
 using OpenTK;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace DAEnerys
@@ -84,9 +78,9 @@ namespace DAEnerys
         {
             EditorJoint.Size = (float)numericJointSize.Value;
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numericMarkerSize_ValueChanged(object sender, EventArgs e)
@@ -102,9 +96,9 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numericZoomSpeed_ValueChanged(object sender, EventArgs e)
@@ -117,9 +111,9 @@ namespace DAEnerys
             Program.Camera.ClipDistance = (float)numericFarClip.Value;
             numericNearClip.Maximum = numericFarClip.Value - (decimal)0.0001;
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void numericNearClip_ValueChanged(object sender, EventArgs e)
@@ -127,9 +121,9 @@ namespace DAEnerys
             Program.Camera.NearClipDistance = (float)numericNearClip.Value;
             numericFarClip.Minimum = numericNearClip.Value + (decimal)0.0001;
 
-            Renderer.UpdateMeshData();
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void buttonAmbientColor_Click(object sender, EventArgs e)
@@ -141,7 +135,7 @@ namespace DAEnerys
                 Renderer.AmbientLight.Color = new Vector3((float)colorDialog.Color.R / 255, (float)colorDialog.Color.G / 255, (float)colorDialog.Color.B / 255);
                 buttonAmbientColor.BackColor = Color.FromArgb((int)Math.Round(Renderer.AmbientLight.Color.X * 255), (int)Math.Round(Renderer.AmbientLight.Color.Y * 255), (int)Math.Round(Renderer.AmbientLight.Color.Z * 255));
 
-                Program.GLControl.Invalidate();
+                Renderer.Invalidate();
             }
         }
 
@@ -160,8 +154,8 @@ namespace DAEnerys
         {
             Program.Camera.FieldOfView = MathHelper.DegreesToRadians((float)numericFOV.Value);
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void comboFSAASamples_SelectedIndexChanged(object sender, EventArgs e)
@@ -189,7 +183,7 @@ namespace DAEnerys
         {
             Renderer.DrawVisualizationsInFront = checkRenderOnTop.Checked;
 
-            Program.GLControl.Invalidate();
+            Renderer.Invalidate();
         }
 
         private void checkVSync_CheckedChanged(object sender, EventArgs e)
@@ -201,15 +195,15 @@ namespace DAEnerys
         {
             HWNavLight.IconSize = (float)numericIconSize.Value;
 
-            Renderer.UpdateView();
-            Program.GLControl.Invalidate();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         private void checkDisableLighting_CheckedChanged(object sender, EventArgs e)
         {
             Renderer.DisableLighting = checkDisableLighting.Checked;
 
-            Program.GLControl.Invalidate();
+            Renderer.Invalidate();
         }
 
         //------------------------------------------ SETTINGS SAVING ----------------------------------------//
@@ -372,7 +366,7 @@ namespace DAEnerys
                 SavedTeamColor = colorDialog.Color;
                 teamColorButtonCustom.SetColors(Renderer.TeamColor, Renderer.StripeColor);
 
-                Program.GLControl.Invalidate();
+                Renderer.Invalidate();
             }
         }
 
@@ -387,7 +381,7 @@ namespace DAEnerys
                 SavedStripeColor = colorDialog.Color;
                 teamColorButtonCustom.SetColors(Renderer.TeamColor, Renderer.StripeColor);
 
-                Program.GLControl.Invalidate();
+                Renderer.Invalidate();
             }
         }
 
@@ -395,7 +389,7 @@ namespace DAEnerys
         {
             buttonTeamColor.BackColor = Renderer.TeamColor = ((TeamColorButton)sender).TeamColor;
             buttonStripeColor.BackColor = Renderer.StripeColor = ((TeamColorButton)sender).StripeColor;
-            Program.GLControl.Invalidate();
+            Renderer.Invalidate();
         }
 
         private void buttonTeamColorSwap_Click(object sender, EventArgs e)
@@ -403,14 +397,14 @@ namespace DAEnerys
             Color save = Renderer.TeamColor;
             buttonTeamColor.BackColor = Renderer.TeamColor = Renderer.StripeColor;
             buttonStripeColor.BackColor = Renderer.StripeColor = save;
-            Program.GLControl.Invalidate();
+            Renderer.Invalidate();
         }
 
         private void comboBadge_SelectedIndexChanged(object sender, EventArgs e)
         {
             SavedBadge = (string)comboBadge.SelectedItem;
             Renderer.BadgeTexture = HWBadge.BadgeNames[(string)comboBadge.SelectedItem].Texture;
-            Program.GLControl.Invalidate();
+            Renderer.Invalidate();
         }
 
         private void buttonEngineColor_Click(object sender, EventArgs e)
@@ -424,7 +418,7 @@ namespace DAEnerys
                 SavedEngineColor = colorDialogAlpha.Color;
                 engineColorButtonCustom.SetColor(Renderer.EngineGlowColor);
 
-                Program.GLControl.Invalidate();
+                Renderer.Invalidate();
             }
         }
 
@@ -434,7 +428,7 @@ namespace DAEnerys
 
             buttonEngineColor.BackColor = Color.FromArgb(255, presetColor.R, presetColor.G, presetColor.B); //The button colors look weird when the alpha is set too
             Renderer.EngineGlowColor = presetColor;
-            Program.GLControl.Invalidate();
+            Renderer.Invalidate();
         }
     }
 }

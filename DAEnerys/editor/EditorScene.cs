@@ -1,6 +1,5 @@
 ﻿using Assimp;
 using Assimp.Configs;
-using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.IO;

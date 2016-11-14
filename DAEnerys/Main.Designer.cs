@@ -31,12 +31,13 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
+            this.buttonSave = new System.Windows.Forms.ToolStripButton();
             this.buttonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.buttonHotkeys = new System.Windows.Forms.ToolStripButton();
@@ -47,13 +48,14 @@ namespace DAEnerys
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabShipMeshes = new System.Windows.Forms.TabPage();
-            this.groupShipMeshLODs = new System.Windows.Forms.GroupBox();
-            this.listShipMeshLODs = new System.Windows.Forms.CheckedListBox();
-            this.panelShipMesh = new System.Windows.Forms.Panel();
             this.checkShipMeshDoScar = new System.Windows.Forms.CheckBox();
             this.listShipMeshes = new System.Windows.Forms.ListBox();
             this.labelShipMeshParent = new System.Windows.Forms.Label();
             this.comboShipMeshParent = new System.Windows.Forms.ComboBox();
+            this.groupShipMeshLODs = new System.Windows.Forms.GroupBox();
+            this.buttonShipMeshLODImport = new System.Windows.Forms.Button();
+            this.buttonShipMeshLODExport = new System.Windows.Forms.Button();
+            this.listShipMeshLODs = new System.Windows.Forms.CheckedListBox();
             this.tabMaterials = new System.Windows.Forms.TabPage();
             this.groupThrusterStrength = new System.Windows.Forms.GroupBox();
             this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
@@ -141,6 +143,9 @@ namespace DAEnerys
             this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
             this.labelFPS = new System.Windows.Forms.Label();
             this.buttonProblems = new System.Windows.Forms.Button();
+            this.saveObjDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openObjDialog = new System.Windows.Forms.OpenFileDialog();
+            this.groupShipMeshLODMaterials = new System.Windows.Forms.GroupBox();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -149,7 +154,6 @@ namespace DAEnerys
             this.tabControl.SuspendLayout();
             this.tabShipMeshes.SuspendLayout();
             this.groupShipMeshLODs.SuspendLayout();
-            this.panelShipMesh.SuspendLayout();
             this.tabMaterials.SuspendLayout();
             this.groupThrusterStrength.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
@@ -195,6 +199,7 @@ namespace DAEnerys
             this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buttonOpen,
+            this.buttonSave,
             this.buttonSettings,
             this.toolStripButton2,
             this.buttonHotkeys,
@@ -214,6 +219,15 @@ namespace DAEnerys
             this.buttonOpen.Size = new System.Drawing.Size(56, 22);
             this.buttonOpen.Text = "Open";
             this.buttonOpen.Click += new System.EventHandler(this.buttonOpen_Click);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Image = ((System.Drawing.Image)(resources.GetObject("buttonSave.Image")));
+            this.buttonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(65, 22);
+            this.buttonSave.Text = "Save as";
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // buttonSettings
             // 
@@ -264,11 +278,12 @@ namespace DAEnerys
             // openColladaDialog
             // 
             this.openColladaDialog.Filter = "COLLADA-Files|*.dae|All files|*.*";
+            this.openColladaDialog.Title = "Open DAE-file...";
             // 
             // saveColladaDialog
             // 
             this.saveColladaDialog.DefaultExt = "dae";
-            this.saveColladaDialog.Filter = "COLLADA-Files|*.dae|All files|*.*";
+            this.saveColladaDialog.Title = "Save DAE-file...";
             // 
             // splitContainer1
             // 
@@ -311,8 +326,11 @@ namespace DAEnerys
             // tabShipMeshes
             // 
             this.tabShipMeshes.AutoScroll = true;
+            this.tabShipMeshes.Controls.Add(this.checkShipMeshDoScar);
+            this.tabShipMeshes.Controls.Add(this.listShipMeshes);
+            this.tabShipMeshes.Controls.Add(this.labelShipMeshParent);
+            this.tabShipMeshes.Controls.Add(this.comboShipMeshParent);
             this.tabShipMeshes.Controls.Add(this.groupShipMeshLODs);
-            this.tabShipMeshes.Controls.Add(this.panelShipMesh);
             this.tabShipMeshes.Location = new System.Drawing.Point(4, 58);
             this.tabShipMeshes.Name = "tabShipMeshes";
             this.tabShipMeshes.Padding = new System.Windows.Forms.Padding(3);
@@ -321,70 +339,36 @@ namespace DAEnerys
             this.tabShipMeshes.Text = "Ship Meshes";
             this.tabShipMeshes.UseVisualStyleBackColor = true;
             // 
-            // groupShipMeshLODs
-            // 
-            this.groupShipMeshLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupShipMeshLODs.Controls.Add(this.listShipMeshLODs);
-            this.groupShipMeshLODs.Location = new System.Drawing.Point(3, 471);
-            this.groupShipMeshLODs.Name = "groupShipMeshLODs";
-            this.groupShipMeshLODs.Size = new System.Drawing.Size(236, 172);
-            this.groupShipMeshLODs.TabIndex = 1;
-            this.groupShipMeshLODs.TabStop = false;
-            this.groupShipMeshLODs.Text = "Level of detail(s)";
-            // 
-            // listShipMeshLODs
-            // 
-            this.listShipMeshLODs.CheckOnClick = true;
-            this.listShipMeshLODs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listShipMeshLODs.FormattingEnabled = true;
-            this.listShipMeshLODs.Location = new System.Drawing.Point(3, 16);
-            this.listShipMeshLODs.Name = "listShipMeshLODs";
-            this.listShipMeshLODs.Size = new System.Drawing.Size(230, 153);
-            this.listShipMeshLODs.TabIndex = 0;
-            this.listShipMeshLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listShipMeshLODs_ItemCheck);
-            // 
-            // panelShipMesh
-            // 
-            this.panelShipMesh.Controls.Add(this.checkShipMeshDoScar);
-            this.panelShipMesh.Controls.Add(this.listShipMeshes);
-            this.panelShipMesh.Controls.Add(this.labelShipMeshParent);
-            this.panelShipMesh.Controls.Add(this.comboShipMeshParent);
-            this.panelShipMesh.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelShipMesh.Location = new System.Drawing.Point(3, 3);
-            this.panelShipMesh.Name = "panelShipMesh";
-            this.panelShipMesh.Size = new System.Drawing.Size(236, 462);
-            this.panelShipMesh.TabIndex = 0;
-            // 
             // checkShipMeshDoScar
             // 
             this.checkShipMeshDoScar.AutoSize = true;
             this.checkShipMeshDoScar.Enabled = false;
-            this.checkShipMeshDoScar.Location = new System.Drawing.Point(6, 439);
+            this.checkShipMeshDoScar.Location = new System.Drawing.Point(9, 238);
             this.checkShipMeshDoScar.Name = "checkShipMeshDoScar";
             this.checkShipMeshDoScar.Size = new System.Drawing.Size(79, 17);
-            this.checkShipMeshDoScar.TabIndex = 11;
+            this.checkShipMeshDoScar.TabIndex = 15;
             this.checkShipMeshDoScar.Text = "Allow scars";
             this.checkShipMeshDoScar.UseVisualStyleBackColor = true;
+            this.checkShipMeshDoScar.CheckedChanged += new System.EventHandler(this.checkShipMeshDoScar_CheckedChanged);
             // 
             // listShipMeshes
             // 
             this.listShipMeshes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listShipMeshes.FormattingEnabled = true;
-            this.listShipMeshes.Location = new System.Drawing.Point(3, 3);
+            this.listShipMeshes.Location = new System.Drawing.Point(6, 6);
             this.listShipMeshes.Name = "listShipMeshes";
-            this.listShipMeshes.Size = new System.Drawing.Size(230, 407);
-            this.listShipMeshes.TabIndex = 10;
+            this.listShipMeshes.Size = new System.Drawing.Size(230, 199);
+            this.listShipMeshes.TabIndex = 14;
             this.listShipMeshes.SelectedIndexChanged += new System.EventHandler(this.listShipMeshes_SelectedIndexChanged);
             // 
             // labelShipMeshParent
             // 
             this.labelShipMeshParent.AutoSize = true;
-            this.labelShipMeshParent.Location = new System.Drawing.Point(3, 415);
+            this.labelShipMeshParent.Location = new System.Drawing.Point(6, 214);
             this.labelShipMeshParent.Name = "labelShipMeshParent";
             this.labelShipMeshParent.Size = new System.Drawing.Size(44, 13);
-            this.labelShipMeshParent.TabIndex = 9;
+            this.labelShipMeshParent.TabIndex = 13;
             this.labelShipMeshParent.Text = "Parent: ";
             // 
             // comboShipMeshParent
@@ -394,10 +378,61 @@ namespace DAEnerys
             this.comboShipMeshParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboShipMeshParent.Enabled = false;
             this.comboShipMeshParent.FormattingEnabled = true;
-            this.comboShipMeshParent.Location = new System.Drawing.Point(53, 412);
+            this.comboShipMeshParent.Location = new System.Drawing.Point(56, 211);
             this.comboShipMeshParent.Name = "comboShipMeshParent";
             this.comboShipMeshParent.Size = new System.Drawing.Size(180, 21);
-            this.comboShipMeshParent.TabIndex = 8;
+            this.comboShipMeshParent.TabIndex = 12;
+            this.comboShipMeshParent.SelectedIndexChanged += new System.EventHandler(this.comboShipMeshParent_SelectedIndexChanged);
+            // 
+            // groupShipMeshLODs
+            // 
+            this.groupShipMeshLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupShipMeshLODs.Controls.Add(this.groupShipMeshLODMaterials);
+            this.groupShipMeshLODs.Controls.Add(this.buttonShipMeshLODImport);
+            this.groupShipMeshLODs.Controls.Add(this.buttonShipMeshLODExport);
+            this.groupShipMeshLODs.Controls.Add(this.listShipMeshLODs);
+            this.groupShipMeshLODs.Location = new System.Drawing.Point(3, 261);
+            this.groupShipMeshLODs.Name = "groupShipMeshLODs";
+            this.groupShipMeshLODs.Size = new System.Drawing.Size(236, 430);
+            this.groupShipMeshLODs.TabIndex = 1;
+            this.groupShipMeshLODs.TabStop = false;
+            this.groupShipMeshLODs.Text = "Level of detail(s)";
+            // 
+            // buttonShipMeshLODImport
+            // 
+            this.buttonShipMeshLODImport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonShipMeshLODImport.Location = new System.Drawing.Point(120, 101);
+            this.buttonShipMeshLODImport.Name = "buttonShipMeshLODImport";
+            this.buttonShipMeshLODImport.Size = new System.Drawing.Size(113, 23);
+            this.buttonShipMeshLODImport.TabIndex = 2;
+            this.buttonShipMeshLODImport.Text = "Import from OBJ";
+            this.buttonShipMeshLODImport.UseVisualStyleBackColor = true;
+            this.buttonShipMeshLODImport.Click += new System.EventHandler(this.buttonShipMeshLODImport_Click);
+            // 
+            // buttonShipMeshLODExport
+            // 
+            this.buttonShipMeshLODExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonShipMeshLODExport.Location = new System.Drawing.Point(3, 101);
+            this.buttonShipMeshLODExport.Name = "buttonShipMeshLODExport";
+            this.buttonShipMeshLODExport.Size = new System.Drawing.Size(111, 23);
+            this.buttonShipMeshLODExport.TabIndex = 1;
+            this.buttonShipMeshLODExport.Text = "Export to OBJ";
+            this.buttonShipMeshLODExport.UseVisualStyleBackColor = true;
+            this.buttonShipMeshLODExport.Click += new System.EventHandler(this.buttonShipMeshLODExport_Click);
+            // 
+            // listShipMeshLODs
+            // 
+            this.listShipMeshLODs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.listShipMeshLODs.FormattingEnabled = true;
+            this.listShipMeshLODs.Location = new System.Drawing.Point(3, 16);
+            this.listShipMeshLODs.Name = "listShipMeshLODs";
+            this.listShipMeshLODs.Size = new System.Drawing.Size(230, 79);
+            this.listShipMeshLODs.TabIndex = 0;
+            this.listShipMeshLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listShipMeshLODs_ItemCheck);
+            this.listShipMeshLODs.SelectedIndexChanged += new System.EventHandler(this.listShipMeshLODs_SelectedIndexChanged);
             // 
             // tabMaterials
             // 
@@ -412,7 +447,7 @@ namespace DAEnerys
             this.tabMaterials.Location = new System.Drawing.Point(4, 58);
             this.tabMaterials.Name = "tabMaterials";
             this.tabMaterials.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMaterials.Size = new System.Drawing.Size(242, 646);
+            this.tabMaterials.Size = new System.Drawing.Size(242, 694);
             this.tabMaterials.TabIndex = 6;
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
@@ -500,9 +535,9 @@ namespace DAEnerys
             this.listMaterials.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listMaterials.FormattingEnabled = true;
-            this.listMaterials.Location = new System.Drawing.Point(3, 3);
+            this.listMaterials.Location = new System.Drawing.Point(6, 6);
             this.listMaterials.Name = "listMaterials";
-            this.listMaterials.Size = new System.Drawing.Size(235, 316);
+            this.listMaterials.Size = new System.Drawing.Size(229, 316);
             this.listMaterials.TabIndex = 19;
             this.listMaterials.SelectedIndexChanged += new System.EventHandler(this.listMaterials_SelectedIndexChanged);
             // 
@@ -522,7 +557,7 @@ namespace DAEnerys
             this.tabCollisionMeshes.Location = new System.Drawing.Point(4, 58);
             this.tabCollisionMeshes.Name = "tabCollisionMeshes";
             this.tabCollisionMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCollisionMeshes.Size = new System.Drawing.Size(242, 646);
+            this.tabCollisionMeshes.Size = new System.Drawing.Size(242, 694);
             this.tabCollisionMeshes.TabIndex = 5;
             this.tabCollisionMeshes.Text = "Collision Meshes";
             this.tabCollisionMeshes.UseVisualStyleBackColor = true;
@@ -1402,9 +1437,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle25;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -1412,14 +1447,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle27;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -1428,9 +1463,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle28;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -1443,9 +1478,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle26;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -1493,6 +1528,25 @@ namespace DAEnerys
             this.buttonProblems.UseVisualStyleBackColor = false;
             this.buttonProblems.Click += new System.EventHandler(this.buttonProblems_Click);
             // 
+            // saveObjDialog
+            // 
+            this.saveObjDialog.DefaultExt = "obj";
+            this.saveObjDialog.Title = "Save OBJ-file...";
+            // 
+            // openObjDialog
+            // 
+            this.openObjDialog.Filter = "OBJ-Files|*.obj|All files|*.*";
+            this.openObjDialog.Title = "Open OBJ-file...";
+            // 
+            // groupShipMeshLODMaterials
+            // 
+            this.groupShipMeshLODMaterials.Location = new System.Drawing.Point(3, 130);
+            this.groupShipMeshLODMaterials.Name = "groupShipMeshLODMaterials";
+            this.groupShipMeshLODMaterials.Size = new System.Drawing.Size(233, 297);
+            this.groupShipMeshLODMaterials.TabIndex = 3;
+            this.groupShipMeshLODMaterials.TabStop = false;
+            this.groupShipMeshLODMaterials.Text = "Assigned materials";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1517,9 +1571,8 @@ namespace DAEnerys
             this.splitContainer1.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tabShipMeshes.ResumeLayout(false);
+            this.tabShipMeshes.PerformLayout();
             this.groupShipMeshLODs.ResumeLayout(false);
-            this.panelShipMesh.ResumeLayout(false);
-            this.panelShipMesh.PerformLayout();
             this.tabMaterials.ResumeLayout(false);
             this.tabMaterials.PerformLayout();
             this.groupThrusterStrength.ResumeLayout(false);
@@ -1588,11 +1641,6 @@ namespace DAEnerys
         private System.Windows.Forms.TabPage tabShipMeshes;
         private System.Windows.Forms.GroupBox groupShipMeshLODs;
         private System.Windows.Forms.CheckedListBox listShipMeshLODs;
-        private System.Windows.Forms.Panel panelShipMesh;
-        private System.Windows.Forms.CheckBox checkShipMeshDoScar;
-        private System.Windows.Forms.ListBox listShipMeshes;
-        private System.Windows.Forms.Label labelShipMeshParent;
-        private System.Windows.Forms.ComboBox comboShipMeshParent;
         private System.Windows.Forms.TabPage tabMaterials;
         private System.Windows.Forms.TabPage tabCollisionMeshes;
         private System.Windows.Forms.Panel panel1;
@@ -1682,6 +1730,16 @@ namespace DAEnerys
         private System.Windows.Forms.ListBox listMaterials;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton buttonSave;
+        private System.Windows.Forms.CheckBox checkShipMeshDoScar;
+        private System.Windows.Forms.ListBox listShipMeshes;
+        private System.Windows.Forms.Label labelShipMeshParent;
+        private System.Windows.Forms.ComboBox comboShipMeshParent;
+        private System.Windows.Forms.Button buttonShipMeshLODExport;
+        private System.Windows.Forms.SaveFileDialog saveObjDialog;
+        private System.Windows.Forms.Button buttonShipMeshLODImport;
+        private System.Windows.Forms.OpenFileDialog openObjDialog;
+        private System.Windows.Forms.GroupBox groupShipMeshLODMaterials;
     }
 }
 

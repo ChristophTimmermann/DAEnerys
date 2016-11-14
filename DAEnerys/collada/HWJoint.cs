@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace DAEnerys
 {
     public class HWJoint
     {
+        public static List<HWJoint> Joints = new List<HWJoint>();
+
         public EditorJoint EditorJoint;
         public HWNode Node;
 
@@ -27,11 +25,20 @@ namespace DAEnerys
             Node = node;
             Name = name;
 
-            HWScene.Joints.Add(this);
+            Joints.Add(this);
             Program.main.AddJoint(this, parent);
 
             //Visualization
             EditorJoint = new EditorJoint(this);
+        }
+
+        public static HWJoint GetByName(string name)
+        {
+            foreach(HWJoint joint in Joints)
+                if (joint.Name == name)
+                    return joint;
+
+            return null;
         }
     }
 }

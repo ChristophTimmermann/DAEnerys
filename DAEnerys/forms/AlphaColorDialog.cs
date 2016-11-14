@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
 using System.Windows.Forms;
-using System.Data;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Opulos.Core.UI {
-public class AlphaColorDialog : ColorDialog {
+namespace Opulos.Core.UI
+{
+    public class AlphaColorDialog : ColorDialog {
 
 	///<summary>Event is fired after the color or alpha value are changed via any of the possible user-interface controls.</summary>
 	public event EventHandler ColorChanged;
