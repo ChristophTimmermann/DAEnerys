@@ -116,6 +116,8 @@ namespace DAEnerys
         {
             foreach(Mesh mesh in Collada.Meshes)
             {
+                Log.WriteLine("Trying to parse mesh \"" + mesh.Name + "\".");
+
                 HWMesh newMesh = new HWMesh(mesh);
 
                 if(Materials[mesh.MaterialIndex] != null)
@@ -125,8 +127,6 @@ namespace DAEnerys
                                 if (!mesh.Name.StartsWith("GLOW")) //Don't put textures on engine glows
                                     if (mesh.TextureCoordinateChannelCount > 0)
                                     newMesh.Material = Materials[mesh.MaterialIndex];
-
-                Log.WriteLine("Mesh '" + mesh.Name + "' added.");
             }
         }
 
@@ -134,6 +134,8 @@ namespace DAEnerys
         {
             foreach(Material material in Collada.Materials)
             {
+                Log.WriteLine("Trying to parse material \"" + material.Name + "\".");
+
                 HWMaterial newMaterial = new HWMaterial();
 
                 newMaterial.Name = material.Name;
@@ -144,7 +146,6 @@ namespace DAEnerys
                 newMaterial.DiffusePath = material.TextureDiffuse.FilePath; 
 
                 newMaterial.Parse();
-                Log.WriteLine("Material '" + material.Name + "' added.");
             }
         }
 
@@ -173,6 +174,7 @@ namespace DAEnerys
 
                     if(name != null && path != null)
                     {
+                        Log.WriteLine("Trying to parse texture \"" + name + "\".");
                         new HWImage(name, path);
                     }
                 }
@@ -291,6 +293,8 @@ namespace DAEnerys
                     farthest = value;
             }
 
+            farthest = Math.Max(0.01f, farthest);
+
             float jointSize = 1;
             float markerSize = 1;
             if (BiggestMesh != null)
@@ -404,12 +408,9 @@ namespace DAEnerys
 
             Nodes.Clear();
             HWNode.Roots = new HWNode[6];
-            HWNode.RootLOD0 = null;
-            HWNode.RootLOD1 = null;
-            HWNode.RootLOD2 = null;
-            HWNode.RootLOD3 = null;
             HWNode.RootCOL = null;
             HWNode.RootINFO = null;
+            HWNode.HoldDock = null;
 
             RenderTextures.Clear();
             HWJoint.Joints.Clear();

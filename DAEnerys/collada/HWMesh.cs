@@ -191,7 +191,7 @@ namespace DAEnerys
             if (Parent.Name.StartsWith("MULT")) //If visible ship mesh
             {
                 string name = "";
-                int lod = -1;
+                int lod = 0;
                 ObservableCollection<ShipMeshTag> tags = new ObservableCollection<ShipMeshTag>();
 
                 string[] splitted = Parent.Name.Split('[');
@@ -207,7 +207,12 @@ namespace DAEnerys
                         }
                         else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
                         {
-                            int.TryParse(splitted[i].Substring(0, end), out lod);
+                            bool success = int.TryParse(splitted[i].Substring(0, end), out lod);
+                            if(!success)
+                            {
+                                new Problem(ProblemTypes.ERROR, "Failed to parse LOD of ship mesh \"" + Parent.Name + "\".");
+                                return;
+                            }
                         }
                         else if (splitted[i - 1].EndsWith("TAGS")) //Tags
                         {
@@ -227,9 +232,10 @@ namespace DAEnerys
                     new Problem(ProblemTypes.ERROR, "Failed to parse name of ship mesh \"" + Parent.Name + "\".");
                     return;
                 }
-                if (lod == -1)
+
+                if(!Parent.IsDescendantOf(HWNode.Roots[lod]))
                 {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse LOD of ship mesh \"" + Parent.Name + "\".");
+                    new Problem(ProblemTypes.WARNING, "Ship mesh \"" + Parent.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
                     return;
                 }
 
@@ -293,6 +299,12 @@ namespace DAEnerys
                     }
                 }
 
+                if (name == "")
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse name of collision mesh \"" + Parent.Name + "\".");
+                    return;
+                }
+
                 Name = name;
                 Prefix = "COL";
 
@@ -311,7 +323,7 @@ namespace DAEnerys
             else if (Parent.Name.StartsWith("GLOW")) //If visible glow mesh
             {
                 string name = "";
-                int lod = 0;
+                int lod = -1;
 
                 string[] splitted = Parent.Name.Split('[');
                 int end = -1;
@@ -326,9 +338,25 @@ namespace DAEnerys
                         }
                         else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
                         {
-                            lod = int.Parse(splitted[i].Substring(0, end));
+                            bool success = int.TryParse(splitted[i].Substring(0, end), out lod);
+                            if (!success)
+                            {
+                                new Problem(ProblemTypes.ERROR, "Failed to parse LOD of engine glow \"" + Parent.Name + "\".");
+                            }
                         }
                     }
+                }
+
+                if (name == "")
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse name of engine glow \"" + Parent.Name + "\".");
+                    return;
+                }
+
+                if (!Parent.IsDescendantOf(HWNode.Roots[lod]))
+                {
+                    new Problem(ProblemTypes.WARNING, "Engine glow \"" + Parent.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
+                    return;
                 }
 
                 Name = name;
@@ -381,6 +409,12 @@ namespace DAEnerys
                             name = splitted[i].Substring(0, end);
                         }
                     }
+                }
+
+                if (name == "")
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse name of engine shape \"" + Parent.Name + "\".");
+                    return;
                 }
 
                 Name = name;

@@ -8,12 +8,9 @@ namespace DAEnerys
     public class HWNode
     {
         public static HWNode[] Roots = new HWNode[6];
-        public static HWNode RootLOD0;
-        public static HWNode RootLOD1;
-        public static HWNode RootLOD2;
-        public static HWNode RootLOD3;
         public static HWNode RootINFO;
         public static HWNode RootCOL;
+        public static HWNode HoldDock;
 
         public List<HWNode> Children = new List<HWNode>();
         public List<HWMesh> Meshes = new List<HWMesh>();
@@ -73,47 +70,56 @@ namespace DAEnerys
 
                     if (success)
                     {
-                        Roots[lod] = this;
+                        if (Roots[lod] != null)
+                            new Problem(ProblemTypes.ERROR, "There are multiple \"ROOT_LOD[" + lod + "]\" nodes.");
 
-                        switch (lod)
-                        {
-                            case 0:
-                                RootLOD0 = this;
-                                break;
-                            case 1:
-                                RootLOD1 = this;
-                                break;
-                            case 2:
-                                RootLOD2 = this;
-                                break;
-                            case 3:
-                                RootLOD3 = this;
-                                break;
-                        }
+                        Roots[lod] = this;
                     }
                 }
             }
-
-            if (Name.StartsWith("ROOT_COL")) //If node is a root COL node
+            else if (Name.StartsWith("ROOT_COL")) //If node is a root COL node
             {
+                if (RootCOL != null)
+                    new Problem(ProblemTypes.ERROR, "There are multiple \"ROOT_COL\" nodes.");
+
                 Roots[4] = this;
                 RootCOL = this;
             }
-
-            if (Name.StartsWith("ROOT_INFO")) //If node is a root INFO node
+            else if (Name.StartsWith("ROOT_INFO")) //If node is a root INFO node
             {
+                if (RootINFO != null)
+                    new Problem(ProblemTypes.ERROR, "There are multiple \"ROOT_INFO\" nodes.");
+
                 Roots[5] = this;
                 RootINFO = this;
             }
-
-            if (Name.StartsWith("JNT")) //If node is a joint
+            else if (Name == "HOLD_DOCK") //If node is the holder for dockpaths
             {
+                if (HoldDock != null)
+                    new Problem(ProblemTypes.ERROR, "There are multiple \"HOLD_DOCK\" nodes.");
+
+                HoldDock = this;
+            }
+            else if (Name.StartsWith("JNT")) //If node is a joint
+            {
+                if (!IsUnderAnyRootNode())
+                {
+                    new Problem(ProblemTypes.ERROR, "The joint \"" + Name + "\" is not under any \"ROOT_LOD[X]\" node.");
+                    return;
+                }
+
                 string jointName = Name.Split('[')[1];
                 jointName = jointName.Remove(jointName.Length - 1);
                 Joint = new HWJoint(this, parent.Joint, jointName);
             }
             else if (Name.StartsWith("MARK")) //If node is a marker
             {
+                if (!IsUnderAnyRootNode())
+                {
+                    new Problem(ProblemTypes.ERROR, "The marker \"" + Name + "\" is not under any \"ROOT_LOD[X]\" node.");
+                    return;
+                }
+
                 string markerName = Name.Split('[')[1];
                 markerName = markerName.Remove(markerName.Length - 1);
                 Marker = new HWMarker(this, markerName);
@@ -121,6 +127,15 @@ namespace DAEnerys
             #region Dockpath
             else if (Name.StartsWith("DOCK")) //If node is a dockpath
             {
+                bool isUnderHoldDock = false;
+                    if (this.IsDescendantOf(HoldDock))
+                        isUnderHoldDock = true;
+                if(!isUnderHoldDock)
+                {
+                    new Problem(ProblemTypes.ERROR, "The dockpath \"" + Name + "\" is not under the HOLD_DOCK node.");
+                    return;
+                }
+
                 string pathName = "";
                 string[] families = new string[0];
                 string[] links = new string[0];
@@ -180,6 +195,12 @@ namespace DAEnerys
             #region DockSegment
             else if (Name.StartsWith("SEG")) //If node is a docksegment
             {
+                if (!IsUnderAnyDockpath())
+                {
+                    new Problem(ProblemTypes.ERROR, "The dockpath segment \"" + Name + "\" is not under any dockpath.");
+                    return;
+                }
+
                 //Check if segment is child of dockpath
                 if (this.Parent.Dockpath != null)
                 {
@@ -339,6 +360,51 @@ namespace DAEnerys
         {
             mesh.Parent = this;
             Meshes.Add(mesh);
+        }
+
+        public HWNode[] GetAllParents()
+        {
+            List<HWNode> parents = new List<HWNode>();
+            HWNode nodeChecking = this.Parent;
+            while (nodeChecking != null)
+            {
+                parents.Add(nodeChecking);
+                nodeChecking = nodeChecking.Parent;
+            }
+
+            return parents.ToArray();
+        }
+
+        public bool IsDescendantOf(HWNode parentToCheck)
+        {
+            HWNode nodeChecking = this.Parent;
+            while(nodeChecking != null)
+            {
+                if (nodeChecking == parentToCheck)
+                    return true;
+
+                nodeChecking = nodeChecking.Parent;
+            }
+
+            return false;
+        }
+
+        public bool IsUnderAnyRootNode()
+        {
+            for (int i = 0; i < 3; i++)
+                if (this.IsDescendantOf(Roots[i]))
+                    return true;
+
+            return false;
+        }
+
+        public bool IsUnderAnyDockpath()
+        {
+            foreach(HWNode parent in GetAllParents())
+                if (parent.Dockpath != null)
+                    return true;
+
+            return false;
         }
 
         /// <summary>
