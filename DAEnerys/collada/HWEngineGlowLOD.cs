@@ -1,21 +1,31 @@
-﻿namespace DAEnerys
+﻿using Assimp;
+
+namespace DAEnerys
 {
-    public class HWEngineGlowLOD
+    public class HWEngineGlowLOD : HWMesh
     {
         public HWEngineGlow GlowMesh;
 
-        public HWMesh Mesh;
         public int LOD;
 
-        public HWEngineGlowLOD(HWEngineGlow glowMesh, HWMesh mesh, int lod)
+        public override string FormattedName
+        {
+            get
+            {
+                string lod = "_LOD[" + LOD + "]";
+
+                return "GLOW[" + Name + "]" + lod;
+            }
+        }
+
+        public HWEngineGlowLOD(Mesh assimpMesh, HWEngineGlow glowMesh, int lod) : base(assimpMesh)
         {
             GlowMesh = glowMesh;
-            Mesh = mesh;
             LOD = lod;
-            Mesh.LOD = lod;
+            this.Name = glowMesh.Name;
 
-            Mesh.Translucent = true;
-            Mesh.Material.Shader = "fx_eng_glowbasic";
+            Translucent = true;
+            Material.Shader = "fx_eng_glowbasic";
         }
     }
 }

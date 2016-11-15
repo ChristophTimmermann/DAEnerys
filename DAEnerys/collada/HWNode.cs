@@ -348,7 +348,13 @@ namespace DAEnerys
             //Add meshes
             foreach (int mesh in node.MeshIndices)
             {
-                this.AddMesh(HWScene.Meshes[mesh]);
+                Mesh assimpMesh = HWScene.Collada.Meshes[mesh];
+                Log.WriteLine("Trying to parse mesh \"" + assimpMesh.Name + "\".");
+
+                HWMesh newMesh = HWMesh.ParseMesh(assimpMesh, this);
+
+                if(newMesh != null)
+                    this.AddMesh(newMesh);
             }
 
             //Add children

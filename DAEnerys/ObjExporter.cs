@@ -38,7 +38,7 @@ namespace DAEnerys
             //Vertices
             file.AppendLine("# Vertices");
             foreach (HWMesh mesh in meshes)
-                foreach (HWVertex vertex in mesh.Vertices)
+                foreach (Vertex vertex in mesh.Vertices)
                     file.AppendLine("v " + vertex.Position.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Z.ToString(CultureInfo.InvariantCulture));
 
             //Texture coordinates
@@ -47,7 +47,7 @@ namespace DAEnerys
                 if (mesh.TextureCoordinateChannelCount > 0)
                 {
                     file.AppendLine("# Texture coordinates");
-                    foreach (HWVertex vertex in mesh.Vertices)
+                    foreach (Vertex vertex in mesh.Vertices)
                         file.AppendLine("vt " + (vertex.UV0.X).ToString(CultureInfo.InvariantCulture) + " " + vertex.UV0.Y.ToString(CultureInfo.InvariantCulture));
                 }
             }
@@ -55,7 +55,7 @@ namespace DAEnerys
             //Normals
             file.AppendLine("# Normals");
             foreach (HWMesh mesh in meshes)
-                foreach (HWVertex vertex in mesh.Vertices)
+                foreach (Vertex vertex in mesh.Vertices)
                     file.AppendLine("vn " + vertex.Normal.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Z.ToString(CultureInfo.InvariantCulture));
                 
 

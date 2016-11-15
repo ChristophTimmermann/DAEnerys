@@ -1,18 +1,25 @@
-﻿namespace DAEnerys
+﻿using Assimp;
+
+namespace DAEnerys
 {
-    public class HWCollisionMesh
+    public class HWCollisionMesh : HWMesh
     {
-        public HWMesh Mesh;
-        public HWJoint Parent;
-        public string Name;
+        new public HWJoint Parent;
+
+        public override string FormattedName
+        {
+            get
+            {
+                return "COL[" + Name + "]";
+            }
+        }
 
         public int CollisionMeshListItemIndex;
 
-        public HWCollisionMesh(HWMesh mesh, HWJoint parent, string name)
+        public HWCollisionMesh(Mesh assimpMesh, HWJoint parent, string name) : base(assimpMesh)
         {
-            Mesh = mesh;
-            Parent = parent;
-            Name = name;
+            this.Parent = parent;
+            this.Name = name;
 
             HWScene.CollisionMeshes.Add(this);
             Program.main.AddCollisionMesh(this);

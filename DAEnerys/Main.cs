@@ -784,38 +784,13 @@ namespace DAEnerys
                 comboShipMeshParent.Enabled = true; //Enable parent combo box
 
                 //Fill LOD list
-                if (selectedShipMesh.LODMeshes[0].Count > 0) //If ship mesh has an LOD0
-                    listShipMeshLODs.Items.Add("LOD 0");
-                if (selectedShipMesh.LODMeshes[1].Count > 0) //If ship mesh has an LOD1
-                    listShipMeshLODs.Items.Add("LOD 1");
-                if (selectedShipMesh.LODMeshes[2].Count > 0) //If ship mesh has an LOD2
-                    listShipMeshLODs.Items.Add("LOD 2");
-                if (selectedShipMesh.LODMeshes[3].Count > 0) //If ship mesh has an LOD3
-                    listShipMeshLODs.Items.Add("LOD 3");
-
-                //Check LOD checkboxes if visible
-                if (selectedShipMesh.LODMeshes[0].Count > 0)
-                {
-                    if (selectedShipMesh.LODMeshes[0][0].Mesh.Visible)
-                        listShipMeshLODs.SetItemChecked(0, true);
-
-                    listShipMeshLODs.SelectedIndex = 0;
-                }
-                if (selectedShipMesh.LODMeshes[1].Count > 0)
-                {
-                    if (selectedShipMesh.LODMeshes[1][0].Mesh.Visible)
-                        listShipMeshLODs.SetItemChecked(1, true);
-                }
-                if (selectedShipMesh.LODMeshes[2].Count > 0)
-                {
-                    if (selectedShipMesh.LODMeshes[2][0].Mesh.Visible)
-                        listShipMeshLODs.SetItemChecked(2, true);
-                }
-                if (selectedShipMesh.LODMeshes[3].Count > 0)
-                {
-                    if (selectedShipMesh.LODMeshes[3][0].Mesh.Visible)
-                        listShipMeshLODs.SetItemChecked(3, true);
-                }
+                for (int i = 0; i < 3; i++)
+                    if (selectedShipMesh.LODMeshes[i].Count > 0)
+                    {
+                        listShipMeshLODs.Items.Add("LOD " + i);
+                        if (selectedShipMesh.LODMeshes[i][0].Visible)
+                            listShipMeshLODs.SetItemChecked(i, true);
+                    }
             }
         }
         public void AddShipMesh(HWShipMesh mesh)
@@ -835,10 +810,9 @@ namespace DAEnerys
 
             foreach (HWShipMeshLOD shipMeshLOD in selectedShipMesh.LODMeshes[e.Index])
             {
-                shipMeshLOD.Mesh.Visible = visible;
+                shipMeshLOD.Visible = visible;
             }
 
-            Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
@@ -884,7 +858,7 @@ namespace DAEnerys
 
             int materialCount = 0;
             foreach (HWShipMeshLOD lodMesh in lodMeshes)
-                if (lodMesh.Mesh.Material != null)
+                if (lodMesh.Material != null)
                     materialCount++;
 
             for(int i = 0; i < materialCount; i++)
@@ -892,7 +866,7 @@ namespace DAEnerys
                 ShipMeshLODMaterialLabels[i].Visible = true;
                 ShipMeshLODMaterialComboBoxes[i].Visible = true;
 
-                ShipMeshLODMaterialComboBoxes[i].SelectedItem = lodMeshes[i].Mesh.Material.MaterialListItem;
+                ShipMeshLODMaterialComboBoxes[i].SelectedItem = lodMeshes[i].Material.MaterialListItem;
             }
         }
         private void OnShipMeshLODMaterialChanged(object sender, EventArgs e)
@@ -912,9 +886,9 @@ namespace DAEnerys
             int selectedIndex = ShipMeshLODMaterialComboBoxes[materialIndex].SelectedIndex;
 
             if (selectedIndex != -1)
-                lodMeshes[materialIndex].Mesh.Material = MaterialListItems.Values.ElementAt(selectedIndex);
+                lodMeshes[materialIndex].Material = MaterialListItems.Values.ElementAt(selectedIndex);
             else
-                ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem = lodMeshes[materialIndex].Mesh.Material.MaterialListItem;
+                ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem = lodMeshes[materialIndex].Material.MaterialListItem;
         }
         private void buttonShipMeshLODExport_Click(object sender, EventArgs e)
         {
@@ -922,9 +896,12 @@ namespace DAEnerys
             if (listShipMeshes.SelectedItem != null)
                 selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
 
+            if (listShipMeshLODs.SelectedIndex < 0)
+                return;
+
             List<HWMesh> meshes = new List<HWMesh>();
             foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LODMeshes[listShipMeshLODs.SelectedIndex])
-                meshes.Add(lodMesh.Mesh);
+                meshes.Add(lodMesh);
 
             if (meshes.Count == 0)
                 return;
@@ -942,6 +919,9 @@ namespace DAEnerys
             if (listShipMeshes.SelectedItem != null)
                 selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
 
+            if (listShipMeshLODs.SelectedIndex < 0)
+                return;
+
             List<HWShipMeshLOD> meshes = selectedShipMesh.LODMeshes[listShipMeshLODs.SelectedIndex];
 
             if (meshes.Count == 0)
@@ -955,9 +935,8 @@ namespace DAEnerys
                 {
                     for (int i = newMeshes.Length - (newMeshes.Length - meshes.Count); i < newMeshes.Length; i++)
                     {
-                        HWMesh newMesh = new HWMesh(newMeshes[i]);
-                        newMesh.Parent = meshes[0].Mesh.Parent;
-                        HWShipMeshLOD newLOD = new HWShipMeshLOD(selectedShipMesh, newMesh, listShipMeshLODs.SelectedIndex);
+                        HWShipMeshLOD newLOD = new HWShipMeshLOD(newMeshes[i], selectedShipMesh, listShipMeshLODs.SelectedIndex);
+                        newLOD.Parent = meshes[0].Parent;
                     }
                 }
 
@@ -965,10 +944,10 @@ namespace DAEnerys
                 {
                     if (newMeshes.Length - 1 >= i)
                     {
-                        HWMaterial material = meshes[i].Mesh.Material;
-                        meshes[i].Mesh.SetMesh(newMeshes[i]);
+                        HWMaterial material = meshes[i].Material;
+                        meshes[i].SetMesh(newMeshes[i]);
                         meshes[i].CalculateBoundingBox();
-                        meshes[i].Mesh.Material = material;
+                        meshes[i].Material = material;
                     }
                     else //Remove old mesh
                     {
@@ -1003,36 +982,13 @@ namespace DAEnerys
                     comboEngineGlowParent.SelectedIndex = 0; //Select root joint in combo box
 
                 //Fill LOD list
-                if (selectedEngineGlow.LOD0Meshes.Count > 0) //If engine glow has an LOD0
-                    listEngineGlowLODs.Items.Add("LOD 0");
-                if (selectedEngineGlow.LOD1Meshes.Count > 0) //If engine glow has an LOD1
-                    listEngineGlowLODs.Items.Add("LOD 1");
-                if (selectedEngineGlow.LOD2Meshes.Count > 0) //If engine glow has an LOD2
-                    listEngineGlowLODs.Items.Add("LOD 2");
-                if (selectedEngineGlow.LOD3Meshes.Count > 0) //If engine glow has an LOD3
-                    listEngineGlowLODs.Items.Add("LOD 3");
-
-                //Check LOD checkboxes if visible
-                if (selectedEngineGlow.LOD0Meshes.Count > 0)
-                {
-                    if (selectedEngineGlow.LOD0Meshes[0].Mesh.Visible)
-                        listEngineGlowLODs.SetItemChecked(0, true);
-                }
-                if (selectedEngineGlow.LOD1Meshes.Count > 0)
-                {
-                    if (selectedEngineGlow.LOD1Meshes[0].Mesh.Visible)
-                        listEngineGlowLODs.SetItemChecked(1, true);
-                }
-                if (selectedEngineGlow.LOD2Meshes.Count > 0)
-                {
-                    if (selectedEngineGlow.LOD2Meshes[0].Mesh.Visible)
-                        listEngineGlowLODs.SetItemChecked(2, true);
-                }
-                if (selectedEngineGlow.LOD3Meshes.Count > 0)
-                {
-                    if (selectedEngineGlow.LOD3Meshes[0].Mesh.Visible)
-                        listEngineGlowLODs.SetItemChecked(3, true);
-                }
+                for (int i = 0; i < 3; i++)
+                    if (selectedEngineGlow.LODMeshes[i].Count > 0)
+                    {
+                        listEngineGlowLODs.Items.Add("LOD " + i);
+                        if(selectedEngineGlow.LODMeshes[i][0].Visible)
+                            listEngineGlowLODs.SetItemChecked(i, true);
+                    }
             }
         }
         public void AddEngineGlow(HWEngineGlow glow)
@@ -1050,43 +1006,9 @@ namespace DAEnerys
             if (e.NewValue == CheckState.Checked)
                 visible = true;
 
-            switch (e.Index)
-            {
-                case 0:
-                    {
-                        foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LOD0Meshes)
-                        {
-                            engineGlowLOD.Mesh.Visible = visible;
-                        }
-                        break;
-                    }
-                case 1:
-                    {
-                        foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LOD1Meshes)
-                        {
-                            engineGlowLOD.Mesh.Visible = visible;
-                        }
-                        break;
-                    }
-                case 2:
-                    {
-                        foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LOD2Meshes)
-                        {
-                            engineGlowLOD.Mesh.Visible = visible;
-                        }
-                        break;
-                    }
-                case 3:
-                    {
-                        foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LOD3Meshes)
-                        {
-                            engineGlowLOD.Mesh.Visible = visible;
-                        }
-                        break;
-                    }
-            }
+            foreach (HWEngineGlowLOD engineGlowLOD in selectedEngineGlow.LODMeshes[e.Index])
+                engineGlowLOD.Visible = visible;
 
-            Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
@@ -1144,7 +1066,7 @@ namespace DAEnerys
                 if (e.NewValue == CheckState.Checked)
                     visible = true;
 
-                selectedCollisionMesh.Mesh.Visible = visible;
+                selectedCollisionMesh.Visible = visible;
 
                 Renderer.InvalidateMeshData();
                 Renderer.InvalidateView();
@@ -1203,7 +1125,7 @@ namespace DAEnerys
                 if (e.NewValue == CheckState.Checked)
                     visible = true;
 
-                selectedEngineShape.Mesh.Visible = visible;
+                selectedEngineShape.Visible = visible;
 
                 Renderer.InvalidateMeshData();
                 Renderer.InvalidateView();

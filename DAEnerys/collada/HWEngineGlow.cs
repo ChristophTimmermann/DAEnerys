@@ -7,15 +7,15 @@ namespace DAEnerys
         public HWJoint Parent;
         public string Name;
 
-        public List<HWEngineGlowLOD> LOD0Meshes = new List<HWEngineGlowLOD>();
-        public List<HWEngineGlowLOD> LOD1Meshes = new List<HWEngineGlowLOD>();
-        public List<HWEngineGlowLOD> LOD2Meshes = new List<HWEngineGlowLOD>();
-        public List<HWEngineGlowLOD> LOD3Meshes = new List<HWEngineGlowLOD>();
+        public List<HWEngineGlowLOD>[] LODMeshes = new List<HWEngineGlowLOD>[4];
 
         public object EngineGlowListItem;
 
         public HWEngineGlow(HWJoint parent, string name)
         {
+            for (int i = 0; i < LODMeshes.Length; i++)
+                LODMeshes[i] = new List<HWEngineGlowLOD>();
+
             Parent = parent;
             Name = name;
 
@@ -25,42 +25,15 @@ namespace DAEnerys
 
         public void AddLODMesh(HWEngineGlowLOD lodMesh)
         {
-            switch(lodMesh.LOD)
-            {
-                case 0:
-                    LOD0Meshes.Add(lodMesh);
-                    break;
-                case 1:
-                    LOD1Meshes.Add(lodMesh);
-                    break;
-                case 2:
-                    LOD2Meshes.Add(lodMesh);
-                    break;
-                case 3:
-                    LOD2Meshes.Add(lodMesh);
-                    break;
-            }
+            LODMeshes[lodMesh.LOD].Add(lodMesh);
         }
 
         public static void UpdateEngineStrength()
         {
             foreach(HWEngineGlow engineGlow in HWScene.EngineGlows)
-            {
-                foreach(HWEngineGlowLOD engineGlowLOD in engineGlow.LOD0Meshes)
-                {
-                    engineGlowLOD.Mesh.Scale.Z = Renderer.ThrusterInterpolation;
-                }
-
-                foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD1Meshes)
-                {
-                    engineGlowLOD.Mesh.Scale.Z = Renderer.ThrusterInterpolation;
-                }
-
-                foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD2Meshes)
-                {
-                    engineGlowLOD.Mesh.Scale.Z = Renderer.ThrusterInterpolation;
-                }
-            }
+                foreach (List<HWEngineGlowLOD> list in engineGlow.LODMeshes)
+                    foreach (HWEngineGlowLOD lodMesh in list)
+                        lodMesh.Scale.Z = Renderer.ThrusterInterpolation;
         }
     }
 }

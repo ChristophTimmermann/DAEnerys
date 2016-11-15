@@ -67,14 +67,8 @@ namespace DAEnerys
             Program.Camera.Zoom = 0; //Set camera zoom to 0 for bounding box calculations to set it
 
             LoadMaterials();
-            LoadMeshes();
 
             RootNode = new HWNode(Collada.RootNode, null);
-
-            foreach(HWMesh mesh in Meshes) //Parse meshes (add them as ship meshes etc.)
-            {
-                mesh.ParseMesh();
-            }
 
             foreach(HWDockpath dockpath in Dockpaths)
             {
@@ -85,7 +79,7 @@ namespace DAEnerys
             {
                 foreach (HWShipMeshLOD shipMeshLOD in shipMesh.LODMeshes[0])
                 {
-                    shipMeshLOD.Mesh.Visible = true;
+                    shipMeshLOD.Visible = true;
                 }
             }
 
@@ -96,9 +90,9 @@ namespace DAEnerys
 
             foreach (HWEngineGlow engineGlow in EngineGlows) //Set all LOD0 engine glows visible by default
             {
-                foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LOD0Meshes)
+                foreach (HWEngineGlowLOD engineGlowLOD in engineGlow.LODMeshes[0])
                 {
-                    engineGlowLOD.Mesh.Visible = true;
+                    engineGlowLOD.Visible = true;
                 }
             }
 
@@ -111,24 +105,6 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
             logStream.Detach();
-        }
-
-        private static void LoadMeshes()
-        {
-            foreach(Mesh mesh in Collada.Meshes)
-            {
-                Log.WriteLine("Trying to parse mesh \"" + mesh.Name + "\".");
-
-                HWMesh newMesh = new HWMesh(mesh);
-
-                if(Materials[mesh.MaterialIndex] != null)
-                    if(Materials[mesh.MaterialIndex].Valid)
-                        if (!mesh.Name.StartsWith("COL")) //Don't put textures on collision meshes
-                            if (!mesh.Name.StartsWith("ETSH")) //Don't put textures on engine shapes
-                                if (!mesh.Name.StartsWith("GLOW")) //Don't put textures on engine glows
-                                    if (mesh.TextureCoordinateChannelCount > 0)
-                                    newMesh.Material = Materials[mesh.MaterialIndex];
-            }
         }
 
         private static void LoadMaterials()
@@ -236,12 +212,12 @@ namespace DAEnerys
             float markerSize = 1;
             if (BiggestMesh != null)
             {
-                if (BiggestMesh.Mesh != null)
+                if (BiggestMesh != null)
                 {
-                    jointSize = farthest / 60 / BiggestMesh.Mesh.Parent.AbsoluteScale.X;
+                    jointSize = farthest / 60 / BiggestMesh.Parent.AbsoluteScale.X;
                     jointSize = Math.Max(jointSize, 0.3f);
 
-                    markerSize = farthest / 65 / BiggestMesh.Mesh.Parent.AbsoluteScale.X;
+                    markerSize = farthest / 65 / BiggestMesh.Parent.AbsoluteScale.X;
                     markerSize = Math.Max(markerSize, 0.01f);
                 }
             }

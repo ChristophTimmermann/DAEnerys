@@ -1,35 +1,48 @@
-﻿using OpenTK;
+﻿using Assimp;
+using OpenTK;
 using System;
 
 namespace DAEnerys
 {
-    public class HWShipMeshLOD
+    public class HWShipMeshLOD : HWMesh
     {
         public HWShipMesh ShipMesh;
-
-        public HWMesh Mesh;
         public int LOD;
 
-        public HWShipMeshLOD(HWShipMesh shipMesh, HWMesh mesh, int lod)
+        public override string FormattedName
+        {
+            get
+            {
+                string lod = "_LOD[" + LOD + "]";
+
+                string tags = "";
+                if (ShipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
+                    tags = "_TAGS[DoScar]";
+
+                return "MULT[" + Name + "]" + lod + tags;
+            }
+        }
+
+        public HWShipMeshLOD(Mesh assimpMesh, HWShipMesh shipMesh, int lod) : base(assimpMesh)
         {
             ShipMesh = shipMesh;
-            Mesh = mesh;
             LOD = lod;
-            Mesh.LOD = lod;
+            Name = shipMesh.Name;
+
+            if (HWScene.Materials[assimpMesh.MaterialIndex] != null)
+                if (HWScene.Materials[assimpMesh.MaterialIndex].Valid)
+                    if (assimpMesh.TextureCoordinateChannelCount > 0)
+                        Material = HWScene.Materials[assimpMesh.MaterialIndex];
 
             ShipMesh.AddLODMesh(this);
-
-            if (shipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
-                Mesh.DoScars = true;
 
             if (lod == 0)
                 CalculateBoundingBox();
         }
 
-        public void Destroy()
+        public override void Destroy()
         {
-            Mesh.Destroy();
-            Mesh = null;
+            base.Destroy();
 
             ShipMesh.Meshes.Remove(this);
             ShipMesh.LODMeshes[LOD].Remove(this);
@@ -40,10 +53,10 @@ namespace DAEnerys
         {
             Vector3 min = new Vector3(float.MaxValue);
             Vector3 max = new Vector3(-float.MaxValue);
-            Mesh.CalculateModelMatrix();
-            foreach (Vector3 vertex in Mesh.GetVertices())
+            CalculateModelMatrix();
+            foreach (Vertex vertex in Vertices)
             {
-                Vector3 computedVertex = (Matrix4.CreateTranslation(vertex) * Mesh.ModelMatrix).ExtractTranslation();
+                Vector3 computedVertex = (Matrix4.CreateTranslation(vertex.Position) * ModelMatrix).ExtractTranslation();
                 //Vector3 computedVertex = Vector3.Add(vertex, Mesh.Parent.AbsolutePosition);
                 min.X = Math.Min(min.X, computedVertex.X);
                 min.Y = Math.Min(min.Y, computedVertex.Y);

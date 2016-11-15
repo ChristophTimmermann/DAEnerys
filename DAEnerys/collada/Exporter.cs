@@ -208,7 +208,7 @@ namespace DAEnerys
                     posArray.SetAttributeValue("id", mesh.FormattedName + "-POSITION-array");
                     posArray.SetAttributeValue("count", mesh.VertexCount * 3);
                     StringBuilder positions = new StringBuilder("\n");
-                    foreach (HWVertex vertex in mesh.Vertices)
+                    foreach (Vertex vertex in mesh.Vertices)
                         positions.AppendLine(vertex.Position.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Z.ToString(CultureInfo.InvariantCulture));
                     posArray.SetValue(positions.ToString());
                     source.Add(posArray);
@@ -245,7 +245,7 @@ namespace DAEnerys
                     normalArray.SetAttributeValue("id", mesh.FormattedName + "-Normal0-array");
                     normalArray.SetAttributeValue("count", mesh.VertexCount * 3);
                     StringBuilder normals = new StringBuilder("\n");
-                    foreach (HWVertex vertex in mesh.Vertices)
+                    foreach (Vertex vertex in mesh.Vertices)
                         normals.AppendLine(vertex.Normal.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Z.ToString(CultureInfo.InvariantCulture));
                     normalArray.SetValue(normals.ToString());
                     source.Add(normalArray);
@@ -286,7 +286,7 @@ namespace DAEnerys
                         uv0Array.SetAttributeValue("id", mesh.FormattedName + "-UV0-array");
                         uv0Array.SetAttributeValue("count", mesh.VertexCount * 2);
                         StringBuilder uvs = new StringBuilder("\n");
-                        foreach (HWVertex vertex in mesh.Vertices)
+                        foreach (Vertex vertex in mesh.Vertices)
                             uvs.AppendLine(vertex.UV0.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.UV0.Y.ToString(CultureInfo.InvariantCulture));
                         uv0Array.SetValue(uvs.ToString());
                         source.Add(uv0Array);
@@ -324,7 +324,7 @@ namespace DAEnerys
                         uv1Array.SetAttributeValue("id", mesh.FormattedName + "-UV1-array");
                         uv1Array.SetAttributeValue("count", mesh.VertexCount * 2);
                         StringBuilder uvs = new StringBuilder("\n");
-                        foreach (HWVertex vertex in mesh.Vertices)
+                        foreach (Vertex vertex in mesh.Vertices)
                             uvs.AppendLine(vertex.UV1.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.UV1.Y.ToString(CultureInfo.InvariantCulture));
                         uv1Array.SetValue(uvs.ToString());
                         source.Add(uv1Array);
@@ -367,7 +367,7 @@ namespace DAEnerys
                     int lastCount = int.Parse(addedMesh.PositionArray.Attribute("count").Value);
                     addedMesh.PositionArray.SetAttributeValue("count", lastCount + mesh.VertexCount * 3);
                     StringBuilder positions = new StringBuilder(addedMesh.PositionArray.Value);
-                    foreach (HWVertex vertex in mesh.Vertices)
+                    foreach (Vertex vertex in mesh.Vertices)
                         positions.AppendLine(vertex.Position.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Z.ToString(CultureInfo.InvariantCulture));
                     addedMesh.PositionArray.SetValue(positions.ToString());
 
@@ -379,7 +379,7 @@ namespace DAEnerys
                     lastCount = int.Parse(addedMesh.NormalArray.Attribute("count").Value);
                     addedMesh.NormalArray.SetAttributeValue("count", lastCount + mesh.VertexCount * 3);
                     StringBuilder normals = new StringBuilder(addedMesh.NormalArray.Value);
-                    foreach (HWVertex vertex in mesh.Vertices)
+                    foreach (Vertex vertex in mesh.Vertices)
                         normals.AppendLine(vertex.Normal.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Z.ToString(CultureInfo.InvariantCulture));
                     addedMesh.NormalArray.SetValue(normals.ToString());
 
@@ -393,7 +393,7 @@ namespace DAEnerys
                         lastCount = int.Parse(addedMesh.UV0Array.Attribute("count").Value);
                         addedMesh.UV0Array.SetAttributeValue("count", lastCount + mesh.VertexCount * 2);
                         StringBuilder uvs = new StringBuilder(addedMesh.UV0Array.Value);
-                        foreach (HWVertex vertex in mesh.Vertices)
+                        foreach (Vertex vertex in mesh.Vertices)
                             uvs.AppendLine(vertex.UV0.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.UV0.Y.ToString(CultureInfo.InvariantCulture));
                         addedMesh.UV0Array.SetValue(uvs.ToString());
 
@@ -408,7 +408,7 @@ namespace DAEnerys
                         lastCount = int.Parse(addedMesh.UV1Array.Attribute("count").Value);
                         addedMesh.UV1Array.SetAttributeValue("count", lastCount + mesh.VertexCount * 2);
                         StringBuilder uvs = new StringBuilder(addedMesh.UV1Array.Value);
-                        foreach (HWVertex vertex in mesh.Vertices)
+                        foreach (Vertex vertex in mesh.Vertices)
                             uvs.AppendLine(vertex.UV1.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.UV1.Y.ToString(CultureInfo.InvariantCulture));
                         addedMesh.UV1Array.SetValue(uvs.ToString());
 

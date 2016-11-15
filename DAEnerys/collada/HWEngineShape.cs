@@ -1,16 +1,23 @@
-﻿namespace DAEnerys
+﻿using Assimp;
+
+namespace DAEnerys
 {
-    public class HWEngineShape
+    public class HWEngineShape : HWMesh
     {
-        public HWMesh Mesh;
-        public HWJoint Parent;
-        public string Name;
+        new public HWJoint Parent;
+
+        public override string FormattedName
+        {
+            get
+            {
+                return "ETSH[" + Name + "]";
+            }
+        }
 
         public int EngineShapeListItemIndex;
 
-        public HWEngineShape(HWMesh mesh, HWJoint parent, string name)
+        public HWEngineShape(Mesh assimpMesh, HWJoint parent, string name) : base(assimpMesh)
         {
-            Mesh = mesh;
             Parent = parent;
             Name = name;
 

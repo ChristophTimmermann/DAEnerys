@@ -113,6 +113,8 @@
     </Compile>
     <Compile Include="FPSCounter.cs" />
     <Compile Include="ActionKey.cs" />
+    <Compile Include="GenericMaterial.cs" />
+    <Compile Include="GenericMesh.cs" />
     <Compile Include="Hotkeys.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -272,7 +274,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
+      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

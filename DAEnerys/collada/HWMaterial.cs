@@ -4,7 +4,7 @@ using System.IO;
 
 namespace DAEnerys
 {
-    public class HWMaterial
+    public class HWMaterial : GenericMaterial
     {
         public string Name = string.Empty;
         public int Suffix = -1;
@@ -25,13 +25,6 @@ namespace DAEnerys
                     return "MAT[" + Name + "]_SHD[" + Shader + "]_" + Suffix;
             }
         }
-
-        public Vector3 DiffuseColor = new Vector3(1);
-        public Vector3 SpecularColor = new Vector3(1);
-        public float SpecularExponent = 10;
-        public float Opacity = 1.0f;
-
-        public string DiffusePath = "";
 
         public object MaterialListItem;
 

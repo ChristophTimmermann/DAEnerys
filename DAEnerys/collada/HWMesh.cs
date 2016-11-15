@@ -7,79 +7,22 @@ using System.Drawing;
 
 namespace DAEnerys
 {
-    public class HWVertex
-    {
-        public Vector3 Position;
-        public Vector3 Normal;
-        public Vector3 Color;
-        public Vector2 UV0;
-        public Vector2 UV1;
-        public Vector3 Tangent;
-        public Vector3 Binormal;
-
-        public HWVertex() { }
-        public HWVertex(HWVertex vtx)
-        {
-            this.Position = vtx.Position;
-            this.Normal = vtx.Normal;
-            this.Color = vtx.Color;
-            this.UV0 = vtx.UV0;
-            this.UV1 = vtx.UV1;
-            this.Tangent = vtx.Tangent;
-            this.Binormal = vtx.Binormal;
-        }
-    }
-
-    public class HWMesh
+    public abstract class HWMesh : GenericMesh
     {
         private static bool goblinWarningShown;
 
         private HWNode parent;
-        public HWNode Parent
+        public virtual HWNode Parent
         {
             get { return parent; }
             set { parent = value; value.Name = FormattedName; Renderer.InvalidateView(); Renderer.Invalidate(); }
         }
 
         public string Name;
-        public string FormattedName
-        {
-            get
-            {
-                if (Prefix == "")
-                    return Name;
-
-                string lod = "";
-                if (LOD != -1)
-                    lod = "_LOD[" + LOD + "]";
-
-                string tags = "";
-                if (DoScars)
-                    tags = "_TAGS[DoScar]";
-
-                return Prefix + "[" + Name + "]" + lod + tags;
-            }
-        }
-        public int LOD = -1;
-
-        private bool doScars = false;
-        public bool DoScars { get { return doScars; } set { doScars = value; Parent.Name = FormattedName; } }
-        public string Prefix = "";
-
-        public bool Visible = false;
-        public bool Shaded = true;
-        public bool Translucent = false;
-        public bool VertexColored = true;
-        public Vector3 Scale = Vector3.One;
-
-        public Matrix4 ModelMatrix;
-        public Matrix4 ModelViewProjectionMatrix = Matrix4.Identity;
-
-        public HWVertex[] Vertices;
-        public int[] Indices;
+        public abstract string FormattedName { get; }
 
         private HWMaterial material = new HWMaterial();
-        public HWMaterial Material { get { return material; } set { material = value; Renderer.Invalidate(); } }
+        new public HWMaterial Material { get { return material; } set { material = value; Renderer.Invalidate(); } }
 
         public int VertexCount { get { return mesh.VertexCount; } }
         public int IndiceCount { get { return Indices.Length; } }
@@ -99,7 +42,7 @@ namespace DAEnerys
                 {
                     _max = -float.MaxValue * Vector3.One;
                     _min = float.MaxValue * Vector3.One;
-                    foreach (HWVertex vtx in Vertices)
+                    foreach (Vertex vtx in Vertices)
                     {
                         _max = Vector3.Max(_max, vtx.Position);
                         _min = Vector3.Min(_min, vtx.Position);
@@ -118,7 +61,7 @@ namespace DAEnerys
                 {
                     _max = -float.MaxValue * Vector3.One;
                     _min = float.MaxValue * Vector3.One;
-                    foreach (HWVertex vtx in Vertices)
+                    foreach (Vertex vtx in Vertices)
                     {
                         _max = Vector3.Max(_max, vtx.Position);
                         _min = Vector3.Min(_min, vtx.Position);
@@ -135,7 +78,6 @@ namespace DAEnerys
         public HWMesh(Mesh mesh)
         {
             this.mesh = mesh;
-            Name = mesh.Name;
 
             GetData();
 
@@ -144,7 +86,7 @@ namespace DAEnerys
 
         public void GetData()
         {
-            List<HWVertex> vtxs = new List<HWVertex>();
+            List<Vertex> vtxs = new List<Vertex>();
             Vector3[] Positions = GetVertices();
             Vector3[] Normals = GetNormals();
             Vector3[] Colors = GetColorData();
@@ -155,7 +97,7 @@ namespace DAEnerys
 
             for (int i = 0; i < Positions.Length; ++i)
             {
-                HWVertex vtx = new HWVertex();
+                Vertex vtx = new Vertex();
                 vtx.Position = Positions[i];
                 if (Normals.Length - 1 >= i)
                     vtx.Normal = Normals[i];
@@ -185,93 +127,13 @@ namespace DAEnerys
             Renderer.Invalidate();
         }
 
-        public void ParseMesh()
+        public static HWMesh ParseMesh(Mesh assimpMesh, HWNode parent)
         {
-            #region ShipMesh
-            if (Parent.Name.StartsWith("MULT")) //If visible ship mesh
+            if (assimpMesh.Name.StartsWith("MULT")) //If visible ship mesh
             {
-                string name = "";
-                int lod = 0;
-                ObservableCollection<ShipMeshTag> tags = new ObservableCollection<ShipMeshTag>();
-
-                string[] splitted = Parent.Name.Split('[');
-                int end = -1;
-                for (int i = 0; i < splitted.Length; i++)
-                {
-                    if (i != 0)
-                    {
-                        end = splitted[i].IndexOf(']');
-                        if (splitted[i - 1].EndsWith("MULT")) //Name
-                        {
-                            name = splitted[i].Substring(0, end);
-                        }
-                        else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
-                        {
-                            bool success = int.TryParse(splitted[i].Substring(0, end), out lod);
-                            if(!success)
-                            {
-                                new Problem(ProblemTypes.ERROR, "Failed to parse LOD of ship mesh \"" + Parent.Name + "\".");
-                                return;
-                            }
-                        }
-                        else if (splitted[i - 1].EndsWith("TAGS")) //Tags
-                        {
-                            string tagsString = splitted[i].Substring(0, end);
-                            string[] tagsStrings = tagsString.Split(' ');
-
-                            foreach (string tag in tagsStrings)
-                            {
-                                tags.Add((ShipMeshTag)Enum.Parse(typeof(ShipMeshTag), tag.ToUpper()));
-                            }
-                        }
-                    }
-                }
-
-                if (name == "")
-                {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse name of ship mesh \"" + Parent.Name + "\".");
-                    return;
-                }
-
-                if(!Parent.IsDescendantOf(HWNode.Roots[lod]))
-                {
-                    new Problem(ProblemTypes.WARNING, "Ship mesh \"" + Parent.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
-                    return;
-                }
-
-                HWJoint parentJoint = null;
-                Name = name;
-                Prefix = "MULT";
-
-                if (Parent.Parent != null)
-                {
-                    if (Parent.Parent.Joint != null)
-                        parentJoint = Parent.Parent.Joint;
-                }
-
-                HWShipMesh newShipMesh = null;
-                foreach (HWShipMesh shipMesh in HWScene.ShipMeshes)
-                {
-                    if (shipMesh.Name == name)
-                    {
-                        newShipMesh = shipMesh;
-                        break;
-                    }
-                }
-
-                if (newShipMesh == null) //If a ship mesh does not already exist with that name
-                    newShipMesh = new HWShipMesh(parentJoint, name, tags);
-                else
-                {
-                    if (parentJoint != null)
-                        newShipMesh.Parent = parentJoint;
-                }
-
-                HWShipMeshLOD newLOD = new HWShipMeshLOD(newShipMesh, this, lod);
+                return ParseShipMesh(assimpMesh, parent);
             }
-            #endregion
-            #region GoblinMesh
-            else if (Parent.Name.StartsWith("GOBG")) //If goblin mesh (deprecated)
+            else if (assimpMesh.Name.StartsWith("GOBG")) //If goblin mesh (deprecated)
             {
                 if (!goblinWarningShown)
                 {
@@ -279,165 +141,251 @@ namespace DAEnerys
                     goblinWarningShown = true;
                 }
             }
-            #endregion
-            #region CollisionMesh
-            else if (Parent.Name.StartsWith("COL")) //If collision mesh
+            else if (assimpMesh.Name.StartsWith("COL")) //If collision mesh
             {
-                string name = "";
-
-                string[] splitted = Parent.Name.Split('[');
-                int end = -1;
-                for (int i = 0; i < splitted.Length; i++)
-                {
-                    if (i != 0)
-                    {
-                        end = splitted[i].IndexOf(']');
-                        if (splitted[i - 1].EndsWith("COL")) //Name
-                        {
-                            name = splitted[i].Substring(0, end);
-                        }
-                    }
-                }
-
-                if (name == "")
-                {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse name of collision mesh \"" + Parent.Name + "\".");
-                    return;
-                }
-
-                Name = name;
-                Prefix = "COL";
-
-                HWJoint parentJoint = null;
-
-                if (Parent.Parent != null)
-                {
-                    if (Parent.Parent.Joint != null)
-                        parentJoint = Parent.Parent.Joint;
-                }
-
-                HWCollisionMesh newCollisionMesh = new HWCollisionMesh(this, parentJoint, name);
+                return ParseCollisionMesh(assimpMesh, parent);
             }
-            #endregion
             #region EngineGlow
-            else if (Parent.Name.StartsWith("GLOW")) //If visible glow mesh
+            else if (assimpMesh.Name.StartsWith("GLOW")) //If visible glow mesh
             {
-                string name = "";
-                int lod = -1;
-
-                string[] splitted = Parent.Name.Split('[');
-                int end = -1;
-                for (int i = 0; i < splitted.Length; i++)
-                {
-                    if (i != 0)
-                    {
-                        end = splitted[i].IndexOf(']');
-                        if (splitted[i - 1].EndsWith("GLOW")) //Name
-                        {
-                            name = splitted[i].Substring(0, end);
-                        }
-                        else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
-                        {
-                            bool success = int.TryParse(splitted[i].Substring(0, end), out lod);
-                            if (!success)
-                            {
-                                new Problem(ProblemTypes.ERROR, "Failed to parse LOD of engine glow \"" + Parent.Name + "\".");
-                            }
-                        }
-                    }
-                }
-
-                if (name == "")
-                {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse name of engine glow \"" + Parent.Name + "\".");
-                    return;
-                }
-
-                if (!Parent.IsDescendantOf(HWNode.Roots[lod]))
-                {
-                    new Problem(ProblemTypes.WARNING, "Engine glow \"" + Parent.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
-                    return;
-                }
-
-                Name = name;
-                Prefix = "GLOW";
-
-                HWJoint parentJoint = null;
-
-                if (Parent.Parent != null)
-                {
-                    if (Parent.Parent.Joint != null)
-                        parentJoint = Parent.Parent.Joint;
-                }
-
-                HWEngineGlow newGlowMesh = null;
-                foreach (HWEngineGlow glowMesh in HWScene.EngineGlows)
-                {
-                    if (glowMesh.Name == name)
-                    {
-                        newGlowMesh = glowMesh;
-                        break;
-                    }
-                }
-
-                if (newGlowMesh == null) //If a glow mesh does not already exist with that name
-                    newGlowMesh = new HWEngineGlow(parentJoint, name);
-                else
-                {
-                    if (parentJoint != null)
-                        newGlowMesh.Parent = parentJoint;
-                }
-
-                HWEngineGlowLOD newLOD = new HWEngineGlowLOD(newGlowMesh, this, lod);
-                newGlowMesh.AddLODMesh(newLOD);
+                return ParseEngineGlow(assimpMesh, parent);
             }
             #endregion
             #region EngineShape
-            else if (Parent.Name.StartsWith("ETSH")) //If engine shape
+            else if (assimpMesh.Name.StartsWith("ETSH")) //If engine shape
             {
-                string name = "";
-
-                string[] splitted = Parent.Name.Split('[');
-                int end = -1;
-                for (int i = 0; i < splitted.Length; i++)
-                {
-                    if (i != 0)
-                    {
-                        end = splitted[i].IndexOf(']');
-                        if (splitted[i - 1].EndsWith("ETSH")) //Name
-                        {
-                            name = splitted[i].Substring(0, end);
-                        }
-                    }
-                }
-
-                if (name == "")
-                {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse name of engine shape \"" + Parent.Name + "\".");
-                    return;
-                }
-
-                Name = name;
-                Prefix = "ETSH";
-
-                HWJoint parentJoint = null;
-
-                if (Parent.Parent != null)
-                {
-                    if (Parent.Parent.Joint != null)
-                        parentJoint = Parent.Parent.Joint;
-                }
-
-                HWEngineShape newEngineShape = new HWEngineShape(this, parentJoint, name);
+                return ParseEngineShape(assimpMesh, parent);
             }
             #endregion
             else
             {
-                new Problem(ProblemTypes.WARNING, "Failed to parse mesh \"" + Parent.Name + "\".");
+                new Problem(ProblemTypes.WARNING, "Failed to parse mesh \"" + assimpMesh.Name + "\".");
             }
+
+            return null;
         }
 
-        public void Destroy()
+        private static HWShipMeshLOD ParseShipMesh(Mesh assimpMesh, HWNode parent)
+        {
+            string name = "";
+            int lod = 0;
+            List<ShipMeshTag> tags = new List<ShipMeshTag>();
+
+            string[] splitted = assimpMesh.Name.Split('[');
+            int end = -1;
+            for (int i = 0; i < splitted.Length; i++)
+            {
+                if (i != 0)
+                {
+                    end = splitted[i].IndexOf(']');
+                    if (splitted[i - 1].EndsWith("MULT")) //Name
+                    {
+                        name = splitted[i].Substring(0, end);
+                    }
+                    else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
+                    {
+                        bool success = int.TryParse(splitted[i].Substring(0, end), out lod);
+                        if (!success)
+                        {
+                            new Problem(ProblemTypes.ERROR, "Failed to parse LOD of ship mesh \"" + assimpMesh.Name + "\".");
+                            return null;
+                        }
+                    }
+                    else if (splitted[i - 1].EndsWith("TAGS")) //Tags
+                    {
+                        string tagsString = splitted[i].Substring(0, end);
+                        string[] tagsStrings = tagsString.Split(' ');
+
+                        foreach (string tag in tagsStrings)
+                        {
+                            tags.Add((ShipMeshTag)Enum.Parse(typeof(ShipMeshTag), tag.ToUpper()));
+                        }
+                    }
+                }
+            }
+
+            if (name == "")
+            {
+                new Problem(ProblemTypes.ERROR, "Failed to parse name of ship mesh \"" + assimpMesh.Name + "\".");
+                return null;
+            }
+
+            if (!parent.IsDescendantOf(HWNode.Roots[lod]))
+            {
+                new Problem(ProblemTypes.WARNING, "Ship mesh \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
+                return null;
+            }
+
+            HWJoint parentJoint = null;
+
+            if (parent.Parent != null)
+            {
+                if (parent.Parent.Joint != null)
+                    parentJoint = parent.Parent.Joint;
+            }
+
+            HWShipMesh newShipMesh = null;
+            foreach (HWShipMesh shipMesh in HWScene.ShipMeshes)
+            {
+                if (shipMesh.Name == name)
+                {
+                    newShipMesh = shipMesh;
+                    break;
+                }
+            }
+
+            if (newShipMesh == null) //If a ship mesh does not already exist with that name
+                newShipMesh = new HWShipMesh(parentJoint, name, tags);
+            else
+            {
+                if (parentJoint != null)
+                    newShipMesh.Parent = parentJoint;
+            }
+
+            HWShipMeshLOD newLOD = new HWShipMeshLOD(assimpMesh, newShipMesh, lod);
+            return newLOD;
+        }
+        private static HWCollisionMesh ParseCollisionMesh(Mesh assimpMesh, HWNode parent)
+        {
+            string name = "";
+
+            string[] splitted = assimpMesh.Name.Split('[');
+            int end = -1;
+            for (int i = 0; i < splitted.Length; i++)
+            {
+                if (i != 0)
+                {
+                    end = splitted[i].IndexOf(']');
+                    if (splitted[i - 1].EndsWith("COL")) //Name
+                    {
+                        name = splitted[i].Substring(0, end);
+                    }
+                }
+            }
+
+            if (name == "")
+            {
+                new Problem(ProblemTypes.ERROR, "Failed to parse name of collision mesh \"" + assimpMesh.Name + "\".");
+                return null;
+            }
+
+            HWJoint parentJoint = null;
+
+            if (parent.Parent != null)
+            {
+                if (parent.Parent.Joint != null)
+                    parentJoint = parent.Parent.Joint;
+            }
+
+            HWCollisionMesh newCollisionMesh = new HWCollisionMesh(assimpMesh, parentJoint, name);
+            return newCollisionMesh;
+        }
+        private static HWEngineGlowLOD ParseEngineGlow(Mesh assimpMesh, HWNode parent)
+        {
+            string name = "";
+            int lod = -1;
+
+            string[] splitted = assimpMesh.Name.Split('[');
+            int end = -1;
+            for (int i = 0; i < splitted.Length; i++)
+            {
+                if (i != 0)
+                {
+                    end = splitted[i].IndexOf(']');
+                    if (splitted[i - 1].EndsWith("GLOW")) //Name
+                    {
+                        name = splitted[i].Substring(0, end);
+                    }
+                    else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
+                    {
+                        bool success = int.TryParse(splitted[i].Substring(0, end), out lod);
+                        if (!success)
+                        {
+                            new Problem(ProblemTypes.ERROR, "Failed to parse LOD of engine glow \"" + assimpMesh.Name + "\".");
+                        }
+                    }
+                }
+            }
+
+            if (name == "")
+            {
+                new Problem(ProblemTypes.ERROR, "Failed to parse name of engine glow \"" + assimpMesh.Name + "\".");
+                return null;
+            }
+
+            if (!parent.IsDescendantOf(HWNode.Roots[lod]))
+            {
+                new Problem(ProblemTypes.WARNING, "Engine glow \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
+                return null;
+            }
+
+            HWJoint parentJoint = null;
+
+            if (parent.Parent != null)
+            {
+                if (parent.Parent.Joint != null)
+                    parentJoint = parent.Parent.Joint;
+            }
+
+            HWEngineGlow newGlowMesh = null;
+            foreach (HWEngineGlow glowMesh in HWScene.EngineGlows)
+            {
+                if (glowMesh.Name == name)
+                {
+                    newGlowMesh = glowMesh;
+                    break;
+                }
+            }
+
+            if (newGlowMesh == null) //If a glow mesh does not already exist with that name
+                newGlowMesh = new HWEngineGlow(parentJoint, name);
+            else
+            {
+                if (parentJoint != null)
+                    newGlowMesh.Parent = parentJoint;
+            }
+
+            HWEngineGlowLOD newLOD = new HWEngineGlowLOD(assimpMesh, newGlowMesh, lod);
+            newGlowMesh.AddLODMesh(newLOD);
+            return newLOD;
+        }
+        private static HWEngineShape ParseEngineShape(Mesh assimpMesh, HWNode parent)
+        {
+            string name = "";
+
+            string[] splitted = assimpMesh.Name.Split('[');
+            int end = -1;
+            for (int i = 0; i < splitted.Length; i++)
+            {
+                if (i != 0)
+                {
+                    end = splitted[i].IndexOf(']');
+                    if (splitted[i - 1].EndsWith("ETSH")) //Name
+                    {
+                        name = splitted[i].Substring(0, end);
+                    }
+                }
+            }
+
+            if (name == "")
+            {
+                new Problem(ProblemTypes.ERROR, "Failed to parse name of engine shape \"" + assimpMesh.Name + "\".");
+                return null;
+            }
+
+            HWJoint parentJoint = null;
+
+            if (parent.Parent != null)
+            {
+                if (parent.Parent.Joint != null)
+                    parentJoint = parent.Parent.Joint;
+            }
+
+            HWEngineShape newEngineShape = new HWEngineShape(assimpMesh, parentJoint, name);
+            return newEngineShape;
+        }
+
+        public virtual void Destroy()
         {
             HWScene.Meshes.Remove(this);
         }
@@ -589,7 +537,7 @@ namespace DAEnerys
         private void RecalculateTangents()
         {
             // float tolerance = 0.01f;
-            foreach (HWVertex vtx in Vertices)
+            foreach (Vertex vtx in Vertices)
             {
                 vtx.Tangent = new Vector3();
                 vtx.Binormal = new Vector3();
@@ -705,11 +653,11 @@ namespace DAEnerys
             //    if (n == -1)
             //    {
             //        // no alternate vertex found, clone current, reset tangents incase they have been set
-            //        HWVertex[] tempV = Vertices;
-            //        Vertices = new HWVertex[Vertices.Length + 1];
+            //        Vertex[] tempV = Vertices;
+            //        Vertices = new Vertex[Vertices.Length + 1];
             //        Array.Copy(tempV, Vertices, tempV.Length);
             //        n = Vertices.Length - 1;
-            //        Vertices[n] = new HWVertex(Vertices[v]);
+            //        Vertices[n] = new Vertex(Vertices[v]);
             //        Vertices[n].Tangent = new Vector3();
             //        Vertices[n].Binormal = new Vector3();
 

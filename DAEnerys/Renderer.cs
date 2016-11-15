@@ -268,7 +268,7 @@ namespace DAEnerys
 
                 foreach (HWMesh mesh in HWScene.Meshes)
                 {
-                    foreach (HWVertex vtx in mesh.Vertices)
+                    foreach (Vertex vtx in mesh.Vertices)
                     {
                         mesh_verts.Add(vtx.Position);
                         mesh_normals.Add(vtx.Normal);
