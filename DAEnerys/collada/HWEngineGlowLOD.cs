@@ -5,7 +5,6 @@ namespace DAEnerys
     public class HWEngineGlowLOD : HWMesh
     {
         public HWEngineGlow GlowMesh;
-
         public int LOD;
 
         public override string FormattedName

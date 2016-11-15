@@ -791,6 +791,9 @@ namespace DAEnerys
                         if (selectedShipMesh.LODMeshes[i][0].Visible)
                             listShipMeshLODs.SetItemChecked(i, true);
                     }
+
+                if(selectedShipMesh.LODMeshes[0].Count > 0)
+                    listShipMeshLODs.SelectedIndex = 0;
             }
         }
         public void AddShipMesh(HWShipMesh mesh)
