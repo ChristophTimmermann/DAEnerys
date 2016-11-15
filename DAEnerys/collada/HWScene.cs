@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace DAEnerys
 {
@@ -200,83 +201,19 @@ namespace DAEnerys
             
             reader.Dispose();
         }
+
         private static string FixCollada(string path)
         {
-            string file = File.ReadAllText(path);
+            XDocument doc = XDocument.Load(path);
+            XNamespace ns = doc.Root.GetDefaultNamespace();
 
-            //Fix emission
-            int index = 0;
-            int found = file.IndexOf("<color sid=\"emission\">  ");
-            while (found != -1)
+            foreach(XElement element in doc.Descendants())
             {
-                int pFrom = found + "<color sid=\"emission\">  ".Length;
-                int pTo = file.IndexOf("  </color>", pFrom);
-                string emission = file.Substring(pFrom, pTo - pFrom);
-
-                if (emission.Split(' ').Length == 3)
-                {
-                    file = file.Insert(pTo, " 1.0");
-                }
-                index = pTo;
-                found = file.IndexOf("<color sid=\"emission\">  ", index);
+                if(element.Name == ns + "color")
+                    element.SetValue(element.Value + "1.0");
             }
 
-            //Fix diffuse
-            index = 0;
-            found = file.IndexOf("<color sid=\"diffuse\">  ");
-            while (found != -1)
-            {
-                int pFrom = found + "<color sid=\"diffuse\">  ".Length;
-                int pTo = file.IndexOf(" </color>", pFrom);
-                string diffuse = file.Substring(pFrom, pTo - pFrom);
-
-                if (diffuse.Split(' ').Length == 3)
-                {
-                    file = file.Insert(pTo, " 1.0");
-                }
-                index = pTo;
-                found = file.IndexOf("<color sid=\"diffuse\">  ", index);
-            }
-
-            //Fix specular
-            index = 0;
-            found = file.IndexOf("<color sid=\"specular\">  ");
-            while (found != -1)
-            {
-                int pFrom = found + "<color sid=\"specular\">  ".Length;
-                int pTo = file.IndexOf(" </color>", pFrom);
-                string specular = file.Substring(pFrom, pTo - pFrom);
-
-                if (specular.Split(' ').Length == 3)
-                {
-                    file = file.Insert(pTo, " 1.0");
-                }
-                index = pTo;
-                found = file.IndexOf("<color sid=\"specular\">  ", index);
-            }
-
-            //Fix reflective parameter
-            index = 0;
-            found = file.IndexOf("<reflective>");
-            while (found != -1)
-            {
-                string subStr = file.Substring(found, 500);
-
-                int pFrom = subStr.IndexOf("<color>  ");
-                if (pFrom != -1) //If blender exported file
-                {
-                    int pTo = subStr.IndexOf(" </color>", pFrom);
-                    string reflective = file.Substring(pFrom + found, pTo - pFrom + " </color>".Length);
-                    int paramIndex = file.IndexOf(reflective);
-
-                    file = file.Remove(paramIndex, reflective.Length);
-                    file = file.Insert(paramIndex, "<color sid=\"reflective\">  0.0 0.0 0.0 1.0</color>");
-                }
-
-                found = file.IndexOf("<reflective>", found + 10);
-            }
-
-            File.WriteAllText("colladaBlenderFix.dae", file);
+            File.WriteAllText("colladaBlenderFix.dae", doc.ToString());
             return "colladaBlenderFix.dae";
         }
 
