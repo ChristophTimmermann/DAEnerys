@@ -1262,6 +1262,12 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
+        private void trackBarProgress_Scroll(object sender, EventArgs e)
+        {
+            Renderer.Progress = (float)trackBarProgress.Value / 100;
+
+            Renderer.Invalidate();
+        }
 
         private void buttonAbout_Click(object sender, EventArgs e)
         {

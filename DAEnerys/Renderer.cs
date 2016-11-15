@@ -147,6 +147,7 @@ namespace DAEnerys
         }
 
         public static float ThrusterInterpolation = 1;
+        public static float Progress = 0;
 
         static int editor_pos_buffer = 0;
         static int editor_col_buffer = 0;
@@ -569,8 +570,9 @@ namespace DAEnerys
                 {
                     AttachTexture(surface, "SOB_progress", mesh.Material.ProgressTexture);
                     //surface["SOB_fadeInfo"] = new float[] { 1f, 1f };
-                    //surface["SOB_fadeWindow"] = new float[] { 0.2f, 0.0f, 1.0f };
-                    //surface["SOB_glowStyle"] = new float[] { 1f, 0f, 0f, 0f }; // Fade Delta Mult Glow, Fade Burn Glow?
+                    surface["SOB_fadeInfo"] = new float[] { Progress, Progress };
+                    surface["SOB_fadeWindow"] = new float[] { 0.2f, 0.0f, 1.0f };
+                    surface["SOB_glowStyle"] = new float[] { 1f, 0f, 0f, 0f }; // Fade Delta Mult Glow, Fade Burn Glow?
 
                     if (SOB_DUALINPUT(shader)) // SOB_DUALINPUT
                     {
