@@ -82,7 +82,7 @@ namespace DAEnerys
 
             foreach (HWShipMesh shipMesh in ShipMeshes) //Set all LOD0 meshes visible by default
             {
-                foreach(HWShipMeshLOD shipMeshLOD in shipMesh.LOD0Meshes)
+                foreach (HWShipMeshLOD shipMeshLOD in shipMesh.LODMeshes[0])
                 {
                     shipMeshLOD.Mesh.Visible = true;
                 }

@@ -191,7 +191,7 @@ namespace DAEnerys
             if (Parent.Name.StartsWith("MULT")) //If visible ship mesh
             {
                 string name = "";
-                int lod = 0;
+                int lod = -1;
                 ObservableCollection<ShipMeshTag> tags = new ObservableCollection<ShipMeshTag>();
 
                 string[] splitted = Parent.Name.Split('[');
@@ -207,7 +207,7 @@ namespace DAEnerys
                         }
                         else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
                         {
-                            lod = int.Parse(splitted[i].Substring(0, end));
+                            int.TryParse(splitted[i].Substring(0, end), out lod);
                         }
                         else if (splitted[i - 1].EndsWith("TAGS")) //Tags
                         {
@@ -220,6 +220,17 @@ namespace DAEnerys
                             }
                         }
                     }
+                }
+
+                if (name == "")
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse name of ship mesh \"" + Parent.Name + "\".");
+                    return;
+                }
+                if (lod == -1)
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse LOD of ship mesh \"" + Parent.Name + "\".");
+                    return;
                 }
 
                 HWJoint parentJoint = null;
@@ -297,7 +308,7 @@ namespace DAEnerys
             }
             #endregion
             #region EngineGlow
-            if (Parent.Name.StartsWith("GLOW")) //If visible glow mesh
+            else if (Parent.Name.StartsWith("GLOW")) //If visible glow mesh
             {
                 string name = "";
                 int lod = 0;
@@ -386,6 +397,10 @@ namespace DAEnerys
                 HWEngineShape newEngineShape = new HWEngineShape(this, parentJoint, name);
             }
             #endregion
+            else
+            {
+                new Problem(ProblemTypes.WARNING, "Failed to parse mesh \"" + Parent.Name + "\".");
+            }
         }
 
         public void Destroy()

@@ -31,15 +31,15 @@ namespace DAEnerys
         public ObservableCollection<ShipMeshTag> Tags = new ObservableCollection<ShipMeshTag>();
 
         public List<HWShipMeshLOD> Meshes = new List<HWShipMeshLOD>();
-        public List<HWShipMeshLOD> LOD0Meshes = new List<HWShipMeshLOD>();
-        public List<HWShipMeshLOD> LOD1Meshes = new List<HWShipMeshLOD>();
-        public List<HWShipMeshLOD> LOD2Meshes = new List<HWShipMeshLOD>();
-        public List<HWShipMeshLOD> LOD3Meshes = new List<HWShipMeshLOD>();
+        public List<HWShipMeshLOD>[] LODMeshes = new List<HWShipMeshLOD>[4];
 
         public object ShipMeshListItem;
 
         public HWShipMesh(HWJoint parent, string name, ObservableCollection<ShipMeshTag> tags)
         {
+            for(int i = 0; i < LODMeshes.Length; i++)
+                LODMeshes[i] = new List<HWShipMeshLOD>();
+
             Parent = parent;
             Name = name;
             Tags = tags;
@@ -53,21 +53,7 @@ namespace DAEnerys
         {
             Meshes.Add(lodMesh);
 
-            switch(lodMesh.LOD)
-            {
-                case 0:
-                    LOD0Meshes.Add(lodMesh);
-                    break;
-                case 1:
-                    LOD1Meshes.Add(lodMesh);
-                    break;
-                case 2:
-                    LOD2Meshes.Add(lodMesh);
-                    break;
-                case 3:
-                    LOD3Meshes.Add(lodMesh);
-                    break;
-            }
+            LODMeshes[lodMesh.LOD].Add(lodMesh);
         }
 
         private void TagsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

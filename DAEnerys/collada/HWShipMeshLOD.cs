@@ -32,21 +32,7 @@ namespace DAEnerys
             Mesh = null;
 
             ShipMesh.Meshes.Remove(this);
-            switch (LOD)
-            {
-                case 0:
-                    ShipMesh.LOD0Meshes.Remove(this);
-                    break;
-                case 1:
-                    ShipMesh.LOD1Meshes.Remove(this);
-                    break;
-                case 2:
-                    ShipMesh.LOD2Meshes.Remove(this);
-                    break;
-                case 3:
-                    ShipMesh.LOD3Meshes.Remove(this);
-                    break;
-            }
+            ShipMesh.LODMeshes[LOD].Remove(this);
             ShipMesh = null;
         }
         
