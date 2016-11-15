@@ -769,6 +769,7 @@ namespace DAEnerys
         {
             return
                 shader == "badge" ||
+                shader == "badge_glow" ||
                 shader == "badgeglow";
         }
 
@@ -790,9 +791,11 @@ namespace DAEnerys
         private static bool SOB_GLOWRGB(string shader)
         {
             return
+                shader == "badge_glow" ||
                 shader == "badgeglow" ||
                 shader == "ore" ||
                 shader == "salvage" ||
+                shader == "ship_glow" ||
                 shader == "shipglow";
         }
 
@@ -813,9 +816,11 @@ namespace DAEnerys
         {
             return
                 shader == "badge" ||
+                shader == "badge_glow" ||
                 shader == "badgeglow" ||
                 shader == "bay" ||
                 shader == "ship" ||
+                shader == "ship_glow" ||
                 shader == "shipglow" ||
                 shader == "thruster";
         }

@@ -87,7 +87,7 @@ namespace DAEnerys
             else
             {
                 if (ShowMessageBoxOnLatestVersion)
-                    MessageBox.Show("DAEnerys is the latest version.", "No new version available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("DAEnerys is the latest version (Build " + currentBuild + ").", "No new version available", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 Checking = false;
             }
