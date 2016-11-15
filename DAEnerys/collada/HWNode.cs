@@ -108,8 +108,9 @@ namespace DAEnerys
                     return;
                 }
 
-                string jointName = Name.Split('[')[1];
-                jointName = jointName.Remove(jointName.Length - 1);
+                string[] splitted = Name.Split('[');
+                int end = splitted[1].IndexOf(']');
+                string jointName = splitted[1].Substring(0, end);
                 Joint = new HWJoint(this, parent.Joint, jointName);
             }
             else if (Name.StartsWith("MARK")) //If node is a marker
@@ -120,8 +121,9 @@ namespace DAEnerys
                     return;
                 }
 
-                string markerName = Name.Split('[')[1];
-                markerName = markerName.Remove(markerName.Length - 1);
+                string[] splitted = Name.Split('[');
+                int end = splitted[1].IndexOf(']');
+                string markerName = splitted[1].Substring(0, end);
                 Marker = new HWMarker(this, markerName);
             }
             #region Dockpath
