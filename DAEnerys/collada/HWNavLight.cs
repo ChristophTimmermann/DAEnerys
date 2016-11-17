@@ -1,18 +1,45 @@
 ﻿using System.Collections.Generic;
 using OpenTK;
+using Assimp;
+using System.Globalization;
 
 namespace DAEnerys
 {
-    public class HWNavLight
+    public class HWNavLight : HWNode
     {
         //Statics
         private static float iconSize = 3;
         public static float IconSize { get { return iconSize; } set { iconSize = value; foreach (HWNavLight navLight in HWScene.NavLights) { navLight.Icon.Size = value; } } }
 
-        public HWNode Node;
         public int NavLightListItemIndex;
 
-        public string Name;
+        public override string FormattedName
+        {
+            get
+            {
+                string type = "_Type[" + Style.Name + "]";
+                string size = "_Sz[" + Size.ToString(CultureInfo.InvariantCulture) + "]";
+                string phase = "_Ph[" + Phase.ToString(CultureInfo.InvariantCulture) + "]";
+                string frequency = "_Fr[" + Frequency.ToString(CultureInfo.InvariantCulture) + "]";
+                string color = "_Col[" + Color.X.ToString(CultureInfo.InvariantCulture) + "," + Color.Y.ToString(CultureInfo.InvariantCulture) + "," + Color.Z.ToString(CultureInfo.InvariantCulture) + "]";
+                string distance = "_Dist[" + Distance.ToString(CultureInfo.InvariantCulture) + "]";
+                string flags = "";
+                if (Flags.Count > 0)
+                {
+                    flags = "_Flags[";
+                    for (int i = 0; i < Flags.Count; i++)
+                    {
+                        flags += Flags[i];
+                        if (i < Flags.Count - 1)
+                            flags += " ";
+                    }
+                    flags += "]";
+                }
+
+                return "NAVL[" + Name + "]" + type + size + phase + frequency + color + distance + flags;
+            }
+        }
+
         public HWNavLightStyle Style;
         public float Size;
         public float Phase;
@@ -57,9 +84,8 @@ namespace DAEnerys
             }
         }
 
-        public HWNavLight(HWNode node, string name, HWNavLightStyle style, float size, float phase, float frequency, Vector3 color, float distance, List<NavLightFlag> flags)
+        public HWNavLight(Node assimpNode, HWNode parent, string name, HWNavLightStyle style, float size, float phase, float frequency, Vector3 color, float distance, List<NavLightFlag> flags) : base(assimpNode, parent)
         {
-            Node = node;
             Name = name;
             Style = style;
             Size = size;
@@ -74,9 +100,9 @@ namespace DAEnerys
             {
                 if (!Style.NoSelfLight)
                 {
-                    RenderLight = new Light(new Vector4(node.AbsolutePosition, 1), color, 1 / distance, 0);
+                    RenderLight = new Light(new Vector4(AbsolutePosition, 1), color, 1 / distance, 0);
                 }
-                RenderIcosphere = new EditorIcosphere(node, color);
+                RenderIcosphere = new EditorIcosphere(this, color);
                 RenderIcosphere.Scale = new Vector3(distance);
                 RenderIcosphere.NeverDrawInFront = true;
                 RenderIcosphere.Wireframe = true;
@@ -93,7 +119,7 @@ namespace DAEnerys
                 RenderSprite.Material.DiffuseColor = Color;*/
             }
 
-            Icon = new EditorIcon(Node.AbsolutePosition, EditorIcon.LightbulbTexture);
+            Icon = new EditorIcon(AbsolutePosition, EditorIcon.LightbulbTexture);
             Icon.Visible = true;
             Icon.Size = IconSize;
             Icon.DrawAboveShip = true;

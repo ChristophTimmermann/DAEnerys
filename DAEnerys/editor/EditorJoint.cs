@@ -18,7 +18,7 @@ namespace DAEnerys
 
         public EditorJoint(HWJoint joint) : base()
         {
-            this.HWNode = joint.Node;
+            this.HWNode = joint;
             this.Material = JointMaterial;
 
             Vertices = GetVertices();

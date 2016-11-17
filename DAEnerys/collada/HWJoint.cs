@@ -1,32 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using Assimp;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace DAEnerys
 {
-    public class HWJoint
+    public class HWJoint : HWNode
     {
         public static List<HWJoint> Joints = new List<HWJoint>();
 
         public EditorJoint EditorJoint;
-        public HWNode Node;
 
-        public string Name;
-        public HWJoint Parent;
-        public List<HWJoint> Children = new List<HWJoint>();
+        public override string FormattedName
+        {
+            get
+            {
+                return "JNT[" + Name + "]";
+            }
+        }
 
         public TreeNode TreeNode;
         public object ComboItemShipMeshParent;
         public object ComboItemEngineGlowParent;
         public object ComboItemEngineShapeParent;
 
-        public HWJoint(HWNode node, HWJoint parent, string name)
+        public HWJoint(Node assimpNode, HWNode parent, string name) : base(assimpNode, parent)
         {
-            Parent = parent;
-            Node = node;
             Name = name;
 
+            if (!IsUnderAnyRootNode())
+            {
+                new Problem(ProblemTypes.ERROR, "The joint \"" + Name + "\" is not under any \"ROOT_LOD[X]\" node.");
+                return;
+            }
+
             Joints.Add(this);
-            Program.main.AddJoint(this, parent);
+
+            HWJoint parentJoint = parent as HWJoint;
+            Program.main.AddJoint(this, parentJoint);
 
             //Visualization
             EditorJoint = new EditorJoint(this);

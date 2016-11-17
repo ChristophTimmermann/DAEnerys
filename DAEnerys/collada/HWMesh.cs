@@ -210,7 +210,7 @@ namespace DAEnerys
                 return null;
             }
 
-            if (!parent.IsDescendantOf(HWNode.Roots[lod]))
+            if (!parent.IsDescendantOf(HWNode.RootLODs[lod]))
             {
                 new Problem(ProblemTypes.WARNING, "Ship mesh \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
                 return null;
@@ -219,10 +219,7 @@ namespace DAEnerys
             HWJoint parentJoint = null;
 
             if (parent.Parent != null)
-            {
-                if (parent.Parent.Joint != null)
-                    parentJoint = parent.Parent.Joint;
-            }
+                parentJoint = parent.Parent as HWJoint;
 
             HWShipMesh newShipMesh = null;
             foreach (HWShipMesh shipMesh in HWScene.ShipMeshes)
@@ -270,12 +267,8 @@ namespace DAEnerys
             }
 
             HWJoint parentJoint = null;
-
             if (parent.Parent != null)
-            {
-                if (parent.Parent.Joint != null)
-                    parentJoint = parent.Parent.Joint;
-            }
+                parentJoint = parent.Parent as HWJoint;
 
             HWCollisionMesh newCollisionMesh = new HWCollisionMesh(assimpMesh, parentJoint, name);
             return newCollisionMesh;
@@ -313,19 +306,15 @@ namespace DAEnerys
                 return null;
             }
 
-            if (!parent.IsDescendantOf(HWNode.Roots[lod]))
+            if (!parent.IsDescendantOf(HWNode.RootLODs[lod]))
             {
                 new Problem(ProblemTypes.WARNING, "Engine glow \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
                 return null;
             }
 
             HWJoint parentJoint = null;
-
             if (parent.Parent != null)
-            {
-                if (parent.Parent.Joint != null)
-                    parentJoint = parent.Parent.Joint;
-            }
+                parentJoint = parent.Parent as HWJoint;
 
             HWEngineGlow newGlowMesh = null;
             foreach (HWEngineGlow glowMesh in HWScene.EngineGlows)
@@ -374,12 +363,8 @@ namespace DAEnerys
             }
 
             HWJoint parentJoint = null;
-
             if (parent.Parent != null)
-            {
-                if (parent.Parent.Joint != null)
-                    parentJoint = parent.Parent.Joint;
-            }
+                parentJoint = parent.Parent as HWJoint;
 
             HWEngineShape newEngineShape = new HWEngineShape(assimpMesh, parentJoint, name);
             return newEngineShape;

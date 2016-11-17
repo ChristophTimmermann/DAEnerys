@@ -498,11 +498,17 @@ namespace DAEnerys
             visualScene.SetAttributeValue("name", "scene");
             libVisualScenes.Add(visualScene);
 
-            foreach(HWNode rootNode in HWNode.Roots)
+            foreach(HWNode rootNode in HWNode.RootLODs)
             {
                 if(rootNode != null)
                     AddNode(visualScene, rootNode);
             }
+
+            if (HWNode.RootINFO != null)
+                AddNode(visualScene, HWNode.RootINFO);
+
+            if (HWNode.RootCOL != null)
+                AddNode(visualScene, HWNode.RootCOL);
             #endregion
 
             #region scene
@@ -520,9 +526,9 @@ namespace DAEnerys
         private static void AddNode(XElement parentElement, HWNode node)
         {
             XElement nodeElement = new XElement(ns + "node");
-            nodeElement.SetAttributeValue("name", node.Name);
-            nodeElement.SetAttributeValue("id", node.Name);
-            nodeElement.SetAttributeValue("sid", node.Name);
+            nodeElement.SetAttributeValue("name", node.FormattedName);
+            nodeElement.SetAttributeValue("id", node.FormattedName);
+            nodeElement.SetAttributeValue("sid", node.FormattedName);
             parentElement.Add(nodeElement);
 
             Vector3 pos = node.RelativePosition;

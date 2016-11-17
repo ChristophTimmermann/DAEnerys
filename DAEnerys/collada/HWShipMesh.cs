@@ -15,13 +15,13 @@ namespace DAEnerys
                 if (value != null)
                     foreach (HWShipMeshLOD mesh in Meshes)
                     {
-                        mesh.Parent.Parent = value.Node;
+                        mesh.Parent.Parent = value;
                         mesh.CalculateBoundingBox();
                     }
                 else
                     foreach (HWShipMeshLOD mesh in Meshes)
                     {
-                        mesh.Parent.Parent = HWNode.Roots[mesh.LOD];
+                        mesh.Parent.Parent = HWNode.RootLODs[mesh.LOD];
                         mesh.CalculateBoundingBox();
                     }
             }

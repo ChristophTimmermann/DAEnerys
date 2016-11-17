@@ -7,7 +7,7 @@ namespace DAEnerys
 {
     public class HWNode
     {
-        public static HWNode[] Roots = new HWNode[6];
+        public static HWNode[] RootLODs = new HWNode[4];
         public static HWNode RootINFO;
         public static HWNode RootCOL;
         public static HWNode HoldDock;
@@ -18,6 +18,8 @@ namespace DAEnerys
         private HWNode parent;
         public HWNode Parent { get { return parent; } set { if(parent != null) parent.Children.Remove(this); parent = value; if(parent != null) parent.Children.Add(this); CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } }
         public string Name;
+        public virtual string FormattedName { get { return Name; } }
+
         public Matrix4 WorldMatrix = Matrix4.Identity;
         public Matrix4 RelativeWorldMatrix = Matrix4.Identity;
 
@@ -37,28 +39,36 @@ namespace DAEnerys
             }
         }
 
-        public HWJoint Joint;
-        public HWMarker Marker;
         public HWDockpath Dockpath;
-        public HWDockSegment DockSegment;
-        public HWNavLight NavLight;
 
-        private Node node;
-
-        public HWNode(Node node, HWNode parent)
+        public HWNode(Node assimpNode, HWNode parent)
         {
             HWScene.Nodes.Add(this);
-            this.node = node;
-            Name = node.Name;
+            Name = assimpNode.Name;
 
-            WorldMatrix = new Matrix4(node.Transform.A1, node.Transform.B1, node.Transform.C1, node.Transform.D1, node.Transform.A2, node.Transform.B2, node.Transform.C2, node.Transform.D2, node.Transform.A3, node.Transform.B3, node.Transform.C3, node.Transform.D3, node.Transform.A4, node.Transform.B4, node.Transform.C4, node.Transform.D4);
+            WorldMatrix = new Matrix4(assimpNode.Transform.A1, assimpNode.Transform.B1, assimpNode.Transform.C1, assimpNode.Transform.D1, assimpNode.Transform.A2, assimpNode.Transform.B2, assimpNode.Transform.C2, assimpNode.Transform.D2, assimpNode.Transform.A3, assimpNode.Transform.B3, assimpNode.Transform.C3, assimpNode.Transform.D3, assimpNode.Transform.A4, assimpNode.Transform.B4, assimpNode.Transform.C4, assimpNode.Transform.D4);
             RelativeWorldMatrix = WorldMatrix;
 
             this.Parent = parent;
 
-            if (Name.StartsWith("ROOT_LOD")) //If node is a root LOD node
+            //Add meshes
+            foreach (int mesh in assimpNode.MeshIndices)
             {
-                string[] split = Name.Split('[');
+                Mesh assimpMesh = HWScene.Collada.Meshes[mesh];
+                Log.WriteLine("Trying to parse mesh \"" + assimpMesh.Name + "\".");
+
+                HWMesh newMesh = HWMesh.ParseMesh(assimpMesh, this);
+
+                if (newMesh != null)
+                    this.AddMesh(newMesh);
+            }
+        }
+
+        public static HWNode ParseNode(Node assimpNode, HWNode parent)
+        {
+            if (assimpNode.Name.StartsWith("ROOT_LOD")) //If node is a root LOD node
+            {
+                string[] split = assimpNode.Name.Split('[');
 
                 if (split.Length > 1)
                 {
@@ -70,72 +80,61 @@ namespace DAEnerys
 
                     if (success)
                     {
-                        if (Roots[lod] != null)
+                        if (RootLODs[lod] != null)
                             new Problem(ProblemTypes.ERROR, "There are multiple \"ROOT_LOD[" + lod + "]\" nodes.");
 
-                        Roots[lod] = this;
+                        RootLODs[lod] = new HWNode(assimpNode, parent);
+                        return RootLODs[lod];
                     }
                 }
             }
-            else if (Name.StartsWith("ROOT_COL")) //If node is a root COL node
+            else if (assimpNode.Name.StartsWith("ROOT_COL")) //If node is a root COL node
             {
                 if (RootCOL != null)
                     new Problem(ProblemTypes.ERROR, "There are multiple \"ROOT_COL\" nodes.");
 
-                Roots[4] = this;
-                RootCOL = this;
+                RootCOL = new HWNode(assimpNode, parent);
+                return RootCOL;
             }
-            else if (Name.StartsWith("ROOT_INFO")) //If node is a root INFO node
+            else if (assimpNode.Name.StartsWith("ROOT_INFO")) //If node is a root INFO node
             {
                 if (RootINFO != null)
                     new Problem(ProblemTypes.ERROR, "There are multiple \"ROOT_INFO\" nodes.");
 
-                Roots[5] = this;
-                RootINFO = this;
+                RootINFO = new HWNode(assimpNode, parent);
+                return RootINFO;
             }
-            else if (Name == "HOLD_DOCK") //If node is the holder for dockpaths
+            else if (assimpNode.Name == "HOLD_DOCK") //If node is the holder for dockpaths
             {
                 if (HoldDock != null)
                     new Problem(ProblemTypes.ERROR, "There are multiple \"HOLD_DOCK\" nodes.");
 
-                HoldDock = this;
+                HoldDock = new HWNode(assimpNode, parent);
+                return HoldDock;
             }
-            else if (Name.StartsWith("JNT")) //If node is a joint
+            else if (assimpNode.Name.StartsWith("JNT")) //If node is a joint
             {
-                if (!IsUnderAnyRootNode())
-                {
-                    new Problem(ProblemTypes.ERROR, "The joint \"" + Name + "\" is not under any \"ROOT_LOD[X]\" node.");
-                    return;
-                }
-
-                string[] splitted = Name.Split('[');
+                string[] splitted = assimpNode.Name.Split('[');
                 int end = splitted[1].IndexOf(']');
                 string jointName = splitted[1].Substring(0, end);
-                Joint = new HWJoint(this, parent.Joint, jointName);
-            }
-            else if (Name.StartsWith("MARK")) //If node is a marker
-            {
-                if (!IsUnderAnyRootNode())
-                {
-                    new Problem(ProblemTypes.ERROR, "The marker \"" + Name + "\" is not under any \"ROOT_LOD[X]\" node.");
-                    return;
-                }
 
-                string[] splitted = Name.Split('[');
+                return new HWJoint(assimpNode, parent, jointName);
+            }
+            else if (assimpNode.Name.StartsWith("MARK")) //If node is a marker
+            {
+                string[] splitted = assimpNode.Name.Split('[');
                 int end = splitted[1].IndexOf(']');
                 string markerName = splitted[1].Substring(0, end);
-                Marker = new HWMarker(this, markerName);
+
+                return new HWMarker(assimpNode, parent, markerName);
             }
             #region Dockpath
-            else if (Name.StartsWith("DOCK")) //If node is a dockpath
+            else if (assimpNode.Name.StartsWith("DOCK")) //If node is a dockpath
             {
-                bool isUnderHoldDock = false;
-                    if (this.IsDescendantOf(HoldDock))
-                        isUnderHoldDock = true;
-                if(!isUnderHoldDock)
+                if (parent != HoldDock)
                 {
-                    new Problem(ProblemTypes.ERROR, "The dockpath \"" + Name + "\" is not under the HOLD_DOCK node.");
-                    return;
+                    new Problem(ProblemTypes.ERROR, "The dockpath \"" + assimpNode.Name + "\" is not under the HOLD_DOCK node.");
+                    return null;
                 }
 
                 string pathName = "";
@@ -143,7 +142,7 @@ namespace DAEnerys
                 string[] links = new string[0];
                 List<DockpathFlag> flags = new List<DockpathFlag>();
 
-                string[] splitted = Name.Split('[');
+                string[] splitted = assimpNode.Name.Split('[');
                 int end = -1;
 
                 for (int i = 0; i < splitted.Length; i++)
@@ -165,7 +164,7 @@ namespace DAEnerys
                             string linksString = splitted[i].Substring(0, end);
 
                             //Don't load empty links
-                            if(linksString.Trim().Length > 0)
+                            if (linksString.Trim().Length > 0)
                                 links = linksString.Replace(" ", "").Split(',');
                         }
                         else if (splitted[i - 1].EndsWith("Flags")) //Flags
@@ -190,79 +189,76 @@ namespace DAEnerys
                         }
                     }
                 }
-                Dockpath = new HWDockpath(this, pathName, families, links, flags);
+                HWNode newNode = new HWNode(assimpNode, parent);
+                new HWDockpath(newNode, pathName, families, links, flags);
+                return newNode;
             }
             #endregion
 
             #region DockSegment
-            else if (Name.StartsWith("SEG")) //If node is a docksegment
+            else if (assimpNode.Name.StartsWith("SEG")) //If node is a docksegment
             {
-                if (!IsUnderAnyDockpath())
+                //Check if segment is child of dockpath
+                if (!parent.Name.StartsWith("DOCK"))
                 {
-                    new Problem(ProblemTypes.ERROR, "The dockpath segment \"" + Name + "\" is not under any dockpath.");
-                    return;
+                    new Problem(ProblemTypes.WARNING, "Dockpath segment \"" + assimpNode.Name + "\" is not a child of a dockpath.");
                 }
 
-                //Check if segment is child of dockpath
-                if (this.Parent.Dockpath != null)
+                int id = -1;
+                float tolerance = 0;
+                float speed = 0;
+                List<DockSegmentFlag> flags = new List<DockSegmentFlag>();
+
+                string[] splitted = assimpNode.Name.Split('_');
+                int start = -1;
+                int end = -1;
+                foreach (string split in splitted)
                 {
-                    int id = -1;
-                    float tolerance = 0;
-                    float speed = 0;
-                    List<DockSegmentFlag> flags = new List<DockSegmentFlag>();
-
-                    string[] splitted = Name.Split('_');
-                    int start = -1;
-                    int end = -1;
-                    foreach (string split in splitted)
+                    if (split.StartsWith("SEG")) //ID
                     {
-                        if (split.StartsWith("SEG")) //ID
-                        {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            id = int.Parse(split.Substring(start, end - start));
-                        }
-                        else if (split.StartsWith("Tol")) //Tolerance
-                        {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            tolerance = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                        else if (split.StartsWith("Spd")) //Speed
-                        {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            speed = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                        else if (split.StartsWith("Flags")) //Flags
-                        {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            string flagsString = split.Substring(start, end - start);
-                            string[] flagsStrings = flagsString.Split(' ');
+                        start = split.IndexOf('[') + 1;
+                        end = split.IndexOf(']');
+                        id = int.Parse(split.Substring(start, end - start));
+                    }
+                    else if (split.StartsWith("Tol")) //Tolerance
+                    {
+                        start = split.IndexOf('[') + 1;
+                        end = split.IndexOf(']');
+                        tolerance = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    else if (split.StartsWith("Spd")) //Speed
+                    {
+                        start = split.IndexOf('[') + 1;
+                        end = split.IndexOf(']');
+                        speed = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    else if (split.StartsWith("Flags")) //Flags
+                    {
+                        start = split.IndexOf('[') + 1;
+                        end = split.IndexOf(']');
+                        string flagsString = split.Substring(start, end - start);
+                        string[] flagsStrings = flagsString.Split(' ');
 
-                            foreach (string flag in flagsStrings)
-                            {
-                                DockSegmentFlag newFlag;
-                                bool success = Enum.TryParse(flag.ToUpper(), out newFlag);
+                        foreach (string flag in flagsStrings)
+                        {
+                            DockSegmentFlag newFlag;
+                            bool success = Enum.TryParse(flag.ToUpper(), out newFlag);
 
-                                //Check if flag is valid
-                                if (success)
-                                    flags.Add(newFlag);
-                                else
-                                    new Problem(ProblemTypes.WARNING, "Unknown dockpath segment flag \"" + flag + "\" in dockpath \"" + this.Parent.Dockpath.Name + "\".");
-                            }
+                            //Check if flag is valid
+                            if (success)
+                                flags.Add(newFlag);
+                            else
+                                new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in dockpath segment \"" + assimpNode.Name + "\".");
                         }
                     }
-                    DockSegment = new HWDockSegment(this, id, tolerance, speed, flags);
                 }
-                else
-                    new Problem(ProblemTypes.WARNING, "Dockpath segment \"" + Name + "\" is not a child of a dockpath.");
+
+                return new HWDockSegment(assimpNode, parent, id, tolerance, speed, flags);
             }
             #endregion
 
             #region NavLight
-            else if (Name.StartsWith("NAVL")) //If node is a navlight
+            else if (assimpNode.Name.StartsWith("NAVL")) //If node is a navlight
             {
                 string lightName = "";
                 string type = "default";
@@ -273,7 +269,7 @@ namespace DAEnerys
                 float distance = 0;
                 List<NavLightFlag> flags = new List<NavLightFlag>();
 
-                string[] splitted = Name.Split('[');
+                string[] splitted = assimpNode.Name.Split('[');
                 int end = -1;
 
                 for (int i = 0; i < splitted.Length; i++)
@@ -329,39 +325,26 @@ namespace DAEnerys
 
                 HWNavLightStyle navLightStyle = null;
                 //Check if navlight style is valid
-                foreach(HWNavLightStyle style in HWData.NavLightStyles)
+                foreach (HWNavLightStyle style in HWData.NavLightStyles)
                 {
-                    if(style.Name == type)
+                    if (style.Name == type)
                     {
                         navLightStyle = style;
                         break;
                     }
                 }
 
-                if(navLightStyle != null)
-                    NavLight = new HWNavLight(this, lightName, navLightStyle, size, phase, frequency, color, distance, flags);
+                if (navLightStyle != null)
+                    return new HWNavLight(assimpNode, parent, lightName, navLightStyle, size, phase, frequency, color, distance, flags);
                 else
+                {
                     new Problem(ProblemTypes.WARNING, "Navlight style \"" + type + "\" not found. Skipping navlight \"" + lightName + "\".");
+                    return null;
+                }
             }
             #endregion
 
-            //Add meshes
-            foreach (int mesh in node.MeshIndices)
-            {
-                Mesh assimpMesh = HWScene.Collada.Meshes[mesh];
-                Log.WriteLine("Trying to parse mesh \"" + assimpMesh.Name + "\".");
-
-                HWMesh newMesh = HWMesh.ParseMesh(assimpMesh, this);
-
-                if(newMesh != null)
-                    this.AddMesh(newMesh);
-            }
-
-            //Add children
-            foreach(Node childNode in node.Children)
-            {
-                HWNode newChild = new HWNode(childNode, this);
-            }
+            return new HWNode(assimpNode, parent);
         }
 
         public void AddMesh(HWMesh mesh)
@@ -400,7 +383,7 @@ namespace DAEnerys
         public bool IsUnderAnyRootNode()
         {
             for (int i = 0; i < 3; i++)
-                if (this.IsDescendantOf(Roots[i]))
+                if (this.IsDescendantOf(RootLODs[i]))
                     return true;
 
             return false;

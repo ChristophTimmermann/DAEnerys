@@ -68,8 +68,8 @@ namespace DAEnerys
 
             LoadMaterials();
 
-            RootNode = new HWNode(Collada.RootNode, null);
-
+            ParseNode(Collada.RootNode, null);
+  
             foreach(HWDockpath dockpath in Dockpaths)
             {
                 dockpath.SetupVisualization(); //Create 3D lines and stuff
@@ -105,6 +105,20 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
             logStream.Detach();
+        }
+
+        private static void ParseNode(Node assimpNode, HWNode parent)
+        {
+            HWNode newNode = HWNode.ParseNode(assimpNode, parent);
+
+            if(HWScene.RootNode == null)
+                if (assimpNode == Collada.RootNode)
+                    HWScene.RootNode = newNode;
+
+            foreach(Node assNode in assimpNode.Children)
+            {
+                ParseNode(assNode, newNode);
+            }
         }
 
         private static void LoadMaterials()
@@ -320,7 +334,7 @@ namespace DAEnerys
             Images.Clear();
 
             Nodes.Clear();
-            HWNode.Roots = new HWNode[6];
+            HWNode.RootLODs = new HWNode[4];
             HWNode.RootCOL = null;
             HWNode.RootINFO = null;
             HWNode.HoldDock = null;

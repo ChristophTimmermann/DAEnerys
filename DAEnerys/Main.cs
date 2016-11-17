@@ -332,8 +332,18 @@ namespace DAEnerys
             {
                 if (parent.Parent != null)
                 {
-                    parent.Parent.TreeNode.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
-                    joint.TreeNode = newNode;
+                    HWJoint parentJoint = parent.Parent as HWJoint;
+
+                    if (parentJoint != null)
+                    {
+                        parentJoint.TreeNode.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
+                        joint.TreeNode = newNode;
+                    }
+                    else
+                    {
+                        jointsTree.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
+                        joint.TreeNode = newNode;
+                    }
                 }
                 else
                 {
