@@ -57,6 +57,13 @@ namespace NewShaderManifest
             GL.BindTexture(TextureTarget.Texture2D, id);
         }
 
+        private static void AttachTexture3D(int unit, int id)
+        {
+            TextureUnit tunit = TextureUnit.Texture0 + unit;
+            GL.ActiveTexture(tunit);
+            GL.BindTexture(TextureTarget.Texture3D, id);
+        }
+
         public void AssignTexture(string name, string path, int id)
         {
             //if (!Textures.IsSet(name)) throw new ArgumentException();
@@ -64,6 +71,15 @@ namespace NewShaderManifest
             dynamic var = this[name];
             if (var == null) return;
             AttachTexture(var, id);
+        }
+
+        public void AssignTexture3D(string name, string path, int id)
+        {
+            //if (!Textures.IsSet(name)) throw new ArgumentException();
+            AssignedTextures[name] = path;
+            dynamic var = this[name];
+            if (var == null) return;
+            AttachTexture3D(var, id);
         }
 
         //private void AssignTextures()
