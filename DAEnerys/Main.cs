@@ -33,11 +33,13 @@ namespace DAEnerys
         public Dictionary<HWJoint, object> EngineShapeParentComboItems = new Dictionary<HWJoint, object>();
 
         public Dictionary<object, HWMaterial> MaterialListItems = new Dictionary<object, HWMaterial>();
+        public Dictionary<string, object> MaterialShaderComboItems = new Dictionary<string, object>();
 
         public bool DrawNavLightRadius;
 
         private bool problemsVisible;
         private bool ignoreShipMeshDoScarCheck;
+        private bool ignoreMaterialShaderChanged;
 
         const int MAX_MATERIALS_ON_MESH = 8;
 
@@ -92,6 +94,10 @@ namespace DAEnerys
 
             if(Updater.CheckForUpdatesOnStart)
                 Updater.CheckForUpdates();
+
+            //Fill shader combo box
+            foreach (string shader in NewShaderManifest.Manifest.HODAliases.Keys)
+                comboMaterialShader.Items.Add(shader);
 
             //Open DAE from arguments
             if (Program.OPEN_PATH != null)
@@ -196,7 +202,6 @@ namespace DAEnerys
 
             listMaterials.Items.Clear();
             MaterialListItems.Clear();
-            boxMaterialShader.Clear();
             listMaterialTextures.Items.Clear();
             comboMaterialFormat.Items.Clear();
 
@@ -1150,14 +1155,21 @@ namespace DAEnerys
         private void listMaterials_SelectedIndexChanged(object sender, EventArgs e)
         {
             listMaterialTextures.Items.Clear();
+            comboMaterialShader.Enabled = false;
+            comboMaterialFormat.Enabled = false;
 
             if (listMaterials.SelectedItem == null)
                 return;
 
             HWMaterial selectedMaterial = MaterialListItems[listMaterials.SelectedItem];
 
-            //Set shader name
-            boxMaterialShader.Text = selectedMaterial.Shader;
+            //Set shader combo
+            ignoreMaterialShaderChanged = true;
+            comboMaterialShader.SelectedItem = selectedMaterial.Shader;
+            ignoreMaterialShaderChanged = false;
+
+            comboMaterialShader.Enabled = true;
+            comboMaterialFormat.Enabled = true;
 
             //Fill texture list
             foreach (HWImage image in selectedMaterial.Images)
@@ -1187,6 +1199,31 @@ namespace DAEnerys
                 material.MaterialListItem = item;
                 MaterialListItems.Add(item, material);
             }
+        }
+        private void comboMaterialShader_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ignoreMaterialShaderChanged)
+                return;
+
+            HWMaterial selectedMaterial = MaterialListItems[listMaterials.SelectedItem];
+            if (selectedMaterial == null)
+                return;
+
+            selectedMaterial.Shader = comboMaterialShader.SelectedItem.ToString();
+            selectedMaterial.LoadTextures();
+        }
+        private void comboMaterialFormat_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            HWMaterial selectedMaterial = MaterialListItems[listMaterials.SelectedItem];
+            if (selectedMaterial == null)
+                return;
+
+            ImageFormat format;
+            if (comboMaterialFormat.SelectedItem.ToString() != "8888")
+                Enum.TryParse(comboMaterialFormat.SelectedItem.ToString(), out format);
+            else
+                format = ImageFormat.UNCOMPRESSED;
+            selectedMaterial.Format = format;
         }
 
         private void trackBarThrusterStrength_Scroll(object sender, EventArgs e)

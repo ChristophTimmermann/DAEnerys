@@ -28,6 +28,7 @@ namespace DAEnerys
             ShipMesh = shipMesh;
             LOD = lod;
             Name = shipMesh.Name;
+            Parent = shipMesh.Parent;
 
             if (HWScene.Materials[assimpMesh.MaterialIndex] != null)
                 if (HWScene.Materials[assimpMesh.MaterialIndex].Valid)
