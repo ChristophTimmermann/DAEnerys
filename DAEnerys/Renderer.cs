@@ -19,6 +19,8 @@ namespace DAEnerys
         public static bool MeshDataInvalid = false;
 
         public static HWTexture DefaultTexture;
+        public static HWTexture3D EnvironmentTexture0 = null;
+        public static HWTexture3D EnvironmentTexture1 = null;
 
         public static Light AmbientLight = new Light(new Vector4(0), new Vector3(0.4f), 0, 0.05f);
 
@@ -502,6 +504,14 @@ namespace DAEnerys
                 surface.AssignTexture(name, "", 0);
         }
 
+        private static void AttachTexture3D(Surface surface, string name, HWTexture3D tex)
+        {
+            if (tex != null)
+                surface.AssignTexture3D(name, tex.Path, tex.ID);
+            else
+                surface.AssignTexture3D(name, "", 0);
+        }
+
         private static void AttachTexture(Surface surface, string name, string path, int id)
         {
             surface.AssignTexture(name, path, id);
@@ -602,8 +612,12 @@ namespace DAEnerys
                 }
 
                 AttachTexture(surface, "SOB_normal", mesh.Material.NormalTexture);
-                AttachTexture(surface, "inTexEnv0", BlackTexture);
-                AttachTexture(surface, "inTexEnv1", BlackTexture);
+
+                if (!SOB_BAYLIGHT(shader))
+                {
+                    AttachTexture3D(surface, "inTexEnv0", EnvironmentTexture0);
+                    AttachTexture3D(surface, "inTexEnv1", EnvironmentTexture1);
+                }
 
                 if (SOB_TEAM(shader))
                 {
