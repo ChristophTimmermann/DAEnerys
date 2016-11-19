@@ -22,14 +22,37 @@ namespace DAEnerys
             numSOBCloak.Value = (decimal)Renderer.SOBCloak;
             numSOBClip.Value = (decimal)Renderer.SOBClip;
 
-            numPaintCurve.Value = (decimal)Renderer.PaintCurve;
-            numPaintScale.Value = (decimal)Renderer.PaintScale;
-            numPaintOffset.Value = (decimal)Renderer.PaintOffset;
-
             numClipDist.Minimum = (decimal)Renderer.MinClipDistance;
             numClipDist.Maximum = (decimal)Renderer.MaxClipDistance;
             numClipDist.Value = (decimal)Renderer.ClipDistance;
             numClipDist.Increment = (numClipDist.Maximum - numClipDist.Minimum) / 100;
+
+            numPaintStyleCurve.Value = (decimal)Renderer.PaintStyleCurve;
+            numPaintStyleScale.Value = (decimal)Renderer.PaintStyleScale;
+            numPaintStyleOffset.Value = (decimal)Renderer.PaintStyleOffset;
+
+            numDiffFren.Value = (decimal)Renderer.SurfaceDiff.Fren;
+            numFrenBias.Value = (decimal)Renderer.SurfaceFren.Bias;
+            numFrenCurve.Value = (decimal)Renderer.SurfaceFren.Curve;
+            numFrenPower.Value = (decimal)Renderer.SurfaceFren.Power;
+            numGlossBias.Value = (decimal)Renderer.SurfaceGloss.Bias;
+            numGlossCurve.Value = (decimal)Renderer.SurfaceGloss.Curve;
+            numGlossScale.Value = (decimal)Renderer.SurfaceGloss.Scale;
+            numGlowFren.Value = (decimal)Renderer.SurfaceGlow.Fren;
+            numGlowPower.Value = (decimal)Renderer.SurfaceGlow.Power;
+            numPaintBias.Value = (decimal)Renderer.SurfacePaint.Bias;
+            numPaintCurve.Value = (decimal)Renderer.SurfacePaint.Curve;
+            numPaintDim.Value = (decimal)Renderer.SurfacePaint.Dim;
+            numPaintScale.Value = (decimal)Renderer.SurfacePaint.Scale;
+            numPeakBase.Value = (decimal)Renderer.SurfacePeak.Base;
+            numPeakFren.Value = (decimal)Renderer.SurfacePeak.Fren;
+            numPeakPaint.Value = (decimal)Renderer.SurfacePeak.Paint;
+            numPeakScar.Value = (decimal)Renderer.SurfacePeak.Scar;
+            numReflAddMix.Value = (decimal)Renderer.SurfaceRefl.AddMix;
+            numReflFren.Value = (decimal)Renderer.SurfaceRefl.Fren;
+            numReflPower.Value = (decimal)Renderer.SurfaceRefl.Power;
+            numSpecFren.Value = (decimal)Renderer.SurfaceSpec.Fren;
+            numSpecPower.Value = (decimal)Renderer.SurfaceSpec.Power;
 
             cbxConfigOptions.Items.Clear();
             foreach (string opt in ManifestConfig.Options.Keys)
@@ -134,30 +157,6 @@ namespace DAEnerys
             //{
             //    Log.WriteLine("Failed to load \"" + Path.Combine(Program.EXECUTABLE_PATH, "settings.xml") + "\".");
             //}
-        }
-
-        private void numPaintCurve_ValueChanged(object sender, EventArgs e)
-        {
-            Renderer.PaintCurve = (float)numPaintCurve.Value;
-
-            Renderer.InvalidateView();
-            Renderer.Invalidate();
-        }
-
-        private void numPaintScale_ValueChanged(object sender, EventArgs e)
-        {
-            Renderer.PaintScale = (float)numPaintScale.Value;
-
-            Renderer.InvalidateView();
-            Renderer.Invalidate();
-        }
-
-        private void numPaintOffset_ValueChanged(object sender, EventArgs e)
-        {
-            Renderer.PaintOffset = (float)numPaintOffset.Value;
-
-            Renderer.InvalidateView();
-            Renderer.Invalidate();
         }
 
         private bool ignore = false;
@@ -286,6 +285,206 @@ namespace DAEnerys
         private void numDeathRatio_ValueChanged(object sender, EventArgs e)
         {
             Renderer.DeathRatio = (float)numDeathRatio.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numDiffFren_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceDiff.Fren = (float)numDiffFren.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+        
+        private void numGlowPower_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceGlow.Power = (float)numGlowPower.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numGlowFren_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceGlow.Fren = (float)numGlowFren.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numSpecPower_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceSpec.Power = (float)numSpecPower.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numSpecFren_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceSpec.Fren = (float)numSpecFren.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numGlossCurve_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceGloss.Curve = (float)numGlossCurve.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numGlossScale_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceGloss.Scale = (float)numGlossScale.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numGlossBias_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceGloss.Bias = (float)numGlossBias.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numReflPower_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceRefl.Power = (float)numReflPower.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numReflFren_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceRefl.Fren = (float)numReflFren.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numReflAddMix_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceRefl.AddMix = (float)numReflAddMix.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numFrenPower_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceFren.Power = (float)numFrenPower.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numFrenBias_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceFren.Bias = (float)numFrenBias.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numFrenCurve_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfaceFren.Curve = (float)numFrenCurve.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPaintCurve_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfacePaint.Curve = (float)numPaintCurve.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPaintScale_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfacePaint.Scale = (float)numPaintScale.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPaintOffset_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfacePaint.Bias = (float)numPaintBias.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPaintDim_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfacePaint.Dim = (float)numPaintDim.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPeakBase_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfacePeak.Base = (float)numPeakBase.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPeakPaint_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfacePeak.Paint = (float)numPeakPaint.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPeakFren_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfacePeak.Fren = (float)numPeakFren.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPeakScar_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.SurfacePeak.Scar = (float)numPeakScar.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPaintStyleCurve_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.PaintStyleCurve = (float)numPaintStyleCurve.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPaintStyleScale_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.PaintStyleScale = (float)numPaintStyleScale.Value;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void numPaintStyleOffset_ValueChanged(object sender, EventArgs e)
+        {
+            Renderer.PaintStyleOffset = (float)numPaintStyleOffset.Value;
 
             Renderer.InvalidateView();
             Renderer.Invalidate();

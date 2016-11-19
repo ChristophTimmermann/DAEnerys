@@ -74,8 +74,8 @@ namespace NewShaderManifest
 
         public static void ReloadManifest()
         {
-            //Surfaces.Clear();
-            //Programs.Clear();
+            LoadedSurfaces.Clear();
+            LoadedPrograms.Clear();
 
             string path = GetDataPath(@"shaders\master.manifest");
             if (!string.IsNullOrEmpty(path))

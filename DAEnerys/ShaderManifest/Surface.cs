@@ -61,7 +61,7 @@ namespace NewShaderManifest
         {
             TextureUnit tunit = TextureUnit.Texture0 + unit;
             GL.ActiveTexture(tunit);
-            GL.BindTexture(TextureTarget.Texture3D, id);
+            GL.BindTexture(TextureTarget.TextureCubeMap, id);
         }
 
         public void AssignTexture(string name, string path, int id)

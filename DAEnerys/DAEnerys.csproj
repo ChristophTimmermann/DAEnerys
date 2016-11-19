@@ -55,6 +55,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -86,7 +87,7 @@
     <Compile Include="collada\HWShipMesh.cs" />
     <Compile Include="collada\HWEngineGlowLOD.cs" />
     <Compile Include="collada\HWShipMeshLOD.cs" />
-    <Compile Include="collada\HWTexture3D.cs" />
+    <Compile Include="collada\HWTextureCube.cs" />
     <Compile Include="data\HWBadge.cs" />
     <Compile Include="data\HWNavLightStyle.cs" />
     <Compile Include="Dump.cs" />
@@ -122,11 +123,15 @@
     <Compile Include="Hotkeys.Designer.cs">
       <DependentUpon>Hotkeys.cs</DependentUpon>
     </Compile>
+    <Compile Include="LabeledNumericUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Log.cs" />
     <Compile Include="ObjExporter.cs" />
     <Compile Include="ObjImporter.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="Rainbow.cs" />
+    <Compile Include="RendererHelperTypes.cs" />
     <Compile Include="ShaderManifest\Compiler.cs" />
     <Compile Include="ShaderManifest\Interpreter.cs" />
     <Compile Include="ShaderManifest\ManifestConfig.cs" />
@@ -183,6 +188,9 @@
     <EmbeddedResource Include="Hotkeys.resx">
       <DependentUpon>Hotkeys.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LabeledNumericUpDown.resx">
+      <DependentUpon>LabeledNumericUpDown.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -220,6 +228,27 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="resources\cubemap-test\black.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\cubemap-test\negx.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\cubemap-test\negy.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\cubemap-test\negz.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\cubemap-test\posx.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\cubemap-test\posy.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\cubemap-test\posz.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="resources\daenerys.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -275,7 +304,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
+      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

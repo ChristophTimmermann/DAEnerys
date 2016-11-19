@@ -13,7 +13,7 @@ namespace DAEnerys
         public int ID = -1;
         public string Path;
 
-        private HWTexture(string path, int id)
+        protected HWTexture(string path, int id)
         {
             Path = path;
             ID = id;
