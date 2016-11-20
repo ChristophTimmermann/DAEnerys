@@ -172,14 +172,12 @@ namespace DAEnerys
                                     paths[suffix] = file;
                                 }
 
-                                if (suffix != "DIFF")
+                                if (suffix != "DIFF" && paths.ContainsKey(suffix)) //Only load textures that are actually used by HODOR/the shaders
                                 {
                                     HWImage newImage = new HWImage(fileName, file);
                                     newImage.Material = this;
                                     Images.Add(newImage);
                                 }
-                                else
-                                    image.Name = fileName;
                             }
                         }
                     }

@@ -60,7 +60,7 @@ namespace DAEnerys
                 string spritePath = Path.Combine(dataPath, "effect/textures/navlight.tga");
                 if (File.Exists(spritePath))
                 {
-                    NavLightSprite = new HWTexture(spritePath, false, true);
+                    NavLightSprite = new HWTexture(spritePath, false, true, true);
                 }
 
                 //Parse badges

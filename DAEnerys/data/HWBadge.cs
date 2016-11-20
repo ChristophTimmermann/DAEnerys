@@ -50,7 +50,7 @@ namespace DAEnerys
             Name = name;
             Path = path;
 
-            Texture = new HWTexture(path, true);
+            Texture = new HWTexture(path, true, false, true);
             Bitmap = HWTexture.LoadToBitmap(path);
 
             BadgeNames.Add(name, this);

@@ -196,7 +196,7 @@ namespace DAEnerys
             editor_shader = new Shader("editor.vs", "editor.fs", true);
 
             //AmbientLight.Enabled = false;
-            DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
+            DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"), false, false, true);
 
             HWBadge.DefaultBadge = new HWBadge("daenerys", Path.Combine(Program.EXECUTABLE_PATH, @"resources/daenerys.tga"));
             BadgeTexture = HWBadge.DefaultBadge.Texture;
@@ -785,7 +785,6 @@ namespace DAEnerys
         {
             return
                 shader == "badge" ||
-                shader == "badge_glow" ||
                 shader == "badgeglow";
         }
 
@@ -807,11 +806,9 @@ namespace DAEnerys
         private static bool SOB_GLOWRGB(string shader)
         {
             return
-                shader == "badge_glow" ||
                 shader == "badgeglow" ||
                 shader == "ore" ||
                 shader == "salvage" ||
-                shader == "ship_glow" ||
                 shader == "shipglow";
         }
 
@@ -832,11 +829,9 @@ namespace DAEnerys
         {
             return
                 shader == "badge" ||
-                shader == "badge_glow" ||
                 shader == "badgeglow" ||
                 shader == "bay" ||
                 shader == "ship" ||
-                shader == "ship_glow" ||
                 shader == "shipglow" ||
                 shader == "thruster";
         }
