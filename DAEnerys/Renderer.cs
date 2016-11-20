@@ -19,6 +19,7 @@ namespace DAEnerys
         public static bool MeshDataInvalid = false;
 
         public static HWTexture DefaultTexture;
+        public static HWTextureCube BackgroundTexture = null;
         public static HWTextureCube EnvironmentTexture0 = null;
         public static HWTextureCube EnvironmentTexture1 = null;
 
@@ -206,20 +207,20 @@ namespace DAEnerys
 
             //AmbientLight.Enabled = false;
             DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
-            EnvironmentTexture0 = new HWTextureCube(
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"));
-            EnvironmentTexture1 = new HWTextureCube(
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/posx.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/negx.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/posy.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/negy.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/posz.tga"),
-                Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/negz.tga"));
+            //EnvironmentTexture0 = new HWTextureCube(
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"));
+            //EnvironmentTexture1 = new HWTextureCube(
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/posx.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/negx.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/posy.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/negy.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/posz.tga"),
+            //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/negz.tga"));
 
             HWBadge.DefaultBadge = new HWBadge("daenerys", Path.Combine(Program.EXECUTABLE_PATH, @"resources/daenerys.tga"));
             BadgeTexture = HWBadge.DefaultBadge.Texture;
@@ -638,8 +639,8 @@ namespace DAEnerys
                 
                 if (!SOB_BAYLIGHT(shader))
                 {
-                    AttachTexture3D(surface, "inTexEnv0", EnvironmentTexture1);
-                    AttachTexture3D(surface, "inTexEnv1", EnvironmentTexture1);
+                    AttachTexture3D(surface, "inTexEnv0", BackgroundTexture);
+                    AttachTexture3D(surface, "inTexEnv1", BackgroundTexture);
                 }
 
                 if (SOB_TEAM(shader))

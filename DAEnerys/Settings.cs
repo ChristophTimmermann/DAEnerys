@@ -63,13 +63,26 @@ namespace DAEnerys
 
             foreach(HWBadge badge in HWData.Badges)
             {
-                comboBadge.Items.Add(badge.Name).ToString();
+                comboBadge.Items.Add(badge.Name);
             }
 
             if (HWBadge.BadgeNames.Keys.Contains(SavedBadge))
             {
                 comboBadge.SelectedItem = SavedBadge;
                 comboBadge_SelectedIndexChanged(this, EventArgs.Empty);
+            }
+
+            comboBackground.Items.Clear();
+            comboBackground.Items.Add("<nothing>");
+            foreach (string bgName in HWData.BackgroundTextures.Keys)
+            {
+                comboBackground.Items.Add(bgName).ToString();
+            }
+
+            if (HWData.BackgroundTextures.Keys.Contains(SavedBackground))
+            {
+                comboBackground.SelectedItem = SavedBackground;
+                comboBackground_SelectedIndexChanged(this, EventArgs.Empty);
             }
 
             checkCheckForUpdates.Checked = Updater.CheckForUpdatesOnStart;
@@ -220,6 +233,7 @@ namespace DAEnerys
                 new XElement("stripeColor", SavedStripeColor.ToArgb()),
                 new XElement("badge", SavedBadge),
                 new XElement("engineColor", SavedEngineColor.ToArgb()),
+                new XElement("background", SavedBackground),
                 new XElement("fieldOfView", MathHelper.RadiansToDegrees(Program.Camera.FieldOfView)),
                 new XElement("fsaaSamples", Program.FSAASamples),
                 new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront),
@@ -239,6 +253,7 @@ namespace DAEnerys
         public static Color SavedStripeColor = Color.SpringGreen;
         public static string SavedBadge = "daenerys";
         public static Color SavedEngineColor = Color.FromArgb(64, 69, 120, 176);
+        public static string SavedBackground = "";
 
         public static void LoadSettings()
         {
@@ -289,6 +304,10 @@ namespace DAEnerys
                             int.TryParse(element.Value, out aRGB);
                             SavedEngineColor = Color.FromArgb(aRGB);
                             Renderer.EngineGlowColor = Color.FromArgb(aRGB);
+                            break;
+                        case "background":
+                            string background = element.Value;
+                            SavedBackground = background;
                             break;
                         case "fieldOfView":
                             double fov = 1.22f;
@@ -441,6 +460,22 @@ namespace DAEnerys
         private void checkCheckForUpdates_CheckedChanged(object sender, EventArgs e)
         {
             Updater.CheckForUpdatesOnStart = checkCheckForUpdates.Checked;
+        }
+
+        private void comboBackground_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SavedBackground = (string)comboBackground.SelectedItem;
+            if (Renderer.BackgroundTexture != null) Renderer.BackgroundTexture.Unload();
+            if (SavedBackground != "<nothing>")
+            {
+                Renderer.BackgroundTexture = HWData.BackgroundTextures[(string)comboBackground.SelectedItem];
+                Renderer.BackgroundTexture.Load();
+            }
+            else
+            {
+                Renderer.BackgroundTexture = null;
+            }
+            Renderer.Invalidate();
         }
     }
 }

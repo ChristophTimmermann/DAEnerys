@@ -11,6 +11,7 @@ namespace DAEnerys
 
         public static List<HWNavLightStyle> NavLightStyles = new List<HWNavLightStyle>();
         public static List<HWBadge> Badges = new List<HWBadge>();
+        public static Dictionary<string, HWTextureCube> BackgroundTextures = new Dictionary<string, HWTextureCube>();
 
         public static HWTexture NavLightSprite;
 
@@ -75,10 +76,19 @@ namespace DAEnerys
                         ParseBadge(file);
                     }
                 }
+
+                //Parse backgrounds
+                string backgroundsPath = Path.Combine(dataPath, "background/");
+
+                //Check if backgrounds folder exists
+                if (Directory.Exists(backgroundsPath))
+                {
+                    ParseBackground(backgroundsPath);
+                }
             }
 
             //When no navlight sprite could have been found
-            if(NavLightSprite == null)
+            if (NavLightSprite == null)
             {
                 NavLightSprite = Renderer.DefaultTexture;
                 MessageBox.Show("Could not find \"effect/textures/navlight.tga\". Be sure to add the default homeworld files to your data paths.", "Failed to find navlight sprite", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -116,7 +126,7 @@ namespace DAEnerys
                 return;
 
             parameters[0] = parameters[0].Remove(0, parameters[0].IndexOf('{') + 1);
-            for(int i = 0; i < parameters.Length - 1; i++)
+            for (int i = 0; i < parameters.Length - 1; i++)
             {
                 string newParameter = Regex.Unescape(parameters[i]);
                 string[] split = newParameter.Split('=');
@@ -126,7 +136,7 @@ namespace DAEnerys
                 string key = split[0].Trim();
                 string value = split[1].Trim();
 
-                switch(key)
+                switch (key)
                 {
                     case "climbTime":
                         climbTime = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
@@ -183,9 +193,9 @@ namespace DAEnerys
             }
 
             HWNavLightStyle existingStyle = null;
-            foreach(HWNavLightStyle style in NavLightStyles)
+            foreach (HWNavLightStyle style in NavLightStyles)
             {
-                if(style.Name == name)
+                if (style.Name == name)
                 {
                     existingStyle = style;
                     break;
@@ -193,7 +203,7 @@ namespace DAEnerys
             }
 
             //Check if a style with that name already exists (because of multiple data paths)
-            if(existingStyle == null)
+            if (existingStyle == null)
                 new HWNavLightStyle(name, climbTime, topWaitTime, decayTime, bottomWaitTime, illumSawHz, illumSawMin, illumSawMax, illumSawOfs, illumSinHz, illumSinMin, illumSinMax, illumSinOfs, noSelfLight, linkThrust);
             else
             {
@@ -219,6 +229,31 @@ namespace DAEnerys
         private static void ParseBadge(string path)
         {
             new HWBadge(Path.GetFileNameWithoutExtension(path), path);
+        }
+
+        private static void ParseBackground(string path)
+        {
+            foreach (string dir in Directory.GetDirectories(path))
+            {
+                string name = Path.GetFileName(dir);
+                // check for high-quality textures
+                string PosX = Path.Combine(dir, name + "_hq_posx.dds");
+                string PosY = Path.Combine(dir, name + "_hq_posy.dds");
+                string PosZ = Path.Combine(dir, name + "_hq_posz.dds");
+                string NegX = Path.Combine(dir, name + "_hq_negx.dds");
+                string NegY = Path.Combine(dir, name + "_hq_negy.dds");
+                string NegZ = Path.Combine(dir, name + "_hq_negz.dds");
+
+                // if HQ texture doesn't exist, check for low-quality textures --> if LQ texture doesn't exist, continue with next directory
+                if (!File.Exists(PosX)) { PosX = Path.Combine(dir, name + "_posx.dds"); if (!File.Exists(PosX)) continue; }
+                if (!File.Exists(PosY)) { PosY = Path.Combine(dir, name + "_posy.dds"); if (!File.Exists(PosY)) continue; }
+                if (!File.Exists(PosZ)) { PosZ = Path.Combine(dir, name + "_posz.dds"); if (!File.Exists(PosZ)) continue; }
+                if (!File.Exists(NegX)) { NegX = Path.Combine(dir, name + "_negx.dds"); if (!File.Exists(NegX)) continue; }
+                if (!File.Exists(NegY)) { NegY = Path.Combine(dir, name + "_negy.dds"); if (!File.Exists(NegY)) continue; }
+                if (!File.Exists(NegZ)) { NegZ = Path.Combine(dir, name + "_negz.dds"); if (!File.Exists(NegZ)) continue; }
+                
+                BackgroundTextures.Add(name, new HWTextureCube(PosX, NegX, PosY, NegY, PosZ, NegZ));
+            }
         }
     }
 }

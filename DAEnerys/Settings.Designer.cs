@@ -105,6 +105,8 @@ namespace DAEnerys
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.groupUpdates = new System.Windows.Forms.GroupBox();
             this.checkCheckForUpdates = new System.Windows.Forms.CheckBox();
+            this.labelBackground = new System.Windows.Forms.Label();
+            this.comboBackground = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -499,6 +501,8 @@ namespace DAEnerys
             // 
             this.groupRendering.AutoSize = true;
             this.groupRendering.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupRendering.Controls.Add(this.comboBackground);
+            this.groupRendering.Controls.Add(this.labelBackground);
             this.groupRendering.Controls.Add(this.buttonBackgroundColor);
             this.groupRendering.Controls.Add(this.checkDisableLighting);
             this.groupRendering.Controls.Add(this.labelBackgroundColor);
@@ -510,7 +514,7 @@ namespace DAEnerys
             this.groupRendering.Controls.Add(this.comboFSAASamples);
             this.groupRendering.Location = new System.Drawing.Point(352, 8);
             this.groupRendering.Name = "groupRendering";
-            this.groupRendering.Size = new System.Drawing.Size(342, 183);
+            this.groupRendering.Size = new System.Drawing.Size(342, 208);
             this.groupRendering.TabIndex = 18;
             this.groupRendering.TabStop = false;
             this.groupRendering.Text = "Rendering";
@@ -618,7 +622,7 @@ namespace DAEnerys
             this.groupRace.Controls.Add(this.buttonTeamColor);
             this.groupRace.Controls.Add(this.teamColorButton0);
             this.groupRace.Controls.Add(this.label3);
-            this.groupRace.Location = new System.Drawing.Point(352, 199);
+            this.groupRace.Location = new System.Drawing.Point(352, 216);
             this.groupRace.Name = "groupRace";
             this.groupRace.Size = new System.Drawing.Size(343, 236);
             this.groupRace.TabIndex = 20;
@@ -1133,6 +1137,25 @@ namespace DAEnerys
             this.checkCheckForUpdates.UseVisualStyleBackColor = true;
             this.checkCheckForUpdates.CheckedChanged += new System.EventHandler(this.checkCheckForUpdates_CheckedChanged);
             // 
+            // labelBackground
+            // 
+            this.labelBackground.AutoSize = true;
+            this.labelBackground.Location = new System.Drawing.Point(7, 172);
+            this.labelBackground.Name = "labelBackground";
+            this.labelBackground.Size = new System.Drawing.Size(65, 13);
+            this.labelBackground.TabIndex = 26;
+            this.labelBackground.Text = "Background";
+            // 
+            // comboBackground
+            // 
+            this.comboBackground.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBackground.FormattingEnabled = true;
+            this.comboBackground.Location = new System.Drawing.Point(104, 168);
+            this.comboBackground.Name = "comboBackground";
+            this.comboBackground.Size = new System.Drawing.Size(232, 21);
+            this.comboBackground.TabIndex = 27;
+            this.comboBackground.SelectedIndexChanged += new System.EventHandler(this.comboBackground_SelectedIndexChanged);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1253,5 +1276,7 @@ namespace DAEnerys
         private System.Windows.Forms.ColorDialog colorDialog;
         private System.Windows.Forms.GroupBox groupUpdates;
         private System.Windows.Forms.CheckBox checkCheckForUpdates;
+        private System.Windows.Forms.ComboBox comboBackground;
+        private System.Windows.Forms.Label labelBackground;
     }
 }

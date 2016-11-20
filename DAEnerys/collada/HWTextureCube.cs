@@ -1,10 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
-using OpenTK.Graphics.OpenGL;
 using DevILSharp;
-using System.Drawing;
+using OpenTK.Graphics.OpenGL;
 
 namespace DAEnerys
 {
@@ -17,6 +14,8 @@ namespace DAEnerys
         private string PathPosZ;
         private string PathNegZ;
 
+        public bool Loaded { get; private set; } = false;
+
         public HWTextureCube(
             string pathPosX, string pathNegX,
             string pathPosY, string pathNegY,
@@ -28,7 +27,20 @@ namespace DAEnerys
             PathNegY = pathNegY;
             PathPosZ = pathPosZ;
             PathNegZ = pathNegZ;
+        }
+
+        public void Load()
+        {
+            if (Loaded) return;
+
             ID = CreateCubeMap();
+            Loaded = true;
+        }
+
+        public void Unload()
+        {
+            if (!Loaded) return;
+
         }
 
         private static void LoadCubeMapSide(int texture, TextureTarget target, CubeTex tex)
