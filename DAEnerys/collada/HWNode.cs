@@ -381,6 +381,7 @@ namespace DAEnerys
             for (int i = 0; i < meshes.Length; i++)
                 meshes[i].Parent = this.Parent;
 
+            this.Parent = null;
             Children.Clear();
             Meshes.Clear();
         }
