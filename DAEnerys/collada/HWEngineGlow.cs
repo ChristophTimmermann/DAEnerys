@@ -7,6 +7,7 @@ namespace DAEnerys
         public HWJoint Parent;
         public string Name;
 
+        public List<HWEngineGlowLOD> Meshes = new List<HWEngineGlowLOD>();
         public List<HWEngineGlowLOD>[] LODMeshes = new List<HWEngineGlowLOD>[4];
 
         public object EngineGlowListItem;
@@ -26,6 +27,7 @@ namespace DAEnerys
         public void AddLODMesh(HWEngineGlowLOD lodMesh)
         {
             LODMeshes[lodMesh.LOD].Add(lodMesh);
+            Meshes.Add(lodMesh);
         }
 
         public static void UpdateEngineStrength()

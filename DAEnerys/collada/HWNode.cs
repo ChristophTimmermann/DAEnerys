@@ -41,6 +41,17 @@ namespace DAEnerys
 
         public HWDockpath Dockpath;
 
+        public HWNode(HWNode parent, string name) //Creates a new node from scratch
+        {
+            HWScene.Nodes.Add(this);
+            Name = name;
+
+            WorldMatrix = Matrix4.Identity;
+            RelativeWorldMatrix = WorldMatrix;
+
+            this.Parent = parent;
+        }
+
         public HWNode(Node assimpNode, HWNode parent)
         {
             HWScene.Nodes.Add(this);
@@ -60,7 +71,7 @@ namespace DAEnerys
                 HWMesh newMesh = HWMesh.ParseMesh(assimpMesh, this);
 
                 if (newMesh != null)
-                    this.AddMesh(newMesh);
+                    newMesh.Parent = this;
             }
         }
 
@@ -345,12 +356,6 @@ namespace DAEnerys
             #endregion
 
             return new HWNode(assimpNode, parent);
-        }
-
-        public void AddMesh(HWMesh mesh)
-        {
-            mesh.Parent = this;
-            Meshes.Add(mesh);
         }
 
         public HWNode[] GetAllParents()

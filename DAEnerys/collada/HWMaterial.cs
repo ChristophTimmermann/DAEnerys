@@ -8,9 +8,12 @@ namespace DAEnerys
     {
         public string Name = string.Empty;
         public int Suffix = -1;
-        public string Shader = "default";
+
+        private string shader = "default";
+        public string Shader { get { return shader; } set { shader = value; Renderer.Invalidate(); } }
+
         public bool Valid = true;
-        public ImageFormat Format = ImageFormat.DXT1;
+        public ImageFormat Format { get { if (Images.Count > 0) return Images[0].Format; else return ImageFormat.DXT1; } set { foreach (HWImage image in Images) image.Format = value; } }
 
         public string FormattedName
         {
@@ -62,18 +65,6 @@ namespace DAEnerys
         public void Parse()
         {
             string fullName = Name;
-            Dictionary<string, string> paths = new Dictionary<string, string>();
-            paths.Add("DIFF", "");
-            paths.Add("GLOW", ""); paths.Add("SPEC", ""); paths.Add("REFL", "");
-            paths.Add("TEAM", ""); paths.Add("STRP", ""); paths.Add("PAIN", "");
-            paths.Add("NORM", "");
-            paths.Add("PROG", "");
-            paths.Add("DIFX", "");
-            paths.Add("GLOX", ""); paths.Add("SPEX", ""); paths.Add("REFX", "");
-            paths.Add("CLD1", ""); paths.Add("CLD2", ""); paths.Add("CLD3", "");
-            paths.Add("WARP", "");
-            paths.Add("MASK", "");
-            paths.Add("NOIZ", "");
 
             if (Name.StartsWith("MAT[")) //If material is a homeworld valid material
             {
@@ -99,80 +90,117 @@ namespace DAEnerys
                         else if (splitted[i - 1].EndsWith("SHD")) //Shader
                         {
                             Shader = splitted[i].Substring(0, end);
+
+                            if (!NewShaderManifest.Manifest.HODAliases.ContainsKey(Shader))
+                                new Problem(ProblemTypes.WARNING, "Unknown shader \"" + Shader + "\" of material \"" + Name + "\".");
                         }
                     }
                 }
 
-                foreach (HWImage image in HWScene.Images)
-                {
-                    if (image.Path.Replace("file://", "") == DiffusePath)
-                    {
-                        Format = image.Format;
-                        Images.Add(image);
-                        image.Material = this;
-
-                        //Search for other images in the diffuse image folder
-                        string diffuseName = Path.GetFileNameWithoutExtension(image.Path);
-                        diffuseName = diffuseName.Remove(diffuseName.Length - 4);
-                        int underspaceIndex = diffuseName.LastIndexOf('_');
-
-                        if (underspaceIndex == -1)
-                            continue;
-
-                        string diffusePrefix = diffuseName.Remove(underspaceIndex);
-
-                        string absolutePath = Path.Combine(HWScene.ColladaPath, image.Path.Replace("file://", ""));
-                        absolutePath = Path.GetDirectoryName(absolutePath);
-
-                        if (!Directory.Exists(absolutePath))
-                            continue;
-
-                        string[] files = Directory.GetFiles(absolutePath);
-                        foreach (string file in files)
-                        {
-                            string fileName = Path.GetFileNameWithoutExtension(file);
-                            string extension = Path.GetExtension(file).ToLower();
-                            if (extension != ".tga" && extension != ".png" && extension != ".jpg" && extension != ".dds")
-                                continue;
-                            
-                            int fileUnderspaceIndex = fileName.LastIndexOf('_');
-                            if (fileUnderspaceIndex != -1)
-                            {
-                                string suffix = fileName.Substring(fileUnderspaceIndex + 1);
-                                string prefix = fileName.Remove(fileUnderspaceIndex);
-                                if (prefix == diffusePrefix)
-                                {
-                                    if (paths.ContainsKey(suffix))
-                                    {
-                                        paths[suffix] = file;
-                                    }
-
-                                    if (suffix != "DIFF")
-                                    {
-                                        HWImage newImage = new HWImage(fileName, file);
-                                        newImage.Material = this;
-                                        Images.Add(newImage);
-                                    }
-                                    else
-                                        image.Name = fileName;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
+                LoadTextures();
 
                 Program.main.AddMaterial(this);
             }
+        }
+
+        public void LoadTextures()
+        {
+            Images.Clear();
+
+            Dictionary<string, string> paths = new Dictionary<string, string>();
+            paths.Add("DIFF", "");
+            paths.Add("GLOW", "");
+            paths.Add("SPEC", "");
+            paths.Add("REFL", "");
+            paths.Add("TEAM", "");
+            paths.Add("STRP", "");
+            paths.Add("PAIN", "");
+            paths.Add("NORM", "");
+            paths.Add("PROG", "");
+            paths.Add("DIFX", "");
+            paths.Add("GLOX", "");
+            paths.Add("SPEX", "");
+            paths.Add("REFX", "");
+            paths.Add("CLD1", "");
+            paths.Add("CLD2", "");
+            paths.Add("CLD3", "");
+            paths.Add("WARP", "");
+            paths.Add("MASK", "");
+            paths.Add("NOIZ", "");
+
+            foreach (HWImage image in HWScene.Images)
+            {
+                if (image.Path.Replace("file://", "") == DiffusePath)
+                {
+                    Format = image.Format;
+                    Images.Add(image);
+                    image.Material = this;
+
+                    //Search for other images in the diffuse image folder
+                    string diffuseName = Path.GetFileNameWithoutExtension(image.Path);
+                    diffuseName = diffuseName.Remove(diffuseName.Length - 4);
+                    int underspaceIndex = diffuseName.LastIndexOf('_');
+
+                    if (underspaceIndex == -1)
+                        continue;
+
+                    string diffusePrefix = diffuseName.Remove(underspaceIndex);
+
+                    string absolutePath = Path.Combine(HWScene.ColladaPath, image.Path.Replace("file://", ""));
+                    absolutePath = Path.GetDirectoryName(absolutePath);
+
+                    if (!Directory.Exists(absolutePath))
+                        continue;
+
+                    string[] files = Directory.GetFiles(absolutePath);
+                    foreach (string file in files)
+                    {
+                        string fileName = Path.GetFileNameWithoutExtension(file);
+                        string extension = Path.GetExtension(file).ToLower();
+                        if (extension != ".tga" && extension != ".png" && extension != ".jpg" && extension != ".dds")
+                            continue;
+
+                        int fileUnderspaceIndex = fileName.LastIndexOf('_');
+                        if (fileUnderspaceIndex != -1)
+                        {
+                            string suffix = fileName.Substring(fileUnderspaceIndex + 1);
+                            string prefix = fileName.Remove(fileUnderspaceIndex);
+                            if (prefix == diffusePrefix)
+                            {
+                                if (paths.ContainsKey(suffix))
+                                {
+                                    paths[suffix] = file;
+                                }
+
+                                if (suffix != "DIFF" && paths.ContainsKey(suffix)) //Only load textures that are actually used by HODOR/the shaders
+                                {
+                                    HWImage newImage = new HWImage(fileName, file);
+                                    newImage.Material = this;
+                                    Images.Add(newImage);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
 
             string DIFF = paths["DIFF"];
-            string REFL = paths["REFL"]; string GLOW = paths["GLOW"]; string SPEC = paths["SPEC"];
-            string TEAM = paths["TEAM"]; string STRP = paths["STRP"]; string PAIN = paths["PAIN"];
+            string REFL = paths["REFL"];
+            string GLOW = paths["GLOW"];
+            string SPEC = paths["SPEC"];
+            string TEAM = paths["TEAM"];
+            string STRP = paths["STRP"];
+            string PAIN = paths["PAIN"];
             string NORM = paths["NORM"];
             string PROG = paths["PROG"];
             string DIFX = paths["DIFX"];
-            string REFX = paths["REFX"]; string GLOX = paths["GLOX"]; string SPEX = paths["SPEX"];
-            string CLD1 = paths["CLD1"]; string CLD2 = paths["CLD2"]; string CLD3 = paths["CLD3"];
+            string REFX = paths["REFX"];
+            string GLOX = paths["GLOX"];
+            string SPEX = paths["SPEX"];
+            string CLD1 = paths["CLD1"];
+            string CLD2 = paths["CLD2"];
+            string CLD3 = paths["CLD3"];
             string WARP = paths["WARP"];
             string MASK = paths["MASK"];
             string NOIZ = paths["NOIZ"];

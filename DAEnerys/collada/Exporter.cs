@@ -12,10 +12,12 @@ namespace DAEnerys
     public static class Exporter
     {
         private static XNamespace ns = "http://www.collada.org/2005/11/COLLADASchema";
+        private static Dictionary<HWNode, XElement> LODRootElements = new Dictionary<HWNode, XElement>();
 
         public static void ExportToFile(string path)
         {
             AddedMesh.AddedMeshes.Clear();
+            LODRootElements.Clear();
 
             XDocument doc = new XDocument(new XDeclaration("1.0", "utf-8", "true"));
 
@@ -498,11 +500,13 @@ namespace DAEnerys
             visualScene.SetAttributeValue("name", "scene");
             libVisualScenes.Add(visualScene);
 
-            foreach(HWNode rootNode in HWNode.RootLODs)
-            {
-                if(rootNode != null)
-                    AddNode(visualScene, rootNode);
-            }
+            foreach (HWNode rootNode in HWNode.RootLODs)
+                if (rootNode != null)
+                    LODRootElements.Add(rootNode, AddNode(visualScene, rootNode));
+
+            foreach (HWNode rootNode in HWNode.RootLODs)
+                if (rootNode != null)
+                    AddNodeChildrenRecursive(LODRootElements[rootNode], rootNode);
 
             if (HWNode.RootINFO != null)
                 AddNode(visualScene, HWNode.RootINFO);
@@ -523,13 +527,27 @@ namespace DAEnerys
             doc.Save(path);
         }
 
-        private static void AddNode(XElement parentElement, HWNode node)
+        private static XElement AddNode(XElement parentElement, HWNode node)
         {
             XElement nodeElement = new XElement(ns + "node");
             nodeElement.SetAttributeValue("name", node.FormattedName);
             nodeElement.SetAttributeValue("id", node.FormattedName);
             nodeElement.SetAttributeValue("sid", node.FormattedName);
-            parentElement.Add(nodeElement);
+
+            HWShipMeshLOD lodMesh = null;
+            foreach (HWShipMesh shipMesh in HWScene.ShipMeshes)
+                foreach (HWShipMeshLOD shipMeshLOD in shipMesh.Meshes)
+                    if (shipMeshLOD.LOD > 0)
+                        if (node.Meshes.Contains(shipMeshLOD))
+                        {
+                            lodMesh = shipMeshLOD;
+                            break;
+                        }
+
+            if (lodMesh == null)
+                parentElement.Add(nodeElement);
+            else
+                LODRootElements[HWNode.RootLODs[lodMesh.LOD]].Add(nodeElement);
 
             Vector3 pos = node.RelativePosition;
             Vector3 rot = node.RelativeRotation;
@@ -595,9 +613,21 @@ namespace DAEnerys
                     technique.Add(materialInstance);
                 }
             }
+            return nodeElement;
+        }
+
+        private static void AddNodeRecursive(XElement parentElement, HWNode node)
+        {
+            XElement newNodeElement = AddNode(parentElement, node);
 
             foreach (HWNode childNode in node.Children)
-                AddNode(nodeElement, childNode);
+                AddNode(newNodeElement, childNode);
+        }
+
+        private static void AddNodeChildrenRecursive(XElement parentElement, HWNode parentNode)
+        {
+            foreach (HWNode childNode in parentNode.Children)
+                AddNodeRecursive(parentElement, childNode);
         }
 
         private class AddedMesh

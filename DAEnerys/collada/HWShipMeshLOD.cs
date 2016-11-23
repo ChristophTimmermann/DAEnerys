@@ -28,11 +28,12 @@ namespace DAEnerys
             ShipMesh = shipMesh;
             LOD = lod;
             Name = shipMesh.Name;
+            Parent = shipMesh.Parent;
 
             if (HWScene.Materials[assimpMesh.MaterialIndex] != null)
                 if (HWScene.Materials[assimpMesh.MaterialIndex].Valid)
-                    if (assimpMesh.TextureCoordinateChannelCount > 0)
-                        Material = HWScene.Materials[assimpMesh.MaterialIndex];
+                    //if (assimpMesh.TextureCoordinateChannelCount > 0) HODOR assigns them anyways
+                    Material = HWScene.Materials[assimpMesh.MaterialIndex];
 
             ShipMesh.AddLODMesh(this);
 

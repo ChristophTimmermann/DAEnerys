@@ -15,7 +15,7 @@ namespace DAEnerys
         public virtual HWNode Parent
         {
             get { return parent; }
-            set { parent = value; value.Name = FormattedName; Renderer.InvalidateView(); Renderer.Invalidate(); }
+            set { if (parent != null) parent.Meshes.Remove(this); parent = value; if(parent != null) parent.Meshes.Add(this); Renderer.InvalidateView(); Renderer.Invalidate(); }
         }
 
         public string Name;

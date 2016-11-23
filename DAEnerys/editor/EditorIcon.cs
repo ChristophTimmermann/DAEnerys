@@ -14,7 +14,7 @@ namespace DAEnerys
         public override int VertexCount { get { return Mesh.VertexCount; } }
         public override int IndiceCount { get { return Indices.Length; } }
 
-        public static HWTexture LightbulbTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/lightbulb.tga"), true, true);
+        public static HWTexture LightbulbTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/lightbulb.tga"), true, true, true);
 
         public EditorIcon(Vector3 position, HWTexture texture) : base()
         {

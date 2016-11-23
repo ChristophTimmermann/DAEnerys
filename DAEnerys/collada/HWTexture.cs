@@ -5,24 +5,41 @@ using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 using DevILSharp;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace DAEnerys
 {
     public class HWTexture
     {
+        public static List<HWTexture> Textures = new List<HWTexture>();
+
         public int ID = -1;
         public string Path;
+        private bool persistent = false;
 
         protected HWTexture(string path, int id)
         {
             Path = path;
             ID = id;
+
+            Textures.Add(this);
         }
 
-        public HWTexture(string path, bool loadAlpha = false, bool sprite = false)
+        public HWTexture(string path, bool loadAlpha = false, bool sprite = false, bool persistent = false)
         {
             Path = path;
+            this.persistent = persistent;
             ID = loadImage(path, loadAlpha, sprite);
+
+            Textures.Add(this);
+        }
+
+        public static void Clear()
+        {
+            foreach(HWTexture texture in Textures)
+                if(!texture.persistent)
+                    GL.DeleteTexture(texture.ID);
+            Textures.Clear();
         }
 
         public static HWTexture MakeTexture(string name, string path, float r, float g, float b, float a, bool loadAlpha = false)
