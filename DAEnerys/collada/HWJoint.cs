@@ -42,6 +42,16 @@ namespace DAEnerys
             EditorJoint = new EditorJoint(this);
         }
 
+        public override void Destroy()
+        {
+            Program.main.RemoveJoint(this);
+            Joints.Remove(this);
+            EditorJoint.Destroy();
+            EditorJoint = null;
+
+            base.Destroy();
+        }
+
         public static HWJoint GetByName(string name)
         {
             foreach(HWJoint joint in Joints)

@@ -374,6 +374,38 @@ namespace DAEnerys
             joint.ComboItemEngineShapeParent = item;
             EngineShapeParentComboItems.Add(joint, item);
         }
+        public void RemoveJoint(HWJoint joint)
+        {
+            HWJoint parentJoint = joint.Parent as HWJoint;
+
+            List<HWJoint> jointChildren = new List<HWJoint>();
+            foreach (HWNode childNode in joint.Children)
+            {
+                HWJoint childJoint = childNode as HWJoint;
+                if (childJoint == null)
+                    continue;
+                childJoint.TreeNode.Remove();
+                AddJoint(childJoint, parentJoint);
+            }
+
+            jointsTree.Nodes.Remove(joint.TreeNode);
+
+            //Remove joint from ship mesh parents
+            object item = joint.Name;
+            comboShipMeshParent.Items.Remove(item);
+            joint.ComboItemShipMeshParent = null;
+            ShipMeshParentComboItems.Remove(joint);
+
+            //Remove joint from engine glow parents
+            comboEngineGlowParent.Items.Remove(item);
+            joint.ComboItemEngineGlowParent = null;
+            EngineGlowParentComboItems.Remove(joint);
+
+            //Remove joint from engine shape parents
+            comboEngineShapeParent.Items.Remove(item);
+            joint.ComboItemEngineShapeParent = null;
+            EngineShapeParentComboItems.Remove(joint);
+        }
 
         //--------------------------------- DOCKPATHS ---------------------------------//
         public void AddDockpath(HWDockpath dockpath)
@@ -689,7 +721,6 @@ namespace DAEnerys
             Renderer.Invalidate();
         }
 
-
         public void glControl_MouseDown(object sender, MouseEventArgs e)
         {
             Program.Camera.MouseDown(e);
@@ -759,6 +790,8 @@ namespace DAEnerys
         //--------------------------------- SHIP MESHES ---------------------------------//
         private void listShipMeshes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            selectedShipMesh = null;
+
             listShipMeshLODs.Items.Clear(); //Clear LOD list
 
             ignoreShipMeshDoScarCheck = true;
@@ -766,7 +799,10 @@ namespace DAEnerys
             ignoreShipMeshDoScarCheck = false;
             checkShipMeshDoScar.Enabled = false; //Disable do scar checkbox
 
+            comboShipMeshParent.SelectedIndex = 0; //Reset parent combo box
             comboShipMeshParent.Enabled = false; //Disable parent combo box
+
+            buttonShipMeshRemove.Enabled = false; //Disable remove button
 
             foreach (Label label in ShipMeshLODMaterialLabels)
                 label.Visible = false;
@@ -777,51 +813,59 @@ namespace DAEnerys
             {
                 selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
             }
+            else
+                return;
 
-            if (selectedShipMesh != null)
+            //Check do scar checkbox
+            if (selectedShipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
+                checkShipMeshDoScar.Checked = true;
+
+            ignoreShipMeshDoScarCheck = true;
+            checkShipMeshDoScar.Enabled = true; //Enable do scar checkbox
+            ignoreShipMeshDoScarCheck = false;
+
+            //Select parent joint in combo box
+            if (selectedShipMesh.Parent != null) //If ship mesh has a parent joint
             {
-                //Check do scar checkbox
-                if (selectedShipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
-                    checkShipMeshDoScar.Checked = true;
-
-                ignoreShipMeshDoScarCheck = true;
-                checkShipMeshDoScar.Enabled = true; //Enable do scar checkbox
-                ignoreShipMeshDoScarCheck = false;
-
-                //Select parent joint in combo box
-                if (selectedShipMesh.Parent != null) //If ship mesh has a parent joint
-                {
-                    object item = ShipMeshParentComboItems[selectedShipMesh.Parent];
-                    comboShipMeshParent.SelectedItem = item; //Select parent joint in combo box
-                }
-                else
-                    comboShipMeshParent.SelectedIndex = 0; //Select root joint in combo box
-
-                comboShipMeshParent.Enabled = true; //Enable parent combo box
-
-                //Fill LOD list
-                for (int i = 0; i < 3; i++)
-                    if (selectedShipMesh.LODMeshes[i].Count > 0)
-                    {
-                        listShipMeshLODs.Items.Add("LOD " + i);
-                        if (selectedShipMesh.LODMeshes[i][0].Visible)
-                            listShipMeshLODs.SetItemChecked(i, true);
-                    }
-
-                if(selectedShipMesh.LODMeshes[0].Count > 0)
-                    listShipMeshLODs.SelectedIndex = 0;
+                object item = ShipMeshParentComboItems[selectedShipMesh.Parent];
+                comboShipMeshParent.SelectedItem = item; //Select parent joint in combo box
             }
+            else
+                comboShipMeshParent.SelectedIndex = 0; //Select root joint in combo box
+
+            comboShipMeshParent.Enabled = true; //Enable parent combo box
+
+            //Fill LOD list
+            for (int i = 0; i < 3; i++)
+                if (selectedShipMesh.LODMeshes[i].Count > 0)
+                {
+                    listShipMeshLODs.Items.Add("LOD " + i);
+                    if (selectedShipMesh.LODMeshes[i][0].Visible)
+                        listShipMeshLODs.SetItemChecked(i, true);
+                }
+
+            if(selectedShipMesh.LODMeshes[0].Count > 0)
+                listShipMeshLODs.SelectedIndex = 0;
+
+            //Enable remove button
+            buttonShipMeshRemove.Enabled = true;
         }
         public void AddShipMesh(HWShipMesh mesh)
         {
             object item = mesh.Name;
             listShipMeshes.Items.Add(item);
-            mesh.ShipMeshListItem = item;
+            mesh.ListItem = item;
             ShipMeshListItems.Add(item, mesh);
+        }
+        public void RemoveShipMesh(HWShipMesh mesh)
+        {
+            listShipMeshes.Items.Remove(mesh.ListItem);
+            ShipMeshListItems.Remove(mesh.ListItem);
         }
         private void listShipMeshLODs_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            HWShipMesh selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+            if (selectedShipMesh == null)
+                return;
 
             bool visible = false;
             if (e.NewValue == CheckState.Checked)
@@ -837,11 +881,8 @@ namespace DAEnerys
         }
         private void comboShipMeshParent_SelectedIndexChanged(object sender, EventArgs e)
         {
-            HWShipMesh selectedShipMesh = null;
-            if (listShipMeshes.SelectedItem != null)
-            {
-                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
-            }
+            if (selectedShipMesh == null)
+                return;
 
             HWJoint newParent = HWJoint.GetByName((string)comboShipMeshParent.SelectedItem);
             selectedShipMesh.Parent = newParent;
@@ -977,6 +1018,15 @@ namespace DAEnerys
                 listShipMeshLODs_SelectedIndexChanged(listShipMeshLODs, EventArgs.Empty);
                 HWScene.CalibrateSettings();
             }
+        }
+        private void buttonShipMeshRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedShipMesh == null)
+                return;
+
+            selectedShipMesh.Destroy();
+            listShipMeshes.ClearSelected();
+            listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
         }
         //--------------------------------- ENGINE GLOW MESHES ---------------------------------//
         private void listEngineGlows_SelectedIndexChanged(object sender, EventArgs e)

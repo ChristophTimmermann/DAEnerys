@@ -43,11 +43,12 @@ namespace DAEnerys
 
         public override void Destroy()
         {
-            base.Destroy();
-
+            Parent.Destroy();
             ShipMesh.Meshes.Remove(this);
             ShipMesh.LODMeshes[LOD].Remove(this);
             ShipMesh = null;
+
+            base.Destroy();
         }
         
         public void CalculateBoundingBox()

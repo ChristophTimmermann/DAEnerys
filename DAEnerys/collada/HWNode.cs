@@ -16,7 +16,20 @@ namespace DAEnerys
         public List<HWMesh> Meshes = new List<HWMesh>();
 
         private HWNode parent;
-        public HWNode Parent { get { return parent; } set { if(parent != null) parent.Children.Remove(this); parent = value; if(parent != null) parent.Children.Add(this); CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } }
+        public HWNode Parent
+        {
+            get { return parent; }
+            set
+            {
+                if (parent != null)
+                    parent.Children.Remove(this);
+                parent = value;
+                if (parent != null)
+                    parent.Children.Add(this);
+                CalculateWorldMatrix();
+                Renderer.InvalidateView(); Renderer.Invalidate();
+            }
+        }
         public string Name;
         public virtual string FormattedName { get { return Name; } }
 
@@ -356,6 +369,20 @@ namespace DAEnerys
             #endregion
 
             return new HWNode(assimpNode, parent);
+        }
+
+        public virtual void Destroy()
+        {
+            HWScene.Nodes.Remove(this);
+            foreach (HWNode child in Children)
+                child.Parent = this.Parent;
+
+            HWMesh[] meshes = Meshes.ToArray();
+            for (int i = 0; i < meshes.Length; i++)
+                meshes[i].Parent = this.Parent;
+
+            Children.Clear();
+            Meshes.Clear();
         }
 
         public HWNode[] GetAllParents()

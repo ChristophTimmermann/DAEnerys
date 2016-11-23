@@ -15,7 +15,15 @@ namespace DAEnerys
         public virtual HWNode Parent
         {
             get { return parent; }
-            set { if (parent != null) parent.Meshes.Remove(this); parent = value; if(parent != null) parent.Meshes.Add(this); Renderer.InvalidateView(); Renderer.Invalidate(); }
+            set
+            {
+                if (parent != null)
+                    parent.Meshes.Remove(this);
+                parent = value;
+                if (parent != null)
+                    parent.Meshes.Add(this);
+                Renderer.InvalidateView(); Renderer.Invalidate();
+            }
         }
 
         public string Name;
@@ -372,7 +380,10 @@ namespace DAEnerys
 
         public virtual void Destroy()
         {
+            Parent = null;
             HWScene.Meshes.Remove(this);
+            Renderer.InvalidateMeshData();
+            Renderer.Invalidate();
         }
 
         public Vector3[] GetVertices()

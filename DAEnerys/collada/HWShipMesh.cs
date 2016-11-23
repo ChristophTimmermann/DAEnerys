@@ -33,7 +33,7 @@ namespace DAEnerys
         public List<HWShipMeshLOD> Meshes = new List<HWShipMeshLOD>();
         public List<HWShipMeshLOD>[] LODMeshes = new List<HWShipMeshLOD>[4];
 
-        public object ShipMeshListItem;
+        public object ListItem;
 
         public HWShipMesh(HWJoint parent, string name, List<ShipMeshTag> tags)
         {
@@ -53,6 +53,16 @@ namespace DAEnerys
             Meshes.Add(lodMesh);
 
             LODMeshes[lodMesh.LOD].Add(lodMesh);
+        }
+
+        public void Destroy()
+        {
+            HWScene.ShipMeshes.Remove(this);
+            Program.main.RemoveShipMesh(this);
+            HWShipMeshLOD[] lodMeshes = Meshes.ToArray();
+            for (int i = 0; i < lodMeshes.Length; i++)
+                lodMeshes[i].Destroy();
+            Parent = null;
         }
     }
 

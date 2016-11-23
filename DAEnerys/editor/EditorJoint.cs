@@ -16,6 +16,16 @@ namespace DAEnerys
         public override int VertexCount { get { return Mesh.VertexCount; } }
         public override int IndiceCount { get { return Indices.Length; } }
 
+        public void Destroy()
+        {
+            EditorScene.meshes.Remove(this);
+            Mesh = null;
+            HWNode = null;
+            JointMaterial = null;
+            Renderer.InvalidateMeshData();
+            Renderer.Invalidate();
+        }
+
         public EditorJoint(HWJoint joint) : base()
         {
             this.HWNode = joint;

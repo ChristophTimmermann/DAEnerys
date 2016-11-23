@@ -621,7 +621,7 @@ namespace DAEnerys
             XElement newNodeElement = AddNode(parentElement, node);
 
             foreach (HWNode childNode in node.Children)
-                AddNode(newNodeElement, childNode);
+                AddNodeRecursive(newNodeElement, childNode);
         }
 
         private static void AddNodeChildrenRecursive(XElement parentElement, HWNode parentNode)
