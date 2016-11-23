@@ -61,6 +61,7 @@ namespace DAEnerys
             Program.DeltaCounter.Start();
 
             HWData.ParseDataPaths();
+            Settings.SavedBackground = Settings.SavedBackground; //Loads the background after the data paths have been parsed
 
             HWBadge.LoadSavedBadge();
 

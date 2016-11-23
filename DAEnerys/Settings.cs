@@ -73,17 +73,15 @@ namespace DAEnerys
             }
 
             comboBackground.Items.Clear();
-            comboBackground.Items.Add("<nothing>");
             foreach (string bgName in HWData.BackgroundTextures.Keys)
             {
                 comboBackground.Items.Add(bgName).ToString();
             }
 
             if (HWData.BackgroundTextures.Keys.Contains(SavedBackground))
-            {
                 comboBackground.SelectedItem = SavedBackground;
-                comboBackground_SelectedIndexChanged(this, EventArgs.Empty);
-            }
+            else
+                comboBackground.SelectedIndex = 0;
 
             checkCheckForUpdates.Checked = Updater.CheckForUpdatesOnStart;
         }
@@ -253,7 +251,34 @@ namespace DAEnerys
         public static Color SavedStripeColor = Color.SpringGreen;
         public static string SavedBadge = "daenerys";
         public static Color SavedEngineColor = Color.FromArgb(64, 69, 120, 176);
-        public static string SavedBackground = "";
+        private static string savedBackground = "";
+        public static string SavedBackground
+        {
+            get { return savedBackground; }
+            set
+            {
+                savedBackground = value;
+                if (Renderer.BackgroundTexture != null)
+                    Renderer.BackgroundTexture.Unload();
+                if (value != "<nothing>" && HWData.BackgroundTextures.Keys.Contains(value))
+                {
+                    Renderer.BackgroundTexture = HWData.BackgroundTextures[value];
+                    Renderer.BackgroundTexture.Load();
+                }
+                else
+                {
+                    if (HWData.BackgroundTextures.Keys.Count > 0)
+                    {
+                        Renderer.BackgroundTexture = HWData.BackgroundTextures.ElementAt(0).Value;
+                        Renderer.BackgroundTexture.Load();
+                    }
+                    else
+                        Renderer.BackgroundTexture = null;
+
+                }
+                Renderer.Invalidate();
+            }
+        }
 
         public static void LoadSettings()
         {
@@ -307,7 +332,7 @@ namespace DAEnerys
                             break;
                         case "background":
                             string background = element.Value;
-                            SavedBackground = background;
+                            savedBackground = background;
                             break;
                         case "fieldOfView":
                             double fov = 1.22f;
@@ -462,20 +487,9 @@ namespace DAEnerys
             Updater.CheckForUpdatesOnStart = checkCheckForUpdates.Checked;
         }
 
-        private void comboBackground_SelectedIndexChanged(object sender, EventArgs e)
+        public void comboBackground_SelectedIndexChanged(object sender, EventArgs e)
         {
             SavedBackground = (string)comboBackground.SelectedItem;
-            if (Renderer.BackgroundTexture != null) Renderer.BackgroundTexture.Unload();
-            if (SavedBackground != "<nothing>")
-            {
-                Renderer.BackgroundTexture = HWData.BackgroundTextures[(string)comboBackground.SelectedItem];
-                Renderer.BackgroundTexture.Load();
-            }
-            else
-            {
-                Renderer.BackgroundTexture = null;
-            }
-            Renderer.Invalidate();
         }
     }
 }

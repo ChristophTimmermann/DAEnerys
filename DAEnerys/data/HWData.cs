@@ -20,7 +20,7 @@ namespace DAEnerys
             //Check if there are any data paths
             if (DataPaths.Count <= 0)
             {
-                MessageBox.Show("You did not specify any data paths yet!\nThis is needed for parsing of navlight styles etc.\nDefine them in the settings window.", "No data paths specified", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You did not specify any data paths yet!\nThis is very important as DAEnerys needs shaders and other things from your Homeworld data.\nDefine them in the settings window.\n\nDAENERYS WILL NOT WORK CORRECTLY WITHOUT THEM.", "No data paths specified", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
