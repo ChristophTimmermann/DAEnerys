@@ -40,11 +40,11 @@ namespace DAEnerys
         public bool VertexColored = true;
         public Vector3 Scale = Vector3.One;
 
-        public Matrix4 ModelMatrix;
+        public Matrix4 ModelMatrix = Matrix4.Identity;
         public Matrix4 ModelViewProjectionMatrix = Matrix4.Identity;
 
-        public Vertex[] Vertices;
-        public int[] Indices;
+        public Vertex[] Vertices = new Vertex[0];
+        public int[] Indices = new int[0];
 
         private GenericMaterial material = new GenericMaterial();
         public GenericMaterial Material { get { return material; } set { material = value; Renderer.Invalidate(); } }

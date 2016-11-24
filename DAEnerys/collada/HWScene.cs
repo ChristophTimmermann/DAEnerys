@@ -207,6 +207,16 @@ namespace DAEnerys
             return "colladaBlenderFix.dae";
         }
 
+        public static void FindBiggestMesh()
+        {
+            HWScene.Min = Vector3.Zero;
+            HWScene.Max = Vector3.Zero;
+
+            foreach (HWShipMesh shipMesh in ShipMeshes)
+                foreach (HWShipMeshLOD lodMesh in shipMesh.LODMeshes[0])
+                    lodMesh.CalculateBoundingBox();
+        }
+
         public static void CalibrateSettings(bool setZoom = true)
         {
             float volume = (-Min.X + Max.X) * (-Min.Y + Max.Y) * (-Min.Z + Max.Z);

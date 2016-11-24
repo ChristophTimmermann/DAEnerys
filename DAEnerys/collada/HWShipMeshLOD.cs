@@ -43,7 +43,9 @@ namespace DAEnerys
 
         public override void Destroy()
         {
-            Parent.Destroy();
+            if(Parent as HWJoint != null)
+                Parent.Destroy();
+
             ShipMesh.Meshes.Remove(this);
             ShipMesh.LODMeshes[LOD].Remove(this);
             ShipMesh = null;

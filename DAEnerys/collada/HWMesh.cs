@@ -33,7 +33,7 @@ namespace DAEnerys
         new public HWMaterial Material { get { return material; } set { material = value; Renderer.Invalidate(); } }
 
         public int VertexCount { get { return mesh.VertexCount; } }
-        public int IndiceCount { get { return Indices.Length; } }
+        public int IndiceCount { get { if (Indices != null) return Indices.Length; else return 0; } }
         public int FaceCount { get { return mesh.FaceCount; } }
         public int TextureCoordinateChannelCount { get { return mesh.TextureCoordinateChannelCount; } }
         public List<Face> Faces { get { return mesh.Faces; } }
@@ -429,6 +429,8 @@ namespace DAEnerys
         public int[] GetIndices(int offset = 0)
         {
             int[] indices = mesh.GetIndices();
+            if (indices == null)
+                indices = new int[0];
 
             if (offset != 0)
             {

@@ -342,18 +342,21 @@ namespace DAEnerys
 
                     if (parentJoint != null)
                     {
-                        parentJoint.TreeNode.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
+                        //parentJoint.TreeNode.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
+                        parentJoint.TreeNode.Nodes.Add(newNode);
                         joint.TreeNode = newNode;
                     }
                     else
                     {
-                        jointsTree.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
+                        //jointsTree.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
+                        parent.TreeNode.Nodes.Add(newNode);
                         joint.TreeNode = newNode;
                     }
                 }
                 else
                 {
-                    jointsTree.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
+                    //jointsTree.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
+                    parent.TreeNode.Nodes.Add(newNode);
                     joint.TreeNode = newNode;
                 }
             }
@@ -803,6 +806,8 @@ namespace DAEnerys
             comboShipMeshParent.Enabled = false; //Disable parent combo box
 
             buttonShipMeshRemove.Enabled = false; //Disable remove button
+            buttonShipMeshLODRemove.Enabled = false;
+            buttonShipMeshLODAdd.Enabled = false;
 
             foreach (Label label in ShipMeshLODMaterialLabels)
                 label.Visible = false;
@@ -836,7 +841,7 @@ namespace DAEnerys
             comboShipMeshParent.Enabled = true; //Enable parent combo box
 
             //Fill LOD list
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i <= 3; i++)
                 if (selectedShipMesh.LODMeshes[i].Count > 0)
                 {
                     listShipMeshLODs.Items.Add("LOD " + i);
@@ -844,11 +849,15 @@ namespace DAEnerys
                         listShipMeshLODs.SetItemChecked(i, true);
                 }
 
-            if(selectedShipMesh.LODMeshes[0].Count > 0)
+            if (selectedShipMesh.LODMeshes[0].Count > 0)
                 listShipMeshLODs.SelectedIndex = 0;
+            else
+                listShipMeshLODs.ClearSelected();
 
             //Enable remove button
             buttonShipMeshRemove.Enabled = true;
+
+            buttonShipMeshLODAdd.Enabled = true;
         }
         public void AddShipMesh(HWShipMesh mesh)
         {
@@ -913,8 +922,20 @@ namespace DAEnerys
             foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
                 comboBox.Visible = false;
 
+            buttonShipMeshLODRemove.Enabled = false;
+            buttonShipMeshLODImport.Enabled = false;
+            buttonShipMeshLODExport.Enabled = false;
+
             selectedShipMeshLOD = listShipMeshLODs.SelectedIndex;
+
+            if (selectedShipMeshLOD == -1)
+                return;
+
             List<HWShipMeshLOD> lodMeshes = selectedShipMesh.LODMeshes[selectedShipMeshLOD];
+
+            buttonShipMeshLODRemove.Enabled = true;
+            buttonShipMeshLODImport.Enabled = true;
+            buttonShipMeshLODExport.Enabled = true;
 
             int materialCount = 0;
             foreach (HWShipMeshLOD lodMesh in lodMeshes)
@@ -1027,6 +1048,51 @@ namespace DAEnerys
             selectedShipMesh.Destroy();
             listShipMeshes.ClearSelected();
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+
+            HWScene.FindBiggestMesh();
+        }
+        private void buttonShipMeshAdd_Click(object sender, EventArgs e)
+        {
+            HWShipMesh newShipMesh = new HWShipMesh(null, "ShipMesh" + HWScene.ShipMeshes.Count, new List<ShipMeshTag>());
+            listShipMeshes.SelectedItem = newShipMesh.ListItem;
+        }
+        private void buttonShipMeshLODRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedShipMesh == null)
+                return;
+            if (selectedShipMeshLOD == -1)
+                return;
+
+            HWShipMeshLOD[] lodMeshes = selectedShipMesh.LODMeshes[selectedShipMeshLOD].ToArray();
+            foreach (HWShipMeshLOD lodMesh in lodMeshes)
+                lodMesh.Destroy();
+
+            listShipMeshLODs.Items.RemoveAt(selectedShipMeshLOD);
+
+            listShipMeshLODs.ClearSelected();
+            listShipMeshLODs_SelectedIndexChanged(this, EventArgs.Empty);
+
+            HWScene.FindBiggestMesh();
+        }
+        private void buttonShipMeshLODAdd_Click(object sender, EventArgs e)
+        {
+            if (selectedShipMesh == null)
+                return;
+
+            int lowestLOD = -1;
+            for (int i = 0; i <= 3; i++)
+                if (selectedShipMesh.LODMeshes[i].Count > 0)
+                    lowestLOD = i;
+
+            HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new Mesh(), selectedShipMesh, lowestLOD + 1);
+
+            //This part is pretty ugly
+            HWNode newNode = new HWNode(newLODMesh.Parent, newLODMesh.FormattedName);
+            newLODMesh.Parent = newNode;
+            //it will go away as soon as I handle the data in Homeworld-way rather than in COLLADA-way
+
+            listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+            listShipMeshLODs.SelectedIndex = lowestLOD + 1;
         }
         //--------------------------------- ENGINE GLOW MESHES ---------------------------------//
         private void listEngineGlows_SelectedIndexChanged(object sender, EventArgs e)
