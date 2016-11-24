@@ -38,6 +38,7 @@ namespace DAEnerys
         public bool DrawNavLightRadius;
 
         private bool problemsVisible;
+        private bool ignoreShipMeshListSelectedIndexChanged;
         private bool ignoreShipMeshDoScarCheck;
         private bool ignoreMaterialShaderChanged;
 
@@ -793,6 +794,9 @@ namespace DAEnerys
         //--------------------------------- SHIP MESHES ---------------------------------//
         private void listShipMeshes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (ignoreShipMeshListSelectedIndexChanged)
+                return;
+
             selectedShipMesh = null;
 
             listShipMeshLODs.Items.Clear(); //Clear LOD list
@@ -808,6 +812,9 @@ namespace DAEnerys
             buttonShipMeshRemove.Enabled = false; //Disable remove button
             buttonShipMeshLODRemove.Enabled = false;
             buttonShipMeshLODAdd.Enabled = false;
+
+            boxShipMeshName.Clear();
+            boxShipMeshName.Enabled = false;
 
             foreach (Label label in ShipMeshLODMaterialLabels)
                 label.Visible = false;
@@ -828,6 +835,9 @@ namespace DAEnerys
             ignoreShipMeshDoScarCheck = true;
             checkShipMeshDoScar.Enabled = true; //Enable do scar checkbox
             ignoreShipMeshDoScarCheck = false;
+
+            boxShipMeshName.Enabled = true;
+            boxShipMeshName.Text = selectedShipMesh.Name;
 
             //Select parent joint in combo box
             if (selectedShipMesh.Parent != null) //If ship mesh has a parent joint
@@ -887,6 +897,50 @@ namespace DAEnerys
 
             Renderer.InvalidateView();
             Renderer.Invalidate();
+        }
+        private void boxShipMeshName_Leave(object sender, EventArgs e)
+        {
+            if (selectedShipMesh == null)
+                return;
+
+            UpdateShipMeshName(selectedShipMesh, boxShipMeshName.Text);
+        }
+        private void boxShipMeshName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedShipMesh == null)
+                return;
+
+            UpdateShipMeshName(selectedShipMesh, boxShipMeshName.Text);
+        }
+        private void UpdateShipMeshName(HWShipMesh shipMesh, string newName)
+        {
+            //Ship mesh with this name already exists
+            if(ShipMeshListItems.ContainsKey(newName))
+            {
+                HWShipMesh existingShipMesh = ShipMeshListItems[newName];
+                if (existingShipMesh != shipMesh)
+                {
+                    MessageBox.Show("A ship mesh with this name already exists.", "Error while changing ship mesh name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxShipMeshName.Text = shipMesh.Name;
+                    boxShipMeshName.Focus();
+                    return;
+                }
+            }
+
+            ignoreShipMeshListSelectedIndexChanged = true;
+            int index = listShipMeshes.Items.IndexOf(selectedShipMesh.ListItem);
+            ShipMeshListItems.Remove(selectedShipMesh.ListItem);
+            listShipMeshes.Items.Remove(selectedShipMesh.ListItem);
+            selectedShipMesh.Name = boxShipMeshName.Text;
+            object item = selectedShipMesh.Name;
+            selectedShipMesh.ListItem = item;
+            listShipMeshes.Items.Insert(index, item);
+            ShipMeshListItems.Add(item, selectedShipMesh);
+            listShipMeshes.SelectedItem = item;
+            ignoreShipMeshListSelectedIndexChanged = false;
         }
         private void comboShipMeshParent_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1067,9 +1121,27 @@ namespace DAEnerys
             foreach (HWShipMeshLOD lodMesh in lodMeshes)
                 lodMesh.Destroy();
 
+            if (selectedShipMeshLOD < 3)
+            {
+                for (int i = selectedShipMeshLOD + 1; i <= 3; i++)
+                {
+                    lodMeshes = selectedShipMesh.LODMeshes[i].ToArray();
+                    foreach (HWShipMeshLOD lodMesh in lodMeshes)
+                    {
+                        lodMesh.LOD -= 1;
+                        selectedShipMesh.LODMeshes[i].Remove(lodMesh);
+                        selectedShipMesh.LODMeshes[i - 1].Add(lodMesh);
+                        lodMesh.Parent.Name = lodMesh.FormattedName;
+                    }
+                }
+            }
+
             listShipMeshLODs.Items.RemoveAt(selectedShipMeshLOD);
 
+            listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+
             listShipMeshLODs.ClearSelected();
+
             listShipMeshLODs_SelectedIndexChanged(this, EventArgs.Empty);
 
             HWScene.FindBiggestMesh();

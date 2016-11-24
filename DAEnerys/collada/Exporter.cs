@@ -500,19 +500,60 @@ namespace DAEnerys
             visualScene.SetAttributeValue("name", "scene");
             libVisualScenes.Add(visualScene);
 
-            foreach (HWNode rootNode in HWNode.RootLODs)
-                if (rootNode != null)
-                    LODRootElements.Add(rootNode, AddNode(visualScene, rootNode));
+            for (int i = 0; i < HWNode.RootLODs.Length; i++)
+            {
+                bool lodExists = false;
+                foreach (HWShipMesh shipMesh in HWScene.ShipMeshes)
+                    foreach (HWShipMeshLOD lodMesh in shipMesh.Meshes)
+                        if (lodMesh.LOD == i)
+                            lodExists = true;
+
+                foreach (HWEngineGlow engineGlow in HWScene.EngineGlows)
+                    foreach (HWEngineGlowLOD lodMesh in engineGlow.Meshes)
+                        if (lodMesh.LOD == i)
+                            lodExists = true;
+
+                if (HWNode.RootLODs[i] == null)
+                {
+                    if(lodExists)
+                        HWNode.RootLODs[i] = new HWNode(null, "ROOT_LOD[" + i + "]");
+                }
+
+                if(lodExists)
+                    LODRootElements.Add(HWNode.RootLODs[i], AddNode(visualScene, HWNode.RootLODs[i]));
+            }
 
             foreach (HWNode rootNode in HWNode.RootLODs)
                 if (rootNode != null)
                     AddNodeChildrenRecursive(LODRootElements[rootNode], rootNode);
 
-            if (HWNode.RootINFO != null)
-                AddNode(visualScene, HWNode.RootINFO);
+            if (HWNode.RootINFO == null)
+            {
+                HWNode.RootINFO = new HWNode(null, "ROOT_INFO");
+                new HWNode(HWNode.RootINFO, "Class[MultiMesh]_Version[512]");
+                int uvSets = 1;
+                foreach (HWShipMesh shipMesh in HWScene.ShipMeshes)
+                    foreach (HWShipMeshLOD shipMeshLOD in shipMesh.Meshes)
+                        if (shipMeshLOD.TextureCoordinateChannelCount > uvSets)
+                            uvSets = shipMeshLOD.TextureCoordinateChannelCount;
+                new HWNode(HWNode.RootINFO, "UVSets[" + uvSets + "]");
+            }
 
-            if (HWNode.RootCOL != null)
-                AddNode(visualScene, HWNode.RootCOL);
+            AddNodeRecursive(visualScene, HWNode.RootINFO);
+
+            if (HWNode.RootCOL == null)
+            {
+                if (HWScene.CollisionMeshes.Count > 0)
+                {
+                    HWNode.RootCOL = new HWNode(null, "ROOT_COL");
+                    foreach (HWCollisionMesh collisionMesh in HWScene.CollisionMeshes)
+                        collisionMesh.Parent.Parent = HWNode.RootCOL;
+                }
+            }
+
+            if (HWScene.CollisionMeshes.Count > 0)
+                AddNodeRecursive(visualScene, HWNode.RootCOL);
+
             #endregion
 
             #region scene
