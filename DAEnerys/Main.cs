@@ -487,6 +487,9 @@ namespace DAEnerys
         }
         private void trackBarDockpathSegments_Scroll(object sender, EventArgs e)
         {
+            if (selectedDockpath == null)
+                return;
+
             //Reset segment colors
             foreach (HWDockSegment segment in HWDockSegment.DockSegments)
             {

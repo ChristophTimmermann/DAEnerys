@@ -597,6 +597,18 @@ namespace DAEnerys
                 AddNode(jointElements[navLight.Parent], navLight.FormattedName, navLight.RelativeWorldMatrix);
             }
 
+            //Dockpaths
+            XElement holdDockElement = AddNode(lodRootElements[0], "HOLD_DOCK", Matrix4.Identity);
+            
+            foreach(HWDockpath dockpath in HWDockpath.Dockpaths)
+            {
+                XElement dockpathElement = AddNode(holdDockElement, dockpath.FormattedName, Matrix4.Identity);
+                foreach(HWDockSegment segment in dockpath.Segments)
+                {
+                    XElement segmentElement = AddNode(dockpathElement, segment.FormattedName, segment.RelativeWorldMatrix);
+                }
+            }
+
             #region ROOT_COL
             if (HWCollisionMesh.CollisionMeshes.Count > 0)
             {

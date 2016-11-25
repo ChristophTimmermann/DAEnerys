@@ -273,8 +273,6 @@ namespace DAEnerys
 
                 if (!failed)
                 {
-                    HWJoint parentJoint = GetNextJointParent(assimpNode);
-
                     string pathName = "";
                     string[] families = new string[0];
                     string[] links = new string[0];
@@ -328,7 +326,7 @@ namespace DAEnerys
                         }
                     }
 
-                    HWDockpath newDockpath = new HWDockpath(parentJoint, pathName, families, links, flags);
+                    HWDockpath newDockpath = new HWDockpath(pathName, families, links, flags);
                     nodeDockpaths.Add(assimpNode, newDockpath);
                 }
             }
