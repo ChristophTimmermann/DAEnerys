@@ -38,6 +38,9 @@ namespace DAEnerys
             Scene effect = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/square.obj"), PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorEffect.Mesh = effect.Meshes[0];
 
+            Scene cube = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/cube.obj"), PostProcessPreset.TargetRealTimeMaximumQuality);
+            EditorCube.Mesh = cube.Meshes[0];
+
             importer.Dispose();
             logStream.Detach();
             #endregion

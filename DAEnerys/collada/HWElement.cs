@@ -4,8 +4,8 @@ namespace DAEnerys
 {
     public abstract class HWElement
     {
-        protected HWJoint parent;
-        public virtual HWJoint Parent
+        protected HWElement parent;
+        public virtual HWElement Parent
         {
             get { return parent; }
             set
@@ -37,7 +37,7 @@ namespace DAEnerys
             }
         }
 
-        public HWElement(string name, HWJoint parent, Matrix4 transform)
+        public HWElement(string name, HWElement parent, Matrix4 transform)
         {
             Name = name;
 

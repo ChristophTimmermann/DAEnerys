@@ -588,13 +588,13 @@ namespace DAEnerys
             //Markers
             foreach(HWMarker marker in HWMarker.Markers)
             {
-                AddNode(jointElements[marker.Parent], marker.FormattedName, marker.RelativeWorldMatrix);
+                AddNode(jointElements[(HWJoint)marker.Parent], marker.FormattedName, marker.RelativeWorldMatrix);
             }
 
             //Navlights
             foreach(HWNavLight navLight in HWNavLight.NavLights)
             {
-                AddNode(jointElements[navLight.Parent], navLight.FormattedName, navLight.RelativeWorldMatrix);
+                AddNode(jointElements[(HWJoint)navLight.Parent], navLight.FormattedName, navLight.RelativeWorldMatrix);
             }
 
             //Dockpaths
@@ -606,6 +606,16 @@ namespace DAEnerys
                 foreach(HWDockSegment segment in dockpath.Segments)
                 {
                     XElement segmentElement = AddNode(dockpathElement, segment.FormattedName, segment.RelativeWorldMatrix);
+                }
+            }
+
+            //Engine burns
+            foreach (HWEngineBurn engineBurn in HWEngineBurn.EngineBurns)
+            {
+                XElement engineBurnElement = AddNode(jointElements[(HWJoint)engineBurn.Parent], engineBurn.FormattedName, engineBurn.RelativeWorldMatrix);
+                foreach (HWEngineFlame flame in engineBurn.Flames)
+                {
+                    XElement flameElement = AddNode(engineBurnElement, flame.FormattedName, flame.RelativeWorldMatrix);
                 }
             }
 

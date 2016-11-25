@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="collada\Exporter.cs" />
+    <Compile Include="collada\HWEngineBurn.cs" />
     <Compile Include="collada\HWElement.cs" />
     <Compile Include="collada\HWEngineShape.cs" />
     <Compile Include="collada\HWDockpath.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Dump.cs" />
     <Compile Include="editor\EditorEffect.cs" />
     <Compile Include="editor\EditorIcon.cs" />
+    <Compile Include="editor\EditorCube.cs" />
     <Compile Include="editor\EditorIcosphere.cs" />
     <Compile Include="editor\EditorJoint.cs" />
     <Compile Include="editor\EditorMesh.cs" />
@@ -229,6 +231,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="resources\cube.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="resources\cubemap-test\black.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -305,7 +310,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
+      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

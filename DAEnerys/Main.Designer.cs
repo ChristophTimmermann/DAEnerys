@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
             this.buttonSave = new System.Windows.Forms.ToolStripButton();
@@ -147,6 +147,17 @@ namespace DAEnerys
             this.listEngineShapes = new System.Windows.Forms.CheckedListBox();
             this.labelEngineShapeParent = new System.Windows.Forms.Label();
             this.comboEngineShapeParent = new System.Windows.Forms.ComboBox();
+            this.tabEngineBurns = new System.Windows.Forms.TabPage();
+            this.comboEngineBurnParent = new System.Windows.Forms.ComboBox();
+            this.labelEngineBurnParent = new System.Windows.Forms.Label();
+            this.boxEngineBurnName = new System.Windows.Forms.TextBox();
+            this.labelEngineBurnName = new System.Windows.Forms.Label();
+            this.groupEngineBurnFlames = new System.Windows.Forms.GroupBox();
+            this.numericEngineBurnSpriteIndex = new System.Windows.Forms.NumericUpDown();
+            this.labelEngineBurnFlameSpriteIndex = new System.Windows.Forms.Label();
+            this.trackBarEngineBurnFlames = new System.Windows.Forms.TrackBar();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.listEngineBurns = new System.Windows.Forms.CheckedListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.gridProblems = new System.Windows.Forms.DataGridView();
             this.columnProblems = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -199,6 +210,11 @@ namespace DAEnerys
             this.panel2.SuspendLayout();
             this.tabEngineShapes.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.tabEngineBurns.SuspendLayout();
+            this.groupEngineBurnFlames.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnSpriteIndex)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarEngineBurnFlames)).BeginInit();
+            this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -336,6 +352,7 @@ namespace DAEnerys
             this.tabControl.Controls.Add(this.tabNavLights);
             this.tabControl.Controls.Add(this.tabEngineGlows);
             this.tabControl.Controls.Add(this.tabEngineShapes);
+            this.tabControl.Controls.Add(this.tabEngineBurns);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Multiline = true;
@@ -1555,6 +1572,127 @@ namespace DAEnerys
             this.comboEngineShapeParent.Size = new System.Drawing.Size(177, 21);
             this.comboEngineShapeParent.TabIndex = 8;
             // 
+            // tabEngineBurns
+            // 
+            this.tabEngineBurns.AutoScroll = true;
+            this.tabEngineBurns.Controls.Add(this.comboEngineBurnParent);
+            this.tabEngineBurns.Controls.Add(this.labelEngineBurnParent);
+            this.tabEngineBurns.Controls.Add(this.boxEngineBurnName);
+            this.tabEngineBurns.Controls.Add(this.labelEngineBurnName);
+            this.tabEngineBurns.Controls.Add(this.groupEngineBurnFlames);
+            this.tabEngineBurns.Controls.Add(this.panel4);
+            this.tabEngineBurns.Location = new System.Drawing.Point(4, 58);
+            this.tabEngineBurns.Name = "tabEngineBurns";
+            this.tabEngineBurns.Size = new System.Drawing.Size(242, 774);
+            this.tabEngineBurns.TabIndex = 10;
+            this.tabEngineBurns.Text = "Engine Burns";
+            this.tabEngineBurns.UseVisualStyleBackColor = true;
+            // 
+            // comboEngineBurnParent
+            // 
+            this.comboEngineBurnParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboEngineBurnParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboEngineBurnParent.Enabled = false;
+            this.comboEngineBurnParent.FormattingEnabled = true;
+            this.comboEngineBurnParent.Location = new System.Drawing.Point(47, 195);
+            this.comboEngineBurnParent.Name = "comboEngineBurnParent";
+            this.comboEngineBurnParent.Size = new System.Drawing.Size(190, 21);
+            this.comboEngineBurnParent.TabIndex = 15;
+            // 
+            // labelEngineBurnParent
+            // 
+            this.labelEngineBurnParent.AutoSize = true;
+            this.labelEngineBurnParent.Location = new System.Drawing.Point(3, 198);
+            this.labelEngineBurnParent.Name = "labelEngineBurnParent";
+            this.labelEngineBurnParent.Size = new System.Drawing.Size(41, 13);
+            this.labelEngineBurnParent.TabIndex = 6;
+            this.labelEngineBurnParent.Text = "Parent:";
+            // 
+            // boxEngineBurnName
+            // 
+            this.boxEngineBurnName.Enabled = false;
+            this.boxEngineBurnName.Location = new System.Drawing.Point(47, 169);
+            this.boxEngineBurnName.Name = "boxEngineBurnName";
+            this.boxEngineBurnName.Size = new System.Drawing.Size(190, 20);
+            this.boxEngineBurnName.TabIndex = 5;
+            // 
+            // labelEngineBurnName
+            // 
+            this.labelEngineBurnName.AutoSize = true;
+            this.labelEngineBurnName.Location = new System.Drawing.Point(3, 172);
+            this.labelEngineBurnName.Name = "labelEngineBurnName";
+            this.labelEngineBurnName.Size = new System.Drawing.Size(38, 13);
+            this.labelEngineBurnName.TabIndex = 4;
+            this.labelEngineBurnName.Text = "Name:";
+            // 
+            // groupEngineBurnFlames
+            // 
+            this.groupEngineBurnFlames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupEngineBurnFlames.Controls.Add(this.numericEngineBurnSpriteIndex);
+            this.groupEngineBurnFlames.Controls.Add(this.labelEngineBurnFlameSpriteIndex);
+            this.groupEngineBurnFlames.Controls.Add(this.trackBarEngineBurnFlames);
+            this.groupEngineBurnFlames.Location = new System.Drawing.Point(4, 222);
+            this.groupEngineBurnFlames.Name = "groupEngineBurnFlames";
+            this.groupEngineBurnFlames.Size = new System.Drawing.Size(233, 98);
+            this.groupEngineBurnFlames.TabIndex = 3;
+            this.groupEngineBurnFlames.TabStop = false;
+            this.groupEngineBurnFlames.Text = "Flames";
+            // 
+            // numericEngineBurnSpriteIndex
+            // 
+            this.numericEngineBurnSpriteIndex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericEngineBurnSpriteIndex.Enabled = false;
+            this.numericEngineBurnSpriteIndex.Location = new System.Drawing.Point(77, 71);
+            this.numericEngineBurnSpriteIndex.Name = "numericEngineBurnSpriteIndex";
+            this.numericEngineBurnSpriteIndex.Size = new System.Drawing.Size(41, 20);
+            this.numericEngineBurnSpriteIndex.TabIndex = 10;
+            // 
+            // labelEngineBurnFlameSpriteIndex
+            // 
+            this.labelEngineBurnFlameSpriteIndex.AutoSize = true;
+            this.labelEngineBurnFlameSpriteIndex.Location = new System.Drawing.Point(6, 73);
+            this.labelEngineBurnFlameSpriteIndex.Name = "labelEngineBurnFlameSpriteIndex";
+            this.labelEngineBurnFlameSpriteIndex.Size = new System.Drawing.Size(65, 13);
+            this.labelEngineBurnFlameSpriteIndex.TabIndex = 9;
+            this.labelEngineBurnFlameSpriteIndex.Text = "Sprite index:";
+            // 
+            // trackBarEngineBurnFlames
+            // 
+            this.trackBarEngineBurnFlames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarEngineBurnFlames.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarEngineBurnFlames.Enabled = false;
+            this.trackBarEngineBurnFlames.Location = new System.Drawing.Point(8, 16);
+            this.trackBarEngineBurnFlames.Name = "trackBarEngineBurnFlames";
+            this.trackBarEngineBurnFlames.Size = new System.Drawing.Size(223, 45);
+            this.trackBarEngineBurnFlames.TabIndex = 3;
+            this.trackBarEngineBurnFlames.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBarEngineBurnFlames.Scroll += new System.EventHandler(this.trackBarEngineBurnFlames_Scroll);
+            // 
+            // panel4
+            // 
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel4.Controls.Add(this.listEngineBurns);
+            this.panel4.Location = new System.Drawing.Point(4, 4);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(235, 159);
+            this.panel4.TabIndex = 0;
+            // 
+            // listEngineBurns
+            // 
+            this.listEngineBurns.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listEngineBurns.FormattingEnabled = true;
+            this.listEngineBurns.Location = new System.Drawing.Point(0, 0);
+            this.listEngineBurns.Name = "listEngineBurns";
+            this.listEngineBurns.Size = new System.Drawing.Size(235, 159);
+            this.listEngineBurns.TabIndex = 7;
+            this.listEngineBurns.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineBurns_ItemCheck);
+            this.listEngineBurns.SelectedIndexChanged += new System.EventHandler(this.listEngineBurns_SelectedIndexChanged);
+            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1575,9 +1713,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle17;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -1585,14 +1723,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle19;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -1601,9 +1739,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle20;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -1616,9 +1754,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle18;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -1751,6 +1889,13 @@ namespace DAEnerys
             this.tabEngineShapes.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.tabEngineBurns.ResumeLayout(false);
+            this.tabEngineBurns.PerformLayout();
+            this.groupEngineBurnFlames.ResumeLayout(false);
+            this.groupEngineBurnFlames.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnSpriteIndex)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarEngineBurnFlames)).EndInit();
+            this.panel4.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
@@ -1881,6 +2026,17 @@ namespace DAEnerys
         private System.Windows.Forms.Button buttonShipMeshLODAdd;
         private System.Windows.Forms.TextBox boxShipMeshName;
         private System.Windows.Forms.Label labelShipMeshName;
+        private System.Windows.Forms.TabPage tabEngineBurns;
+        private System.Windows.Forms.TextBox boxEngineBurnName;
+        private System.Windows.Forms.Label labelEngineBurnName;
+        private System.Windows.Forms.GroupBox groupEngineBurnFlames;
+        private System.Windows.Forms.NumericUpDown numericEngineBurnSpriteIndex;
+        private System.Windows.Forms.Label labelEngineBurnFlameSpriteIndex;
+        private System.Windows.Forms.TrackBar trackBarEngineBurnFlames;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.CheckedListBox listEngineBurns;
+        private System.Windows.Forms.ComboBox comboEngineBurnParent;
+        private System.Windows.Forms.Label labelEngineBurnParent;
     }
 }
 

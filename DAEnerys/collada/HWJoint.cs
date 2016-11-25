@@ -12,16 +12,26 @@ namespace DAEnerys
         public List<HWElement> Children = new List<HWElement>();
         public List<HWMesh> Meshes = new List<HWMesh>();
 
-        public override HWJoint Parent
+        public override HWElement Parent
         {
             get { return parent; }
             set
             {
                 if (parent != null)
-                    parent.Children.Remove(this);
+                {
+                    HWJoint parentJoint = parent as HWJoint;
+
+                    if(parentJoint != null)
+                        parentJoint.Children.Remove(this);
+                }
                 parent = value;
                 if (parent != null)
-                    parent.Children.Add(this);
+                {
+                    HWJoint parentJoint = parent as HWJoint;
+
+                    if (parentJoint != null)
+                        parentJoint.Children.Add(this);
+                }
                 CalculateWorldMatrix();
                 Renderer.InvalidateView();
                 Renderer.Invalidate();
@@ -39,10 +49,7 @@ namespace DAEnerys
         }
 
         public TreeNode TreeNode;
-        public object ComboItemShipMeshParent;
-        public object ComboItemCollisionMeshParent;
-        public object ComboItemEngineGlowParent;
-        public object ComboItemEngineShapeParent;
+        public object ComboItem;
 
         public HWJoint(string name, HWJoint parent, Matrix4 transform) : base(name, parent, transform)
         {

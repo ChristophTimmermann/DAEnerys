@@ -18,19 +18,17 @@ namespace DAEnerys
         public bool Loaded = false;
         HWDockpath selectedDockpath;
         HWNavLight selectedNavLight;
+        HWEngineBurn selectedEngineBurn;
 
         public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
-        public Dictionary<HWJoint, object> ShipMeshParentComboItems = new Dictionary<HWJoint, object>();
         private Label[] ShipMeshLODMaterialLabels = new Label[MAX_MATERIALS_ON_MESH];
         private ComboBox[] ShipMeshLODMaterialComboBoxes = new ComboBox[MAX_MATERIALS_ON_MESH];
         private HWShipMesh selectedShipMesh;
         private int selectedShipMeshLOD;
 
         public Dictionary<object, HWEngineGlow> EngineGlowListItems = new Dictionary<object, HWEngineGlow>();
-        public Dictionary<HWJoint, object> EngineGlowParentComboItems = new Dictionary<HWJoint, object>();
 
-        public Dictionary<HWJoint, object> CollisionMeshParentComboItems = new Dictionary<HWJoint, object>();
-        public Dictionary<HWJoint, object> EngineShapeParentComboItems = new Dictionary<HWJoint, object>();
+        public Dictionary<HWJoint, object> JointComboItems = new Dictionary<HWJoint, object>();
 
         public Dictionary<object, HWMaterial> MaterialListItems = new Dictionary<object, HWMaterial>();
         public Dictionary<string, object> MaterialShaderComboItems = new Dictionary<string, object>();
@@ -174,12 +172,13 @@ namespace DAEnerys
 
         private void Clear()
         {
+            JointComboItems.Clear();
+
             listShipMeshes.Items.Clear();
             comboShipMeshParent.Items.Clear();
             checkShipMeshDoScar.Checked = false;
             listShipMeshLODs.Items.Clear();
             ShipMeshListItems.Clear();
-            ShipMeshParentComboItems.Clear();
 
             foreach (Label label in ShipMeshLODMaterialLabels)
                 label.Visible = false;
@@ -194,7 +193,6 @@ namespace DAEnerys
             comboEngineGlowParent.Items.Clear();
             listEngineGlowLODs.Items.Clear();
             EngineGlowListItems.Clear();
-            EngineGlowParentComboItems.Clear();
 
             listCollisionMeshes.Items.Clear();
             comboCollisionMeshParent.Items.Clear();
@@ -247,9 +245,24 @@ namespace DAEnerys
             checkNavLightFlagHighEnd.Checked = false;
             selectedNavLight = null;
 
+            //Engine burns
+            listEngineBurns.Items.Clear();
+            boxEngineBurnName.Clear();
+            comboEngineBurnParent.Items.Clear();
+            trackBarEngineBurnFlames.Enabled = false;
+            trackBarEngineBurnFlames.Value = 0;
+            trackBarEngineBurnFlames.Maximum = 1;
+            numericEngineBurnSpriteIndex.Value = 0;
+            numericEngineBurnSpriteIndex.Enabled = false;
+
             foreach (HWDockSegment segment in HWDockSegment.DockSegments)
             {
                 segment.Icosphere.Color = new Vector3(1, 0, 0);
+            }
+
+            foreach (HWEngineFlame flame in HWEngineFlame.EngineFlames)
+            {
+                flame.Cube.Color = new Vector3(1, 1, 1);
             }
 
             EditorScene.Clear();
@@ -264,6 +277,7 @@ namespace DAEnerys
             comboCollisionMeshParent.SelectedItem = 0;
             comboEngineGlowParent.SelectedItem = 0;
             comboEngineShapeParent.SelectedItem = 0;
+            comboEngineBurnParent.SelectedItem = 0;
 
             problemsVisible = false;
             splitContainer2.Panel2Collapsed = true;
@@ -332,26 +346,24 @@ namespace DAEnerys
 
             joint.TreeNode = newNode;
 
-            //Add joint to ship mesh parents
+            
             object item = joint.Name;
+            JointComboItems.Add(joint, item);
+            joint.ComboItem = item;
+
+            //Add joint to ship mesh parents
             comboShipMeshParent.Items.Add(item);
-            joint.ComboItemShipMeshParent = item;
-            ShipMeshParentComboItems.Add(joint, item);
 
             //Add joint to collision mesh parents
             comboCollisionMeshParent.Items.Add(item);
-            joint.ComboItemCollisionMeshParent = item;
-            CollisionMeshParentComboItems.Add(joint, item);
 
             //Add joint to engine glow parents
             comboEngineGlowParent.Items.Add(item);
-            joint.ComboItemEngineGlowParent = item;
-            EngineGlowParentComboItems.Add(joint, item);
 
             //Add joint to engine shape parents
             comboEngineShapeParent.Items.Add(item);
-            joint.ComboItemEngineShapeParent = item;
-            EngineShapeParentComboItems.Add(joint, item);
+
+            comboEngineBurnParent.Items.Add(item);
         }
         public void RemoveJoint(HWJoint joint)
         {
@@ -362,26 +374,27 @@ namespace DAEnerys
                 if (childJoint == null)
                     continue;
                 childJoint.TreeNode.Remove();
-                AddJoint(childJoint, joint.Parent);
+                AddJoint(childJoint, (HWJoint)joint.Parent);
             }
 
             jointsTree.Nodes.Remove(joint.TreeNode);
 
-            //Remove joint from ship mesh parents
+            JointComboItems.Remove(joint);
+            joint.ComboItem = null;
             object item = joint.Name;
+
+            //Remove joint from ship mesh parents
             comboShipMeshParent.Items.Remove(item);
-            joint.ComboItemShipMeshParent = null;
-            ShipMeshParentComboItems.Remove(joint);
+
+            comboCollisionMeshParent.Items.Remove(item);
 
             //Remove joint from engine glow parents
             comboEngineGlowParent.Items.Remove(item);
-            joint.ComboItemEngineGlowParent = null;
-            EngineGlowParentComboItems.Remove(joint);
 
             //Remove joint from engine shape parents
             comboEngineShapeParent.Items.Remove(item);
-            joint.ComboItemEngineShapeParent = null;
-            EngineShapeParentComboItems.Remove(joint);
+
+            comboEngineBurnParent.Items.Remove(item);
         }
 
         //--------------------------------- DOCKPATHS ---------------------------------//
@@ -811,7 +824,7 @@ namespace DAEnerys
             boxShipMeshName.Text = selectedShipMesh.Name;
 
             //Select parent joint in combo box
-            object item = ShipMeshParentComboItems[selectedShipMesh.Parent];
+            object item = JointComboItems[selectedShipMesh.Parent];
             comboShipMeshParent.SelectedItem = item; //Select parent joint in combo box
                 
             comboShipMeshParent.Enabled = true; //Enable parent combo box
@@ -1146,7 +1159,7 @@ namespace DAEnerys
             if (selectedEngineGlow != null)
             {
                 //Select parent joint in combo box
-                object item = EngineGlowParentComboItems[selectedEngineGlow.Parent];
+                object item = JointComboItems[selectedEngineGlow.Parent];
                 comboEngineGlowParent.SelectedItem = item; //Select parent joint in combo box
 
                 //Fill LOD list
@@ -1180,6 +1193,81 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
+        //--------------------------------- ENGINE BURNS ---------------------------------//
+        public void AddEngineBurn(HWEngineBurn engineBurn)
+        {
+            listEngineBurns.Items.Add(engineBurn.Name);
+        }
+        private void listEngineBurns_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            bool newValue = false;
+
+            if (e.NewValue == CheckState.Checked)
+                newValue = true;
+
+            foreach (HWEngineBurn engineBurn in HWEngineBurn.EngineBurns)
+            {
+                if (engineBurn.Name == listEngineBurns.Items[e.Index].ToString())
+                    engineBurn.Visible = newValue;
+            }
+
+            trackBarEngineBurnFlames_Scroll(null, EventArgs.Empty);
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+        private void listEngineBurns_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            trackBarEngineBurnFlames.Enabled = true;
+            trackBarEngineBurnFlames.Value = 0;
+            trackBarEngineBurnFlames.Maximum = 1;
+            numericEngineBurnSpriteIndex.Value = 0;
+
+            HWEngineBurn engineBurn = null;
+            foreach (HWEngineBurn burn in HWEngineBurn.EngineBurns)
+            {
+                if (burn.Name == listEngineBurns.SelectedItem.ToString())
+                {
+                    engineBurn = burn;
+                    break;
+                }
+            }
+
+            if (engineBurn != null)
+            {
+                boxEngineBurnName.Text = engineBurn.Name;
+                HWJoint jointParent = (HWJoint)engineBurn.Parent;
+
+                comboEngineBurnParent.SelectedItem = jointParent.ComboItem;
+
+                selectedEngineBurn = engineBurn;
+
+                trackBarEngineBurnFlames.Maximum = engineBurn.Flames.Count - 1;
+                trackBarEngineBurnFlames_Scroll(null, EventArgs.Empty);
+            }
+        }
+        private void trackBarEngineBurnFlames_Scroll(object sender, EventArgs e)
+        {
+            if (selectedEngineBurn == null)
+                return;
+
+            //Reset flame colors
+            foreach (HWEngineFlame flame in HWEngineFlame.EngineFlames)
+            {
+                flame.Cube.Color = new Vector3(1, 1, 1);
+            }
+
+            HWEngineFlame selectedFlame = selectedEngineBurn.Flames[trackBarEngineBurnFlames.Value];
+
+            if (selectedEngineBurn.Visible)
+                selectedFlame.Cube.Color = new Vector3(1, 0, 0);
+
+            numericEngineBurnSpriteIndex.Value = selectedFlame.SpriteIndex;
+
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
 
         //--------------------------------- COLLISION MESHES ---------------------------------//
         private void listCollisionMeshes_SelectedIndexChanged(object sender, EventArgs e)
@@ -1201,7 +1289,7 @@ namespace DAEnerys
             }
 
             //Select parent joint in combo box
-            object item = CollisionMeshParentComboItems[selectedCollisionMesh.Parent];
+            object item = JointComboItems[selectedCollisionMesh.Parent];
             comboCollisionMeshParent.SelectedItem = item; //Select parent joint in combo box
         }
         public void AddCollisionMesh(HWCollisionMesh mesh)
@@ -1255,7 +1343,7 @@ namespace DAEnerys
                 return;
 
             //Select parent joint in combo box
-            object item = EngineShapeParentComboItems[selectedEngineShape.Parent];
+            object item = JointComboItems[selectedEngineShape.Parent];
             comboEngineShapeParent.SelectedItem = item; //Select parent joint in combo box
                 
         }

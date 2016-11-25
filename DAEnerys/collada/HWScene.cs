@@ -156,6 +156,8 @@ namespace DAEnerys
             HWDockpath.Dockpaths.Clear();
             HWDockSegment.DockSegments.Clear();
             HWNavLight.NavLights.Clear();
+            HWEngineBurn.EngineBurns.Clear();
+            HWEngineFlame.EngineFlames.Clear();
 
             HWJoint.Root = new HWJoint("Root", null, Matrix4.Identity);
         }

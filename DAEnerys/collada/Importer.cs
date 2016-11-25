@@ -18,6 +18,7 @@ namespace DAEnerys
 
         private static Dictionary<Node, HWJoint> nodeJoints = new Dictionary<Node, HWJoint>();
         private static Dictionary<Node, HWDockpath> nodeDockpaths = new Dictionary<Node, HWDockpath>();
+        private static Dictionary<Node, HWEngineBurn> nodeEngineBurns = new Dictionary<Node, HWEngineBurn>();
 
         private static Node[] lodNodes;
         private static Node colNode;
@@ -30,6 +31,7 @@ namespace DAEnerys
         {
             nodeJoints.Clear();
             nodeDockpaths.Clear();
+            nodeEngineBurns.Clear();
 
             lodNodes = new Node[4];
             colNode = null;
@@ -489,6 +491,77 @@ namespace DAEnerys
 
                 if(!failed)
                     new HWNavLight(lightName, parentJoint, GetAssimpNodeTransform(assimpNode), navLightStyle, size, phase, frequency, color, distance, flags);
+            }
+            #endregion
+            #region EngineBurn
+            else if (assimpNode.Name.StartsWith("BURN"))
+            {
+                HWJoint parentJoint = GetNextJointParent(assimpNode);
+
+                if (!failed)
+                {
+                    string burnName = "";
+
+                    string[] splitted = assimpNode.Name.Split('[');
+                    int end = -1;
+
+                    for (int i = 0; i < splitted.Length; i++)
+                    {
+                        if (i != 0)
+                        {
+                            end = splitted[i].IndexOf(']');
+                            if (splitted[i - 1].EndsWith("BURN")) //Name
+                            {
+                                burnName = splitted[i].Substring(0, end);
+                            }
+                        }
+                    }
+
+                    HWEngineBurn newBurn = new HWEngineBurn(burnName, parentJoint, GetAssimpNodeTransform(assimpNode));
+                    nodeEngineBurns.Add(assimpNode, newBurn);
+                }
+            }
+            #endregion
+            #region EngineFlame
+            else if (assimpNode.Name.StartsWith("Flame"))
+            {
+                HWEngineBurn engineBurn = null;
+                if (nodeEngineBurns.ContainsKey(assimpNode.Parent))
+                    engineBurn = nodeEngineBurns[assimpNode.Parent];
+
+                //Check if segment is child of engine burn
+                if (engineBurn == null)
+                {
+                    new Problem(ProblemTypes.WARNING, "Engine burn flame \"" + assimpNode.Name + "\" is not a child of an engine burn.");
+                    failed = true;
+                }
+
+                if (!failed)
+                {
+                    int spriteIndex = 0;
+                    int divIndex = -1;
+
+                    string[] splitted = assimpNode.Name.Split('_');
+                    int start = -1;
+                    int end = -1;
+                    foreach (string split in splitted)
+                    {
+                        if (split.StartsWith("Flame")) //SpriteIndex
+                        {
+                            start = split.IndexOf('[') + 1;
+                            end = split.IndexOf(']');
+                            spriteIndex = int.Parse(split.Substring(start, end - start));
+                        }
+                        else if (split.StartsWith("Div")) //DivIndex
+                        {
+                            start = split.IndexOf('[') + 1;
+                            end = split.IndexOf(']');
+                            divIndex = int.Parse(split.Substring(start, end - start));
+                        }
+                    }
+
+                    HWEngineFlame newFlame = new HWEngineFlame(engineBurn, GetAssimpNodeAbsoluteTransform(assimpNode), divIndex, spriteIndex);
+                }
             }
             #endregion
             else if (assimpNode.Name.StartsWith("MULT"))
