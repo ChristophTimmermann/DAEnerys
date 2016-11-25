@@ -1,5 +1,4 @@
-﻿using Assimp;
-using OpenTK;
+﻿using OpenTK;
 using System;
 
 namespace DAEnerys
@@ -23,17 +22,12 @@ namespace DAEnerys
             }
         }
 
-        public HWShipMeshLOD(Mesh assimpMesh, HWShipMesh shipMesh, int lod) : base(assimpMesh)
+        public HWShipMeshLOD(MeshData data, Matrix4 transform, HWMaterial material, HWShipMesh shipMesh, int lod) : base(data, transform, material)
         {
             ShipMesh = shipMesh;
             LOD = lod;
             Name = shipMesh.Name;
             Parent = shipMesh.Parent;
-
-            if (HWScene.Materials[assimpMesh.MaterialIndex] != null)
-                if (HWScene.Materials[assimpMesh.MaterialIndex].Valid)
-                    //if (assimpMesh.TextureCoordinateChannelCount > 0) HODOR assigns them anyways
-                    Material = HWScene.Materials[assimpMesh.MaterialIndex];
 
             ShipMesh.AddLODMesh(this);
 
@@ -43,9 +37,6 @@ namespace DAEnerys
 
         public override void Destroy()
         {
-            if(Parent as HWJoint != null)
-                Parent.Destroy();
-
             ShipMesh.Meshes.Remove(this);
             ShipMesh.LODMeshes[LOD].Remove(this);
             ShipMesh = null;
@@ -57,11 +48,11 @@ namespace DAEnerys
         {
             Vector3 min = new Vector3(float.MaxValue);
             Vector3 max = new Vector3(-float.MaxValue);
-            CalculateModelMatrix();
-            foreach (Vertex vertex in Vertices)
+
+            foreach (Vector3 vertex in Vertices)
             {
-                Vector3 computedVertex = (Matrix4.CreateTranslation(vertex.Position) * ModelMatrix).ExtractTranslation();
-                //Vector3 computedVertex = Vector3.Add(vertex, Mesh.Parent.AbsolutePosition);
+                Vector3 computedVertex = (Matrix4.CreateTranslation(vertex) * ModelMatrix).ExtractTranslation();
+                //Vector3 computedVertex = Vector3.Add(vertex, Parent.AbsolutePosition);
                 min.X = Math.Min(min.X, computedVertex.X);
                 min.Y = Math.Min(min.Y, computedVertex.Y);
                 min.Z = Math.Min(min.Z, computedVertex.Z);

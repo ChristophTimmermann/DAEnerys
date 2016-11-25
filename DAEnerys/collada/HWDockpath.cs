@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using OpenTK;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace DAEnerys
 {
-    public class HWDockpath
+    public class HWDockpath : HWElement
     {
-        public string Name;
-        public HWNode Node;
+        public static List<HWDockpath> Dockpaths = new List<HWDockpath>();
 
-        public string FormattedName
+        public override string FormattedName
         {
             get
             {
@@ -80,22 +80,24 @@ namespace DAEnerys
             }
         }
 
-        public HWDockpath(HWNode node, string name, string[] families, string[] links, List<DockpathFlag> flags)
+        public HWDockpath(HWJoint parent, string name, string[] families, string[] links, List<DockpathFlag> flags) : base(name, parent, Matrix4.Identity)
         {
-            Node = node;
-            Node.Dockpath = this;
-
             Name = name;
             Families = families;
             Links = links;
             Flags = flags;
 
-            HWScene.Dockpaths.Add(this);
+            Dockpaths.Add(this);
             Program.main.AddDockpath(this);
         }
 
         public void SetupVisualization()
         {
+            foreach (EditorLine line in Lines)
+                line.Destroy();
+
+            Lines.Clear();
+
             for(int i = 0; i < Segments.Count - 1; i++) //1 line less than segments
             {
                 EditorLine line = new EditorLine(Segments[i].AbsolutePosition, Segments[i + 1].AbsolutePosition, Color.Red, Color.Red);

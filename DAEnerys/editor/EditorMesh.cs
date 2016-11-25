@@ -33,6 +33,14 @@ namespace DAEnerys
             EditorScene.meshes.Add(this);
         }
 
+        public virtual void Destroy()
+        {
+            EditorScene.meshes.Remove(this);
+
+            Renderer.InvalidateMeshData();
+            Renderer.Invalidate();
+        }
+
         public abstract Vector3[] GetVertices();
         public abstract Vector3[] GetNormals();
         public abstract int[] GetIndices(int offset = 0);

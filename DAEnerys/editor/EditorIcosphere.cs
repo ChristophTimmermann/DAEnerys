@@ -8,7 +8,7 @@ namespace DAEnerys
     {
         public static Mesh Mesh;
         public new Vector3 Scale = Vector3.One;
-        public HWNode HWNode;
+        public HWElement Element;
 
         private Vector3 color;
         public Vector3 Color { get { return color; } set { color = value; Colors = GetColorData(); } }
@@ -16,9 +16,9 @@ namespace DAEnerys
         public override int VertexCount { get { return Mesh.VertexCount; } }
         public override int IndiceCount { get { return Indices.Length; } }
 
-        public EditorIcosphere(HWNode node, Vector3 color) : base()
+        public EditorIcosphere(HWElement element, Vector3 color) : base()
         {
-            this.HWNode = node;
+            this.Element = element;
             this.Color = color;
 
             Vertices = GetVertices();
@@ -98,7 +98,7 @@ namespace DAEnerys
         /// </summary>
         public override void CalculateModelMatrix()
         {
-            ModelMatrix = Matrix4.CreateScale(Scale) * HWNode.WorldMatrix;
+            ModelMatrix = Matrix4.CreateScale(Scale) * Element.WorldMatrix;
         }
     }
 }

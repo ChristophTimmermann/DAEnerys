@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace DAEnerys
 {
     public class HWShipMesh
     {
+        public static List<HWShipMesh> ShipMeshes = new List<HWShipMesh>();
+
         private HWJoint parent;
         public HWJoint Parent
         {
@@ -12,18 +13,11 @@ namespace DAEnerys
             set
             {
                 parent = value;
-                if (value != null)
-                    foreach (HWShipMeshLOD mesh in Meshes)
-                    {
-                        mesh.Parent.Parent = value;
-                        mesh.CalculateBoundingBox();
-                    }
-                else
-                    foreach (HWShipMeshLOD mesh in Meshes)
-                    {
-                        mesh.Parent.Parent = HWNode.RootLODs[mesh.LOD];
-                        mesh.CalculateBoundingBox();
-                    }
+                foreach (HWShipMeshLOD mesh in Meshes)
+                {
+                    mesh.Parent = value;
+                    mesh.CalculateBoundingBox();
+                }
             }
         }
         public string Name;
@@ -44,7 +38,7 @@ namespace DAEnerys
             Name = name;
             Tags = tags;
 
-            HWScene.ShipMeshes.Add(this);
+            ShipMeshes.Add(this);
             Program.main.AddShipMesh(this);
         }
 
@@ -57,7 +51,7 @@ namespace DAEnerys
 
         public void Destroy()
         {
-            HWScene.ShipMeshes.Remove(this);
+            ShipMeshes.Remove(this);
             Program.main.RemoveShipMesh(this);
             HWShipMeshLOD[] lodMeshes = Meshes.ToArray();
             for (int i = 0; i < lodMeshes.Length; i++)

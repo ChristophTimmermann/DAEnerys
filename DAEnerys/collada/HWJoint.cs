@@ -1,12 +1,32 @@
-﻿using Assimp;
+﻿using OpenTK;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace DAEnerys
 {
-    public class HWJoint : HWNode
+    public class HWJoint : HWElement
     {
         public static List<HWJoint> Joints = new List<HWJoint>();
+        public static HWJoint Root;
+
+        public List<HWElement> Children = new List<HWElement>();
+        public List<HWMesh> Meshes = new List<HWMesh>();
+
+        public override HWJoint Parent
+        {
+            get { return parent; }
+            set
+            {
+                if (parent != null)
+                    parent.Children.Remove(this);
+                parent = value;
+                if (parent != null)
+                    parent.Children.Add(this);
+                CalculateWorldMatrix();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
+            }
+        }
 
         public EditorJoint EditorJoint;
 
@@ -20,23 +40,15 @@ namespace DAEnerys
 
         public TreeNode TreeNode;
         public object ComboItemShipMeshParent;
+        public object ComboItemCollisionMeshParent;
         public object ComboItemEngineGlowParent;
         public object ComboItemEngineShapeParent;
 
-        public HWJoint(Node assimpNode, HWNode parent, string name) : base(assimpNode, parent)
+        public HWJoint(string name, HWJoint parent, Matrix4 transform) : base(name, parent, transform)
         {
-            Name = name;
-
-            if (!IsUnderAnyRootNode())
-            {
-                new Problem(ProblemTypes.ERROR, "The joint \"" + Name + "\" is not under any \"ROOT_LOD[X]\" node.");
-                return;
-            }
-
             Joints.Add(this);
 
-            HWJoint parentJoint = parent as HWJoint;
-            Program.main.AddJoint(this, parentJoint);
+            Program.main.AddJoint(this, parent);
 
             //Visualization
             EditorJoint = new EditorJoint(this);

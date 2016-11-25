@@ -4,6 +4,8 @@ namespace DAEnerys
 {
     public class HWEngineGlow
     {
+        public static List<HWEngineGlow> EngineGlows = new List<HWEngineGlow>();
+
         public HWJoint Parent;
         public string Name;
 
@@ -20,7 +22,7 @@ namespace DAEnerys
             Parent = parent;
             Name = name;
 
-            HWScene.EngineGlows.Add(this);
+            EngineGlows.Add(this);
             Program.main.AddEngineGlow(this);
         }
 
@@ -32,7 +34,7 @@ namespace DAEnerys
 
         public static void UpdateEngineStrength()
         {
-            foreach(HWEngineGlow engineGlow in HWScene.EngineGlows)
+            foreach(HWEngineGlow engineGlow in EngineGlows)
                 foreach (List<HWEngineGlowLOD> list in engineGlow.LODMeshes)
                     foreach (HWEngineGlowLOD lodMesh in list)
                         lodMesh.Scale.Z = Renderer.ThrusterInterpolation;

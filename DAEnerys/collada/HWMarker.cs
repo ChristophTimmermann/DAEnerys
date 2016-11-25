@@ -1,11 +1,13 @@
-﻿using Assimp;
-using OpenTK;
+﻿using OpenTK;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace DAEnerys
 {
-    public class HWMarker : HWNode
+    public class HWMarker : HWElement
     {
+        public static List<HWMarker> Markers = new List<HWMarker>();
+
         public EditorLine[] Lines = new EditorLine[3];
 
         public override string FormattedName
@@ -23,11 +25,9 @@ namespace DAEnerys
             set { markerSize = value; SetMarkerSize(); }
         }
 
-        public HWMarker(Node assimpNode, HWNode parent, string name) : base(assimpNode, parent)
+        public HWMarker(string name, HWJoint parent, Matrix4 transform) : base(name, parent, transform)
         {
-            Name = name;
-
-            HWScene.Markers.Add(this);
+            Markers.Add(this);
             Program.main.AddMarker(this);
             float realSize = markerSize;
 
@@ -40,7 +40,7 @@ namespace DAEnerys
         {
             float realSize = markerSize;
 
-            foreach(HWMarker marker in HWScene.Markers)
+            foreach(HWMarker marker in Markers)
             {
                 marker.Lines[0].Start = marker.AbsolutePosition + new Vector3(0, -realSize, 0);
                 marker.Lines[0].End = marker.AbsolutePosition + new Vector3(0, realSize, 0);

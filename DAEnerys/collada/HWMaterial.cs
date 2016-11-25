@@ -6,6 +6,9 @@ namespace DAEnerys
 {
     public class HWMaterial : GenericMaterial
     {
+        public static List<HWMaterial> Materials = new List<HWMaterial>();
+
+
         public string Name = string.Empty;
         public int Suffix = -1;
 
@@ -48,7 +51,14 @@ namespace DAEnerys
 
         public HWMaterial()
         {
-            HWScene.Materials.Add(this);
+            Materials.Add(this);
+        }
+
+        public HWMaterial(string shader)
+        {
+            Shader = shader;
+
+            Materials.Add(this);
         }
 
         public HWMaterial(string name, Vector3 diffuse, Vector3 specular, float specexponent = 1.0f, float opacity = 1.0f)
@@ -59,7 +69,7 @@ namespace DAEnerys
             SpecularExponent = specexponent;
             Opacity = opacity;
 
-            HWScene.Materials.Add(this);
+            Materials.Add(this);
         }
 
         public void Parse()
@@ -91,7 +101,7 @@ namespace DAEnerys
                         {
                             Shader = splitted[i].Substring(0, end);
 
-                            if (!NewShaderManifest.Manifest.HODAliases.ContainsKey(Shader))
+                            if (!NewShaderManifest.Manifest.HODAliases.ContainsKey(Shader.ToLower()))
                                 new Problem(ProblemTypes.WARNING, "Unknown shader \"" + Shader + "\" of material \"" + Name + "\".");
                         }
                     }
@@ -128,7 +138,7 @@ namespace DAEnerys
             paths.Add("MASK", "");
             paths.Add("NOIZ", "");
 
-            foreach (HWImage image in HWScene.Images)
+            foreach (HWImage image in HWImage.Images)
             {
                 if (image.Path.Replace("file://", "") == DiffusePath)
                 {
@@ -146,7 +156,7 @@ namespace DAEnerys
 
                     string diffusePrefix = diffuseName.Remove(underspaceIndex);
 
-                    string absolutePath = Path.Combine(HWScene.ColladaPath, image.Path.Replace("file://", ""));
+                    string absolutePath = Path.Combine(Importer.ColladaPath, image.Path.Replace("file://", ""));
                     absolutePath = Path.GetDirectoryName(absolutePath);
 
                     if (!Directory.Exists(absolutePath))

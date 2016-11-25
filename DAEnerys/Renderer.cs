@@ -280,29 +280,27 @@ namespace DAEnerys
                 //SORT SHIP MESHES
                 List<HWMesh> hwMeshList = new List<HWMesh>();
 
-                foreach (HWMesh mesh in HWScene.Meshes)
+                foreach (HWMesh mesh in HWMesh.Meshes)
                 {
                     if (!mesh.Translucent)
                         hwMeshList.Add(mesh);
                 }
-                foreach (HWMesh mesh in HWScene.Meshes)
+                foreach (HWMesh mesh in HWMesh.Meshes)
                 {
                     if (mesh.Translucent)
                         hwMeshList.Add(mesh);
                 }
-                HWScene.Meshes = hwMeshList;
+                HWMesh.Meshes = hwMeshList;
 
-                foreach (HWMesh mesh in HWScene.Meshes)
+                foreach (HWMesh mesh in HWMesh.Meshes)
                 {
-                    foreach (Vertex vtx in mesh.Vertices)
-                    {
-                        mesh_verts.Add(vtx.Position);
-                        mesh_normals.Add(vtx.Normal);
-                        mesh_tangents.Add(vtx.Tangent);
-                        mesh_bitangents.Add(vtx.Binormal);
-                        mesh_uv0.Add(vtx.UV0);
-                        mesh_uv1.Add(vtx.UV1);
-                    }
+                    mesh_verts.AddRange(mesh.Vertices);
+                    mesh_normals.AddRange(mesh.Normals);
+                    mesh_tangents.AddRange(mesh.Tangents);
+                    mesh_bitangents.AddRange(mesh.BiTangents);
+                    mesh_uv0.AddRange(mesh.UV0);
+                    mesh_uv1.AddRange(mesh.UV1);
+
                     mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount).ToList());
 
                     mesh_vertcount += mesh.VertexCount;
@@ -325,7 +323,7 @@ namespace DAEnerys
                 BindBufferData(mesh_uv1_buffer, uv1data, false); // for SOB_BADGE shader
 
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(int)), indicedata, BufferUsageHint.StaticDraw);
+                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(uint)), indicedata, BufferUsageHint.StaticDraw);
                 GetError("Mesh Buffering");
             }
 
@@ -371,7 +369,7 @@ namespace DAEnerys
 
                 // Buffer index data
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, editor_ind_buffer);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(int)), indicedata, BufferUsageHint.StaticDraw);
+                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(uint)), indicedata, BufferUsageHint.StaticDraw);
                 GetError("Editor Buffering");
             }
 
@@ -395,7 +393,7 @@ namespace DAEnerys
                 ViewProjection = View * Matrix4.CreateOrthographic(aspectRatioWidthOrtho, aspectRatioHeightOrtho, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
 
             // Update model view matrices
-            foreach (HWMesh mesh in HWScene.Meshes)
+            foreach (HWMesh mesh in HWMesh.Meshes)
             {
                 if (mesh.Visible)
                 {
@@ -423,14 +421,14 @@ namespace DAEnerys
 
             UpdateManifestGlobals();
 
-            foreach (HWMesh mesh in HWScene.Meshes)
+            foreach (HWMesh mesh in HWMesh.Meshes)
                 if (!mesh.Translucent)
                     indiceat += DrawHWMesh(mesh, indiceat);
 
             GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
 
-            foreach (HWMesh mesh in HWScene.Meshes)
+            foreach (HWMesh mesh in HWMesh.Meshes)
                 if (mesh.Translucent)
                     indiceat += DrawHWMesh(mesh, indiceat);
 
@@ -676,12 +674,12 @@ namespace DAEnerys
 
                 // Draw
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
-                surface.Draw(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
+                surface.Draw(BeginMode.Triangles, mesh.IndexCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
 
                 GetError("Post DrawHWMesh");
             }
 
-            return mesh.IndiceCount;
+            return mesh.IndexCount;
         }
 
         private static int DrawEditorMesh(EditorMesh mesh, int index)

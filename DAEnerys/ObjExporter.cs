@@ -1,4 +1,4 @@
-﻿using Assimp;
+﻿using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -38,25 +38,25 @@ namespace DAEnerys
             //Vertices
             file.AppendLine("# Vertices");
             foreach (HWMesh mesh in meshes)
-                foreach (Vertex vertex in mesh.Vertices)
-                    file.AppendLine("v " + vertex.Position.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Z.ToString(CultureInfo.InvariantCulture));
+                foreach (Vector3 vertex in mesh.Vertices)
+                    file.AppendLine("v " + vertex.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Z.ToString(CultureInfo.InvariantCulture));
 
             //Texture coordinates
             foreach (HWMesh mesh in meshes)
             {
-                if (mesh.TextureCoordinateChannelCount > 0)
+                if (mesh.UVCount > 0)
                 {
                     file.AppendLine("# Texture coordinates");
-                    foreach (Vertex vertex in mesh.Vertices)
-                        file.AppendLine("vt " + (vertex.UV0.X).ToString(CultureInfo.InvariantCulture) + " " + vertex.UV0.Y.ToString(CultureInfo.InvariantCulture));
+                    foreach (Vector2 uv0 in mesh.UV0)
+                        file.AppendLine("vt " + (uv0.X).ToString(CultureInfo.InvariantCulture) + " " + uv0.Y.ToString(CultureInfo.InvariantCulture));
                 }
             }
 
             //Normals
             file.AppendLine("# Normals");
             foreach (HWMesh mesh in meshes)
-                foreach (Vertex vertex in mesh.Vertices)
-                    file.AppendLine("vn " + vertex.Normal.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Z.ToString(CultureInfo.InvariantCulture));
+                foreach (Vector3 normal in mesh.Normals)
+                    file.AppendLine("vn " + normal.X.ToString(CultureInfo.InvariantCulture) + " " + normal.Y.ToString(CultureInfo.InvariantCulture) + " " + normal.Z.ToString(CultureInfo.InvariantCulture));
                 
 
             //Faces
@@ -70,8 +70,8 @@ namespace DAEnerys
                 else
                     file.AppendLine("usemtl");
 
-                foreach (Face face in mesh.Faces)
-                    file.AppendLine("f " + (face.Indices[0] + 1 + indexOffset) + "/" + (face.Indices[0] + 1 + indexOffset) + " " + (face.Indices[1] + 1 + indexOffset) + "/" + (face.Indices[1] + 1 + indexOffset) + " " + (face.Indices[2] + 1 + indexOffset) + "/" + (face.Indices[2] + 1 + indexOffset));
+                for(int i = 0; i < mesh.IndexCount; i += 3)
+                    file.AppendLine("f " + (mesh.GetIndices(indexOffset)[i] + 1) + "/" + (mesh.GetIndices(indexOffset)[i] + 1) + " " + (mesh.GetIndices(indexOffset)[i + 1] + 1) + "/" + (mesh.GetIndices(indexOffset)[i + 1] + 1) + " " + (mesh.GetIndices(indexOffset)[i + 2] + 1) + "/" + (mesh.GetIndices(indexOffset)[i + 2] + 1));
 
                 indexOffset += mesh.VertexCount;
             }

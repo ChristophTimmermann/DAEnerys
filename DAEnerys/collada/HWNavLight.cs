@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using OpenTK;
-using Assimp;
 using System.Globalization;
 
 namespace DAEnerys
 {
-    public class HWNavLight : HWNode
+    public class HWNavLight : HWElement
     {
         //Statics
+        public static List<HWNavLight> NavLights = new List<HWNavLight>();
+
         private static float iconSize = 3;
-        public static float IconSize { get { return iconSize; } set { iconSize = value; foreach (HWNavLight navLight in HWScene.NavLights) { navLight.Icon.Size = value; } } }
+        public static float IconSize { get { return iconSize; } set { iconSize = value; foreach (HWNavLight navLight in HWNavLight.NavLights) { navLight.Icon.Size = value; } } }
 
         public int NavLightListItemIndex;
 
@@ -84,9 +85,8 @@ namespace DAEnerys
             }
         }
 
-        public HWNavLight(Node assimpNode, HWNode parent, string name, HWNavLightStyle style, float size, float phase, float frequency, Vector3 color, float distance, List<NavLightFlag> flags) : base(assimpNode, parent)
+        public HWNavLight(string name, HWJoint parent, Matrix4 transform, HWNavLightStyle style, float size, float phase, float frequency, Vector3 color, float distance, List<NavLightFlag> flags) : base(name, parent, transform)
         {
-            Name = name;
             Style = style;
             Size = size;
             Phase = phase;
@@ -131,10 +131,11 @@ namespace DAEnerys
             else
                 state = NavLightState.BOTTOM;
 
-            HWScene.NavLights.Add(this);
+            NavLights.Add(this);
             Program.main.AddNavLight(this);
 
             Visible = true;
+            Program.main.CheckNavLightVisible(this, true); //Set all navlights visible by default
         }
 
         public void Update()

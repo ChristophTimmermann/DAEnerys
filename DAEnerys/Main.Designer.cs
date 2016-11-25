@@ -840,7 +840,7 @@ namespace DAEnerys
             this.groupDockpathFlags.Controls.Add(this.checkDockpathExit);
             this.groupDockpathFlags.Location = new System.Drawing.Point(4, 169);
             this.groupDockpathFlags.Name = "groupDockpathFlags";
-            this.groupDockpathFlags.Size = new System.Drawing.Size(218, 64);
+            this.groupDockpathFlags.Size = new System.Drawing.Size(235, 64);
             this.groupDockpathFlags.TabIndex = 12;
             this.groupDockpathFlags.TabStop = false;
             this.groupDockpathFlags.Text = "Flags";
@@ -850,7 +850,7 @@ namespace DAEnerys
             this.checkDockpathAjar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathAjar.AutoSize = true;
             this.checkDockpathAjar.Enabled = false;
-            this.checkDockpathAjar.Location = new System.Drawing.Point(193, 42);
+            this.checkDockpathAjar.Location = new System.Drawing.Point(176, 42);
             this.checkDockpathAjar.Name = "checkDockpathAjar";
             this.checkDockpathAjar.Size = new System.Drawing.Size(44, 17);
             this.checkDockpathAjar.TabIndex = 11;
@@ -863,7 +863,7 @@ namespace DAEnerys
             this.checkDockpathLatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathLatch.AutoSize = true;
             this.checkDockpathLatch.Enabled = false;
-            this.checkDockpathLatch.Location = new System.Drawing.Point(193, 19);
+            this.checkDockpathLatch.Location = new System.Drawing.Point(176, 19);
             this.checkDockpathLatch.Name = "checkDockpathLatch";
             this.checkDockpathLatch.Size = new System.Drawing.Size(53, 17);
             this.checkDockpathLatch.TabIndex = 10;
@@ -1056,7 +1056,7 @@ namespace DAEnerys
             this.boxDockpathSegmentSpeed.Location = new System.Drawing.Point(77, 96);
             this.boxDockpathSegmentSpeed.Name = "boxDockpathSegmentSpeed";
             this.boxDockpathSegmentSpeed.ReadOnly = true;
-            this.boxDockpathSegmentSpeed.Size = new System.Drawing.Size(190, 20);
+            this.boxDockpathSegmentSpeed.Size = new System.Drawing.Size(156, 20);
             this.boxDockpathSegmentSpeed.TabIndex = 8;
             // 
             // boxDockpathSegmentTolerance
@@ -1066,7 +1066,7 @@ namespace DAEnerys
             this.boxDockpathSegmentTolerance.Location = new System.Drawing.Point(77, 70);
             this.boxDockpathSegmentTolerance.Name = "boxDockpathSegmentTolerance";
             this.boxDockpathSegmentTolerance.ReadOnly = true;
-            this.boxDockpathSegmentTolerance.Size = new System.Drawing.Size(190, 20);
+            this.boxDockpathSegmentTolerance.Size = new System.Drawing.Size(156, 20);
             this.boxDockpathSegmentTolerance.TabIndex = 7;
             // 
             // trackBarDockpathSegments
@@ -1076,7 +1076,7 @@ namespace DAEnerys
             this.trackBarDockpathSegments.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarDockpathSegments.Location = new System.Drawing.Point(8, 16);
             this.trackBarDockpathSegments.Name = "trackBarDockpathSegments";
-            this.trackBarDockpathSegments.Size = new System.Drawing.Size(259, 45);
+            this.trackBarDockpathSegments.Size = new System.Drawing.Size(225, 45);
             this.trackBarDockpathSegments.TabIndex = 3;
             this.trackBarDockpathSegments.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBarDockpathSegments.Scroll += new System.EventHandler(this.trackBarDockpathSegments_Scroll);

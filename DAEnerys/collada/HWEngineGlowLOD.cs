@@ -1,4 +1,4 @@
-﻿using Assimp;
+﻿using OpenTK;
 
 namespace DAEnerys
 {
@@ -17,14 +17,16 @@ namespace DAEnerys
             }
         }
 
-        public HWEngineGlowLOD(Mesh assimpMesh, HWEngineGlow glowMesh, int lod) : base(assimpMesh)
+        public HWEngineGlowLOD(MeshData data, Matrix4 transform, HWEngineGlow glowMesh, int lod) : base(data, transform, new HWMaterial("fx_eng_glowbasic"))
         {
             GlowMesh = glowMesh;
             LOD = lod;
+            Parent = GlowMesh.Parent;
             this.Name = glowMesh.Name;
 
             Translucent = true;
-            Material.Shader = "fx_eng_glowbasic";
+
+            GlowMesh.AddLODMesh(this);
         }
     }
 }

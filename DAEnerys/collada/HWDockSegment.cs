@@ -1,11 +1,12 @@
-﻿using Assimp;
-using OpenTK;
+﻿using OpenTK;
 using System.Collections.Generic;
 
 namespace DAEnerys
 {
-    public class HWDockSegment : HWNode
+    public class HWDockSegment : HWElement
     {
+        public static List<HWDockSegment> DockSegments = new List<HWDockSegment>();
+
         public int ID;
         public float Tolerance;
         public float Speed;
@@ -35,29 +36,19 @@ namespace DAEnerys
             }
         }
 
-        new public HWDockpath Dockpath;
+        public HWDockpath Dockpath;
         public EditorIcosphere Icosphere;
         public EditorIcosphere ToleranceIcosphere;
 
-        public HWDockSegment(Node assimpNode, HWNode parent, int id, float tolerance, float speed, List<DockSegmentFlag> flags) : base(assimpNode, parent)
+        public HWDockSegment(HWDockpath dockpath, Matrix4 transform, int id, float tolerance, float speed, List<DockSegmentFlag> flags) : base("", HWJoint.Root, transform)
         {
-            if (!IsUnderAnyDockpath())
-            {
-                new Problem(ProblemTypes.ERROR, "The dockpath segment \"" + Name + "\" is not under any dockpath.");
-                return;
-            }
-
+            Dockpath = dockpath;
             ID = id;
             Tolerance = tolerance;
             Speed = speed;
             Flags = flags;
 
-            Dockpath = parent.Dockpath;
-            if (Dockpath == null)
-            {
-                Problem.Problems.Add(new Problem(ProblemTypes.ERROR, "Dockpath error with node " + assimpNode.Name.ToString()));
-            } else
-                Dockpath.Segments.Add(this);
+            Dockpath.Segments.Add(this);
 
             Icosphere = new EditorIcosphere(this, new Vector3(1, 0, 0));
             Icosphere.Scale = new Vector3(5, 5, 5);
@@ -67,7 +58,9 @@ namespace DAEnerys
             ToleranceIcosphere.Wireframe = true;
             ToleranceIcosphere.Visible = false;
 
-            HWScene.DockSegments.Add(this);
+            DockSegments.Add(this);
+
+            Dockpath.SetupVisualization();
         }
     }
 

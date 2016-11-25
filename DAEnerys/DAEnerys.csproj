@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="collada\Exporter.cs" />
+    <Compile Include="collada\HWElement.cs" />
     <Compile Include="collada\HWEngineShape.cs" />
     <Compile Include="collada\HWDockpath.cs" />
     <Compile Include="collada\HWDockSegment.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="collada\HWEngineGlowLOD.cs" />
     <Compile Include="collada\HWShipMeshLOD.cs" />
     <Compile Include="collada\HWTextureCube.cs" />
+    <Compile Include="collada\Importer.cs" />
     <Compile Include="data\HWBadge.cs" />
     <Compile Include="data\HWNavLightStyle.cs" />
     <Compile Include="Dump.cs" />
@@ -97,7 +99,6 @@
     <Compile Include="editor\EditorJoint.cs" />
     <Compile Include="editor\EditorMesh.cs" />
     <Compile Include="editor\EditorScene.cs" />
-    <Compile Include="collada\HWNode.cs" />
     <Compile Include="editor\EditorMaterial.cs" />
     <Compile Include="editor\EditorLine.cs" />
     <Compile Include="data\HWData.cs" />
@@ -304,7 +305,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

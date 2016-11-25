@@ -90,7 +90,6 @@ namespace DAEnerys
         {
             EditorJoint.Size = (float)numericJointSize.Value;
 
-            Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
@@ -100,7 +99,7 @@ namespace DAEnerys
             HWMarker.MarkerSize = (float)numericMarkerSize.Value;
 
             //Update line vertices
-            foreach (HWMarker marker in HWScene.Markers)
+            foreach (HWMarker marker in HWMarker.Markers)
             {
                 foreach (EditorLine line in marker.Lines)
                 {
@@ -123,7 +122,6 @@ namespace DAEnerys
             Program.Camera.ClipDistance = (float)numericFarClip.Value;
             numericNearClip.Maximum = numericFarClip.Value - (decimal)0.0001;
 
-            Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
@@ -133,7 +131,6 @@ namespace DAEnerys
             Program.Camera.NearClipDistance = (float)numericNearClip.Value;
             numericFarClip.Minimum = numericNearClip.Value + (decimal)0.0001;
 
-            Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }

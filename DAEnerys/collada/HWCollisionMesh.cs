@@ -1,10 +1,11 @@
-﻿using Assimp;
+﻿using OpenTK;
+using System.Collections.Generic;
 
 namespace DAEnerys
 {
     public class HWCollisionMesh : HWMesh
     {
-        new public HWJoint Parent;
+        public static List<HWCollisionMesh> CollisionMeshes = new List<HWCollisionMesh>();
 
         public override string FormattedName
         {
@@ -16,12 +17,12 @@ namespace DAEnerys
 
         public int CollisionMeshListItemIndex;
 
-        public HWCollisionMesh(Mesh assimpMesh, HWJoint parent, string name) : base(assimpMesh)
+        public HWCollisionMesh(MeshData data, Matrix4 transform, HWJoint parent, string name) : base(data, transform, new HWMaterial())
         {
             this.Parent = parent;
             this.Name = name;
 
-            HWScene.CollisionMeshes.Add(this);
+            CollisionMeshes.Add(this);
             Program.main.AddCollisionMesh(this);
         }
     }

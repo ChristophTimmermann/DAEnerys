@@ -1,7 +1,6 @@
 ﻿using Assimp;
 using Assimp.Configs;
 using System;
-using System.Collections.Generic;
 
 namespace DAEnerys
 {

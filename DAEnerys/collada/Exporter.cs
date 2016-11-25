@@ -1,5 +1,4 @@
-﻿using Assimp;
-using OpenTK;
+﻿using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,12 +11,14 @@ namespace DAEnerys
     public static class Exporter
     {
         private static XNamespace ns = "http://www.collada.org/2005/11/COLLADASchema";
-        private static Dictionary<HWNode, XElement> LODRootElements = new Dictionary<HWNode, XElement>();
+        private static XElement[] lodRootElements;
+        private static Dictionary<HWJoint, XElement> jointElements = new Dictionary<HWJoint, XElement>();
 
         public static void ExportToFile(string path)
         {
             AddedMesh.AddedMeshes.Clear();
-            LODRootElements.Clear();
+            lodRootElements = new XElement[4];
+            jointElements.Clear();
 
             XDocument doc = new XDocument(new XDeclaration("1.0", "utf-8", "true"));
 
@@ -83,7 +84,7 @@ namespace DAEnerys
             collada.Add(libImages);
 
             List<string> addedImages = new List<string>();
-            foreach (HWImage image in HWScene.Images)
+            foreach (HWImage image in HWImage.Images)
             {
                 if (image.ColladaName.Length == 0)
                     continue;
@@ -111,7 +112,7 @@ namespace DAEnerys
             collada.Add(libMaterials);
 
             List<string> addedMaterials = new List<string>();
-            foreach (HWMaterial material in HWScene.Materials)
+            foreach (HWMaterial material in HWMaterial.Materials)
             {
                 if (material.Name.Length == 0 || material.Name.Contains("[") || material.Name.Contains("]"))
                     continue;
@@ -141,7 +142,7 @@ namespace DAEnerys
             XElement libEffects = new XElement(ns + "library_effects");
             collada.Add(libEffects);
 
-            foreach (HWMaterial material in HWScene.Materials)
+            foreach (HWMaterial material in HWMaterial.Materials)
             {
                 if (material.Name.Length == 0)
                     continue;
@@ -181,7 +182,7 @@ namespace DAEnerys
             XElement libGeometries = new XElement(ns + "library_geometries");
             collada.Add(libGeometries);
 
-            foreach (HWMesh mesh in HWScene.Meshes)
+            foreach (HWMesh mesh in HWMesh.Meshes)
             {
                 if (!mesh.FormattedName.StartsWith("MULT") && !mesh.FormattedName.StartsWith("COL") && !mesh.FormattedName.StartsWith("ETSH") && !mesh.FormattedName.StartsWith("GLOW"))
                     continue;
@@ -210,8 +211,8 @@ namespace DAEnerys
                     posArray.SetAttributeValue("id", mesh.FormattedName + "-POSITION-array");
                     posArray.SetAttributeValue("count", mesh.VertexCount * 3);
                     StringBuilder positions = new StringBuilder("\n");
-                    foreach (Vertex vertex in mesh.Vertices)
-                        positions.AppendLine(vertex.Position.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Z.ToString(CultureInfo.InvariantCulture));
+                    foreach (Vector3 vertex in mesh.Vertices)
+                        positions.AppendLine(vertex.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Z.ToString(CultureInfo.InvariantCulture));
                     posArray.SetValue(positions.ToString());
                     source.Add(posArray);
 
@@ -247,8 +248,8 @@ namespace DAEnerys
                     normalArray.SetAttributeValue("id", mesh.FormattedName + "-Normal0-array");
                     normalArray.SetAttributeValue("count", mesh.VertexCount * 3);
                     StringBuilder normals = new StringBuilder("\n");
-                    foreach (Vertex vertex in mesh.Vertices)
-                        normals.AppendLine(vertex.Normal.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Z.ToString(CultureInfo.InvariantCulture));
+                    foreach (Vector3 normal in mesh.Normals)
+                        normals.AppendLine(normal.X.ToString(CultureInfo.InvariantCulture) + " " + normal.Y.ToString(CultureInfo.InvariantCulture) + " " + normal.Z.ToString(CultureInfo.InvariantCulture));
                     normalArray.SetValue(normals.ToString());
                     source.Add(normalArray);
 
@@ -278,7 +279,7 @@ namespace DAEnerys
                     #region uv0 source
                     XElement uv0Array = null;
                     XElement uv0Accessor = null;
-                    if (mesh.TextureCoordinateChannelCount > 0)
+                    if (mesh.UVCount > 0)
                     {
                         source = new XElement(ns + "source");
                         source.SetAttributeValue("id", mesh.FormattedName + "-UV0");
@@ -288,8 +289,8 @@ namespace DAEnerys
                         uv0Array.SetAttributeValue("id", mesh.FormattedName + "-UV0-array");
                         uv0Array.SetAttributeValue("count", mesh.VertexCount * 2);
                         StringBuilder uvs = new StringBuilder("\n");
-                        foreach (Vertex vertex in mesh.Vertices)
-                            uvs.AppendLine(vertex.UV0.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.UV0.Y.ToString(CultureInfo.InvariantCulture));
+                        foreach (Vector2 uv in mesh.UV0)
+                            uvs.AppendLine(uv.X.ToString(CultureInfo.InvariantCulture) + " " + uv.Y.ToString(CultureInfo.InvariantCulture));
                         uv0Array.SetValue(uvs.ToString());
                         source.Add(uv0Array);
 
@@ -316,7 +317,7 @@ namespace DAEnerys
                     #region uv1 source
                     XElement uv1Array = null;
                     XElement uv1Accessor = null;
-                    if (mesh.TextureCoordinateChannelCount > 1)
+                    if (mesh.UVCount > 1)
                     {
                         source = new XElement(ns + "source");
                         source.SetAttributeValue("id", mesh.FormattedName + "-UV1");
@@ -326,8 +327,8 @@ namespace DAEnerys
                         uv1Array.SetAttributeValue("id", mesh.FormattedName + "-UV1-array");
                         uv1Array.SetAttributeValue("count", mesh.VertexCount * 2);
                         StringBuilder uvs = new StringBuilder("\n");
-                        foreach (Vertex vertex in mesh.Vertices)
-                            uvs.AppendLine(vertex.UV1.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.UV1.Y.ToString(CultureInfo.InvariantCulture));
+                        foreach (Vector2 uv1 in mesh.UV1)
+                            uvs.AppendLine(uv1.X.ToString(CultureInfo.InvariantCulture) + " " + uv1.Y.ToString(CultureInfo.InvariantCulture));
                         uv1Array.SetValue(uvs.ToString());
                         source.Add(uv1Array);
 
@@ -369,8 +370,8 @@ namespace DAEnerys
                     int lastCount = int.Parse(addedMesh.PositionArray.Attribute("count").Value);
                     addedMesh.PositionArray.SetAttributeValue("count", lastCount + mesh.VertexCount * 3);
                     StringBuilder positions = new StringBuilder(addedMesh.PositionArray.Value);
-                    foreach (Vertex vertex in mesh.Vertices)
-                        positions.AppendLine(vertex.Position.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Position.Z.ToString(CultureInfo.InvariantCulture));
+                    foreach (Vector3 vertex in mesh.Vertices)
+                        positions.AppendLine(vertex.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Z.ToString(CultureInfo.InvariantCulture));
                     addedMesh.PositionArray.SetValue(positions.ToString());
 
                     lastCount = int.Parse(addedMesh.PositionAccessor.Attribute("count").Value);
@@ -381,8 +382,8 @@ namespace DAEnerys
                     lastCount = int.Parse(addedMesh.NormalArray.Attribute("count").Value);
                     addedMesh.NormalArray.SetAttributeValue("count", lastCount + mesh.VertexCount * 3);
                     StringBuilder normals = new StringBuilder(addedMesh.NormalArray.Value);
-                    foreach (Vertex vertex in mesh.Vertices)
-                        normals.AppendLine(vertex.Normal.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Y.ToString(CultureInfo.InvariantCulture) + " " + vertex.Normal.Z.ToString(CultureInfo.InvariantCulture));
+                    foreach (Vector3 normal in mesh.Normals)
+                        normals.AppendLine(normal.X.ToString(CultureInfo.InvariantCulture) + " " + normal.Y.ToString(CultureInfo.InvariantCulture) + " " + normal.Z.ToString(CultureInfo.InvariantCulture));
                     addedMesh.NormalArray.SetValue(normals.ToString());
 
                     lastCount = int.Parse(addedMesh.NormalAccessor.Attribute("count").Value);
@@ -390,13 +391,13 @@ namespace DAEnerys
                     #endregion
 
                     #region uv0 source
-                    if (mesh.TextureCoordinateChannelCount > 0)
+                    if (mesh.UVCount > 0)
                     {
                         lastCount = int.Parse(addedMesh.UV0Array.Attribute("count").Value);
                         addedMesh.UV0Array.SetAttributeValue("count", lastCount + mesh.VertexCount * 2);
                         StringBuilder uvs = new StringBuilder(addedMesh.UV0Array.Value);
-                        foreach (Vertex vertex in mesh.Vertices)
-                            uvs.AppendLine(vertex.UV0.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.UV0.Y.ToString(CultureInfo.InvariantCulture));
+                        foreach (Vector2 uv0 in mesh.UV0)
+                            uvs.AppendLine(uv0.X.ToString(CultureInfo.InvariantCulture) + " " + uv0.Y.ToString(CultureInfo.InvariantCulture));
                         addedMesh.UV0Array.SetValue(uvs.ToString());
 
                         lastCount = int.Parse(addedMesh.UV0Accessor.Attribute("count").Value);
@@ -405,13 +406,13 @@ namespace DAEnerys
                     #endregion
 
                     #region uv1 source
-                    if (mesh.TextureCoordinateChannelCount > 1)
+                    if (mesh.UVCount > 1)
                     {
                         lastCount = int.Parse(addedMesh.UV1Array.Attribute("count").Value);
                         addedMesh.UV1Array.SetAttributeValue("count", lastCount + mesh.VertexCount * 2);
                         StringBuilder uvs = new StringBuilder(addedMesh.UV1Array.Value);
-                        foreach (Vertex vertex in mesh.Vertices)
-                            uvs.AppendLine(vertex.UV1.X.ToString(CultureInfo.InvariantCulture) + " " + vertex.UV1.Y.ToString(CultureInfo.InvariantCulture));
+                        foreach (Vector2 uv1 in mesh.UV1)
+                            uvs.AppendLine(uv1.X.ToString(CultureInfo.InvariantCulture) + " " + uv1.Y.ToString(CultureInfo.InvariantCulture));
                         addedMesh.UV1Array.SetValue(uvs.ToString());
 
                         lastCount = int.Parse(addedMesh.UV1Accessor.Attribute("count").Value);
@@ -438,7 +439,7 @@ namespace DAEnerys
                 input.SetAttributeValue("source", "#" + mesh.FormattedName + "-Normal0");
                 triangles.Add(input);
 
-                if (mesh.TextureCoordinateChannelCount > 0)
+                if (mesh.UVCount > 0)
                 {
                     input = new XElement(ns + "input");
                     input.SetAttributeValue("semantic", "TEXCOORD");
@@ -448,7 +449,7 @@ namespace DAEnerys
                     triangles.Add(input);
                     inputCount++;
                 }
-                if (mesh.TextureCoordinateChannelCount > 1)
+                if (mesh.UVCount > 1)
                 {
                     input = new XElement(ns + "input");
                     input.SetAttributeValue("semantic", "TEXCOORD");
@@ -466,13 +467,13 @@ namespace DAEnerys
                 XElement p = new XElement(ns + "p");
                 StringBuilder faces = new StringBuilder("\n");
 
-                foreach (Face face in mesh.Faces)
+                for (int f = 0; f < mesh.IndexCount; f += 3)
                 {
                     for (int i = 0; i < 3; i++)
                     {
                         for (int c = 0; c < inputCount; c++)
                         {
-                            faces.Append(" " + (int)(face.Indices[i] + indexOffset));
+                            faces.Append(" " + (int)(mesh.GetIndices(indexOffset)[f + i]));
                         }
                     }
                     faces.AppendLine();
@@ -500,59 +501,114 @@ namespace DAEnerys
             visualScene.SetAttributeValue("name", "scene");
             libVisualScenes.Add(visualScene);
 
-            for (int i = 0; i < HWNode.RootLODs.Length; i++)
+            #region ROOT_INFO
+            XElement rootInfo = AddNode(visualScene, "ROOT_INFO", Matrix4.Identity);
+            AddNode(rootInfo, "Class[MultiMesh]_Version[512]", Matrix4.Identity);
+
+            int uvSets = 1;
+            foreach (HWShipMesh shipMesh in HWShipMesh.ShipMeshes)
+                foreach (HWShipMeshLOD shipMeshLOD in shipMesh.Meshes)
+                    if (shipMeshLOD.UVCount > uvSets)
+                        uvSets = shipMeshLOD.UVCount;
+            AddNode(rootInfo, "UVSets[" + uvSets + "]", Matrix4.Identity);
+            #endregion
+
+            #region ROOT_LOD[X]
+            for (int lod = 0; lod < lodRootElements.Length; lod++)
             {
                 bool lodExists = false;
-                foreach (HWShipMesh shipMesh in HWScene.ShipMeshes)
+                foreach (HWShipMesh shipMesh in HWShipMesh.ShipMeshes)
                     foreach (HWShipMeshLOD lodMesh in shipMesh.Meshes)
-                        if (lodMesh.LOD == i)
+                        if (lodMesh.LOD == lod)
                             lodExists = true;
 
-                foreach (HWEngineGlow engineGlow in HWScene.EngineGlows)
+                foreach (HWEngineGlow engineGlow in HWEngineGlow.EngineGlows)
                     foreach (HWEngineGlowLOD lodMesh in engineGlow.Meshes)
-                        if (lodMesh.LOD == i)
+                        if (lodMesh.LOD == lod)
                             lodExists = true;
 
-                if (HWNode.RootLODs[i] == null)
+                if (lodExists || lod == 0)
                 {
-                    if(lodExists)
-                        HWNode.RootLODs[i] = new HWNode(null, "ROOT_LOD[" + i + "]");
+                    //Offset the LOD roots so they are clean when importing with 3d software
+                    Vector3 pos = new Vector3(100 * lod, 0, 0);
+                    Matrix4 transform = Matrix4.CreateTranslation(pos);
+                    lodRootElements[lod] = AddNode(visualScene, "ROOT_LOD[" + lod + "]", transform);
                 }
+            }
+            #endregion
 
-                if(lodExists)
-                    LODRootElements.Add(HWNode.RootLODs[i], AddNode(visualScene, HWNode.RootLODs[i]));
+            //Joints
+            jointElements.Add(HWJoint.Root, lodRootElements[0]);
+
+            foreach(HWJoint joint in HWJoint.Root.Children)
+            {
+                AddJointRecursive(lodRootElements[0], joint);
             }
 
-            foreach (HWNode rootNode in HWNode.RootLODs)
-                if (rootNode != null)
-                    AddNodeChildrenRecursive(LODRootElements[rootNode], rootNode);
-
-            if (HWNode.RootINFO == null)
+            //Ship meshes
+            foreach(HWShipMesh shipMesh in HWShipMesh.ShipMeshes)
             {
-                HWNode.RootINFO = new HWNode(null, "ROOT_INFO");
-                new HWNode(HWNode.RootINFO, "Class[MultiMesh]_Version[512]");
-                int uvSets = 1;
-                foreach (HWShipMesh shipMesh in HWScene.ShipMeshes)
-                    foreach (HWShipMeshLOD shipMeshLOD in shipMesh.Meshes)
-                        if (shipMeshLOD.TextureCoordinateChannelCount > uvSets)
-                            uvSets = shipMeshLOD.TextureCoordinateChannelCount;
-                new HWNode(HWNode.RootINFO, "UVSets[" + uvSets + "]");
-            }
+                if (shipMesh.LODMeshes[0].Count == 0)
+                    continue;
 
-            AddNodeRecursive(visualScene, HWNode.RootINFO);
+                AddNode(jointElements[shipMesh.Parent], shipMesh.LODMeshes[0][0].FormattedName, shipMesh.LODMeshes[0][0].Transform, shipMesh.LODMeshes[0].ToArray());
 
-            if (HWNode.RootCOL == null)
-            {
-                if (HWScene.CollisionMeshes.Count > 0)
+                for(int lod = 1; lod <= 3; lod++)
                 {
-                    HWNode.RootCOL = new HWNode(null, "ROOT_COL");
-                    foreach (HWCollisionMesh collisionMesh in HWScene.CollisionMeshes)
-                        collisionMesh.Parent.Parent = HWNode.RootCOL;
+                    if (shipMesh.LODMeshes[lod].Count == 0)
+                        continue;
+
+                    AddNode(lodRootElements[lod], shipMesh.LODMeshes[lod][0].FormattedName, shipMesh.LODMeshes[lod][0].Transform, shipMesh.LODMeshes[lod].ToArray());
                 }
             }
 
-            if (HWScene.CollisionMeshes.Count > 0)
-                AddNodeRecursive(visualScene, HWNode.RootCOL);
+            //Engine glows
+            foreach (HWEngineGlow engineGlow in HWEngineGlow.EngineGlows)
+            {
+                if (engineGlow.LODMeshes[0].Count == 0)
+                    continue;
+
+                AddNode(jointElements[engineGlow.Parent], engineGlow.LODMeshes[0][0].FormattedName, engineGlow.LODMeshes[0][0].Transform, engineGlow.LODMeshes[0].ToArray());
+
+                for (int lod = 1; lod <= 3; lod++)
+                {
+                    if (engineGlow.LODMeshes[lod].Count == 0)
+                        continue;
+
+                    AddNode(lodRootElements[lod], engineGlow.LODMeshes[lod][0].FormattedName, engineGlow.LODMeshes[lod][0].Transform, engineGlow.LODMeshes[lod].ToArray());
+                }
+            }
+
+            //Engine shapes
+            foreach(HWEngineShape engineShape in HWEngineShape.EngineShapes)
+            {
+                AddNode(jointElements[engineShape.Parent], engineShape.FormattedName, engineShape.Transform, new HWMesh[] { engineShape });
+            }
+
+            //Markers
+            foreach(HWMarker marker in HWMarker.Markers)
+            {
+                AddNode(jointElements[marker.Parent], marker.FormattedName, marker.RelativeWorldMatrix);
+            }
+
+            //Navlights
+            foreach(HWNavLight navLight in HWNavLight.NavLights)
+            {
+                AddNode(jointElements[navLight.Parent], navLight.FormattedName, navLight.RelativeWorldMatrix);
+            }
+
+            #region ROOT_COL
+            if (HWCollisionMesh.CollisionMeshes.Count > 0)
+            {
+                //Offset the COL root so it's clean when importing with 3d software
+                Vector3 pos = new Vector3(-100, 0, 0);
+                Matrix4 transform = Matrix4.CreateTranslation(pos);
+
+                XElement rootCol = AddNode(visualScene, "ROOT_COL", transform);
+                foreach (HWCollisionMesh collisionMesh in HWCollisionMesh.CollisionMeshes)
+                    AddNode(rootCol, collisionMesh.FormattedName, collisionMesh.Parent.WorldMatrix, new HWMesh[] { collisionMesh });
+            }
+            #endregion
 
             #endregion
 
@@ -568,30 +624,23 @@ namespace DAEnerys
             doc.Save(path);
         }
 
-        private static XElement AddNode(XElement parentElement, HWNode node)
+        private static XElement AddNode(XElement parentElement, string name, Matrix4 transform)
+        {
+            return AddNode(parentElement, name, transform, new HWMesh[0]);
+        }
+        private static XElement AddNode(XElement parentElement, string name, Matrix4 transform, HWMesh[] meshes)
         {
             XElement nodeElement = new XElement(ns + "node");
-            nodeElement.SetAttributeValue("name", node.FormattedName);
-            nodeElement.SetAttributeValue("id", node.FormattedName);
-            nodeElement.SetAttributeValue("sid", node.FormattedName);
+            nodeElement.SetAttributeValue("name", name);
+            nodeElement.SetAttributeValue("id", name);
+            nodeElement.SetAttributeValue("sid", name);
 
-            HWShipMeshLOD lodMesh = null;
-            foreach (HWShipMesh shipMesh in HWScene.ShipMeshes)
-                foreach (HWShipMeshLOD shipMeshLOD in shipMesh.Meshes)
-                    if (shipMeshLOD.LOD > 0)
-                        if (node.Meshes.Contains(shipMeshLOD))
-                        {
-                            lodMesh = shipMeshLOD;
-                            break;
-                        }
+            Vector3 pos = transform.ExtractTranslation();
 
-            if (lodMesh == null)
-                parentElement.Add(nodeElement);
-            else
-                LODRootElements[HWNode.RootLODs[lodMesh.LOD]].Add(nodeElement);
-
-            Vector3 pos = node.RelativePosition;
-            Vector3 rot = node.RelativeRotation;
+            Vector3 rot = Vector3.Zero;
+            float angle = 0;
+            transform.ExtractRotation().ToAxisAngle(out rot, out angle);
+            rot *= angle;
             float x = MathHelper.RadiansToDegrees(rot.X);
             float y = MathHelper.RadiansToDegrees(rot.Y);
             float z = MathHelper.RadiansToDegrees(rot.Z);
@@ -620,7 +669,7 @@ namespace DAEnerys
             //TODO: Export scale?
 
             Dictionary<string, XElement> addedTechniques = new Dictionary<string, XElement>();
-            foreach (HWMesh mesh in node.Meshes)
+            foreach (HWMesh mesh in meshes)
             {
                 XElement geometryInstance = null;
 
@@ -654,21 +703,19 @@ namespace DAEnerys
                     technique.Add(materialInstance);
                 }
             }
+
+            parentElement.Add(nodeElement);
+
             return nodeElement;
         }
 
-        private static void AddNodeRecursive(XElement parentElement, HWNode node)
+        private static void AddJointRecursive(XElement parentElement, HWJoint joint)
         {
-            XElement newNodeElement = AddNode(parentElement, node);
+            XElement newElement = AddNode(parentElement, joint.FormattedName, joint.RelativeWorldMatrix);
+            jointElements.Add(joint, newElement);
 
-            foreach (HWNode childNode in node.Children)
-                AddNodeRecursive(newNodeElement, childNode);
-        }
-
-        private static void AddNodeChildrenRecursive(XElement parentElement, HWNode parentNode)
-        {
-            foreach (HWNode childNode in parentNode.Children)
-                AddNodeRecursive(parentElement, childNode);
+            foreach (HWJoint childJoint in joint.Children)
+                AddJointRecursive(newElement, childJoint);
         }
 
         private class AddedMesh

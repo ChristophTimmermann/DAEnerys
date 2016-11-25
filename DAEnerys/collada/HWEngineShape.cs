@@ -1,10 +1,11 @@
-﻿using Assimp;
+﻿using OpenTK;
+using System.Collections.Generic;
 
 namespace DAEnerys
 {
     public class HWEngineShape : HWMesh
     {
-        new public HWJoint Parent;
+        public static List<HWEngineShape> EngineShapes = new List<HWEngineShape>();
 
         public override string FormattedName
         {
@@ -16,12 +17,12 @@ namespace DAEnerys
 
         public int EngineShapeListItemIndex;
 
-        public HWEngineShape(Mesh assimpMesh, HWJoint parent, string name) : base(assimpMesh)
+        public HWEngineShape(MeshData data, Matrix4 transform, HWJoint parent, string name) : base(data, transform, new HWMaterial())
         {
             Parent = parent;
             Name = name;
 
-            HWScene.EngineShapes.Add(this);
+            EngineShapes.Add(this);
             Program.main.AddEngineShape(this);
         }
     }

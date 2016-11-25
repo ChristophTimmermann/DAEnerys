@@ -1,7 +1,11 @@
-﻿namespace DAEnerys
+﻿using System.Collections.Generic;
+
+namespace DAEnerys
 {
     public class HWImage
     {
+        public static List<HWImage> Images = new List<HWImage>();
+
         public string Name = "";
         public int Suffix = 1;
         public string ColladaName = "";
@@ -73,7 +77,7 @@
                 ColladaName = Name;
             }
 
-            HWScene.Images.Add(this);
+            Images.Add(this);
         }
     }
 

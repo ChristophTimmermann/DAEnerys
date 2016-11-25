@@ -7,7 +7,7 @@ namespace DAEnerys
     public class EditorJoint : EditorMesh
     {
         public static Mesh Mesh;
-        public HWNode HWNode;
+        public HWJoint Joint;
 
         public static float Size = 10;
 
@@ -20,7 +20,7 @@ namespace DAEnerys
         {
             EditorScene.meshes.Remove(this);
             Mesh = null;
-            HWNode = null;
+            Joint = null;
             JointMaterial = null;
             Renderer.InvalidateMeshData();
             Renderer.Invalidate();
@@ -28,7 +28,7 @@ namespace DAEnerys
 
         public EditorJoint(HWJoint joint) : base()
         {
-            this.HWNode = joint;
+            this.Joint = joint;
             this.Material = JointMaterial;
 
             Vertices = GetVertices();
@@ -111,7 +111,7 @@ namespace DAEnerys
             float realSize = Size;
 
             Scale = new Vector3(realSize, realSize, realSize);
-            ModelMatrix = Matrix4.CreateScale(Scale) * HWNode.WorldMatrix;
+            ModelMatrix = Matrix4.CreateScale(Scale) * Joint.WorldMatrix;
         }
     }
 }

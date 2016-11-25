@@ -105,7 +105,7 @@ namespace DAEnerys
             if (Program.OPEN_PATH != null)
                 if (File.Exists(Program.OPEN_PATH))
                 {
-                    HWScene.LoadCollada(Program.OPEN_PATH);
+                    Importer.ImportFromFile(Program.OPEN_PATH);
                     this.Text = Program.OPEN_PATH + " - DAEnerys";
                     OpenedFile = Path.GetFileNameWithoutExtension(Program.OPEN_PATH);
 
@@ -127,7 +127,7 @@ namespace DAEnerys
             Program.Camera.Update();
 
             int visibleNavLights = 0;
-            foreach (HWNavLight navLight in HWScene.NavLights)
+            foreach (HWNavLight navLight in HWNavLight.NavLights)
             {
                 if (navLight.Visible)
                     visibleNavLights++;
@@ -247,18 +247,13 @@ namespace DAEnerys
             checkNavLightFlagHighEnd.Checked = false;
             selectedNavLight = null;
 
-            foreach (HWDockSegment segment in HWScene.DockSegments)
+            foreach (HWDockSegment segment in HWDockSegment.DockSegments)
             {
                 segment.Icosphere.Color = new Vector3(1, 0, 0);
             }
 
-            HWScene.Clear();
             EditorScene.Clear();
-
-            comboShipMeshParent.Items.Add("Root"); //Add root joint to possible ship mesh parents
-            comboCollisionMeshParent.Items.Add("Root"); //Add root joint to possible collision mesh parents
-            comboEngineGlowParent.Items.Add("Root"); //Add root joint to possible engine glow parents
-            comboEngineShapeParent.Items.Add("Root"); //Add root joint to possible engine shape parents
+            HWScene.Clear();
 
             comboMaterialFormat.Items.Add("DXT1");
             comboMaterialFormat.Items.Add("DXT3");
@@ -291,7 +286,7 @@ namespace DAEnerys
             if (result == DialogResult.OK)
             {
                 Clear();
-                HWScene.LoadCollada(openColladaDialog.FileName);
+                Importer.ImportFromFile(openColladaDialog.FileName);
                 this.Text = openColladaDialog.FileName + " - DAEnerys";
                 OpenedFile = Path.GetFileNameWithoutExtension(openColladaDialog.FileName);
 
@@ -331,42 +326,22 @@ namespace DAEnerys
             TreeNode newNode = new TreeNode(joint.Name);
 
             if (parent == null) //If root joint
-            {
                 jointsTree.Nodes.Add(newNode);
-                joint.TreeNode = newNode;
-            }
             else
-            {
-                if (parent.Parent != null)
-                {
-                    HWJoint parentJoint = parent.Parent as HWJoint;
+                parent.TreeNode.Nodes.Add(newNode);
 
-                    if (parentJoint != null)
-                    {
-                        //parentJoint.TreeNode.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
-                        parentJoint.TreeNode.Nodes.Add(newNode);
-                        joint.TreeNode = newNode;
-                    }
-                    else
-                    {
-                        //jointsTree.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
-                        parent.TreeNode.Nodes.Add(newNode);
-                        joint.TreeNode = newNode;
-                    }
-                }
-                else
-                {
-                    //jointsTree.Nodes[parent.TreeNode.Index].Nodes.Add(newNode);
-                    parent.TreeNode.Nodes.Add(newNode);
-                    joint.TreeNode = newNode;
-                }
-            }
+            joint.TreeNode = newNode;
 
             //Add joint to ship mesh parents
             object item = joint.Name;
             comboShipMeshParent.Items.Add(item);
             joint.ComboItemShipMeshParent = item;
             ShipMeshParentComboItems.Add(joint, item);
+
+            //Add joint to collision mesh parents
+            comboCollisionMeshParent.Items.Add(item);
+            joint.ComboItemCollisionMeshParent = item;
+            CollisionMeshParentComboItems.Add(joint, item);
 
             //Add joint to engine glow parents
             comboEngineGlowParent.Items.Add(item);
@@ -380,16 +355,14 @@ namespace DAEnerys
         }
         public void RemoveJoint(HWJoint joint)
         {
-            HWJoint parentJoint = joint.Parent as HWJoint;
-
-            List<HWJoint> jointChildren = new List<HWJoint>();
-            foreach (HWNode childNode in joint.Children)
+            List<HWElement> jointChildren = new List<HWElement>();
+            foreach (HWElement child in joint.Children)
             {
-                HWJoint childJoint = childNode as HWJoint;
+                HWJoint childJoint = child as HWJoint;
                 if (childJoint == null)
                     continue;
                 childJoint.TreeNode.Remove();
-                AddJoint(childJoint, parentJoint);
+                AddJoint(childJoint, joint.Parent);
             }
 
             jointsTree.Nodes.Remove(joint.TreeNode);
@@ -423,12 +396,12 @@ namespace DAEnerys
             if (e.NewValue == CheckState.Checked)
                 newValue = true;
 
-            foreach (HWDockSegment segment in HWScene.DockSegments)
+            foreach (HWDockSegment segment in HWDockSegment.DockSegments)
             {
                 segment.ToleranceIcosphere.Visible = false;
             }
 
-            foreach (HWDockpath dockpath in HWScene.Dockpaths)
+            foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
             {
                 if (dockpath.Name == dockpathList.Items[e.Index].ToString())
                     dockpath.Visible = newValue;
@@ -436,7 +409,6 @@ namespace DAEnerys
 
             trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
 
-            Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
@@ -463,11 +435,11 @@ namespace DAEnerys
             checkDockpathSegmentFlagUnfocus.Checked = false;
             checkDockpathSegmentFlagClip.Checked = false;
 
-            foreach (HWDockSegment segment in HWScene.DockSegments)
+            foreach (HWDockSegment segment in HWDockSegment.DockSegments)
                 segment.ToleranceIcosphere.Visible = false;
 
             HWDockpath dockpath = null;
-            foreach (HWDockpath path in HWScene.Dockpaths)
+            foreach (HWDockpath path in HWDockpath.Dockpaths)
             {
                 if (path.Name == dockpathList.SelectedItem.ToString())
                 {
@@ -516,7 +488,7 @@ namespace DAEnerys
         private void trackBarDockpathSegments_Scroll(object sender, EventArgs e)
         {
             //Reset segment colors
-            foreach (HWDockSegment segment in HWScene.DockSegments)
+            foreach (HWDockSegment segment in HWDockSegment.DockSegments)
             {
                 segment.Icosphere.Color = new Vector3(1, 0, 0);
                 segment.ToleranceIcosphere.Visible = false;
@@ -604,7 +576,7 @@ namespace DAEnerys
             if (e.NewValue == CheckState.Checked)
                 newValue = true;
 
-            foreach (HWNavLight navLight in HWScene.NavLights)
+            foreach (HWNavLight navLight in HWNavLight.NavLights)
             {
                 if (navLight.Name == navLightList.Items[e.Index].ToString())
                 {
@@ -612,7 +584,6 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
@@ -632,7 +603,7 @@ namespace DAEnerys
 
             if (navLightList.SelectedItem != null)
             {
-                foreach (HWNavLight light in HWScene.NavLights)
+                foreach (HWNavLight light in HWNavLight.NavLights)
                 {
                     if (light.Name == navLightList.SelectedItem.ToString())
                     {
@@ -689,7 +660,7 @@ namespace DAEnerys
 
             if (DrawNavLightRadius)
             {
-                foreach (HWNavLight navLight in HWScene.NavLights)
+                foreach (HWNavLight navLight in HWNavLight.NavLights)
                 {
                     if (navLight.Visible)
                         if (navLight.RenderIcosphere != null)
@@ -698,21 +669,20 @@ namespace DAEnerys
             }
             else
             {
-                foreach (HWNavLight navLight in HWScene.NavLights)
+                foreach (HWNavLight navLight in HWNavLight.NavLights)
                 {
                     if (navLight.RenderIcosphere != null)
                         navLight.RenderIcosphere.Visible = false;
                 }
             }
 
-            Renderer.InvalidateMeshData();
-            Renderer.InvalidateView();
             Renderer.Invalidate();
         }
 
+        //--------------------------------- MISC ---------------------------------//
         private void checkboxDrawMarkers_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (HWMarker marker in HWScene.Markers)
+            foreach (HWMarker marker in HWMarker.Markers)
             {
                 foreach (EditorLine line in marker.Lines)
                 {
@@ -720,7 +690,6 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
@@ -760,7 +729,6 @@ namespace DAEnerys
                 }
             }
 
-            Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
@@ -840,14 +808,9 @@ namespace DAEnerys
             boxShipMeshName.Text = selectedShipMesh.Name;
 
             //Select parent joint in combo box
-            if (selectedShipMesh.Parent != null) //If ship mesh has a parent joint
-            {
-                object item = ShipMeshParentComboItems[selectedShipMesh.Parent];
-                comboShipMeshParent.SelectedItem = item; //Select parent joint in combo box
-            }
-            else
-                comboShipMeshParent.SelectedIndex = 0; //Select root joint in combo box
-
+            object item = ShipMeshParentComboItems[selectedShipMesh.Parent];
+            comboShipMeshParent.SelectedItem = item; //Select parent joint in combo box
+                
             comboShipMeshParent.Enabled = true; //Enable parent combo box
 
             //Fill LOD list
@@ -1066,12 +1029,16 @@ namespace DAEnerys
             if (result == DialogResult.OK)
             {
                 Mesh[] newMeshes = ObjImporter.ImportFromFile(openObjDialog.FileName);
+
                 if (newMeshes.Length > meshes.Count)
                 {
                     for (int i = newMeshes.Length - (newMeshes.Length - meshes.Count); i < newMeshes.Length; i++)
                     {
-                        HWShipMeshLOD newLOD = new HWShipMeshLOD(newMeshes[i], selectedShipMesh, listShipMeshLODs.SelectedIndex);
-                        newLOD.Parent = meshes[0].Parent;
+                        HWMaterial material = MaterialListItems.Values.ElementAt(0);
+                        if (meshes.Count - 1 >= i)
+                            material = meshes[i].Material;
+
+                        HWShipMeshLOD newLOD = new HWShipMeshLOD(Importer.ParseAssimpMesh(newMeshes[i]), Matrix4.Identity, material, selectedShipMesh, listShipMeshLODs.SelectedIndex);
                     }
                 }
 
@@ -1080,7 +1047,7 @@ namespace DAEnerys
                     if (newMeshes.Length - 1 >= i)
                     {
                         HWMaterial material = meshes[i].Material;
-                        meshes[i].SetMesh(newMeshes[i]);
+                        meshes[i].SetData(Importer.ParseAssimpMesh(newMeshes[i]));
                         meshes[i].CalculateBoundingBox();
                         meshes[i].Material = material;
                     }
@@ -1107,7 +1074,7 @@ namespace DAEnerys
         }
         private void buttonShipMeshAdd_Click(object sender, EventArgs e)
         {
-            HWShipMesh newShipMesh = new HWShipMesh(null, "ShipMesh" + HWScene.ShipMeshes.Count, new List<ShipMeshTag>());
+            HWShipMesh newShipMesh = new HWShipMesh(HWJoint.Root, "ShipMesh" + HWShipMesh.ShipMeshes.Count, new List<ShipMeshTag>());
             listShipMeshes.SelectedItem = newShipMesh.ListItem;
         }
         private void buttonShipMeshLODRemove_Click(object sender, EventArgs e)
@@ -1131,7 +1098,6 @@ namespace DAEnerys
                         lodMesh.LOD -= 1;
                         selectedShipMesh.LODMeshes[i].Remove(lodMesh);
                         selectedShipMesh.LODMeshes[i - 1].Add(lodMesh);
-                        lodMesh.Parent.Name = lodMesh.FormattedName;
                     }
                 }
             }
@@ -1156,12 +1122,7 @@ namespace DAEnerys
                 if (selectedShipMesh.LODMeshes[i].Count > 0)
                     lowestLOD = i;
 
-            HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new Mesh(), selectedShipMesh, lowestLOD + 1);
-
-            //This part is pretty ugly
-            HWNode newNode = new HWNode(newLODMesh.Parent, newLODMesh.FormattedName);
-            newLODMesh.Parent = newNode;
-            //it will go away as soon as I handle the data in Homeworld-way rather than in COLLADA-way
+            HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new MeshData(new Vertex[0], new int[0], 0), Matrix4.Identity, MaterialListItems.Values.ElementAt(0), selectedShipMesh, lowestLOD + 1);
 
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
             listShipMeshLODs.SelectedIndex = lowestLOD + 1;
@@ -1170,6 +1131,8 @@ namespace DAEnerys
         private void listEngineGlows_SelectedIndexChanged(object sender, EventArgs e)
         {
             listEngineGlowLODs.Items.Clear(); //Clear LOD list
+
+            comboEngineGlowParent.SelectedIndex = 0; //Select root joint in combo box
 
             HWEngineGlow selectedEngineGlow = null;
             if (listEngineGlows.SelectedItem != null)
@@ -1180,13 +1143,8 @@ namespace DAEnerys
             if (selectedEngineGlow != null)
             {
                 //Select parent joint in combo box
-                if (selectedEngineGlow.Parent != null) //If engine glow has a parent joint
-                {
-                    object item = EngineGlowParentComboItems[selectedEngineGlow.Parent];
-                    comboEngineGlowParent.SelectedItem = item; //Select parent joint in combo box
-                }
-                else
-                    comboEngineGlowParent.SelectedIndex = 0; //Select root joint in combo box
+                object item = EngineGlowParentComboItems[selectedEngineGlow.Parent];
+                comboEngineGlowParent.SelectedItem = item; //Select parent joint in combo box
 
                 //Fill LOD list
                 for (int i = 0; i < 3; i++)
@@ -1225,7 +1183,7 @@ namespace DAEnerys
         {
             HWCollisionMesh selectedCollisionMesh = null;
             //Has to be done with a loop, because of multiple collision meshes with the same name
-            foreach (HWCollisionMesh collisionMesh in HWScene.CollisionMeshes)
+            foreach (HWCollisionMesh collisionMesh in HWCollisionMesh.CollisionMeshes)
             {
                 if (collisionMesh.CollisionMeshListItemIndex == listCollisionMeshes.SelectedIndex)
                 {
@@ -1240,13 +1198,8 @@ namespace DAEnerys
             }
 
             //Select parent joint in combo box
-            if (selectedCollisionMesh.Parent != null) //If collision mesh has a parent joint
-            {
-                object item = CollisionMeshParentComboItems[selectedCollisionMesh.Parent];
-                comboCollisionMeshParent.SelectedItem = item; //Select parent joint in combo box
-            }
-            else
-                comboCollisionMeshParent.SelectedIndex = 0; //Select root joint in combo box
+            object item = CollisionMeshParentComboItems[selectedCollisionMesh.Parent];
+            comboCollisionMeshParent.SelectedItem = item; //Select parent joint in combo box
         }
         public void AddCollisionMesh(HWCollisionMesh mesh)
         {
@@ -1260,7 +1213,7 @@ namespace DAEnerys
             {
                 HWCollisionMesh selectedCollisionMesh = null;
                 //Has to be done with a loop, because of multiple collision meshes with the same name
-                foreach (HWCollisionMesh collisionMesh in HWScene.CollisionMeshes)
+                foreach (HWCollisionMesh collisionMesh in HWCollisionMesh.CollisionMeshes)
                 {
                     if (collisionMesh.CollisionMeshListItemIndex == listCollisionMeshes.SelectedIndex)
                     {
@@ -1275,8 +1228,6 @@ namespace DAEnerys
 
                 selectedCollisionMesh.Visible = visible;
 
-                Renderer.InvalidateMeshData();
-                Renderer.InvalidateView();
                 Renderer.Invalidate();
             }
         }
@@ -1284,9 +1235,11 @@ namespace DAEnerys
         //--------------------------------- ENGINE SHAPES ---------------------------------//
         private void listEngineShapes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            comboEngineShapeParent.SelectedIndex = 0; //Select root joint in combo box
+
             HWEngineShape selectedEngineShape = null;
             //Has to be done with a loop, because of multiple engine shapes with the same name
-            foreach (HWEngineShape engineShape in HWScene.EngineShapes)
+            foreach (HWEngineShape engineShape in HWEngineShape.EngineShapes)
             {
                 if (engineShape.EngineShapeListItemIndex == listEngineShapes.SelectedIndex)
                 {
@@ -1299,13 +1252,9 @@ namespace DAEnerys
                 return;
 
             //Select parent joint in combo box
-            if (selectedEngineShape.Parent != null) //If engine shape has a parent joint
-            {
-                object item = EngineShapeParentComboItems[selectedEngineShape.Parent];
-                comboEngineShapeParent.SelectedItem = item; //Select parent joint in combo box
-            }
-            else
-                comboEngineShapeParent.SelectedIndex = 0; //Select root joint in combo box
+            object item = EngineShapeParentComboItems[selectedEngineShape.Parent];
+            comboEngineShapeParent.SelectedItem = item; //Select parent joint in combo box
+                
         }
         public void AddEngineShape(HWEngineShape mesh)
         {
@@ -1319,7 +1268,7 @@ namespace DAEnerys
             {
                 HWEngineShape selectedEngineShape = null;
                 //Has to be done with a loop, because of multiple engine shapes with the same name
-                foreach (HWEngineShape engineShape in HWScene.EngineShapes)
+                foreach (HWEngineShape engineShape in HWEngineShape.EngineShapes)
                 {
                     if (engineShape.EngineShapeListItemIndex == listEngineShapes.SelectedIndex)
                     {
@@ -1334,8 +1283,6 @@ namespace DAEnerys
 
                 selectedEngineShape.Visible = visible;
 
-                Renderer.InvalidateMeshData();
-                Renderer.InvalidateView();
                 Renderer.Invalidate();
             }
         }
