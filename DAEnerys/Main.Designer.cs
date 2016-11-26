@@ -30,12 +30,13 @@ namespace DAEnerys
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
             this.buttonSave = new System.Windows.Forms.ToolStripButton();
             this.buttonSettings = new System.Windows.Forms.ToolStripButton();
@@ -172,7 +173,6 @@ namespace DAEnerys
             this.saveObjDialog = new System.Windows.Forms.SaveFileDialog();
             this.openObjDialog = new System.Windows.Forms.OpenFileDialog();
             this.browseMaterialTexturesDIFFDialog = new System.Windows.Forms.OpenFileDialog();
-            this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -246,6 +246,15 @@ namespace DAEnerys
             this.toolStrip.Size = new System.Drawing.Size(1284, 25);
             this.toolStrip.TabIndex = 1;
             this.toolStrip.Text = "toolStrip";
+            // 
+            // buttonNew
+            // 
+            this.buttonNew.Image = ((System.Drawing.Image)(resources.GetObject("buttonNew.Image")));
+            this.buttonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonNew.Name = "buttonNew";
+            this.buttonNew.Size = new System.Drawing.Size(51, 22);
+            this.buttonNew.Text = "New";
+            this.buttonNew.Click += new System.EventHandler(this.buttonNew_Click);
             // 
             // buttonOpen
             // 
@@ -328,6 +337,7 @@ namespace DAEnerys
             // saveColladaDialog
             // 
             this.saveColladaDialog.DefaultExt = "dae";
+            this.saveColladaDialog.Filter = "\"COLLADA-files|*.dae|All files|*.*\"";
             this.saveColladaDialog.Title = "Save DAE-file...";
             // 
             // splitContainer1
@@ -1871,6 +1881,7 @@ namespace DAEnerys
             // saveObjDialog
             // 
             this.saveObjDialog.DefaultExt = "obj";
+            this.saveObjDialog.Filter = "OBJ-Files|*.obj|All files|*.*";
             this.saveObjDialog.Title = "Save OBJ-file...";
             // 
             // openObjDialog
@@ -1882,15 +1893,6 @@ namespace DAEnerys
             // 
             this.browseMaterialTexturesDIFFDialog.Filter = "TGA-files|*.tga|All files|*.*";
             this.browseMaterialTexturesDIFFDialog.Title = "Open TGA-DIFF-file...";
-            // 
-            // buttonNew
-            // 
-            this.buttonNew.Image = ((System.Drawing.Image)(resources.GetObject("buttonNew.Image")));
-            this.buttonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.buttonNew.Name = "buttonNew";
-            this.buttonNew.Size = new System.Drawing.Size(51, 22);
-            this.buttonNew.Text = "New";
-            this.buttonNew.Click += new System.EventHandler(this.buttonNew_Click);
             // 
             // Main
             // 
