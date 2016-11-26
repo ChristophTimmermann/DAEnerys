@@ -473,7 +473,7 @@ namespace DAEnerys
                     {
                         for (int c = 0; c < inputCount; c++)
                         {
-                            faces.Append(" " + (int)(mesh.GetIndices(indexOffset)[f + i]));
+                            faces.Append(" " + (mesh.Indices[f + i] + indexOffset));
                         }
                     }
                     faces.AppendLine();

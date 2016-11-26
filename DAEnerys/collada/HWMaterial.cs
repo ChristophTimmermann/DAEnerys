@@ -7,7 +7,7 @@ namespace DAEnerys
     public class HWMaterial : GenericMaterial
     {
         public static List<HWMaterial> Materials = new List<HWMaterial>();
-
+        public static HWMaterial DefaultMaterial;
 
         public string Name = string.Empty;
         public int Suffix = -1;
@@ -31,8 +31,6 @@ namespace DAEnerys
                     return "MAT[" + Name + "]_SHD[" + Shader + "]_" + Suffix;
             }
         }
-
-        public object MaterialListItem;
 
         public HWTexture DiffuseTexture;
         public HWTexture GlowTexture;
@@ -70,6 +68,20 @@ namespace DAEnerys
             Opacity = opacity;
 
             Materials.Add(this);
+        }
+
+        public void Destroy()
+        {
+            Materials.Remove(this);
+            Program.main.RemoveMaterial(this);
+            foreach (HWMesh mesh in HWMesh.Meshes)
+                if (mesh.Material == this)
+                    mesh.Material = HWMaterial.DefaultMaterial;
+
+            HWImage[] images = Images.ToArray();
+            for (int i = 0; i < images.Length; i++)
+                images[i].Destroy();
+            Images.Clear();
         }
 
         public void Parse()
@@ -156,8 +168,13 @@ namespace DAEnerys
 
                     string diffusePrefix = diffuseName.Remove(underspaceIndex);
 
-                    string absolutePath = Path.Combine(Importer.ColladaPath, image.Path.Replace("file://", ""));
+                    string absolutePath = image.Path.Replace("file://", "");
                     absolutePath = Path.GetDirectoryName(absolutePath);
+                    if (Importer.ColladaPath.Length > 0)
+                    {
+                        absolutePath = Path.Combine(Importer.ColladaPath, image.Path.Replace("file://", ""));
+                        absolutePath = Path.GetDirectoryName(absolutePath);
+                    }
 
                     if (!Directory.Exists(absolutePath))
                         continue;

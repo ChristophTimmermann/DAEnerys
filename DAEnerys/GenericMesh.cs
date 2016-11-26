@@ -127,6 +127,13 @@ namespace DAEnerys
                 return biTangents.ToArray();
             }
         }
+        public int[] Indices
+        {
+            get
+            {
+                return indices;
+            }
+        }
 
         public int VertexCount { get { return VertexList.Length; } }
         public int IndexCount { get { return indices.Length; } }
@@ -167,15 +174,15 @@ namespace DAEnerys
         private void RecalculateNormals()
         {
             // See if we have anything to do.
-            if (Vertices.Length == 0 || GetIndices().Length == 0)
+            if (VertexCount == 0 || IndexCount == 0)
                 return;
 
             Vector3[] normals = new Vector3[Vertices.Length];
             for (int i = 0; i < IndexCount; i += 3)
             {
-                int ind1 = GetIndices()[i + 0];
-                int ind2 = GetIndices()[i + 1];
-                int ind3 = GetIndices()[i + 2];
+                int ind1 = Indices[i + 0];
+                int ind2 = Indices[i + 1];
+                int ind3 = Indices[i + 2];
                 Vector3 v1 = Vertices[ind1];
                 Vector3 v2 = Vertices[ind2];
                 Vector3 v3 = Vertices[ind3];
@@ -209,17 +216,17 @@ namespace DAEnerys
             for (int i = 0; i < IndexCount; i += 3)
             {
                 Vector3 fT, fB;
-                int i1 = GetIndices()[i + 0];
-                int i2 = GetIndices()[i + 1];
-                int i3 = GetIndices()[i + 2];
+                int i1 = Indices[i + 0];
+                int i2 = Indices[i + 1];
+                int i3 = Indices[i + 2];
                 int fH, N;
                 _CalcFaceTangents(out fT, out fB, out fH, i1, i2, i3);
                 _UpdateVertTangents(altv, ref handedness, fT, fB, fH, i1, out N);
-                GetIndices()[i1] = N;
+                Indices[i1] = N;
                 _UpdateVertTangents(altv, ref handedness, fT, fB, fH, i2, out N);
-                GetIndices()[i2] = N;
+                Indices[i2] = N;
                 _UpdateVertTangents(altv, ref handedness, fT, fB, fH, i3, out N);
-                GetIndices()[i3] = N;
+                Indices[i3] = N;
             }
             for (int i = 0; i < Vertices.Length; ++i)
                 _NormaliseVertTangents(handedness[i], i);

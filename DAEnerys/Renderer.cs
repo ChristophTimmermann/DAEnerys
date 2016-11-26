@@ -207,6 +207,9 @@ namespace DAEnerys
 
             //AmbientLight.Enabled = false;
             DefaultTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/missing.tga"));
+            HWMaterial.DefaultMaterial = new HWMaterial("matte");
+            HWMaterial.DefaultMaterial.LoadTextures();
+
             //EnvironmentTexture0 = new HWTextureCube(
             //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
             //    Path.Combine(Program.EXECUTABLE_PATH, @"resources/cubemap-test/black.tga"),
@@ -301,7 +304,7 @@ namespace DAEnerys
                     mesh_uv0.AddRange(mesh.UV0);
                     mesh_uv1.AddRange(mesh.UV1);
 
-                    mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount).ToList());
+                    mesh_inds.AddRange(mesh.GetIndices(mesh_vertcount));
 
                     mesh_vertcount += mesh.VertexCount;
                 }

@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
             this.buttonSave = new System.Windows.Forms.ToolStripButton();
@@ -49,10 +49,10 @@ namespace DAEnerys
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabShipMeshes = new System.Windows.Forms.TabPage();
-            this.boxShipMeshName = new System.Windows.Forms.TextBox();
-            this.labelShipMeshName = new System.Windows.Forms.Label();
             this.buttonShipMeshRemove = new System.Windows.Forms.Button();
             this.buttonShipMeshAdd = new System.Windows.Forms.Button();
+            this.boxShipMeshName = new System.Windows.Forms.TextBox();
+            this.labelShipMeshName = new System.Windows.Forms.Label();
             this.checkShipMeshDoScar = new System.Windows.Forms.CheckBox();
             this.listShipMeshes = new System.Windows.Forms.ListBox();
             this.labelShipMeshParent = new System.Windows.Forms.Label();
@@ -65,11 +65,11 @@ namespace DAEnerys
             this.buttonShipMeshLODExport = new System.Windows.Forms.Button();
             this.listShipMeshLODs = new System.Windows.Forms.CheckedListBox();
             this.tabMaterials = new System.Windows.Forms.TabPage();
+            this.boxMaterialName = new System.Windows.Forms.TextBox();
+            this.labelMaterialName = new System.Windows.Forms.Label();
+            this.buttonMaterialRemove = new System.Windows.Forms.Button();
+            this.buttonMaterialAdd = new System.Windows.Forms.Button();
             this.comboMaterialShader = new System.Windows.Forms.ComboBox();
-            this.groupProgress = new System.Windows.Forms.GroupBox();
-            this.trackBarProgress = new System.Windows.Forms.TrackBar();
-            this.groupThrusterStrength = new System.Windows.Forms.GroupBox();
-            this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
             this.groupMaterialTextures = new System.Windows.Forms.GroupBox();
             this.listMaterialTextures = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -166,6 +166,12 @@ namespace DAEnerys
             this.buttonProblems = new System.Windows.Forms.Button();
             this.saveObjDialog = new System.Windows.Forms.SaveFileDialog();
             this.openObjDialog = new System.Windows.Forms.OpenFileDialog();
+            this.buttonMaterialTexturesBrowseDIFF = new System.Windows.Forms.Button();
+            this.groupProgress = new System.Windows.Forms.GroupBox();
+            this.trackBarProgress = new System.Windows.Forms.TrackBar();
+            this.groupThrusterStrength = new System.Windows.Forms.GroupBox();
+            this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
+            this.browseMaterialTexturesDIFFDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -175,10 +181,6 @@ namespace DAEnerys
             this.tabShipMeshes.SuspendLayout();
             this.groupShipMeshLODs.SuspendLayout();
             this.tabMaterials.SuspendLayout();
-            this.groupProgress.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarProgress)).BeginInit();
-            this.groupThrusterStrength.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
             this.groupMaterialTextures.SuspendLayout();
             this.tabCollisionMeshes.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -219,6 +221,10 @@ namespace DAEnerys
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).BeginInit();
+            this.groupProgress.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarProgress)).BeginInit();
+            this.groupThrusterStrength.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -364,10 +370,10 @@ namespace DAEnerys
             // tabShipMeshes
             // 
             this.tabShipMeshes.AutoScroll = true;
-            this.tabShipMeshes.Controls.Add(this.boxShipMeshName);
-            this.tabShipMeshes.Controls.Add(this.labelShipMeshName);
             this.tabShipMeshes.Controls.Add(this.buttonShipMeshRemove);
             this.tabShipMeshes.Controls.Add(this.buttonShipMeshAdd);
+            this.tabShipMeshes.Controls.Add(this.boxShipMeshName);
+            this.tabShipMeshes.Controls.Add(this.labelShipMeshName);
             this.tabShipMeshes.Controls.Add(this.checkShipMeshDoScar);
             this.tabShipMeshes.Controls.Add(this.listShipMeshes);
             this.tabShipMeshes.Controls.Add(this.labelShipMeshParent);
@@ -381,31 +387,12 @@ namespace DAEnerys
             this.tabShipMeshes.Text = "Ship Meshes";
             this.tabShipMeshes.UseVisualStyleBackColor = true;
             // 
-            // boxShipMeshName
-            // 
-            this.boxShipMeshName.Enabled = false;
-            this.boxShipMeshName.Location = new System.Drawing.Point(56, 211);
-            this.boxShipMeshName.Name = "boxShipMeshName";
-            this.boxShipMeshName.Size = new System.Drawing.Size(180, 20);
-            this.boxShipMeshName.TabIndex = 20;
-            this.boxShipMeshName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxShipMeshName_KeyPress);
-            this.boxShipMeshName.Leave += new System.EventHandler(this.boxShipMeshName_Leave);
-            // 
-            // labelShipMeshName
-            // 
-            this.labelShipMeshName.AutoSize = true;
-            this.labelShipMeshName.Location = new System.Drawing.Point(6, 214);
-            this.labelShipMeshName.Name = "labelShipMeshName";
-            this.labelShipMeshName.Size = new System.Drawing.Size(41, 13);
-            this.labelShipMeshName.TabIndex = 19;
-            this.labelShipMeshName.Text = "Name: ";
-            // 
             // buttonShipMeshRemove
             // 
             this.buttonShipMeshRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonShipMeshRemove.Enabled = false;
-            this.buttonShipMeshRemove.Location = new System.Drawing.Point(123, 287);
+            this.buttonShipMeshRemove.Location = new System.Drawing.Point(123, 211);
             this.buttonShipMeshRemove.Name = "buttonShipMeshRemove";
             this.buttonShipMeshRemove.Size = new System.Drawing.Size(113, 23);
             this.buttonShipMeshRemove.TabIndex = 17;
@@ -417,7 +404,7 @@ namespace DAEnerys
             // 
             this.buttonShipMeshAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonShipMeshAdd.Location = new System.Drawing.Point(6, 287);
+            this.buttonShipMeshAdd.Location = new System.Drawing.Point(6, 211);
             this.buttonShipMeshAdd.Name = "buttonShipMeshAdd";
             this.buttonShipMeshAdd.Size = new System.Drawing.Size(111, 23);
             this.buttonShipMeshAdd.TabIndex = 16;
@@ -425,11 +412,30 @@ namespace DAEnerys
             this.buttonShipMeshAdd.UseVisualStyleBackColor = true;
             this.buttonShipMeshAdd.Click += new System.EventHandler(this.buttonShipMeshAdd_Click);
             // 
+            // boxShipMeshName
+            // 
+            this.boxShipMeshName.Enabled = false;
+            this.boxShipMeshName.Location = new System.Drawing.Point(56, 240);
+            this.boxShipMeshName.Name = "boxShipMeshName";
+            this.boxShipMeshName.Size = new System.Drawing.Size(180, 20);
+            this.boxShipMeshName.TabIndex = 20;
+            this.boxShipMeshName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxShipMeshName_KeyPress);
+            this.boxShipMeshName.Leave += new System.EventHandler(this.boxShipMeshName_Leave);
+            // 
+            // labelShipMeshName
+            // 
+            this.labelShipMeshName.AutoSize = true;
+            this.labelShipMeshName.Location = new System.Drawing.Point(6, 243);
+            this.labelShipMeshName.Name = "labelShipMeshName";
+            this.labelShipMeshName.Size = new System.Drawing.Size(41, 13);
+            this.labelShipMeshName.TabIndex = 19;
+            this.labelShipMeshName.Text = "Name: ";
+            // 
             // checkShipMeshDoScar
             // 
             this.checkShipMeshDoScar.AutoSize = true;
             this.checkShipMeshDoScar.Enabled = false;
-            this.checkShipMeshDoScar.Location = new System.Drawing.Point(9, 264);
+            this.checkShipMeshDoScar.Location = new System.Drawing.Point(9, 293);
             this.checkShipMeshDoScar.Name = "checkShipMeshDoScar";
             this.checkShipMeshDoScar.Size = new System.Drawing.Size(79, 17);
             this.checkShipMeshDoScar.TabIndex = 15;
@@ -451,7 +457,7 @@ namespace DAEnerys
             // labelShipMeshParent
             // 
             this.labelShipMeshParent.AutoSize = true;
-            this.labelShipMeshParent.Location = new System.Drawing.Point(6, 240);
+            this.labelShipMeshParent.Location = new System.Drawing.Point(6, 269);
             this.labelShipMeshParent.Name = "labelShipMeshParent";
             this.labelShipMeshParent.Size = new System.Drawing.Size(44, 13);
             this.labelShipMeshParent.TabIndex = 13;
@@ -464,7 +470,7 @@ namespace DAEnerys
             this.comboShipMeshParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboShipMeshParent.Enabled = false;
             this.comboShipMeshParent.FormattingEnabled = true;
-            this.comboShipMeshParent.Location = new System.Drawing.Point(56, 237);
+            this.comboShipMeshParent.Location = new System.Drawing.Point(56, 266);
             this.comboShipMeshParent.Name = "comboShipMeshParent";
             this.comboShipMeshParent.Size = new System.Drawing.Size(180, 21);
             this.comboShipMeshParent.TabIndex = 12;
@@ -565,9 +571,13 @@ namespace DAEnerys
             // tabMaterials
             // 
             this.tabMaterials.AutoScroll = true;
-            this.tabMaterials.Controls.Add(this.comboMaterialShader);
             this.tabMaterials.Controls.Add(this.groupProgress);
             this.tabMaterials.Controls.Add(this.groupThrusterStrength);
+            this.tabMaterials.Controls.Add(this.boxMaterialName);
+            this.tabMaterials.Controls.Add(this.labelMaterialName);
+            this.tabMaterials.Controls.Add(this.buttonMaterialRemove);
+            this.tabMaterials.Controls.Add(this.buttonMaterialAdd);
+            this.tabMaterials.Controls.Add(this.comboMaterialShader);
             this.tabMaterials.Controls.Add(this.groupMaterialTextures);
             this.tabMaterials.Controls.Add(this.label3);
             this.tabMaterials.Controls.Add(this.comboMaterialFormat);
@@ -581,92 +591,88 @@ namespace DAEnerys
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
             // 
+            // boxMaterialName
+            // 
+            this.boxMaterialName.Enabled = false;
+            this.boxMaterialName.Location = new System.Drawing.Point(50, 279);
+            this.boxMaterialName.Name = "boxMaterialName";
+            this.boxMaterialName.Size = new System.Drawing.Size(185, 20);
+            this.boxMaterialName.TabIndex = 30;
+            this.boxMaterialName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxMaterialName_KeyPress);
+            this.boxMaterialName.Leave += new System.EventHandler(this.boxMaterialName_Leave);
+            // 
+            // labelMaterialName
+            // 
+            this.labelMaterialName.AutoSize = true;
+            this.labelMaterialName.Location = new System.Drawing.Point(8, 282);
+            this.labelMaterialName.Name = "labelMaterialName";
+            this.labelMaterialName.Size = new System.Drawing.Size(41, 13);
+            this.labelMaterialName.TabIndex = 29;
+            this.labelMaterialName.Text = "Name: ";
+            // 
+            // buttonMaterialRemove
+            // 
+            this.buttonMaterialRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonMaterialRemove.Enabled = false;
+            this.buttonMaterialRemove.Location = new System.Drawing.Point(123, 250);
+            this.buttonMaterialRemove.Name = "buttonMaterialRemove";
+            this.buttonMaterialRemove.Size = new System.Drawing.Size(112, 23);
+            this.buttonMaterialRemove.TabIndex = 28;
+            this.buttonMaterialRemove.Text = "Remove";
+            this.buttonMaterialRemove.UseVisualStyleBackColor = true;
+            this.buttonMaterialRemove.Click += new System.EventHandler(this.buttonMaterialRemove_Click);
+            // 
+            // buttonMaterialAdd
+            // 
+            this.buttonMaterialAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonMaterialAdd.Location = new System.Drawing.Point(6, 250);
+            this.buttonMaterialAdd.Name = "buttonMaterialAdd";
+            this.buttonMaterialAdd.Size = new System.Drawing.Size(111, 23);
+            this.buttonMaterialAdd.TabIndex = 27;
+            this.buttonMaterialAdd.Text = "Add";
+            this.buttonMaterialAdd.UseVisualStyleBackColor = true;
+            this.buttonMaterialAdd.Click += new System.EventHandler(this.buttonMaterialAdd_Click);
+            // 
             // comboMaterialShader
             // 
             this.comboMaterialShader.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboMaterialShader.Enabled = false;
             this.comboMaterialShader.FormattingEnabled = true;
-            this.comboMaterialShader.Location = new System.Drawing.Point(50, 250);
+            this.comboMaterialShader.Location = new System.Drawing.Point(50, 305);
             this.comboMaterialShader.Name = "comboMaterialShader";
             this.comboMaterialShader.Size = new System.Drawing.Size(185, 21);
             this.comboMaterialShader.TabIndex = 26;
             this.comboMaterialShader.SelectedIndexChanged += new System.EventHandler(this.comboMaterialShader_SelectedIndexChanged);
-            // 
-            // groupProgress
-            // 
-            this.groupProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupProgress.Controls.Add(this.trackBarProgress);
-            this.groupProgress.Location = new System.Drawing.Point(3, 540);
-            this.groupProgress.Name = "groupProgress";
-            this.groupProgress.Size = new System.Drawing.Size(235, 46);
-            this.groupProgress.TabIndex = 25;
-            this.groupProgress.TabStop = false;
-            this.groupProgress.Text = "Progress (ore shader)";
-            // 
-            // trackBarProgress
-            // 
-            this.trackBarProgress.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarProgress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBarProgress.Location = new System.Drawing.Point(3, 16);
-            this.trackBarProgress.Maximum = 100;
-            this.trackBarProgress.Name = "trackBarProgress";
-            this.trackBarProgress.Size = new System.Drawing.Size(229, 27);
-            this.trackBarProgress.TabIndex = 0;
-            this.trackBarProgress.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarProgress.Scroll += new System.EventHandler(this.trackBarProgress_Scroll);
-            // 
-            // groupThrusterStrength
-            // 
-            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
-            this.groupThrusterStrength.Location = new System.Drawing.Point(3, 491);
-            this.groupThrusterStrength.Name = "groupThrusterStrength";
-            this.groupThrusterStrength.Size = new System.Drawing.Size(235, 46);
-            this.groupThrusterStrength.TabIndex = 24;
-            this.groupThrusterStrength.TabStop = false;
-            this.groupThrusterStrength.Text = "Thruster strength";
-            // 
-            // trackBarThrusterStrength
-            // 
-            this.trackBarThrusterStrength.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarThrusterStrength.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
-            this.trackBarThrusterStrength.Maximum = 100;
-            this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
-            this.trackBarThrusterStrength.Size = new System.Drawing.Size(229, 27);
-            this.trackBarThrusterStrength.TabIndex = 0;
-            this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarThrusterStrength.Value = 100;
-            this.trackBarThrusterStrength.Scroll += new System.EventHandler(this.trackBarThrusterStrength_Scroll);
             // 
             // groupMaterialTextures
             // 
             this.groupMaterialTextures.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupMaterialTextures.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupMaterialTextures.Controls.Add(this.buttonMaterialTexturesBrowseDIFF);
             this.groupMaterialTextures.Controls.Add(this.listMaterialTextures);
-            this.groupMaterialTextures.Location = new System.Drawing.Point(3, 304);
+            this.groupMaterialTextures.Location = new System.Drawing.Point(4, 359);
             this.groupMaterialTextures.Name = "groupMaterialTextures";
-            this.groupMaterialTextures.Size = new System.Drawing.Size(235, 184);
+            this.groupMaterialTextures.Size = new System.Drawing.Size(235, 214);
             this.groupMaterialTextures.TabIndex = 23;
             this.groupMaterialTextures.TabStop = false;
             this.groupMaterialTextures.Text = "Textures";
             // 
             // listMaterialTextures
             // 
-            this.listMaterialTextures.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listMaterialTextures.Dock = System.Windows.Forms.DockStyle.Top;
             this.listMaterialTextures.FormattingEnabled = true;
             this.listMaterialTextures.Location = new System.Drawing.Point(3, 16);
             this.listMaterialTextures.Name = "listMaterialTextures";
-            this.listMaterialTextures.Size = new System.Drawing.Size(229, 165);
+            this.listMaterialTextures.Size = new System.Drawing.Size(229, 160);
             this.listMaterialTextures.TabIndex = 0;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 280);
+            this.label3.Location = new System.Drawing.Point(6, 335);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 13);
             this.label3.TabIndex = 22;
@@ -679,7 +685,7 @@ namespace DAEnerys
             this.comboMaterialFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboMaterialFormat.Enabled = false;
             this.comboMaterialFormat.FormattingEnabled = true;
-            this.comboMaterialFormat.Location = new System.Drawing.Point(50, 277);
+            this.comboMaterialFormat.Location = new System.Drawing.Point(50, 332);
             this.comboMaterialFormat.Name = "comboMaterialFormat";
             this.comboMaterialFormat.Size = new System.Drawing.Size(185, 21);
             this.comboMaterialFormat.TabIndex = 21;
@@ -699,7 +705,7 @@ namespace DAEnerys
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 253);
+            this.label2.Location = new System.Drawing.Point(6, 308);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(44, 13);
             this.label2.TabIndex = 18;
@@ -1713,9 +1719,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -1723,14 +1729,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle3;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -1739,9 +1745,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -1754,9 +1760,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle2;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -1814,6 +1820,71 @@ namespace DAEnerys
             this.openObjDialog.Filter = "OBJ-Files|*.obj|All files|*.*";
             this.openObjDialog.Title = "Open OBJ-file...";
             // 
+            // buttonMaterialTexturesBrowseDIFF
+            // 
+            this.buttonMaterialTexturesBrowseDIFF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonMaterialTexturesBrowseDIFF.Enabled = false;
+            this.buttonMaterialTexturesBrowseDIFF.Location = new System.Drawing.Point(3, 182);
+            this.buttonMaterialTexturesBrowseDIFF.Name = "buttonMaterialTexturesBrowseDIFF";
+            this.buttonMaterialTexturesBrowseDIFF.Size = new System.Drawing.Size(229, 23);
+            this.buttonMaterialTexturesBrowseDIFF.TabIndex = 28;
+            this.buttonMaterialTexturesBrowseDIFF.Text = "Browse DIFF...";
+            this.buttonMaterialTexturesBrowseDIFF.UseVisualStyleBackColor = true;
+            this.buttonMaterialTexturesBrowseDIFF.Click += new System.EventHandler(this.buttonMaterialTexturesBrowseDIFF_Click);
+            // 
+            // groupProgress
+            // 
+            this.groupProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupProgress.Controls.Add(this.trackBarProgress);
+            this.groupProgress.Location = new System.Drawing.Point(4, 628);
+            this.groupProgress.Name = "groupProgress";
+            this.groupProgress.Size = new System.Drawing.Size(235, 46);
+            this.groupProgress.TabIndex = 32;
+            this.groupProgress.TabStop = false;
+            this.groupProgress.Text = "Progress (ore shader)";
+            // 
+            // trackBarProgress
+            // 
+            this.trackBarProgress.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarProgress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBarProgress.Location = new System.Drawing.Point(3, 16);
+            this.trackBarProgress.Maximum = 100;
+            this.trackBarProgress.Name = "trackBarProgress";
+            this.trackBarProgress.Size = new System.Drawing.Size(229, 27);
+            this.trackBarProgress.TabIndex = 0;
+            this.trackBarProgress.TickStyle = System.Windows.Forms.TickStyle.None;
+            // 
+            // groupThrusterStrength
+            // 
+            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
+            this.groupThrusterStrength.Location = new System.Drawing.Point(4, 579);
+            this.groupThrusterStrength.Name = "groupThrusterStrength";
+            this.groupThrusterStrength.Size = new System.Drawing.Size(235, 46);
+            this.groupThrusterStrength.TabIndex = 31;
+            this.groupThrusterStrength.TabStop = false;
+            this.groupThrusterStrength.Text = "Thruster strength";
+            // 
+            // trackBarThrusterStrength
+            // 
+            this.trackBarThrusterStrength.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarThrusterStrength.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
+            this.trackBarThrusterStrength.Maximum = 100;
+            this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
+            this.trackBarThrusterStrength.Size = new System.Drawing.Size(229, 27);
+            this.trackBarThrusterStrength.TabIndex = 0;
+            this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarThrusterStrength.Value = 100;
+            // 
+            // browseMaterialTexturesDIFFDialog
+            // 
+            this.browseMaterialTexturesDIFFDialog.Filter = "TGA-files|*.tga|All files|*.*";
+            this.browseMaterialTexturesDIFFDialog.Title = "Open TGA-DIFF-file...";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1842,12 +1913,6 @@ namespace DAEnerys
             this.groupShipMeshLODs.ResumeLayout(false);
             this.tabMaterials.ResumeLayout(false);
             this.tabMaterials.PerformLayout();
-            this.groupProgress.ResumeLayout(false);
-            this.groupProgress.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarProgress)).EndInit();
-            this.groupThrusterStrength.ResumeLayout(false);
-            this.groupThrusterStrength.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).EndInit();
             this.groupMaterialTextures.ResumeLayout(false);
             this.tabCollisionMeshes.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -1900,6 +1965,12 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).EndInit();
+            this.groupProgress.ResumeLayout(false);
+            this.groupProgress.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarProgress)).EndInit();
+            this.groupThrusterStrength.ResumeLayout(false);
+            this.groupThrusterStrength.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1997,8 +2068,6 @@ namespace DAEnerys
         private System.Windows.Forms.DataGridView gridProblems;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnProblems;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.GroupBox groupThrusterStrength;
-        private System.Windows.Forms.TrackBar trackBarThrusterStrength;
         private System.Windows.Forms.GroupBox groupMaterialTextures;
         private System.Windows.Forms.ListBox listMaterialTextures;
         private System.Windows.Forms.Label label3;
@@ -2017,8 +2086,6 @@ namespace DAEnerys
         private System.Windows.Forms.OpenFileDialog openObjDialog;
         private System.Windows.Forms.GroupBox groupShipMeshLODMaterials;
         private System.Windows.Forms.ToolStripButton buttonShaderSettings;
-        private System.Windows.Forms.GroupBox groupProgress;
-        private System.Windows.Forms.TrackBar trackBarProgress;
         private System.Windows.Forms.ComboBox comboMaterialShader;
         private System.Windows.Forms.Button buttonShipMeshRemove;
         private System.Windows.Forms.Button buttonShipMeshAdd;
@@ -2037,6 +2104,16 @@ namespace DAEnerys
         private System.Windows.Forms.CheckedListBox listEngineBurns;
         private System.Windows.Forms.ComboBox comboEngineBurnParent;
         private System.Windows.Forms.Label labelEngineBurnParent;
+        private System.Windows.Forms.Button buttonMaterialRemove;
+        private System.Windows.Forms.Button buttonMaterialAdd;
+        private System.Windows.Forms.TextBox boxMaterialName;
+        private System.Windows.Forms.Label labelMaterialName;
+        private System.Windows.Forms.Button buttonMaterialTexturesBrowseDIFF;
+        private System.Windows.Forms.GroupBox groupProgress;
+        private System.Windows.Forms.TrackBar trackBarProgress;
+        private System.Windows.Forms.GroupBox groupThrusterStrength;
+        private System.Windows.Forms.TrackBar trackBarThrusterStrength;
+        private System.Windows.Forms.OpenFileDialog browseMaterialTexturesDIFFDialog;
     }
 }
 

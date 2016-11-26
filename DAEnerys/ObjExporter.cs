@@ -71,7 +71,7 @@ namespace DAEnerys
                     file.AppendLine("usemtl");
 
                 for(int i = 0; i < mesh.IndexCount; i += 3)
-                    file.AppendLine("f " + (mesh.GetIndices(indexOffset)[i] + 1) + "/" + (mesh.GetIndices(indexOffset)[i] + 1) + " " + (mesh.GetIndices(indexOffset)[i + 1] + 1) + "/" + (mesh.GetIndices(indexOffset)[i + 1] + 1) + " " + (mesh.GetIndices(indexOffset)[i + 2] + 1) + "/" + (mesh.GetIndices(indexOffset)[i + 2] + 1));
+                    file.AppendLine("f " + (mesh.Indices[i] + 1 + indexOffset) + "/" + (mesh.Indices[i] + 1 + indexOffset) + " " + (mesh.Indices[i + 1] + 1 + indexOffset) + "/" + (mesh.Indices[i + 1] + 1 + indexOffset) + " " + (mesh.Indices[i + 2] + 1 + indexOffset) + "/" + (mesh.Indices[i + 2] + 1 + indexOffset));
 
                 indexOffset += mesh.VertexCount;
             }

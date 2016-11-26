@@ -868,7 +868,7 @@ namespace DAEnerys
                     if (name != null && path != null)
                     {
                         Log.WriteLine("Trying to parse texture \"" + name + "\".");
-                        new HWImage(name, path);
+                        HWImage.Parse(name, path);
                     }
                 }
 

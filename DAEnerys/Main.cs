@@ -19,6 +19,7 @@ namespace DAEnerys
         HWDockpath selectedDockpath;
         HWNavLight selectedNavLight;
         HWEngineBurn selectedEngineBurn;
+        HWMaterial selectedMaterial;
 
         public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
         private Label[] ShipMeshLODMaterialLabels = new Label[MAX_MATERIALS_ON_MESH];
@@ -30,15 +31,16 @@ namespace DAEnerys
 
         public Dictionary<HWJoint, object> JointComboItems = new Dictionary<HWJoint, object>();
 
-        public Dictionary<object, HWMaterial> MaterialListItems = new Dictionary<object, HWMaterial>();
-        public Dictionary<string, object> MaterialShaderComboItems = new Dictionary<string, object>();
+        public Dictionary<string, HWMaterial> MaterialNames = new Dictionary<string, HWMaterial>();
 
         public bool DrawNavLightRadius;
 
         private bool problemsVisible;
         private bool ignoreShipMeshListSelectedIndexChanged;
+        private bool ignoreMaterialListSelectedIndexChanged;
         private bool ignoreShipMeshDoScarCheck;
         private bool ignoreMaterialShaderChanged;
+        private bool ignoreShipMeshLODMaterialChanged;
 
         const int MAX_MATERIALS_ON_MESH = 8;
 
@@ -71,7 +73,7 @@ namespace DAEnerys
             gridProblems.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
             //Create ship mesh lod material selection
-            for(int i = 0; i < MAX_MATERIALS_ON_MESH; i++)
+            for (int i = 0; i < MAX_MATERIALS_ON_MESH; i++)
             {
                 ShipMeshLODMaterialLabels[i] = new Label();
                 ShipMeshLODMaterialLabels[i].Parent = groupShipMeshLODMaterials;
@@ -92,7 +94,7 @@ namespace DAEnerys
 
             Clear();
 
-            if(Updater.CheckForUpdatesOnStart)
+            if (Updater.CheckForUpdatesOnStart)
                 Updater.CheckForUpdates();
 
             //Fill shader combo box
@@ -179,6 +181,9 @@ namespace DAEnerys
             checkShipMeshDoScar.Checked = false;
             listShipMeshLODs.Items.Clear();
             ShipMeshListItems.Clear();
+            boxShipMeshName.Clear();
+            boxShipMeshName.Enabled = false;
+            selectedShipMesh = null;
 
             foreach (Label label in ShipMeshLODMaterialLabels)
                 label.Visible = false;
@@ -201,9 +206,12 @@ namespace DAEnerys
             comboEngineShapeParent.Items.Clear();
 
             listMaterials.Items.Clear();
-            MaterialListItems.Clear();
+            MaterialNames.Clear();
             listMaterialTextures.Items.Clear();
             comboMaterialFormat.Items.Clear();
+            boxMaterialName.Enabled = false;
+            boxMaterialName.Clear();
+            selectedMaterial = null;
 
             jointsTree.Nodes.Clear();
 
@@ -286,6 +294,9 @@ namespace DAEnerys
 
             this.Text = "DAEnerys";
 
+            listMaterials_SelectedIndexChanged(this, EventArgs.Empty);
+            listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+
             Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
@@ -346,23 +357,14 @@ namespace DAEnerys
 
             joint.TreeNode = newNode;
 
-            
             object item = joint.Name;
             JointComboItems.Add(joint, item);
             joint.ComboItem = item;
 
-            //Add joint to ship mesh parents
             comboShipMeshParent.Items.Add(item);
-
-            //Add joint to collision mesh parents
             comboCollisionMeshParent.Items.Add(item);
-
-            //Add joint to engine glow parents
             comboEngineGlowParent.Items.Add(item);
-
-            //Add joint to engine shape parents
             comboEngineShapeParent.Items.Add(item);
-
             comboEngineBurnParent.Items.Add(item);
         }
         public void RemoveJoint(HWJoint joint)
@@ -826,7 +828,7 @@ namespace DAEnerys
             //Select parent joint in combo box
             object item = JointComboItems[selectedShipMesh.Parent];
             comboShipMeshParent.SelectedItem = item; //Select parent joint in combo box
-                
+
             comboShipMeshParent.Enabled = true; //Enable parent combo box
 
             //Fill LOD list
@@ -897,7 +899,7 @@ namespace DAEnerys
         private void UpdateShipMeshName(HWShipMesh shipMesh, string newName)
         {
             //Ship mesh with this name already exists
-            if(ShipMeshListItems.ContainsKey(newName))
+            if (ShipMeshListItems.ContainsKey(newName))
             {
                 HWShipMesh existingShipMesh = ShipMeshListItems[newName];
                 if (existingShipMesh != shipMesh)
@@ -975,16 +977,19 @@ namespace DAEnerys
                 if (lodMesh.Material != null)
                     materialCount++;
 
-            for(int i = 0; i < materialCount; i++)
+            for (int i = 0; i < materialCount; i++)
             {
                 ShipMeshLODMaterialLabels[i].Visible = true;
                 ShipMeshLODMaterialComboBoxes[i].Visible = true;
 
-                ShipMeshLODMaterialComboBoxes[i].SelectedItem = lodMeshes[i].Material.MaterialListItem;
+                ShipMeshLODMaterialComboBoxes[i].SelectedItem = lodMeshes[i].Material.Name;
             }
         }
         private void OnShipMeshLODMaterialChanged(object sender, EventArgs e)
         {
+            if (ignoreShipMeshLODMaterialChanged)
+                return;
+
             int materialIndex = -1;
             for (int i = 0; i < MAX_MATERIALS_ON_MESH; i++)
                 if (sender == ShipMeshLODMaterialComboBoxes[i])
@@ -1000,9 +1005,9 @@ namespace DAEnerys
             int selectedIndex = ShipMeshLODMaterialComboBoxes[materialIndex].SelectedIndex;
 
             if (selectedIndex != -1)
-                lodMeshes[materialIndex].Material = MaterialListItems.Values.ElementAt(selectedIndex);
+                lodMeshes[materialIndex].Material = MaterialNames[(string)ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem];
             else
-                ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem = lodMeshes[materialIndex].Material.MaterialListItem;
+                ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem = lodMeshes[materialIndex].Material.Name;
         }
         private void buttonShipMeshLODExport_Click(object sender, EventArgs e)
         {
@@ -1050,7 +1055,7 @@ namespace DAEnerys
                 {
                     for (int i = newMeshes.Length - (newMeshes.Length - meshes.Count); i < newMeshes.Length; i++)
                     {
-                        HWMaterial material = MaterialListItems.Values.ElementAt(0);
+                        HWMaterial material = HWMaterial.DefaultMaterial;
                         if (meshes.Count - 1 >= i)
                             material = meshes[i].Material;
 
@@ -1073,7 +1078,10 @@ namespace DAEnerys
                     }
                 }
 
-                listShipMeshLODs_SelectedIndexChanged(listShipMeshLODs, EventArgs.Empty);
+                foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LODMeshes[selectedShipMeshLOD])
+                    lodMesh.Visible = true;
+
+                listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
                 HWScene.CalibrateSettings();
             }
         }
@@ -1090,7 +1098,17 @@ namespace DAEnerys
         }
         private void buttonShipMeshAdd_Click(object sender, EventArgs e)
         {
-            HWShipMesh newShipMesh = new HWShipMesh(HWJoint.Root, "ShipMesh" + HWShipMesh.ShipMeshes.Count, new List<ShipMeshTag>());
+            int indexOffset = 1;
+            string newName = "ShipMesh" + (listShipMeshes.Items.Count + indexOffset);
+            while (listShipMeshes.Items.Contains(newName))
+            {
+                indexOffset++;
+                newName = "ShipMesh" + (listShipMeshes.Items.Count + indexOffset);
+            }
+
+            List<ShipMeshTag> tags = new List<ShipMeshTag>(); tags.Add(ShipMeshTag.DOSCAR);
+            HWShipMesh newShipMesh = new HWShipMesh(HWJoint.Root, newName, tags);
+
             listShipMeshes.SelectedItem = newShipMesh.ListItem;
         }
         private void buttonShipMeshLODRemove_Click(object sender, EventArgs e)
@@ -1138,7 +1156,8 @@ namespace DAEnerys
                 if (selectedShipMesh.LODMeshes[i].Count > 0)
                     lowestLOD = i;
 
-            HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new MeshData(new Vertex[0], new int[0], 0), Matrix4.Identity, MaterialListItems.Values.ElementAt(0), selectedShipMesh, lowestLOD + 1);
+            HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new MeshData(new Vertex[0], new int[0], 0), Matrix4.Identity, HWMaterial.DefaultMaterial, selectedShipMesh, lowestLOD + 1);
+            newLODMesh.Visible = true;
 
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
             listShipMeshLODs.SelectedIndex = lowestLOD + 1;
@@ -1381,14 +1400,21 @@ namespace DAEnerys
         //----------------------------------- MATERIALS ----------------------------------//
         private void listMaterials_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (ignoreMaterialListSelectedIndexChanged)
+                return;
+
             listMaterialTextures.Items.Clear();
             comboMaterialShader.Enabled = false;
             comboMaterialFormat.Enabled = false;
+            buttonMaterialRemove.Enabled = false;
+            boxMaterialName.Enabled = false;
+            buttonMaterialTexturesBrowseDIFF.Enabled = false;
+            boxMaterialName.Clear();
 
             if (listMaterials.SelectedItem == null)
                 return;
 
-            HWMaterial selectedMaterial = MaterialListItems[listMaterials.SelectedItem];
+            selectedMaterial = MaterialNames[(string)listMaterials.SelectedItem];
 
             //Set shader combo
             ignoreMaterialShaderChanged = true;
@@ -1397,6 +1423,10 @@ namespace DAEnerys
 
             comboMaterialShader.Enabled = true;
             comboMaterialFormat.Enabled = true;
+            buttonMaterialRemove.Enabled = true;
+            boxMaterialName.Enabled = true;
+            boxMaterialName.Text = selectedMaterial.Name;
+            buttonMaterialTexturesBrowseDIFF.Enabled = true;
 
             //Fill texture list
             foreach (HWImage image in selectedMaterial.Images)
@@ -1405,13 +1435,7 @@ namespace DAEnerys
             }
 
             //Set texture format
-            if (selectedMaterial.Images.Count > 0)
-            {
-                if (selectedMaterial.Images[0] != null)
-                {
-                    comboMaterialFormat.SelectedIndex = (int)selectedMaterial.Format;
-                }
-            }
+            comboMaterialFormat.SelectedIndex = (int)selectedMaterial.Format;
         }
         public void AddMaterial(HWMaterial material)
         {
@@ -1423,16 +1447,21 @@ namespace DAEnerys
                 foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
                     comboBox.Items.Add(item);
 
-                material.MaterialListItem = item;
-                MaterialListItems.Add(item, material);
+                MaterialNames.Add(material.Name, material);
             }
+        }
+        public void RemoveMaterial(HWMaterial material)
+        {
+            listMaterials.Items.Remove(material.Name);
+            MaterialNames.Remove(material.Name);
+            foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+                comboBox.Items.Remove(material.Name);
         }
         private void comboMaterialShader_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ignoreMaterialShaderChanged)
                 return;
 
-            HWMaterial selectedMaterial = MaterialListItems[listMaterials.SelectedItem];
             if (selectedMaterial == null)
                 return;
 
@@ -1441,7 +1470,6 @@ namespace DAEnerys
         }
         private void comboMaterialFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            HWMaterial selectedMaterial = MaterialListItems[listMaterials.SelectedItem];
             if (selectedMaterial == null)
                 return;
 
@@ -1452,6 +1480,125 @@ namespace DAEnerys
                 format = ImageFormat.UNCOMPRESSED;
             selectedMaterial.Format = format;
         }
+        private void buttonMaterialRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedMaterial == null)
+                return;
+
+            selectedMaterial.Destroy();
+            listMaterials.ClearSelected();
+            listMaterials_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void boxMaterialName_Leave(object sender, EventArgs e)
+        {
+            if (selectedMaterial == null)
+                return;
+
+            UpdateMaterialName(selectedMaterial, boxMaterialName.Text);
+        }
+        private void boxMaterialName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedMaterial == null)
+                return;
+
+            UpdateMaterialName(selectedMaterial, boxMaterialName.Text);
+        }
+        private void UpdateMaterialName(HWMaterial material, string newName)
+        {
+            //Material with this name already exists
+            if (MaterialNames.ContainsKey(newName))
+            {
+                HWMaterial existingMaterial = MaterialNames[newName];
+                if (existingMaterial != material)
+                {
+                    MessageBox.Show("A material with this name already exists.", "Error while changing material name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxMaterialName.Text = material.Name;
+                    boxMaterialName.Focus();
+                    return;
+                }
+            }
+
+            
+            int index = listMaterials.Items.IndexOf(selectedMaterial.Name);
+            if (index == -1)
+                return;
+
+            ignoreShipMeshLODMaterialChanged = true;
+
+            foreach (ComboBox comboMaterial in ShipMeshLODMaterialComboBoxes)
+                comboMaterial.Items.Remove(selectedMaterial.Name);
+
+            ignoreMaterialListSelectedIndexChanged = true;
+            MaterialNames.Remove(selectedMaterial.Name);
+            listMaterials.Items.Remove(selectedMaterial.Name);
+            selectedMaterial.Name = boxMaterialName.Text;
+            listMaterials.Items.Insert(index, selectedMaterial.Name);
+            MaterialNames.Add(selectedMaterial.Name, selectedMaterial);
+            listMaterials.SelectedItem = selectedMaterial.Name;
+            ignoreMaterialListSelectedIndexChanged = false;
+
+            foreach (ComboBox comboMaterial in ShipMeshLODMaterialComboBoxes)
+                comboMaterial.Items.Add(selectedMaterial.Name);
+
+            ignoreShipMeshLODMaterialChanged = false;
+
+            listShipMeshLODs_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void buttonMaterialAdd_Click(object sender, EventArgs e)
+        {
+            HWMaterial newMaterial = new HWMaterial("ship");
+
+            int indexOffset = 1;
+            string newName = "material" + (listMaterials.Items.Count + indexOffset);
+            while (listMaterials.Items.Contains(newName))
+            {
+                indexOffset++;
+                newName = "material" + (listMaterials.Items.Count + indexOffset);
+            }
+            newMaterial.Name = newName;
+            newMaterial.Suffix = 1;
+            newMaterial.LoadTextures();
+
+            AddMaterial(newMaterial);
+            listMaterials.SelectedItem = newMaterial.Name;
+        }
+        private void buttonMaterialTexturesBrowseDIFF_Click(object sender, EventArgs e)
+        {
+            if (selectedMaterial == null)
+                return;
+
+            DialogResult result = browseMaterialTexturesDIFFDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string filePath = browseMaterialTexturesDIFFDialog.FileName;
+                string fileName = Path.GetFileNameWithoutExtension(filePath);
+                if (!fileName.EndsWith("_DIFF"))
+                {
+                    MessageBox.Show("The texture name does not end with \"_DIFF\"!", "Error while loading new textures", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                //Remove previous images
+                HWImage[] images = selectedMaterial.Images.ToArray();
+                for (int i = 0; i < images.Length; i++)
+                    images[i].Destroy();
+
+                HWImage newDiff = new HWImage(Path.GetFileNameWithoutExtension(filePath), filePath, selectedMaterial.Format);
+                newDiff.Material = selectedMaterial;
+
+                selectedMaterial.DiffusePath = filePath;
+
+                selectedMaterial.LoadTextures();
+
+                listMaterials_SelectedIndexChanged(this, EventArgs.Empty);
+
+                Renderer.Invalidate();
+            }
+        }
+
 
         private void trackBarThrusterStrength_Scroll(object sender, EventArgs e)
         {

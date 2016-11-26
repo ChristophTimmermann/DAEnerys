@@ -132,6 +132,8 @@ namespace DAEnerys
 
         public static void Clear()
         {
+            Importer.ColladaPath = String.Empty;
+
             Min = Vector3.Zero;
             Max = Vector3.Zero;
 
@@ -160,6 +162,7 @@ namespace DAEnerys
             HWEngineFlame.EngineFlames.Clear();
 
             HWJoint.Root = new HWJoint("Root", null, Matrix4.Identity);
+            HWJoint.Root.TreeNode.Expand();
         }
     }
 }

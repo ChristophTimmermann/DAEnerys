@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace DAEnerys
 {
@@ -26,58 +27,87 @@ namespace DAEnerys
 
         public HWMaterial Material;
 
-        public HWImage(string name, string path)
+        public HWImage(string name, string path, ImageFormat format = ImageFormat.DXT1)
         {
             Name = name;
+            ColladaName = name;
             Path = path;
+            Format = format;
 
-            if (name.StartsWith("IMG[")) //If texture is a valid homeworld texture
+            Images.Add(this);
+        }
+
+        public static HWImage Parse(string name, string path)
+        {
+            string absolutePath = System.IO.Path.Combine(Importer.ColladaPath, path.Replace("file://", ""));
+
+            if (File.Exists(absolutePath))
             {
-                string[] splitted = name.Split('[');
-                int end = -1;
-
-                for (int i = 0; i < splitted.Length; i++)
+                if (name.StartsWith("IMG[")) //If texture is a valid homeworld texture
                 {
-                    if (i != 0)
-                    {
-                        end = splitted[i].IndexOf(']');
-                        if (splitted[i - 1].EndsWith("IMG")) //Name
-                        {
-                            if (splitted.Length > 3)
-                            {
-                                string combined = splitted[i] + splitted[i + 1];
-                                end = combined.LastIndexOf(']');
-                                Name = combined.Substring(0, end);
-                            }
-                            else
-                                Name = splitted[i].Substring(0, end);
+                    string[] splitted = name.Split('[');
+                    int end = -1;
+                    string texName = "";
+                    ImageFormat format = ImageFormat.DXT1;
 
-                        }
-                        else if (splitted[i - 1].EndsWith("FMT")) //Format
+                    for (int i = 0; i < splitted.Length; i++)
+                    {
+                        if (i != 0)
                         {
-                            string formatString = splitted[i].Substring(0, end);
-                            switch (formatString)
+                            end = splitted[i].IndexOf(']');
+                            if (splitted[i - 1].EndsWith("IMG")) //Name
                             {
-                                case "DXT1":
-                                    Format = ImageFormat.DXT1;
-                                    break;
-                                case "DXT3":
-                                    Format = ImageFormat.DXT3;
-                                    break;
-                                case "DXT5":
-                                    Format = ImageFormat.DXT5;
-                                    break;
-                                case "8888":
-                                    Format = ImageFormat.UNCOMPRESSED;
-                                    break;
+                                if (splitted.Length > 3)
+                                {
+                                    string combined = splitted[i] + splitted[i + 1];
+                                    end = combined.LastIndexOf(']');
+                                    texName = combined.Substring(0, end);
+                                }
+                                else
+                                    texName = splitted[i].Substring(0, end);
+
+                            }
+                            else if (splitted[i - 1].EndsWith("FMT")) //Format
+                            {
+                                string formatString = splitted[i].Substring(0, end);
+                                switch (formatString)
+                                {
+                                    case "DXT1":
+                                        format = ImageFormat.DXT1;
+                                        break;
+                                    case "DXT3":
+                                        format = ImageFormat.DXT3;
+                                        break;
+                                    case "DXT5":
+                                        format = ImageFormat.DXT5;
+                                        break;
+                                    case "8888":
+                                        format = ImageFormat.UNCOMPRESSED;
+                                        break;
+                                }
                             }
                         }
                     }
-                }
-                ColladaName = Name;
-            }
 
-            Images.Add(this);
+                    HWImage newImage = new HWImage(texName, path, format);
+                    newImage.ColladaName = name;
+                    return newImage;
+                }
+                else
+                    return null;
+            }
+            else
+            {
+                new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + path + "\".");
+                return null;
+            }
+        }
+
+        public void Destroy()
+        {
+            Images.Remove(this);
+            Material.Images.Remove(this);
+            Material = null;
         }
     }
 
