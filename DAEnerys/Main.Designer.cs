@@ -30,11 +30,11 @@ namespace DAEnerys
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
             this.buttonSave = new System.Windows.Forms.ToolStripButton();
@@ -65,12 +65,17 @@ namespace DAEnerys
             this.buttonShipMeshLODExport = new System.Windows.Forms.Button();
             this.listShipMeshLODs = new System.Windows.Forms.CheckedListBox();
             this.tabMaterials = new System.Windows.Forms.TabPage();
+            this.groupProgress = new System.Windows.Forms.GroupBox();
+            this.trackBarProgress = new System.Windows.Forms.TrackBar();
+            this.groupThrusterStrength = new System.Windows.Forms.GroupBox();
+            this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
             this.boxMaterialName = new System.Windows.Forms.TextBox();
             this.labelMaterialName = new System.Windows.Forms.Label();
             this.buttonMaterialRemove = new System.Windows.Forms.Button();
             this.buttonMaterialAdd = new System.Windows.Forms.Button();
             this.comboMaterialShader = new System.Windows.Forms.ComboBox();
             this.groupMaterialTextures = new System.Windows.Forms.GroupBox();
+            this.buttonMaterialTexturesBrowseDIFF = new System.Windows.Forms.Button();
             this.listMaterialTextures = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.comboMaterialFormat = new System.Windows.Forms.ComboBox();
@@ -166,12 +171,8 @@ namespace DAEnerys
             this.buttonProblems = new System.Windows.Forms.Button();
             this.saveObjDialog = new System.Windows.Forms.SaveFileDialog();
             this.openObjDialog = new System.Windows.Forms.OpenFileDialog();
-            this.buttonMaterialTexturesBrowseDIFF = new System.Windows.Forms.Button();
-            this.groupProgress = new System.Windows.Forms.GroupBox();
-            this.trackBarProgress = new System.Windows.Forms.TrackBar();
-            this.groupThrusterStrength = new System.Windows.Forms.GroupBox();
-            this.trackBarThrusterStrength = new System.Windows.Forms.TrackBar();
             this.browseMaterialTexturesDIFFDialog = new System.Windows.Forms.OpenFileDialog();
+            this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -181,6 +182,10 @@ namespace DAEnerys
             this.tabShipMeshes.SuspendLayout();
             this.groupShipMeshLODs.SuspendLayout();
             this.tabMaterials.SuspendLayout();
+            this.groupProgress.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarProgress)).BeginInit();
+            this.groupThrusterStrength.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
             this.groupMaterialTextures.SuspendLayout();
             this.tabCollisionMeshes.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -221,16 +226,13 @@ namespace DAEnerys
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).BeginInit();
-            this.groupProgress.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarProgress)).BeginInit();
-            this.groupThrusterStrength.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip
             // 
             this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buttonNew,
             this.buttonOpen,
             this.buttonSave,
             this.buttonSettings,
@@ -591,6 +593,53 @@ namespace DAEnerys
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
             // 
+            // groupProgress
+            // 
+            this.groupProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupProgress.Controls.Add(this.trackBarProgress);
+            this.groupProgress.Location = new System.Drawing.Point(4, 628);
+            this.groupProgress.Name = "groupProgress";
+            this.groupProgress.Size = new System.Drawing.Size(235, 46);
+            this.groupProgress.TabIndex = 32;
+            this.groupProgress.TabStop = false;
+            this.groupProgress.Text = "Progress (ore shader)";
+            // 
+            // trackBarProgress
+            // 
+            this.trackBarProgress.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarProgress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBarProgress.Location = new System.Drawing.Point(3, 16);
+            this.trackBarProgress.Maximum = 100;
+            this.trackBarProgress.Name = "trackBarProgress";
+            this.trackBarProgress.Size = new System.Drawing.Size(229, 27);
+            this.trackBarProgress.TabIndex = 0;
+            this.trackBarProgress.TickStyle = System.Windows.Forms.TickStyle.None;
+            // 
+            // groupThrusterStrength
+            // 
+            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
+            this.groupThrusterStrength.Location = new System.Drawing.Point(4, 579);
+            this.groupThrusterStrength.Name = "groupThrusterStrength";
+            this.groupThrusterStrength.Size = new System.Drawing.Size(235, 46);
+            this.groupThrusterStrength.TabIndex = 31;
+            this.groupThrusterStrength.TabStop = false;
+            this.groupThrusterStrength.Text = "Thruster strength";
+            // 
+            // trackBarThrusterStrength
+            // 
+            this.trackBarThrusterStrength.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarThrusterStrength.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
+            this.trackBarThrusterStrength.Maximum = 100;
+            this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
+            this.trackBarThrusterStrength.Size = new System.Drawing.Size(229, 27);
+            this.trackBarThrusterStrength.TabIndex = 0;
+            this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarThrusterStrength.Value = 100;
+            // 
             // boxMaterialName
             // 
             this.boxMaterialName.Enabled = false;
@@ -659,6 +708,19 @@ namespace DAEnerys
             this.groupMaterialTextures.TabIndex = 23;
             this.groupMaterialTextures.TabStop = false;
             this.groupMaterialTextures.Text = "Textures";
+            // 
+            // buttonMaterialTexturesBrowseDIFF
+            // 
+            this.buttonMaterialTexturesBrowseDIFF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonMaterialTexturesBrowseDIFF.Enabled = false;
+            this.buttonMaterialTexturesBrowseDIFF.Location = new System.Drawing.Point(3, 182);
+            this.buttonMaterialTexturesBrowseDIFF.Name = "buttonMaterialTexturesBrowseDIFF";
+            this.buttonMaterialTexturesBrowseDIFF.Size = new System.Drawing.Size(229, 23);
+            this.buttonMaterialTexturesBrowseDIFF.TabIndex = 28;
+            this.buttonMaterialTexturesBrowseDIFF.Text = "Browse DIFF...";
+            this.buttonMaterialTexturesBrowseDIFF.UseVisualStyleBackColor = true;
+            this.buttonMaterialTexturesBrowseDIFF.Click += new System.EventHandler(this.buttonMaterialTexturesBrowseDIFF_Click);
             // 
             // listMaterialTextures
             // 
@@ -1820,70 +1882,19 @@ namespace DAEnerys
             this.openObjDialog.Filter = "OBJ-Files|*.obj|All files|*.*";
             this.openObjDialog.Title = "Open OBJ-file...";
             // 
-            // buttonMaterialTexturesBrowseDIFF
-            // 
-            this.buttonMaterialTexturesBrowseDIFF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonMaterialTexturesBrowseDIFF.Enabled = false;
-            this.buttonMaterialTexturesBrowseDIFF.Location = new System.Drawing.Point(3, 182);
-            this.buttonMaterialTexturesBrowseDIFF.Name = "buttonMaterialTexturesBrowseDIFF";
-            this.buttonMaterialTexturesBrowseDIFF.Size = new System.Drawing.Size(229, 23);
-            this.buttonMaterialTexturesBrowseDIFF.TabIndex = 28;
-            this.buttonMaterialTexturesBrowseDIFF.Text = "Browse DIFF...";
-            this.buttonMaterialTexturesBrowseDIFF.UseVisualStyleBackColor = true;
-            this.buttonMaterialTexturesBrowseDIFF.Click += new System.EventHandler(this.buttonMaterialTexturesBrowseDIFF_Click);
-            // 
-            // groupProgress
-            // 
-            this.groupProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupProgress.Controls.Add(this.trackBarProgress);
-            this.groupProgress.Location = new System.Drawing.Point(4, 628);
-            this.groupProgress.Name = "groupProgress";
-            this.groupProgress.Size = new System.Drawing.Size(235, 46);
-            this.groupProgress.TabIndex = 32;
-            this.groupProgress.TabStop = false;
-            this.groupProgress.Text = "Progress (ore shader)";
-            // 
-            // trackBarProgress
-            // 
-            this.trackBarProgress.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarProgress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBarProgress.Location = new System.Drawing.Point(3, 16);
-            this.trackBarProgress.Maximum = 100;
-            this.trackBarProgress.Name = "trackBarProgress";
-            this.trackBarProgress.Size = new System.Drawing.Size(229, 27);
-            this.trackBarProgress.TabIndex = 0;
-            this.trackBarProgress.TickStyle = System.Windows.Forms.TickStyle.None;
-            // 
-            // groupThrusterStrength
-            // 
-            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
-            this.groupThrusterStrength.Location = new System.Drawing.Point(4, 579);
-            this.groupThrusterStrength.Name = "groupThrusterStrength";
-            this.groupThrusterStrength.Size = new System.Drawing.Size(235, 46);
-            this.groupThrusterStrength.TabIndex = 31;
-            this.groupThrusterStrength.TabStop = false;
-            this.groupThrusterStrength.Text = "Thruster strength";
-            // 
-            // trackBarThrusterStrength
-            // 
-            this.trackBarThrusterStrength.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarThrusterStrength.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBarThrusterStrength.Location = new System.Drawing.Point(3, 16);
-            this.trackBarThrusterStrength.Maximum = 100;
-            this.trackBarThrusterStrength.Name = "trackBarThrusterStrength";
-            this.trackBarThrusterStrength.Size = new System.Drawing.Size(229, 27);
-            this.trackBarThrusterStrength.TabIndex = 0;
-            this.trackBarThrusterStrength.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarThrusterStrength.Value = 100;
-            // 
             // browseMaterialTexturesDIFFDialog
             // 
             this.browseMaterialTexturesDIFFDialog.Filter = "TGA-files|*.tga|All files|*.*";
             this.browseMaterialTexturesDIFFDialog.Title = "Open TGA-DIFF-file...";
+            // 
+            // buttonNew
+            // 
+            this.buttonNew.Image = ((System.Drawing.Image)(resources.GetObject("buttonNew.Image")));
+            this.buttonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonNew.Name = "buttonNew";
+            this.buttonNew.Size = new System.Drawing.Size(51, 22);
+            this.buttonNew.Text = "New";
+            this.buttonNew.Click += new System.EventHandler(this.buttonNew_Click);
             // 
             // Main
             // 
@@ -1913,6 +1924,12 @@ namespace DAEnerys
             this.groupShipMeshLODs.ResumeLayout(false);
             this.tabMaterials.ResumeLayout(false);
             this.tabMaterials.PerformLayout();
+            this.groupProgress.ResumeLayout(false);
+            this.groupProgress.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarProgress)).EndInit();
+            this.groupThrusterStrength.ResumeLayout(false);
+            this.groupThrusterStrength.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).EndInit();
             this.groupMaterialTextures.ResumeLayout(false);
             this.tabCollisionMeshes.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -1965,12 +1982,6 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).EndInit();
-            this.groupProgress.ResumeLayout(false);
-            this.groupProgress.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarProgress)).EndInit();
-            this.groupThrusterStrength.ResumeLayout(false);
-            this.groupThrusterStrength.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2114,6 +2125,7 @@ namespace DAEnerys
         private System.Windows.Forms.GroupBox groupThrusterStrength;
         private System.Windows.Forms.TrackBar trackBarThrusterStrength;
         private System.Windows.Forms.OpenFileDialog browseMaterialTexturesDIFFDialog;
+        private System.Windows.Forms.ToolStripButton buttonNew;
     }
 }
 

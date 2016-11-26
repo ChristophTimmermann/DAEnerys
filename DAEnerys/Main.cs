@@ -305,6 +305,20 @@ namespace DAEnerys
         //--------------------------------------------------------------------------------------------------------------//
         //-------------------------------------------------- GUI STUFF -------------------------------------------------//
         //--------------------------------------------------------------------------------------------------------------//
+        private void buttonNew_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Are you sure that you want to clear the scene?\nAll unsaved changes will be lost forever.", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            if (result != DialogResult.Yes)
+                return;
+
+            Clear();
+
+            this.Text = "DAEnerys";
+
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             DialogResult result = openColladaDialog.ShowDialog();
