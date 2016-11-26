@@ -81,7 +81,7 @@ namespace DAEnerys
             if (HWData.BackgroundTextures.Keys.Contains(SavedBackground))
                 comboBackground.SelectedItem = SavedBackground;
             else
-                comboBackground.SelectedIndex = 0;
+                comboBackground.SelectedItem = "";
 
             checkCheckForUpdates.Checked = Updater.CheckForUpdatesOnStart;
         }
