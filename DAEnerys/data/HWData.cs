@@ -230,45 +230,34 @@ namespace DAEnerys
         {
             new HWBadge(Path.GetFileNameWithoutExtension(path), path);
         }
-        
-        private static string CheckBGMapExists(string dir, string name, string axis)
-        {
-            // check for textures in this order: HQ DDS, HQ TGA, LQ DDS, LQ TGA
-            string file = Path.Combine(dir, name + "_hq_" + axis + ".dds");
-            if (!File.Exists(file))
-            {
-                file = Path.Combine(dir, name + "_hq_" + axis + ".tga");
-                if (!File.Exists(file))
-                {
-                    file = Path.Combine(dir, name + "_" + axis + ".dds");
-                    if (!File.Exists(file))
-                    {
-                        file = Path.Combine(dir, name + "_" + axis + ".tga");
-                        if (!File.Exists(file))
-                        {
-                            return null;
-                        }
-                    }
-                }
-            }
-            return file;
-        }
 
         private static void ParseBackground(string path)
         {
             foreach (string dir in Directory.GetDirectories(path))
             {
                 string name = Path.GetFileName(dir);
-                string PosX = CheckBGMapExists(dir, name, "posx");
-                string PosY = CheckBGMapExists(dir, name, "posy");
-                string PosZ = CheckBGMapExists(dir, name, "posz");
-                string NegX = CheckBGMapExists(dir, name, "negx");
-                string NegY = CheckBGMapExists(dir, name, "negy");
-                string NegZ = CheckBGMapExists(dir, name, "negz");
-                
-                // if texture doesn't exist, continue with next directory
-                if (PosX == null || PosY == null || PosZ == null || NegX == null || NegY == null || NegZ == null) continue;
-                
+                // check for high-quality textures
+                string PosX = Path.Combine(dir, name + "_hq_posx.dds");
+                string PosY = Path.Combine(dir, name + "_hq_posy.dds");
+                string PosZ = Path.Combine(dir, name + "_hq_posz.dds");
+                string NegX = Path.Combine(dir, name + "_hq_negx.dds");
+                string NegY = Path.Combine(dir, name + "_hq_negy.dds");
+                string NegZ = Path.Combine(dir, name + "_hq_negz.dds");
+
+                // if HQ texture doesn't exist, check for low-quality textures --> if LQ texture doesn't exist, continue with next directory
+                if (!File.Exists(PosX))
+                { PosX = Path.Combine(dir, name + "_posx.dds"); if (!File.Exists(PosX)) continue; }
+                if (!File.Exists(PosY))
+                { PosY = Path.Combine(dir, name + "_posy.dds"); if (!File.Exists(PosY)) continue; }
+                if (!File.Exists(PosZ))
+                { PosZ = Path.Combine(dir, name + "_posz.dds"); if (!File.Exists(PosZ)) continue; }
+                if (!File.Exists(NegX))
+                { NegX = Path.Combine(dir, name + "_negx.dds"); if (!File.Exists(NegX)) continue; }
+                if (!File.Exists(NegY))
+                { NegY = Path.Combine(dir, name + "_negy.dds"); if (!File.Exists(NegY)) continue; }
+                if (!File.Exists(NegZ))
+                { NegZ = Path.Combine(dir, name + "_negz.dds"); if (!File.Exists(NegZ)) continue; }
+
                 BackgroundTextures.Add(name, new HWTextureCube(PosX, NegX, PosY, NegY, PosZ, NegZ));
             }
         }
