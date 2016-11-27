@@ -51,13 +51,20 @@ namespace DAEnerys
                     links += "]";
                 }
 
-                return "DOCK[" + Name + "]" + fams + flags + links;
+                string animIndex = "";
+                if (AnimationIndex > 0)
+                {
+                    animIndex = "_MAD[" + AnimationIndex + "]";
+                }
+
+                return "DOCK[" + Name + "]" + fams + flags + links + animIndex;
             }
         }
 
         public string[] Families;
         public string[] Links;
         public List<DockpathFlag> Flags;
+        public int AnimationIndex;
         public List<HWDockSegment> Segments = new List<HWDockSegment>();
         public List<EditorLine> Lines = new List<EditorLine>();
 
@@ -80,12 +87,13 @@ namespace DAEnerys
             }
         }
 
-        public HWDockpath(string name, string[] families, string[] links, List<DockpathFlag> flags) : base(name, HWJoint.Root, Matrix4.Identity)
+        public HWDockpath(string name, string[] families, string[] links, List<DockpathFlag> flags, int animationIndex) : base(name, HWJoint.Root, Matrix4.Identity)
         {
             Name = name;
             Families = families;
             Links = links;
             Flags = flags;
+            AnimationIndex = animationIndex;
 
             Dockpaths.Add(this);
             Program.main.AddDockpath(this);
@@ -108,9 +116,9 @@ namespace DAEnerys
 
     public enum DockpathFlag
     {
-        EXIT = 1,
-        LATCH = 2,
-        ANIM = 3,
-        AJAR = 4,
+        Exit = 1,
+        Latch = 2,
+        Anim = 3,
+        Ajar = 4,
     }
 }

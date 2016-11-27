@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DAEnerys
 {
@@ -92,32 +93,25 @@ namespace DAEnerys
             {
                 Suffix = 1;
 
-                string[] splitted = Name.Split('[');
-                int end = -1;
-
-                for (int i = 0; i < splitted.Length; i++)
+                Dictionary<string, string> values = Importer.ParseNameParameters(Name, new string[] { "MAT", "SHD" });
+                foreach (KeyValuePair<string, string> pair in values.ToArray())
                 {
-                    if (i != 0)
+                    switch (pair.Key)
                     {
-                        end = splitted[i].IndexOf(']');
-                        if (end < 0)
-                        {
-                            Problem.Problems.Add(new Problem(ProblemTypes.ERROR,
-                                "Material parsing error: '" + fullName + "' has an invalid name format."));
-                        }
-                        else if (splitted[i - 1].EndsWith("MAT")) //Name
-                        {
-                            Name = splitted[i].Substring(0, end);
-                        }
-                        else if (splitted[i - 1].EndsWith("SHD")) //Shader
-                        {
-                            Shader = splitted[i].Substring(0, end);
-
-                            if (!NewShaderManifest.Manifest.HODAliases.ContainsKey(Shader.ToLower()))
-                                new Problem(ProblemTypes.WARNING, "Unknown shader \"" + Shader + "\" of material \"" + Name + "\".");
-                        }
+                        case "MAT":
+                            Name = pair.Value;
+                            break;
+                        case "SHD":
+                            Shader = pair.Value;
+                            break;
                     }
                 }
+
+                if(Name == "")
+                    new Problem(ProblemTypes.WARNING, "Failed to parse name of material \"" + fullName + "\".");
+
+                if (!NewShaderManifest.Manifest.HODAliases.ContainsKey(Shader.ToLower()))
+                    new Problem(ProblemTypes.WARNING, "Unknown shader \"" + Shader + "\" of material \"" + fullName + "\".");
 
                 LoadTextures();
 

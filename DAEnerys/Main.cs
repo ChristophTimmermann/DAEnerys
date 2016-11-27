@@ -493,16 +493,16 @@ namespace DAEnerys
                 {
                     switch (flag)
                     {
-                        case DockpathFlag.EXIT:
+                        case DockpathFlag.Exit:
                             checkDockpathExit.Checked = true;
                             break;
-                        case DockpathFlag.LATCH:
+                        case DockpathFlag.Latch:
                             checkDockpathLatch.Checked = true;
                             break;
-                        case DockpathFlag.ANIM:
+                        case DockpathFlag.Anim:
                             checkDockpathAnim.Checked = true;
                             break;
-                        case DockpathFlag.AJAR:
+                        case DockpathFlag.Ajar:
                             checkDockpathAjar.Checked = true;
                             break;
                     }
@@ -563,28 +563,28 @@ namespace DAEnerys
             {
                 switch (flag)
                 {
-                    case DockSegmentFlag.USEROT:
+                    case DockSegmentFlag.UseRot:
                         checkDockpathSegmentFlagUseRot.Checked = true;
                         break;
-                    case DockSegmentFlag.PLAYER:
+                    case DockSegmentFlag.Player:
                         checkDockpathSegmentFlagPlayer.Checked = true;
                         break;
-                    case DockSegmentFlag.QUEUE:
+                    case DockSegmentFlag.Queue:
                         checkDockpathSegmentFlagQueue.Checked = true;
                         break;
-                    case DockSegmentFlag.CLOSE:
+                    case DockSegmentFlag.Close:
                         checkDockpathSegmentFlagClose.Checked = true;
                         break;
-                    case DockSegmentFlag.CLEARRES:
+                    case DockSegmentFlag.ClearRes:
                         checkDockpathSegmentFlagClearRes.Checked = true;
                         break;
-                    case DockSegmentFlag.CHECK:
+                    case DockSegmentFlag.Check:
                         checkDockpathSegmentFlagCheck.Checked = true;
                         break;
-                    case DockSegmentFlag.UNFOCUS:
+                    case DockSegmentFlag.UnFocus:
                         checkDockpathSegmentFlagUnfocus.Checked = true;
                         break;
-                    case DockSegmentFlag.CLIP:
+                    case DockSegmentFlag.Clip:
                         checkDockpathSegmentFlagClip.Checked = true;
                         break;
                 }
@@ -666,10 +666,10 @@ namespace DAEnerys
                 {
                     switch (flag)
                     {
-                        case NavLightFlag.SPRITE:
+                        case NavLightFlag.Sprite:
                             checkNavLightFlagSprite.Checked = true;
                             break;
-                        case NavLightFlag.HIGHEND:
+                        case NavLightFlag.HighEnd:
                             checkNavLightFlagHighEnd.Checked = true;
                             break;
                     }
@@ -829,7 +829,7 @@ namespace DAEnerys
                 return;
 
             //Check do scar checkbox
-            if (selectedShipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
+            if (selectedShipMesh.Tags.Contains(ShipMeshTag.DoScar))
                 checkShipMeshDoScar.Checked = true;
 
             ignoreShipMeshDoScarCheck = true;
@@ -960,9 +960,9 @@ namespace DAEnerys
             if (selectedShipMesh == null)
                 return;
 
-            selectedShipMesh.Tags.Remove(ShipMeshTag.DOSCAR);
+            selectedShipMesh.Tags.Remove(ShipMeshTag.DoScar);
             if (checkShipMeshDoScar.Checked)
-                selectedShipMesh.Tags.Add(ShipMeshTag.DOSCAR);
+                selectedShipMesh.Tags.Add(ShipMeshTag.DoScar);
         }
         private void listShipMeshLODs_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1120,7 +1120,7 @@ namespace DAEnerys
                 newName = "ShipMesh" + (listShipMeshes.Items.Count + indexOffset);
             }
 
-            List<ShipMeshTag> tags = new List<ShipMeshTag>(); tags.Add(ShipMeshTag.DOSCAR);
+            List<ShipMeshTag> tags = new List<ShipMeshTag>(); tags.Add(ShipMeshTag.DoScar);
             HWShipMesh newShipMesh = new HWShipMesh(HWJoint.Root, newName, tags);
 
             listShipMeshes.SelectedItem = newShipMesh.ListItem;

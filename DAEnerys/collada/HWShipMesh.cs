@@ -62,6 +62,6 @@ namespace DAEnerys
 
     public enum ShipMeshTag
     {
-        DOSCAR = 1,
+        DoScar = 1,
     }
 }

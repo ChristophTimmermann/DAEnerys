@@ -15,7 +15,7 @@ namespace DAEnerys
                 string lod = "_LOD[" + LOD + "]";
 
                 string tags = "";
-                if (ShipMesh.Tags.Contains(ShipMeshTag.DOSCAR))
+                if (ShipMesh.Tags.Contains(ShipMeshTag.DoScar))
                     tags = "_TAGS[DoScar]";
 
                 return "MULT[" + Name + "]" + lod + tags;

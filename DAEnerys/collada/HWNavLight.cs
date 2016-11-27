@@ -110,7 +110,7 @@ namespace DAEnerys
             }
 
             //If the navlight has a sprite
-            if(Flags.Contains(NavLightFlag.SPRITE))
+            if(Flags.Contains(NavLightFlag.Sprite))
             {
                 /*RenderSprite = new EditorIcon(Node.AbsolutePosition, HWData.NavLightSprite);
                 RenderSprite.BlackIsTransparent = true;
@@ -219,8 +219,8 @@ namespace DAEnerys
 
     public enum NavLightFlag
     {
-        SPRITE = 1,
-        HIGHEND = 2,
+        Sprite = 1,
+        HighEnd = 2,
     }
 
     enum NavLightState

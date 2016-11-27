@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DAEnerys
 {
@@ -45,32 +46,20 @@ namespace DAEnerys
             {
                 if (name.StartsWith("IMG[")) //If texture is a valid homeworld texture
                 {
-                    string[] splitted = name.Split('[');
-                    int end = -1;
                     string texName = "";
                     ImageFormat format = ImageFormat.DXT1;
 
-                    for (int i = 0; i < splitted.Length; i++)
+                    bool success = true;
+                    Dictionary<string, string> values = Importer.ParseNameParameters(name, new string[] { "IMG", "FMT" });
+                    foreach (KeyValuePair<string, string> pair in values.ToArray())
                     {
-                        if (i != 0)
+                        switch (pair.Key)
                         {
-                            end = splitted[i].IndexOf(']');
-                            if (splitted[i - 1].EndsWith("IMG")) //Name
-                            {
-                                if (splitted.Length > 3)
-                                {
-                                    string combined = splitted[i] + splitted[i + 1];
-                                    end = combined.LastIndexOf(']');
-                                    texName = combined.Substring(0, end);
-                                }
-                                else
-                                    texName = splitted[i].Substring(0, end);
-
-                            }
-                            else if (splitted[i - 1].EndsWith("FMT")) //Format
-                            {
-                                string formatString = splitted[i].Substring(0, end);
-                                switch (formatString)
+                            case "IMG":
+                                texName = pair.Value;
+                                break;
+                            case "FMT":
+                                switch (pair.Value)
                                 {
                                     case "DXT1":
                                         format = ImageFormat.DXT1;
@@ -84,14 +73,28 @@ namespace DAEnerys
                                     case "8888":
                                         format = ImageFormat.UNCOMPRESSED;
                                         break;
+                                    default:
+                                        new Problem(ProblemTypes.WARNING, "Failed to parse format of image \"" + name + "\".");
+                                        break;
                                 }
-                            }
+                                break;
                         }
                     }
 
-                    HWImage newImage = new HWImage(texName, path, format);
-                    newImage.ColladaName = name;
-                    return newImage;
+                    if (texName == "")
+                    {
+                        success = false;
+                        new Problem(ProblemTypes.WARNING, "Failed to parse name of image \"" + name + "\".");
+                    }
+
+                    if (success)
+                    {
+                        HWImage newImage = new HWImage(texName, path, format);
+                        newImage.ColladaName = name;
+                        return newImage;
+                    }
+                    else
+                        return null;
                 }
                 else
                     return null;

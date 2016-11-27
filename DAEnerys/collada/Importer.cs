@@ -3,9 +3,11 @@ using Assimp.Configs;
 using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -245,24 +247,57 @@ namespace DAEnerys
                 if (!failed)
                 {
                     HWJoint parentJoint = GetNextJointParent(assimpNode);
+                    string jointName = "";
 
-                    string[] splitted = assimpNode.Name.Split('[');
-                    int end = splitted[1].IndexOf(']');
-                    string jointName = splitted[1].Substring(0, end);
+                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "JNT" });
+                    foreach (KeyValuePair<string, string> pair in values.ToArray())
+                    {
+                        switch (pair.Key)
+                        {
+                            case "JNT":
+                                jointName = pair.Value;
+                                break;
+                        }
+                    }
 
-                    HWJoint newJoint = new HWJoint(jointName, parentJoint, GetAssimpNodeAbsoluteTransform(assimpNode));
-                    nodeJoints.Add(assimpNode, newJoint);
+                    if (jointName == "")
+                    {
+                        new Problem(ProblemTypes.ERROR, "Failed to parse name of joint \"" + assimpNode.Name + "\".");
+                        failed = true;
+                    }
+
+                    if (!failed)
+                    {
+                        HWJoint newJoint = new HWJoint(jointName, parentJoint, GetAssimpNodeAbsoluteTransform(assimpNode));
+                        nodeJoints.Add(assimpNode, newJoint);
+                    }
                 }
             }
             else if (assimpNode.Name.StartsWith("MARK")) //If node is a marker
             {
                 HWJoint parentJoint = GetNextJointParent(assimpNode);
 
-                string[] splitted = assimpNode.Name.Split('[');
-                int end = splitted[1].IndexOf(']');
-                string markerName = splitted[1].Substring(0, end);
+                string markerName = "";
 
-                new HWMarker(markerName, parentJoint, GetAssimpNodeAbsoluteTransform(assimpNode));
+                Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "MARK" });
+                foreach (KeyValuePair<string, string> pair in values.ToArray())
+                {
+                    switch (pair.Key)
+                    {
+                        case "MARK":
+                            markerName = pair.Value;
+                            break;
+                    }
+                }
+
+                if (markerName == "")
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse name of marker \"" + assimpNode.Name + "\".");
+                    failed = true;
+                }
+
+                if(!failed)
+                    new HWMarker(markerName, parentJoint, GetAssimpNodeAbsoluteTransform(assimpNode));
             }
             #region Dockpath
             else if (assimpNode.Name.StartsWith("DOCK")) //If node is a dockpath
@@ -279,57 +314,60 @@ namespace DAEnerys
                     string[] families = new string[0];
                     string[] links = new string[0];
                     List<DockpathFlag> flags = new List<DockpathFlag>();
+                    int animationIndex = 0;
 
-                    string[] splitted = assimpNode.Name.Split('[');
-                    int end = -1;
-
-                    for (int i = 0; i < splitted.Length; i++)
+                    bool success = false;
+                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "DOCK", "Fam", "Link", "Flags", "MAD" });
+                    foreach(KeyValuePair<string, string> pair in values.ToArray())
                     {
-                        if (i != 0)
+                        switch (pair.Key)
                         {
-                            end = splitted[i].IndexOf(']');
-                            if (splitted[i - 1].EndsWith("DOCK")) //Name
-                            {
-                                pathName = splitted[i].Substring(0, end);
-                            }
-                            else if (splitted[i - 1].EndsWith("Fam")) //Families
-                            {
-                                string familiesString = splitted[i].Substring(0, end);
-                                families = familiesString.Replace(" ", "").Split(',');
-                            }
-                            else if (splitted[i - 1].EndsWith("Link")) //Links
-                            {
-                                string linksString = splitted[i].Substring(0, end);
-
-                                //Don't load empty links
-                                if (linksString.Trim().Length > 0)
-                                    links = linksString.Replace(" ", "").Split(',');
-                            }
-                            else if (splitted[i - 1].EndsWith("Flags")) //Flags
-                            {
-                                string flagsString = splitted[i].Substring(0, end);
-                                string[] flagsStrings = flagsString.Split(' ');
-
+                            case "DOCK":
+                                pathName = pair.Value;
+                                break;
+                            case "Fam":
+                                families = pair.Value.Replace(" ", "").Split(',');
+                                break;
+                            case "Link":
+                                if (pair.Value.Trim().Length > 0)
+                                    links = pair.Value.Replace(" ", "").Split(',');
+                                break;
+                            case "Flags":
+                                string[] flagsStrings = pair.Value.Split(' ');
                                 foreach (string flag in flagsStrings)
                                 {
                                     if (flag.Length > 0) //If FLAGS is not empty
                                     {
                                         DockpathFlag newFlag;
-                                        bool success = Enum.TryParse(flag.ToUpper(), out newFlag);
+                                        success = Enum.TryParse(flag, true, out newFlag);
 
                                         //Check if flag is valid
                                         if (success)
                                             flags.Add(newFlag);
                                         else
+                                        {
                                             new Problem(ProblemTypes.WARNING, "Unknown dockpath flag \"" + flag + "\" on dockpath \"" + pathName + "\".");
+                                            failed = true;
+                                        }
                                     }
                                 }
-                            }
+                                break;
+                            case "MAD":
+                                success = int.TryParse(pair.Value, out animationIndex);
+                                if (!success)
+                                {
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse MAD-index \"" + pair.Value + "\" on dockpath \"" + pathName + "\".");
+                                    failed = true;
+                                }
+                                break;
                         }
                     }
 
-                    HWDockpath newDockpath = new HWDockpath(pathName, families, links, flags);
-                    nodeDockpaths.Add(assimpNode, newDockpath);
+                    if (!failed)
+                    {
+                        HWDockpath newDockpath = new HWDockpath(pathName, families, links, flags, animationIndex);
+                        nodeDockpaths.Add(assimpNode, newDockpath);
+                    }
                 }
             }
             #endregion
@@ -351,55 +389,68 @@ namespace DAEnerys
                 if (!failed)
                 {
                     int id = -1;
-                    float tolerance = 0;
-                    float speed = 0;
+                    float tolerance = -1;
+                    float speed = -1;
                     List<DockSegmentFlag> flags = new List<DockSegmentFlag>();
 
-                    string[] splitted = assimpNode.Name.Split('_');
-                    int start = -1;
-                    int end = -1;
-                    foreach (string split in splitted)
+                    bool success = false;
+                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "SEG", "Tol", "Spd", "Flags",  });
+                    foreach (KeyValuePair<string, string> pair in values.ToArray())
                     {
-                        if (split.StartsWith("SEG")) //ID
+                        switch (pair.Key)
                         {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            id = int.Parse(split.Substring(start, end - start));
-                        }
-                        else if (split.StartsWith("Tol")) //Tolerance
-                        {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            tolerance = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                        else if (split.StartsWith("Spd")) //Speed
-                        {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            speed = float.Parse(split.Substring(start, end - start), System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                        else if (split.StartsWith("Flags")) //Flags
-                        {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            string flagsString = split.Substring(start, end - start);
-                            string[] flagsStrings = flagsString.Split(' ');
+                            case "SEG":
+                                int.TryParse(pair.Value, out id);
+                                break;
+                            case "Tol":
+                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out tolerance);
+                                break;
+                            case "Spd":
+                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out speed);
+                                break;
+                            case "Flags":
+                                string[] flagsStrings = pair.Value.Split(' ');
+                                foreach (string flag in flagsStrings)
+                                {
+                                    if (flag.Length > 0) //If FLAGS is not empty
+                                    {
+                                        DockSegmentFlag newFlag;
+                                        success = Enum.TryParse(flag, true, out newFlag);
 
-                            foreach (string flag in flagsStrings)
-                            {
-                                DockSegmentFlag newFlag;
-                                bool success = Enum.TryParse(flag.ToUpper(), out newFlag);
-
-                                //Check if flag is valid
-                                if (success)
-                                    flags.Add(newFlag);
-                                else
-                                    new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in dockpath segment \"" + assimpNode.Name + "\".");
-                            }
+                                        //Check if flag is valid
+                                        if (success)
+                                            flags.Add(newFlag);
+                                        else
+                                        {
+                                            new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in dockpath segment \"" + assimpNode.Name + "\".");
+                                            failed = true;
+                                        }
+                                    }
+                                }
+                                break;
                         }
                     }
 
-                    new HWDockSegment(dockpath, GetAssimpNodeAbsoluteTransform(assimpNode), id, tolerance, speed, flags);
+                    if (id == -1)
+                    {
+                        new Problem(ProblemTypes.ERROR, "Failed to parse ID of dockpath segment \"" + assimpNode.Name + "\".");
+                        failed = true;
+                    }
+
+                    if (tolerance == -1)
+                    {
+                        new Problem(ProblemTypes.ERROR, "Failed to parse tolerance of dockpath segment \"" + assimpNode.Name + "\".");
+                        failed = true;
+                    }
+
+                    if (speed == -1)
+                    {
+                        new Problem(ProblemTypes.ERROR, "Failed to parse speed of dockpath segment \"" + assimpNode.Name + "\".");
+                        failed = true;
+                    }
+
+                    if(!failed)
+                        new HWDockSegment(dockpath, GetAssimpNodeAbsoluteTransform(assimpNode), id, tolerance, speed, flags);
                 }
             }
             #endregion
@@ -411,64 +462,71 @@ namespace DAEnerys
 
                 string lightName = "";
                 string type = "default";
-                float size = 0;
-                float phase = 0;
-                float frequency = 0;
-                Vector3 color = Vector3.One;
-                float distance = 0;
+                float size = -1;
+                float phase = -1;
+                float frequency = -1;
+                Vector3 color = new Vector3(168, 123, 945);
+                float distance = -1;
                 List<NavLightFlag> flags = new List<NavLightFlag>();
 
-                string[] splitted = assimpNode.Name.Split('[');
-                int end = -1;
-
-                for (int i = 0; i < splitted.Length; i++)
+                bool success = false;
+                Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "NAVL", "Type", "Sz", "Ph", "Fr", "Col", "Dist", "Flags" });
+                foreach (KeyValuePair<string, string> pair in values.ToArray())
                 {
-                    if (i != 0)
+                    switch (pair.Key)
                     {
-                        end = splitted[i].IndexOf(']');
-                        if (splitted[i - 1].EndsWith("NAVL")) //Name
-                        {
-                            lightName = splitted[i].Substring(0, end);
-                        }
-                        else if (splitted[i - 1].EndsWith("Type")) //Type
-                        {
-                            type = splitted[i].Substring(0, end);
-                        }
-                        else if (splitted[i - 1].EndsWith("Sz")) //Size
-                        {
-                            size = float.Parse(splitted[i].Substring(0, end), System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                        else if (splitted[i - 1].EndsWith("Ph")) //Phase
-                        {
-                            phase = float.Parse(splitted[i].Substring(0, end), System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                        else if (splitted[i - 1].EndsWith("Fr")) //Frequency
-                        {
-                            frequency = float.Parse(splitted[i].Substring(0, end), System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                        else if (splitted[i - 1].EndsWith("Col")) //Color
-                        {
-                            string[] channels = splitted[i].Substring(0, end).Split(',');
-                            float red = float.Parse(channels[0], System.Globalization.CultureInfo.InvariantCulture);
-                            float green = float.Parse(channels[1], System.Globalization.CultureInfo.InvariantCulture);
-                            float blue = float.Parse(channels[2], System.Globalization.CultureInfo.InvariantCulture);
-                            color = new Vector3(red, green, blue);
-                        }
-                        else if (splitted[i - 1].EndsWith("Dist")) //Distance
-                        {
-                            distance = float.Parse(splitted[i].Substring(0, end), System.Globalization.CultureInfo.InvariantCulture);
-                        }
-                        else if (splitted[i - 1].EndsWith("Flags")) //Flags
-                        {
-                            string flagsString = splitted[i].Substring(0, end);
-                            string[] flagsStrings = flagsString.Split(' ');
+                        case "NAVL":
+                            lightName = pair.Value;
+                            break;
+                        case "Type":
+                            type = pair.Value;
+                            break;
+                        case "Sz":
+                            float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out size);
+                            break;
+                        case "Ph":
+                            float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out phase);
+                            break;
+                        case "Fr":
+                            float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out frequency);
+                            break;
+                        case "Col":
+                            string[] channels = pair.Value.Split(',');
+                            if (channels.Length < 3)
+                            {
+                                failed = true;
+                                break;
+                            }
 
+                            float red, green, blue = 1;
+                            float.TryParse(channels[0], NumberStyles.Float, CultureInfo.InvariantCulture, out red);
+                            float.TryParse(channels[1], NumberStyles.Float, CultureInfo.InvariantCulture, out green);
+                            float.TryParse(channels[2], NumberStyles.Float, CultureInfo.InvariantCulture, out blue);
+                            color = new Vector3(red, green, blue);
+                            break;
+                        case "Dist":
+                            float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out distance);
+                            break;
+                        case "Flags":
+                            string[] flagsStrings = pair.Value.Split(' ');
                             foreach (string flag in flagsStrings)
                             {
                                 if (flag.Length > 0) //If FLAGS is not empty
-                                    flags.Add((NavLightFlag)Enum.Parse(typeof(NavLightFlag), flag.ToUpper()));
+                                {
+                                    NavLightFlag newFlag;
+                                    success = Enum.TryParse(flag, true, out newFlag);
+
+                                    //Check if flag is valid
+                                    if (success)
+                                        flags.Add(newFlag);
+                                    else
+                                    {
+                                        new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in navlight \"" + assimpNode.Name + "\".");
+                                        failed = true;
+                                    }
+                                }
                             }
-                        }
+                            break;
                     }
                 }
 
@@ -488,8 +546,43 @@ namespace DAEnerys
                     new Problem(ProblemTypes.WARNING, "Navlight style \"" + type + "\" not found. Skipping navlight \"" + lightName + "\".");
                     failed = true;
                 }
+                if (lightName == "")
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse name of navlight \"" + assimpNode.Name + "\".");
+                    failed = true;
+                }
+                if (type == "")
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse type of navlight \"" + assimpNode.Name + "\".");
+                    failed = true;
+                }
+                if (size == -1)
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse size of navlight \"" + assimpNode.Name + "\".");
+                    failed = true;
+                }
+                if (phase == -1)
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse phase of navlight \"" + assimpNode.Name + "\".");
+                    failed = true;
+                }
+                if (frequency == -1)
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse frequency of navlight \"" + assimpNode.Name + "\".");
+                    failed = true;
+                }
+                if (color == new Vector3(168, 123, 945))
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse color of navlight \"" + assimpNode.Name + "\".");
+                    failed = true;
+                }
+                if (distance == -1)
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse distance of navlight \"" + assimpNode.Name + "\".");
+                    failed = true;
+                }
 
-                if(!failed)
+                if (!failed)
                     new HWNavLight(lightName, parentJoint, GetAssimpNodeTransform(assimpNode), navLightStyle, size, phase, frequency, color, distance, flags);
             }
             #endregion
@@ -502,23 +595,28 @@ namespace DAEnerys
                 {
                     string burnName = "";
 
-                    string[] splitted = assimpNode.Name.Split('[');
-                    int end = -1;
-
-                    for (int i = 0; i < splitted.Length; i++)
+                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "BURN" });
+                    foreach (KeyValuePair<string, string> pair in values.ToArray())
                     {
-                        if (i != 0)
+                        switch (pair.Key)
                         {
-                            end = splitted[i].IndexOf(']');
-                            if (splitted[i - 1].EndsWith("BURN")) //Name
-                            {
-                                burnName = splitted[i].Substring(0, end);
-                            }
+                            case "BURN":
+                                burnName = pair.Value;
+                                break;
                         }
                     }
 
-                    HWEngineBurn newBurn = new HWEngineBurn(burnName, parentJoint, GetAssimpNodeTransform(assimpNode));
-                    nodeEngineBurns.Add(assimpNode, newBurn);
+                    if (burnName == "")
+                    {
+                        new Problem(ProblemTypes.ERROR, "Failed to parse name of engine burn \"" + assimpNode.Name + "\".");
+                        failed = true;
+                    }
+
+                    if (!failed)
+                    {
+                        HWEngineBurn newBurn = new HWEngineBurn(burnName, parentJoint, GetAssimpNodeTransform(assimpNode));
+                        nodeEngineBurns.Add(assimpNode, newBurn);
+                    }
                 }
             }
             #endregion
@@ -538,29 +636,38 @@ namespace DAEnerys
 
                 if (!failed)
                 {
-                    int spriteIndex = 0;
+                    int spriteIndex = -1;
                     int divIndex = -1;
 
-                    string[] splitted = assimpNode.Name.Split('_');
-                    int start = -1;
-                    int end = -1;
-                    foreach (string split in splitted)
+                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "Flame", "Div" });
+                    foreach (KeyValuePair<string, string> pair in values.ToArray())
                     {
-                        if (split.StartsWith("Flame")) //SpriteIndex
+                        switch (pair.Key)
                         {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            spriteIndex = int.Parse(split.Substring(start, end - start));
-                        }
-                        else if (split.StartsWith("Div")) //DivIndex
-                        {
-                            start = split.IndexOf('[') + 1;
-                            end = split.IndexOf(']');
-                            divIndex = int.Parse(split.Substring(start, end - start));
+                            case "Flame":
+                                int.TryParse(pair.Value, out spriteIndex);
+                                break;
+                            case "Div":
+                                int.TryParse(pair.Value, out divIndex);
+                                break;
                         }
                     }
 
-                    HWEngineFlame newFlame = new HWEngineFlame(engineBurn, GetAssimpNodeAbsoluteTransform(assimpNode), divIndex, spriteIndex);
+                    if(spriteIndex == -1)
+                    {
+                        new Problem(ProblemTypes.ERROR, "Failed to parse sprite index of engine flame \"" + assimpNode.Name + "\".");
+                        failed = true;
+                    }
+                    if (divIndex == -1)
+                    {
+                        new Problem(ProblemTypes.ERROR, "Failed to parse division index of engine flame \"" + assimpNode.Name + "\".");
+                        failed = true;
+                    }
+
+                    if (!failed)
+                    {
+                        HWEngineFlame newFlame = new HWEngineFlame(engineBurn, GetAssimpNodeAbsoluteTransform(assimpNode), divIndex, spriteIndex);
+                    }
                 }
             }
             #endregion
@@ -615,36 +722,30 @@ namespace DAEnerys
             int lod = 0;
             List<ShipMeshTag> tags = new List<ShipMeshTag>();
 
-            string[] splitted = assimpMesh.Name.Split('[');
-            int end = -1;
-            for (int i = 0; i < splitted.Length; i++)
+            bool success = false;
+            Dictionary<string, string> values = ParseNameParameters(assimpMesh.Name, new string[] { "MULT", "LOD", "TAGS" });
+            foreach (KeyValuePair<string, string> pair in values.ToArray())
             {
-                if (i != 0)
+                switch (pair.Key)
                 {
-                    end = splitted[i].IndexOf(']');
-                    if (splitted[i - 1].EndsWith("MULT")) //Name
-                    {
-                        name = splitted[i].Substring(0, end);
-                    }
-                    else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
-                    {
-                        bool success = int.TryParse(splitted[i].Substring(0, end), out lod);
+                    case "MULT":
+                        name = pair.Value;
+                        break;
+                    case "LOD":
+                        success = int.TryParse(pair.Value, out lod);
                         if (!success)
                         {
                             new Problem(ProblemTypes.ERROR, "Failed to parse LOD of ship mesh \"" + assimpMesh.Name + "\".");
                             return;
                         }
-                    }
-                    else if (splitted[i - 1].EndsWith("TAGS")) //Tags
-                    {
-                        string tagsString = splitted[i].Substring(0, end);
-                        string[] tagsStrings = tagsString.Split(' ');
-
+                        break;
+                    case "TAGS":
+                        string[] tagsStrings = pair.Value.Split(' ');
                         foreach (string tag in tagsStrings)
                         {
-                            tags.Add((ShipMeshTag)Enum.Parse(typeof(ShipMeshTag), tag.ToUpper()));
+                            tags.Add((ShipMeshTag)Enum.Parse(typeof(ShipMeshTag), tag, true));
                         }
-                    }
+                        break;
                 }
             }
 
@@ -689,17 +790,14 @@ namespace DAEnerys
         {
             string name = "";
 
-            string[] splitted = assimpMesh.Name.Split('[');
-            int end = -1;
-            for (int i = 0; i < splitted.Length; i++)
+            Dictionary<string, string> values = ParseNameParameters(assimpMesh.Name, new string[] { "COL" });
+            foreach (KeyValuePair<string, string> pair in values.ToArray())
             {
-                if (i != 0)
+                switch (pair.Key)
                 {
-                    end = splitted[i].IndexOf(']');
-                    if (splitted[i - 1].EndsWith("COL")) //Name
-                    {
-                        name = splitted[i].Substring(0, end);
-                    }
+                    case "COL":
+                        name = pair.Value;
+                        break;
                 }
             }
 
@@ -716,25 +814,23 @@ namespace DAEnerys
             string name = "";
             int lod = -1;
 
-            string[] splitted = assimpMesh.Name.Split('[');
-            int end = -1;
-            for (int i = 0; i < splitted.Length; i++)
+            bool success = false;
+            Dictionary<string, string> values = ParseNameParameters(assimpMesh.Name, new string[] { "GLOW", "LOD" });
+            foreach (KeyValuePair<string, string> pair in values.ToArray())
             {
-                if (i != 0)
+                switch (pair.Key)
                 {
-                    end = splitted[i].IndexOf(']');
-                    if (splitted[i - 1].EndsWith("GLOW")) //Name
-                    {
-                        name = splitted[i].Substring(0, end);
-                    }
-                    else if (splitted[i - 1].EndsWith("LOD")) //Level of detail
-                    {
-                        bool success = int.TryParse(splitted[i].Substring(0, end), out lod);
+                    case "GLOW":
+                        name = pair.Value;
+                        break;
+                    case "LOD":
+                        success = int.TryParse(pair.Value, out lod);
                         if (!success)
                         {
                             new Problem(ProblemTypes.ERROR, "Failed to parse LOD of engine glow \"" + assimpMesh.Name + "\".");
+                            return;
                         }
-                    }
+                        break;
                 }
             }
 
@@ -771,17 +867,14 @@ namespace DAEnerys
         {
             string name = "";
 
-            string[] splitted = assimpMesh.Name.Split('[');
-            int end = -1;
-            for (int i = 0; i < splitted.Length; i++)
+            Dictionary<string, string> values = ParseNameParameters(assimpMesh.Name, new string[] { "ETSH" });
+            foreach (KeyValuePair<string, string> pair in values.ToArray())
             {
-                if (i != 0)
+                switch (pair.Key)
                 {
-                    end = splitted[i].IndexOf(']');
-                    if (splitted[i - 1].EndsWith("ETSH")) //Name
-                    {
-                        name = splitted[i].Substring(0, end);
-                    }
+                    case "ETSH":
+                        name = pair.Value;
+                        break;
                 }
             }
 
@@ -821,6 +914,56 @@ namespace DAEnerys
             }
 
             return new MeshData(vertexList.ToArray(), assimpMesh.GetIndices(), assimpMesh.TextureCoordinateChannelCount);
+        }
+
+        public static Dictionary<string, string> ParseNameParameters(string input, string[] parameters)
+        {
+            if (parameters.Length == 0 || input.Length == 0)
+                return new Dictionary<string, string>();
+
+            List<string> filteredParameters = new List<string>();
+
+            //Sort the parameters
+            int startIndex = 0;
+            while (startIndex < input.Length)
+            {
+                int lowestIndex = input.Length;
+                string lowestParameter = "";
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    int newIndex = input.IndexOf(parameters[i] + "[", startIndex);
+                    if (newIndex != -1 && newIndex < lowestIndex)
+                    {
+                        lowestIndex = newIndex;
+                        lowestParameter = parameters[i];
+                    }
+                }
+                startIndex = lowestIndex + 5;
+                if (lowestParameter != string.Empty)
+                    if (!filteredParameters.Contains(lowestParameter))
+                        filteredParameters.Add(lowestParameter);
+                    else
+                        new Problem(ProblemTypes.WARNING, "Multiple parameter \"" + lowestParameter + "\" in \"" + input + "\".");
+            }
+
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            for (int i = 0; i < filteredParameters.Count; i++)
+            {
+                string pattern = "";
+
+                if(filteredParameters.Count - 1 > i)
+                    pattern = @"(?<=" + filteredParameters[i] + @"\[)(.*)(?=\]_" + filteredParameters[i + 1] + ")";
+                else
+                    pattern = @"(?<=" + filteredParameters[i] + @"\[)(.*)(?=\])";
+
+                Match match = Regex.Match(input, pattern);
+
+                if (match.Success)
+                    result.Add(filteredParameters[i], match.Value);
+                else
+                    new Problem(ProblemTypes.ERROR, "Failed to parse parameter \"" + filteredParameters[i] + "\" of \"" + input + "\".");
+            }
+            return result;
         }
 
         private static void LoadMaterials()

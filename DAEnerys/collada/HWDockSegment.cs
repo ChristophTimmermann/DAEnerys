@@ -66,13 +66,13 @@ namespace DAEnerys
 
     public enum DockSegmentFlag
     {
-        USEROT = 1,
-        PLAYER = 2,
-        QUEUE = 3,
-        CLOSE = 4,
-        CLEARRES = 5,
-        CHECK = 6,
-        UNFOCUS = 7,
-        CLIP = 8,
+        UseRot = 1,
+        Player = 2,
+        Queue = 3,
+        Close = 4,
+        ClearRes = 5,
+        Check = 6,
+        UnFocus = 7,
+        Clip = 8,
     }
 }
