@@ -18,9 +18,9 @@ namespace DAEnerys
             get
             {
                 if(Suffix <= 1)
-                    return "IMG[" + ColladaName + "]_FMT[" + Format + "]";
+                    return "IMG[" + Name + "]_FMT[" + Format + "]";
                 else
-                    return "IMG[" + ColladaName + "]_FMT[" + Format + "]_" + Suffix;
+                    return "IMG[" + Name + "]_FMT[" + Format + "]_" + Suffix;
             }
         }
 

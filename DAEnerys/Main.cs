@@ -455,6 +455,8 @@ namespace DAEnerys
             trackBarDockpathSegments.Maximum = 1;
             boxDockpathSegmentTolerance.Clear();
             boxDockpathSegmentSpeed.Clear();
+            boxDockpathName.Clear();
+            numericDockpathAnimationIndex.Value = 0;
             checkDockpathSegmentFlagUseRot.Checked = false;
             checkDockpathSegmentFlagPlayer.Checked = false;
             checkDockpathSegmentFlagQueue.Checked = false;
@@ -507,6 +509,9 @@ namespace DAEnerys
                             break;
                     }
                 }
+
+                boxDockpathName.Text = dockpath.Name;
+                numericDockpathAnimationIndex.Value = dockpath.AnimationIndex;
 
                 selectedDockpath = dockpath;
             }

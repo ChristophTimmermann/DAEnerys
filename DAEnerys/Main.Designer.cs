@@ -94,6 +94,10 @@ namespace DAEnerys
             this.listBoxMarkers = new System.Windows.Forms.ListBox();
             this.checkboxDrawMarkers = new System.Windows.Forms.CheckBox();
             this.tabDockpaths = new System.Windows.Forms.TabPage();
+            this.labelDockpathAnimationIndex = new System.Windows.Forms.Label();
+            this.numericDockpathAnimationIndex = new System.Windows.Forms.NumericUpDown();
+            this.boxDockpathName = new System.Windows.Forms.TextBox();
+            this.labelDockpathName = new System.Windows.Forms.Label();
             this.groupDockpathFlags = new System.Windows.Forms.GroupBox();
             this.checkDockpathAjar = new System.Windows.Forms.CheckBox();
             this.checkDockpathLatch = new System.Windows.Forms.CheckBox();
@@ -196,6 +200,7 @@ namespace DAEnerys
             this.splitTabMarkers.Panel2.SuspendLayout();
             this.splitTabMarkers.SuspendLayout();
             this.tabDockpaths.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathAnimationIndex)).BeginInit();
             this.groupDockpathFlags.SuspendLayout();
             this.groupDockpathSegments.SuspendLayout();
             this.groupDockpathSegmentFlags.SuspendLayout();
@@ -909,6 +914,10 @@ namespace DAEnerys
             // tabDockpaths
             // 
             this.tabDockpaths.AutoScroll = true;
+            this.tabDockpaths.Controls.Add(this.labelDockpathAnimationIndex);
+            this.tabDockpaths.Controls.Add(this.numericDockpathAnimationIndex);
+            this.tabDockpaths.Controls.Add(this.boxDockpathName);
+            this.tabDockpaths.Controls.Add(this.labelDockpathName);
             this.tabDockpaths.Controls.Add(this.groupDockpathFlags);
             this.tabDockpaths.Controls.Add(this.groupDockpathSegments);
             this.tabDockpaths.Controls.Add(this.groupDockpathLinks);
@@ -921,6 +930,42 @@ namespace DAEnerys
             this.tabDockpaths.Text = "Dockpaths";
             this.tabDockpaths.UseVisualStyleBackColor = true;
             // 
+            // labelDockpathAnimationIndex
+            // 
+            this.labelDockpathAnimationIndex.AutoSize = true;
+            this.labelDockpathAnimationIndex.Location = new System.Drawing.Point(3, 197);
+            this.labelDockpathAnimationIndex.Name = "labelDockpathAnimationIndex";
+            this.labelDockpathAnimationIndex.Size = new System.Drawing.Size(84, 13);
+            this.labelDockpathAnimationIndex.TabIndex = 24;
+            this.labelDockpathAnimationIndex.Text = "Animation index:";
+            // 
+            // numericDockpathAnimationIndex
+            // 
+            this.numericDockpathAnimationIndex.Enabled = false;
+            this.numericDockpathAnimationIndex.Location = new System.Drawing.Point(93, 195);
+            this.numericDockpathAnimationIndex.Name = "numericDockpathAnimationIndex";
+            this.numericDockpathAnimationIndex.Size = new System.Drawing.Size(41, 20);
+            this.numericDockpathAnimationIndex.TabIndex = 23;
+            // 
+            // boxDockpathName
+            // 
+            this.boxDockpathName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.boxDockpathName.Enabled = false;
+            this.boxDockpathName.Location = new System.Drawing.Point(50, 169);
+            this.boxDockpathName.Name = "boxDockpathName";
+            this.boxDockpathName.Size = new System.Drawing.Size(189, 20);
+            this.boxDockpathName.TabIndex = 22;
+            // 
+            // labelDockpathName
+            // 
+            this.labelDockpathName.AutoSize = true;
+            this.labelDockpathName.Location = new System.Drawing.Point(3, 172);
+            this.labelDockpathName.Name = "labelDockpathName";
+            this.labelDockpathName.Size = new System.Drawing.Size(41, 13);
+            this.labelDockpathName.TabIndex = 21;
+            this.labelDockpathName.Text = "Name: ";
+            // 
             // groupDockpathFlags
             // 
             this.groupDockpathFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -929,7 +974,7 @@ namespace DAEnerys
             this.groupDockpathFlags.Controls.Add(this.checkDockpathLatch);
             this.groupDockpathFlags.Controls.Add(this.checkDockpathAnim);
             this.groupDockpathFlags.Controls.Add(this.checkDockpathExit);
-            this.groupDockpathFlags.Location = new System.Drawing.Point(4, 169);
+            this.groupDockpathFlags.Location = new System.Drawing.Point(3, 232);
             this.groupDockpathFlags.Name = "groupDockpathFlags";
             this.groupDockpathFlags.Size = new System.Drawing.Size(235, 64);
             this.groupDockpathFlags.TabIndex = 12;
@@ -996,7 +1041,7 @@ namespace DAEnerys
             this.groupDockpathSegments.Controls.Add(this.boxDockpathSegmentSpeed);
             this.groupDockpathSegments.Controls.Add(this.boxDockpathSegmentTolerance);
             this.groupDockpathSegments.Controls.Add(this.trackBarDockpathSegments);
-            this.groupDockpathSegments.Location = new System.Drawing.Point(3, 453);
+            this.groupDockpathSegments.Location = new System.Drawing.Point(2, 516);
             this.groupDockpathSegments.Name = "groupDockpathSegments";
             this.groupDockpathSegments.Size = new System.Drawing.Size(236, 236);
             this.groupDockpathSegments.TabIndex = 3;
@@ -1177,7 +1222,7 @@ namespace DAEnerys
             this.groupDockpathLinks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupDockpathLinks.Controls.Add(this.listDockpathLinks);
-            this.groupDockpathLinks.Location = new System.Drawing.Point(4, 346);
+            this.groupDockpathLinks.Location = new System.Drawing.Point(3, 409);
             this.groupDockpathLinks.Name = "groupDockpathLinks";
             this.groupDockpathLinks.Size = new System.Drawing.Size(235, 101);
             this.groupDockpathLinks.TabIndex = 2;
@@ -1199,7 +1244,7 @@ namespace DAEnerys
             this.groupDockpathFamilies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupDockpathFamilies.Controls.Add(this.listDockpathFamilies);
-            this.groupDockpathFamilies.Location = new System.Drawing.Point(4, 239);
+            this.groupDockpathFamilies.Location = new System.Drawing.Point(3, 302);
             this.groupDockpathFamilies.Name = "groupDockpathFamilies";
             this.groupDockpathFamilies.Size = new System.Drawing.Size(235, 101);
             this.groupDockpathFamilies.TabIndex = 1;
@@ -1685,6 +1730,8 @@ namespace DAEnerys
             // 
             // boxEngineBurnName
             // 
+            this.boxEngineBurnName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.boxEngineBurnName.Enabled = false;
             this.boxEngineBurnName.Location = new System.Drawing.Point(47, 169);
             this.boxEngineBurnName.Name = "boxEngineBurnName";
@@ -1716,8 +1763,6 @@ namespace DAEnerys
             // 
             // numericEngineBurnSpriteIndex
             // 
-            this.numericEngineBurnSpriteIndex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericEngineBurnSpriteIndex.Enabled = false;
             this.numericEngineBurnSpriteIndex.Location = new System.Drawing.Point(77, 71);
             this.numericEngineBurnSpriteIndex.Name = "numericEngineBurnSpriteIndex";
@@ -1940,6 +1985,8 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.splitTabMarkers)).EndInit();
             this.splitTabMarkers.ResumeLayout(false);
             this.tabDockpaths.ResumeLayout(false);
+            this.tabDockpaths.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathAnimationIndex)).EndInit();
             this.groupDockpathFlags.ResumeLayout(false);
             this.groupDockpathFlags.PerformLayout();
             this.groupDockpathSegments.ResumeLayout(false);
@@ -2124,6 +2171,10 @@ namespace DAEnerys
         private System.Windows.Forms.TrackBar trackBarThrusterStrength;
         private System.Windows.Forms.OpenFileDialog browseMaterialTexturesDIFFDialog;
         private System.Windows.Forms.ToolStripButton buttonNew;
+        private System.Windows.Forms.Label labelDockpathAnimationIndex;
+        private System.Windows.Forms.NumericUpDown numericDockpathAnimationIndex;
+        private System.Windows.Forms.TextBox boxDockpathName;
+        private System.Windows.Forms.Label labelDockpathName;
     }
 }
 
