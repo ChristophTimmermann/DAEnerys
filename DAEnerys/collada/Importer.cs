@@ -462,11 +462,11 @@ namespace DAEnerys
 
                 string lightName = "";
                 string type = "default";
-                float size = -1;
-                float phase = -1;
-                float frequency = -1;
-                Vector3 color = new Vector3(168, 123, 945);
-                float distance = -1;
+                float size = 1;
+                float phase = 0;
+                float frequency = 1;
+                Vector3 color = new Vector3(255, 255, 255);
+                float distance = 0.001f;
                 List<NavLightFlag> flags = new List<NavLightFlag>();
 
                 bool success = false;
@@ -551,7 +551,7 @@ namespace DAEnerys
                     new Problem(ProblemTypes.ERROR, "Failed to parse name of navlight \"" + assimpNode.Name + "\".");
                     failed = true;
                 }
-                if (type == "")
+                /*if (type == "")
                 {
                     new Problem(ProblemTypes.ERROR, "Failed to parse type of navlight \"" + assimpNode.Name + "\".");
                     failed = true;
@@ -580,7 +580,7 @@ namespace DAEnerys
                 {
                     new Problem(ProblemTypes.ERROR, "Failed to parse distance of navlight \"" + assimpNode.Name + "\".");
                     failed = true;
-                }
+                }*/
 
                 if (!failed)
                     new HWNavLight(lightName, parentJoint, GetAssimpNodeTransform(assimpNode), navLightStyle, size, phase, frequency, color, distance, flags);
