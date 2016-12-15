@@ -9,6 +9,11 @@ namespace DAEnerys
         public static List<HWJoint> Joints = new List<HWJoint>();
         public static HWJoint Root;
 
+        public Matrix4 AnimationMatrix = Matrix4.Identity;
+        public HWAnimationChannel PositionChannel = new HWAnimationChannel();
+        public HWAnimationChannel RotationChannel = new HWAnimationChannel();
+        public HWAnimationChannel ScalingChannel = new HWAnimationChannel();
+
         public List<HWElement> Children = new List<HWElement>();
         public List<HWMesh> Meshes = new List<HWMesh>();
 
@@ -78,6 +83,19 @@ namespace DAEnerys
                     return joint;
 
             return null;
+        }
+
+        public override void CalculateWorldMatrix()
+        {
+            if (AnimationMatrix == Matrix4.Identity)
+                WorldMatrix = RelativeWorldMatrix;
+            else
+                WorldMatrix = AnimationMatrix;
+
+            if (Parent != null)
+                WorldMatrix *= Parent.WorldMatrix;
+
+            AbsoluteRotation = WorldMatrix.ExtractRotation();
         }
     }
 }

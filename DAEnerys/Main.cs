@@ -20,6 +20,7 @@ namespace DAEnerys
         HWNavLight selectedNavLight;
         HWEngineBurn selectedEngineBurn;
         HWMaterial selectedMaterial;
+        public HWAnimation selectedAnimation;
 
         public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
         private Label[] ShipMeshLODMaterialLabels = new Label[MAX_MATERIALS_ON_MESH];
@@ -32,6 +33,7 @@ namespace DAEnerys
         public Dictionary<HWJoint, object> JointComboItems = new Dictionary<HWJoint, object>();
 
         public Dictionary<string, HWMaterial> MaterialNames = new Dictionary<string, HWMaterial>();
+        public Dictionary<string, HWAnimation> AnimationNames = new Dictionary<string, HWAnimation>();
 
         public bool DrawNavLightRadius;
 
@@ -41,6 +43,9 @@ namespace DAEnerys
         private bool ignoreShipMeshDoScarCheck;
         private bool ignoreMaterialShaderChanged;
         private bool ignoreShipMeshLODMaterialChanged;
+
+        private bool animationPlaying;
+        public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
 
         const int MAX_MATERIALS_ON_MESH = 8;
 
@@ -143,6 +148,9 @@ namespace DAEnerys
 
                 effect.Update();
             }
+
+            if(animationPlaying)
+                HWAnimation.Update();
 
             //Only update render if it is needed
             if (visibleNavLights > 0 || visibleEffects > 0)
@@ -262,6 +270,13 @@ namespace DAEnerys
             trackBarEngineBurnFlames.Maximum = 1;
             numericEngineBurnSpriteIndex.Value = 0;
             numericEngineBurnSpriteIndex.Enabled = false;
+
+            //Animations
+            AnimationNames.Clear();
+            listAnimations.Items.Clear();
+            selectedAnimation = null;
+            AnimationPlaying = false;
+            listAnimations_SelectedIndexChanged(this, EventArgs.Empty);
 
             foreach (HWDockSegment segment in HWDockSegment.DockSegments)
             {
@@ -1416,6 +1431,48 @@ namespace DAEnerys
             }
         }
 
+        //----------------------------------- ANIMATIONS ----------------------------------//
+        public void AddAnimation(HWAnimation animation)
+        {
+            listAnimations.Items.Add(animation.Name);
+            AnimationNames.Add(animation.Name, animation);
+        }
+        private void listAnimations_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            listAnimationJoints.Items.Clear();
+            boxAnimationName.Clear();
+            buttonAnimationPlay.Enabled = false;
+            AnimationPlaying = false;
+            selectedAnimation = null;
+
+            if (listAnimations.SelectedItem == null)
+                return;
+
+            if (AnimationNames.ContainsKey((string)listAnimations.SelectedItem))
+                selectedAnimation = AnimationNames[(string)listAnimations.SelectedItem];
+
+            if (selectedAnimation == null)
+                return;
+
+            boxAnimationName.Text = selectedAnimation.Name;
+            buttonAnimationPlay.Enabled = true;
+
+            foreach (HWJoint joint in selectedAnimation.AnimatedJoints)
+            {
+                listAnimationJoints.Items.Add(joint.Name);
+            }
+        }
+        private void buttonAnimationPlay_Click(object sender, EventArgs e)
+        {
+            if (selectedAnimation == null)
+                return;
+
+            if (AnimationPlaying)
+                AnimationPlaying = false;
+            else
+                AnimationPlaying = true;
+        }
+
         //----------------------------------- MATERIALS ----------------------------------//
         private void listMaterials_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1653,6 +1710,11 @@ namespace DAEnerys
                 comboPerspectiveOrtho.SelectedIndex = 0;
             else
                 comboPerspectiveOrtho.SelectedIndex = 1;
+        }
+
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AnimationPlaying = false;
         }
 
         //--------------------------------- PROBLEMS TAB ---------------------------------//

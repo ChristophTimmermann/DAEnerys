@@ -52,7 +52,7 @@ namespace DAEnerys
             this.Parent = null;
         }
 
-        public void CalculateWorldMatrix()
+        public virtual void CalculateWorldMatrix()
         {
             WorldMatrix = RelativeWorldMatrix;
 

@@ -17,28 +17,49 @@ namespace DAEnerys
     {
         public static string ColladaPath;
         public static Scene Collada;
+        public static float Framerate = 30f;
+
+        private static XDocument doc;
+        private static XNamespace ns;
 
         private static Dictionary<Node, HWJoint> nodeJoints = new Dictionary<Node, HWJoint>();
         private static Dictionary<Node, HWDockpath> nodeDockpaths = new Dictionary<Node, HWDockpath>();
         private static Dictionary<Node, HWEngineBurn> nodeEngineBurns = new Dictionary<Node, HWEngineBurn>();
 
+        private static Dictionary<HWJoint, string> jointColladaNames = new Dictionary<HWJoint, string>();
+
+        private static List<COLLADAAnimation> parsedAnimations = new List<COLLADAAnimation>();
+        private static List<COLLADAJointAnimation> parsedJointAnimations = new List<COLLADAJointAnimation>();
+
         private static Node[] lodNodes;
         private static Node colNode;
         private static Node infoNode;
         private static Node holdDockNode;
+        private static Node holdAnimNode;
 
         private static bool goblinWarningShown;
 
         public static void ImportFromFile(string path)
         {
+            doc = null;
+            ns = null;
+
             nodeJoints.Clear();
             nodeDockpaths.Clear();
             nodeEngineBurns.Clear();
+
+            Framerate = 30f;
+
+            jointColladaNames.Clear();
+
+            parsedAnimations.Clear();
+            parsedJointAnimations.Clear();
 
             lodNodes = new Node[4];
             colNode = null;
             infoNode = null;
             holdDockNode = null;
+            holdAnimNode = null;
 
             goblinWarningShown = false;
 
@@ -63,7 +84,7 @@ namespace DAEnerys
             importer.Dispose();
 
             //Manual parsing
-            LoadTextures(fixedColladaPath);
+            ManualParsing(fixedColladaPath);
 
             //File.Delete(fixedColladaPath);
             #endregion
@@ -90,9 +111,12 @@ namespace DAEnerys
                 }
             }
 
+            LoadAnimationData();
+
             HWScene.CalibrateSettings();
             HWScene.CheckForProblems();
             HWEngineGlow.UpdateEngineStrength();
+            HWAnimation.UpdateAnimatedJoints();
             Program.main.UpdateProblems();
 
             Renderer.InvalidateMeshData();
@@ -236,6 +260,13 @@ namespace DAEnerys
 
                 holdDockNode = assimpNode;
             }
+            else if (assimpNode.Name == "HOLD_ANIM") //If node is the holder for animations
+            {
+                if (holdAnimNode != null)
+                    new Problem(ProblemTypes.ERROR, "There are multiple \"HOLD_ANIM\" nodes.");
+
+                holdAnimNode = assimpNode;
+            }
             else if (assimpNode.Name.StartsWith("JNT")) //If node is a joint
             {
                 if (!IsAssimpNodeUnderAnyRootNode(assimpNode))
@@ -270,6 +301,7 @@ namespace DAEnerys
                     {
                         HWJoint newJoint = new HWJoint(jointName, parentJoint, GetAssimpNodeAbsoluteTransform(assimpNode));
                         nodeJoints.Add(assimpNode, newJoint);
+                        jointColladaNames.Add(newJoint, assimpNode.Name);
                     }
                 }
             }
@@ -304,7 +336,7 @@ namespace DAEnerys
             {
                 if (assimpNode.Parent != holdDockNode)
                 {
-                    new Problem(ProblemTypes.ERROR, "The dockpath \"" + assimpNode.Name + "\" is not under the HOLD_DOCK node.");
+                    new Problem(ProblemTypes.ERROR, "The dockpath \"" + assimpNode.Name + "\" is not under the \"HOLD_DOCK\" node.");
                     failed = true;
                 }
 
@@ -711,6 +743,76 @@ namespace DAEnerys
                 foreach (int meshIndex in assimpNode.MeshIndices)
                     ParseEngineShape(Collada.Meshes[meshIndex], assimpNode, parentJoint);
             }
+            else if (assimpNode.Name.StartsWith("ANIM")) //If node is an animation
+            {
+                if (assimpNode.Parent != holdAnimNode)
+                {
+                    new Problem(ProblemTypes.ERROR, "The animation \"" + assimpNode.Name + "\" is not under the \"HOLD_ANIM\" node.");
+                    failed = true;
+                }
+
+                if (!failed)
+                {
+                    string animName = "";
+                    float startTime = 0;
+                    int startFrame = 0;
+                    float endTime = 0;
+                    int endFrame = 0;
+                    float loopStartTime = 0;
+                    int loopStartFrame = 0;
+                    float loopEndTime = 0;
+                    int loopEndFrame = 0;
+                    AnimationType type = AnimationType.TIME;
+
+                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "ANIM", "ST", "STF", "EN", "ENF", "LS", "LSF", "LE", "LEF" });
+                    foreach (KeyValuePair<string, string> pair in values.ToArray())
+                    {
+                        switch (pair.Key)
+                        {
+                            case "ANIM":
+                                animName = pair.Value;
+                                break;
+                            case "ST":
+                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out startTime);
+                                type = AnimationType.TIME;
+                                break;
+                            case "STF":
+                                int.TryParse(pair.Value, out startFrame);
+                                type = AnimationType.FRAME;
+                                break;
+                            case "EN":
+                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out endTime);
+                                break;
+                            case "ENF":
+                                int.TryParse(pair.Value, out endFrame);
+                                break;
+                            case "LS":
+                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out loopStartTime);
+                                break;
+                            case "LSF":
+                                int.TryParse(pair.Value, out loopStartFrame);
+                                break;
+                            case "LE":
+                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out loopEndTime);
+                                break;
+                            case "LEF":
+                                int.TryParse(pair.Value, out loopEndFrame);
+                                break;
+                        }
+                    }
+
+                    if (animName == "")
+                    {
+                        new Problem(ProblemTypes.ERROR, "Failed to parse name of animation \"" + assimpNode.Name + "\".");
+                        failed = true;
+                    }
+
+                    if (!failed)
+                    {
+                        HWAnimation newAnim = new HWAnimation(animName, startTime, startFrame, endTime, endFrame, loopStartTime, loopStartFrame, loopEndTime, loopEndFrame, type);
+                    }
+                }
+            }
 
             foreach (Node childNode in assimpNode.Children)
                 ParseNode(childNode);
@@ -985,62 +1087,442 @@ namespace DAEnerys
             }
         }
 
-        private static void LoadTextures(string file)
+        private static void LoadAnimationData()
         {
-            XmlReader reader = XmlReader.Create(file);
+            if (parsedJointAnimations.Count == 0)
+                return;
 
-            while (reader.Read())
+            foreach (COLLADAJointAnimation jointAnim in parsedJointAnimations)
             {
-                if (reader.Name == "image")
+                HWJoint animJoint = null;
+                foreach (HWJoint joint in HWJoint.Joints)
                 {
-                    string name = reader.GetAttribute("name");
-                    string path = null;
-                    if (name != null)
+                    if (joint == HWJoint.Root)
+                        continue;
+
+                    if (jointColladaNames[joint] == jointAnim.Name)
                     {
-                        while (reader.Read())
+                        animJoint = joint;
+                        break;
+                    }
+                }
+
+                if (animJoint == null)
+                    continue;
+
+                HWAnimationChannel positionChannel = new HWAnimationChannel();
+                HWAnimationChannel rotationChannel = new HWAnimationChannel();
+                HWAnimationChannel scalingChannel = new HWAnimationChannel();
+
+                for (int i = 0; i < 3; i++)
+                {
+                    HWAnimationAxis axis = new HWAnimationAxis();
+                    positionChannel.Axes[i] = axis;
+                    axis = new HWAnimationAxis();
+                    rotationChannel.Axes[i] = axis;
+                    axis = new HWAnimationAxis();
+                    scalingChannel.Axes[i] = axis;
+                }
+
+                COLLADAJointAnimation colladaJointAnim = null;
+                foreach (COLLADAJointAnimation colJointAnim in parsedJointAnimations)
+                {
+                    if (colJointAnim.Name == jointColladaNames[animJoint])
+                    {
+                        colladaJointAnim = colJointAnim;
+                        break;
+                    }
+                }
+
+                if (colladaJointAnim == null)
+                    continue;
+
+                //TRANSLATION
+                for (int i = 0; i < 3; i++)
+                {
+                    if (colladaJointAnim.Translation[i] == null)
+                        continue;
+
+                    positionChannel.Axes[i].Times = colladaJointAnim.Translation[i].Times;
+                    positionChannel.Axes[i].Values = colladaJointAnim.Translation[i].Values;
+                    positionChannel.Axes[i].KeyInterpolationTypes = colladaJointAnim.Translation[i].Interpolations;
+                    positionChannel.Axes[i].InTangents = colladaJointAnim.Translation[i].InTangents;
+                    positionChannel.Axes[i].OutTangents = colladaJointAnim.Translation[i].OutTangents;
+                }
+
+                //ROTATION
+                for (int i = 0; i < 3; i++)
+                {
+                    if (colladaJointAnim.Rotation[i] == null)
+                        continue;
+
+                    rotationChannel.Axes[i].Times = colladaJointAnim.Rotation[i].Times;
+                    rotationChannel.Axes[i].Values = colladaJointAnim.Rotation[i].Values;
+                    rotationChannel.Axes[i].KeyInterpolationTypes = colladaJointAnim.Rotation[i].Interpolations;
+                    rotationChannel.Axes[i].InTangents = colladaJointAnim.Rotation[i].InTangents;
+                    rotationChannel.Axes[i].OutTangents = colladaJointAnim.Rotation[i].OutTangents;
+                }
+
+                //SCALING
+                for (int i = 0; i < 3; i++)
+                {
+                    if (colladaJointAnim.Scaling[i] == null)
+                        continue;
+
+                    scalingChannel.Axes[i].Times = colladaJointAnim.Scaling[i].Times;
+                    scalingChannel.Axes[i].Values = colladaJointAnim.Scaling[i].Values;
+                    scalingChannel.Axes[i].KeyInterpolationTypes = colladaJointAnim.Scaling[i].Interpolations;
+                    scalingChannel.Axes[i].InTangents = colladaJointAnim.Scaling[i].InTangents;
+                    scalingChannel.Axes[i].OutTangents = colladaJointAnim.Scaling[i].OutTangents;
+                }
+
+                animJoint.PositionChannel = positionChannel;
+                animJoint.RotationChannel = rotationChannel;
+                animJoint.ScalingChannel = scalingChannel;
+            }
+        }
+
+        private static void ManualParsing(string file)
+        {
+            #region Textures
+            using (XmlReader reader = XmlReader.Create(file))
+            {
+                while (reader.Read())
+                {
+
+                    if (reader.Name == "image")
+                    {
+                        string name = reader.GetAttribute("name");
+                        string path = null;
+                        if (name != null)
                         {
-                            if (reader.Name == "init_from")
+                            while (reader.Read())
                             {
-                                reader.MoveToElement();
-                                path = reader.ReadElementContentAsString();
+                                if (reader.Name == "init_from")
+                                {
+                                    reader.MoveToElement();
+                                    path = reader.ReadElementContentAsString();
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (name != null && path != null)
+                        {
+                            Log.WriteLine("Trying to parse texture \"" + name + "\".");
+                            HWImage.Parse(name, path);
+                        }
+                    }
+
+                    //Check for problems with texture names in diffuse slots (Crashes HODOR without any information)
+                    if (reader.Name == "diffuse")
+                    {
+                        reader.ReadToDescendant("texture");
+                        string name = "";
+
+                        if (reader.Name == "texture")
+                        {
+                            name = reader.GetAttribute("texture").Replace("-image", "");
+                        }
+
+                        if (name.Length > 0)
+                        {
+                            if (!name.StartsWith("IMG[")) //Not a very good check (I guess)...
+                                new Problem(ProblemTypes.ERROR, "Diffuse texture \"" + name + "\" has the wrong name format. This will most likely crash HODOR.");
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region Animations
+            List<XElement> animLibraries = doc.Descendants(ns + "library_animations").ToList();
+            XElement animLibrary = null;
+            if (animLibraries.Count > 0)
+                animLibrary = animLibraries[0];
+
+            if (animLibrary != null)
+            {
+                List<XElement> animationElements = animLibrary.Descendants(ns + "animation").ToList();
+                foreach (XElement animationElement in animationElements)
+                {
+                    COLLADAAnimation animation = new COLLADAAnimation();
+
+                    List<XElement> sourceElements = animationElement.Descendants(ns + "source").ToList();
+                    foreach (XElement sourceElement in sourceElements)
+                    {
+                        COLLADASource source = new COLLADASource();
+                        source.ID = sourceElement.Attribute("id").Value;
+
+                        animation.Sources.Add(source);
+
+                        List<XElement> floatArrayElements = sourceElement.Descendants(ns + "float_array").ToList();
+                        if (floatArrayElements.Count > 0)
+                        {
+                            XElement floatArrayElement = floatArrayElements[0];
+
+                            COLLADAFloatArray floatArray = new COLLADAFloatArray();
+                            floatArray.ID = floatArrayElement.Attribute("id").Value;
+                            int.TryParse(floatArrayElement.Attribute("count").Value, out floatArray.Count);
+                            floatArray.Value = floatArrayElement.Value;
+
+                            source.FloatArray = floatArray;
+                        }
+
+                        List<XElement> nameArrayElements = sourceElement.Descendants(ns + "Name_array").ToList();
+                        if (nameArrayElements.Count > 0)
+                        {
+                            XElement nameArrayElement = nameArrayElements[0];
+
+                            COLLADANameArray nameArray = new COLLADANameArray();
+                            nameArray.ID = nameArrayElement.Attribute("id").Value;
+                            int.TryParse(nameArrayElement.Attribute("count").Value, out nameArray.Count);
+                            nameArray.Value = nameArrayElement.Value;
+
+                            source.NameArray = nameArray;
+                        }
+                    }
+
+                    List<XElement> samplerElements = animationElement.Descendants(ns + "sampler").ToList();
+
+                    if (samplerElements.Count > 0)
+                    {
+                        XElement samplerElement = samplerElements[0];
+
+                        COLLADASampler sampler = new COLLADASampler();
+                        sampler.ID = samplerElement.Attribute("id").Value;
+
+                        animation.Sampler = sampler;
+                        List<XElement> inputElements = samplerElement.Descendants(ns + "input").ToList();
+                        foreach (XElement inputElement in inputElements)
+                        {
+                            COLLADAInput input = new COLLADAInput();
+                            input.Semantic = inputElement.Attribute("semantic").Value;
+                            input.Source = inputElement.Attribute("source").Value;
+
+                            sampler.Inputs.Add(input);
+                        }
+                    }
+                    else
+                        continue;
+
+                    foreach (COLLADAInput input in animation.Sampler.Inputs)
+                    {
+                        COLLADASource source = null;
+                        foreach (COLLADASource animSource in animation.Sources)
+                            if (animSource.ID == input.Source.Remove(0, 1))
+                            {
+                                source = animSource;
                                 break;
+                            }
+
+                        if (source == null)
+                            continue;
+
+                        if (input.Semantic == "INTERPOLATION")
+                        {
+                            string[] values = source.NameArray.Value.Trim().Split(' ');
+                            foreach (string value in values)
+                            {
+                                switch (value)
+                                {
+                                    case "BEZIER":
+                                        animation.Interpolations.Add(AnimationInterpolation.BEZIER);
+                                        break;
+                                    default:
+                                        animation.Interpolations.Add(AnimationInterpolation.LINEAR);
+                                        break;
+                                }
+                            }
+                        }
+                        else if (input.Semantic == "INPUT")
+                        {
+                            string[] values = source.FloatArray.Value.Trim().Split(' ');
+                            for (int i = 0; i < values.Length; i++)
+                            {
+                                float value = 0;
+                                float.TryParse(values[i], NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+                                animation.Times.Add(value);
+                            }
+                        }
+                        else if (input.Semantic == "OUTPUT")
+                        {
+                            string[] values = source.FloatArray.Value.Trim().Split(' ');
+                            for (int i = 0; i < values.Length; i++)
+                            {
+                                float value = 0;
+                                float.TryParse(values[i], NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+                                animation.Values.Add(value);
+                            }
+                        }
+                        else if (input.Semantic == "IN_TANGENT")
+                        {
+                            string[] values = source.FloatArray.Value.Trim().Split(' ');
+                            for (int i = 0; i < values.Length; i += 2)
+                            {
+                                float x, y = 0;
+                                float.TryParse(values[i], NumberStyles.Float, CultureInfo.InvariantCulture, out x);
+                                float.TryParse(values[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out y);
+                                animation.InTangents.Add(new Vector2(x, y));
+                            }
+                        }
+                        else if (input.Semantic == "OUT_TANGENT")
+                        {
+                            string[] values = source.FloatArray.Value.Trim().Split(' ');
+                            for (int i = 0; i < values.Length; i += 2)
+                            {
+                                float x, y = 0;
+                                float.TryParse(values[i], NumberStyles.Float, CultureInfo.InvariantCulture, out x);
+                                float.TryParse(values[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out y);
+                                animation.OutTangents.Add(new Vector2(x, y));
                             }
                         }
                     }
 
-                    if (name != null && path != null)
-                    {
-                        Log.WriteLine("Trying to parse texture \"" + name + "\".");
-                        HWImage.Parse(name, path);
-                    }
-                }
+                    List<XElement> channelElements = animationElement.Descendants(ns + "channel").ToList();
 
-                //Check for problems with texture names in diffuse slots (Crashes HODOR without any information)
-                if (reader.Name == "diffuse")
-                {
-                    reader.ReadToDescendant("texture");
-                    string name = "";
-
-                    if (reader.Name == "texture")
+                    if (channelElements.Count > 0)
                     {
-                        name = reader.GetAttribute("texture").Replace("-image", "");
-                    }
+                        XElement channelElement = channelElements[0];
 
-                    if (name.Length > 0)
-                    {
-                        if (!name.StartsWith("IMG[")) //Not a very good check (I guess)...
-                            new Problem(ProblemTypes.ERROR, "Diffuse texture \"" + name + "\" has the wrong name format. This will most likely crash HODOR.");
+                        COLLADAChannel channel = new COLLADAChannel();
+                        channel.Target = channelElement.Attribute("target").Value;
+
+                        animation.Channel = channel;
+
+                        int lastSlash = channel.Target.LastIndexOf('/');
+                        int lastDot = channel.Target.LastIndexOf('.');
+                        string jointTarget = channel.Target.Substring(0, lastSlash);
+                        string channelTarget = channel.Target.Substring(lastSlash + 1, lastDot - lastSlash - 1);
+                        string axisTarget = channel.Target.Substring(lastDot + 1);
+
+                        COLLADAJointAnimation jointAnimation = null;
+
+                        //Add to joint animation
+                        foreach (COLLADAJointAnimation jointAnim in parsedJointAnimations)
+                            if (jointAnim.Name == jointTarget)
+                            {
+                                jointAnimation = jointAnim;
+                                break;
+                            }
+
+                        if (jointAnimation == null)
+                        {
+                            jointAnimation = new COLLADAJointAnimation();
+                            jointAnimation.Name = jointTarget;
+                        }
+
+                        switch (channelTarget)
+                        {
+                            case "translate":
+                                switch (axisTarget)
+                                {
+                                    case "X":
+                                        jointAnimation.Translation[0] = animation;
+                                        break;
+                                    case "Y":
+                                        jointAnimation.Translation[1] = animation;
+                                        break;
+                                    case "Z":
+                                        jointAnimation.Translation[2] = animation;
+                                        break;
+                                }
+                                break;
+                            case "rotateX":
+                                jointAnimation.Rotation[0] = animation;
+                                break;
+                            case "rotateY":
+                                jointAnimation.Rotation[1] = animation;
+                                break;
+                            case "rotateZ":
+                                jointAnimation.Rotation[2] = animation;
+                                break;
+
+                                //TODO: Scaling
+                        }
                     }
                 }
             }
+            #endregion
 
-            reader.Dispose();
+            #region Framerate
+            List<XElement> frameRates = doc.Descendants(ns + "frame_rate").ToList();
+            XElement frameRate = null;
+            if (frameRates.Count > 0)
+                frameRate = frameRates[0];
+
+            if (frameRate != null)
+                float.TryParse(frameRate.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out Framerate);
+            #endregion
+        }
+
+        private class COLLADAJointAnimation
+        {
+            public string Name;
+
+            public COLLADAAnimation[] Translation = new COLLADAAnimation[3];
+            public COLLADAAnimation[] Rotation = new COLLADAAnimation[3];
+            public COLLADAAnimation[] Scaling = new COLLADAAnimation[3];
+
+            public COLLADAJointAnimation()
+            {
+                parsedJointAnimations.Add(this);
+            }
+        }
+        private class COLLADAAnimation
+        {
+            public List<COLLADASource> Sources = new List<COLLADASource>();
+            public COLLADASampler Sampler;
+            public COLLADAChannel Channel;
+
+            public List<float> Times = new List<float>();
+            public List<float> Values = new List<float>();
+            public List<AnimationInterpolation> Interpolations = new List<AnimationInterpolation>();
+            public List<Vector2> InTangents = new List<Vector2>();
+            public List<Vector2> OutTangents = new List<Vector2>();
+
+            public COLLADAAnimation()
+            {
+                parsedAnimations.Add(this);
+            }
+        }
+        private class COLLADASource
+        {
+            public string ID;
+            public COLLADAFloatArray FloatArray;
+            public COLLADANameArray NameArray;
+        }
+        private class COLLADAChannel
+        {
+            public string Target;
+        }
+        private class COLLADAFloatArray
+        {
+            public string ID;
+            public int Count;
+            public string Value;
+        }
+        private class COLLADANameArray
+        {
+            public string ID;
+            public int Count;
+            public string Value;
+        }
+        private class COLLADASampler
+        {
+            public string ID;
+            public List<COLLADAInput> Inputs = new List<COLLADAInput>();
+        }
+        private class COLLADAInput
+        {
+            public string Semantic;
+            public string Source;
         }
 
         private static string FixCollada(string path)
         {
-            XDocument doc = XDocument.Load(path);
-            XNamespace ns = doc.Root.GetDefaultNamespace();
+            doc = XDocument.Load(path);
+            ns = doc.Root.GetDefaultNamespace();
 
             foreach (XElement element in doc.Descendants())
             {

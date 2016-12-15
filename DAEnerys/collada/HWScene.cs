@@ -160,6 +160,7 @@ namespace DAEnerys
             HWNavLight.NavLights.Clear();
             HWEngineBurn.EngineBurns.Clear();
             HWEngineFlame.EngineFlames.Clear();
+            HWAnimation.Animations.Clear();
 
             HWJoint.Root = new HWJoint("Root", null, Matrix4.Identity);
             HWJoint.Root.TreeNode.Expand();

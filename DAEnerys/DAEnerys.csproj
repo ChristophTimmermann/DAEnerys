@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="collada\Exporter.cs" />
+    <Compile Include="collada\HWAnimation.cs" />
     <Compile Include="collada\HWEngineBurn.cs" />
     <Compile Include="collada\HWElement.cs" />
     <Compile Include="collada\HWEngineShape.cs" />
@@ -312,7 +313,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

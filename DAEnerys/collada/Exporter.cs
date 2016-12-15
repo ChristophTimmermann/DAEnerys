@@ -490,6 +490,256 @@ namespace DAEnerys
             XElement libAnimations = new XElement(ns + "library_animations");
             libAnimations.SetValue("");
             collada.Add(libAnimations);
+
+            foreach (HWJoint joint in HWJoint.Joints)
+            {
+                List<float>[] posTimes = new List<float>[] { new List<float>(), new List<float>(), new List<float>() };
+                List<float>[] posValues = new List<float>[] { new List<float>(), new List<float>(), new List<float>() };
+                List<AnimationInterpolation>[] posInterpolations = new List<AnimationInterpolation>[] { new List<AnimationInterpolation>(), new List<AnimationInterpolation>(), new List<AnimationInterpolation>() };
+                List<Vector2>[] posInTangents = new List<Vector2>[] { new List<Vector2>(), new List<Vector2>(), new List<Vector2>() };
+                List<Vector2>[] posOutTangents = new List<Vector2>[] { new List<Vector2>(), new List<Vector2>(), new List<Vector2>() };
+
+                List<float>[] rotTimes = new List<float>[] { new List<float>(), new List<float>(), new List<float>() };
+                List<float>[] rotValues = new List<float>[] { new List<float>(), new List<float>(), new List<float>() };
+                List<AnimationInterpolation>[] rotInterpolations = new List<AnimationInterpolation>[] { new List<AnimationInterpolation>(), new List<AnimationInterpolation>(), new List<AnimationInterpolation>() };
+                List<Vector2>[] rotInTangents = new List<Vector2>[] { new List<Vector2>(), new List<Vector2>(), new List<Vector2>() };
+                List<Vector2>[] rotOutTangents = new List<Vector2>[] { new List<Vector2>(), new List<Vector2>(), new List<Vector2>() };
+
+                
+                for (int i = 0; i < 3; i++)
+                {
+                    posTimes[i].AddRange(joint.PositionChannel.Axes[i].Times);
+                    posValues[i].AddRange(joint.PositionChannel.Axes[i].Values);
+                    posInterpolations[i].AddRange(joint.PositionChannel.Axes[i].KeyInterpolationTypes);
+                    posInTangents[i].AddRange(joint.PositionChannel.Axes[i].InTangents);
+                    posOutTangents[i].AddRange(joint.PositionChannel.Axes[i].OutTangents);
+                }
+
+                for (int i = 0; i < 3; i++)
+                {
+                    rotTimes[i].AddRange(joint.RotationChannel.Axes[i].Times);
+                    rotValues[i].AddRange(joint.RotationChannel.Axes[i].Values);
+                    rotInterpolations[i].AddRange(joint.RotationChannel.Axes[i].KeyInterpolationTypes);
+                    rotInTangents[i].AddRange(joint.RotationChannel.Axes[i].InTangents);
+                    rotOutTangents[i].AddRange(joint.RotationChannel.Axes[i].OutTangents);
+                }
+
+                #region Translate
+                for (int i = 0; i < 3; i++)
+                {
+                    if (posValues[i] == null)
+                        continue;
+
+                    if (posValues[i].Count == 0)
+                        continue;
+
+                    XElement animElement = new XElement(ns + "animation");
+                    libAnimations.Add(animElement);
+
+                    string axisName = "X";
+                    switch (i)
+                    {
+                        case 0:
+                            axisName = "X";
+                            break;
+                        case 1:
+                            axisName = "Y";
+                            break;
+                        case 2:
+                            axisName = "Z";
+                            break;
+                    }
+
+                    string axisId = joint.FormattedName + "-translate." + axisName;
+
+                    string sourceId = axisId + "-input";
+                    string value = "";
+                    foreach (float time in posTimes[i])
+                        value += time.ToString(CultureInfo.InvariantCulture) + " ";
+                    value = value.Trim();
+                    AddAnimationSource(animElement, sourceId, posTimes[i].Count, value, new string[] { "float" });
+
+                    sourceId = axisId + "-output";
+                    value = "";
+                    foreach (float output in posValues[i])
+                        value += output.ToString(CultureInfo.InvariantCulture) + " ";
+                    value = value.Trim();
+                    AddAnimationSource(animElement, sourceId, posValues[i].Count, value, new string[] { "float" });
+
+                    sourceId = axisId + "-interpolation";
+                    value = "";
+                    foreach (AnimationInterpolation interpolation in posInterpolations[i])
+                        value += interpolation.ToString() + " ";
+                    value = value.Trim();
+                    AddAnimationSource(animElement, sourceId, posInterpolations[i].Count, value, new string[] { "name" }, "Name_array");
+
+                    if(posInTangents[i].Count > 0)
+                    {
+                        sourceId = axisId + "-intan";
+                        value = "";
+                        foreach (Vector2 tangent in posInTangents[i])
+                            value += tangent.X.ToString(CultureInfo.InvariantCulture) + " " + tangent.Y.ToString(CultureInfo.InvariantCulture) + " ";
+                        value = value.Trim();
+                        AddAnimationSource(animElement, sourceId, posInTangents[i].Count, value, new string[] { "float", "float" });
+                    }
+
+                    if (posOutTangents[i].Count > 0)
+                    {
+                        sourceId = axisId + "-outtan";
+                        value = "";
+                        foreach (Vector2 tangent in posOutTangents[i])
+                            value += tangent.X.ToString(CultureInfo.InvariantCulture) + " " + tangent.Y.ToString(CultureInfo.InvariantCulture) + " ";
+                        value = value.Trim();
+                        AddAnimationSource(animElement, sourceId, posOutTangents[i].Count, value, new string[] { "float", "float" });
+                    }
+
+                    XElement samplerElement = new XElement(ns + "sampler");
+                    samplerElement.SetAttributeValue("id", axisId);
+                    animElement.Add(samplerElement);
+
+                    XElement inputElement = new XElement(ns + "input");
+                    inputElement.SetAttributeValue("semantic", "INPUT");
+                    inputElement.SetAttributeValue("source", "#" + axisId + "-input");
+                    samplerElement.Add(inputElement);
+                    inputElement = new XElement(ns + "input");
+                    inputElement.SetAttributeValue("semantic", "OUTPUT");
+                    inputElement.SetAttributeValue("source", "#" + axisId + "-output");
+                    samplerElement.Add(inputElement);
+                    inputElement = new XElement(ns + "input");
+                    inputElement.SetAttributeValue("semantic", "INTERPOLATION");
+                    inputElement.SetAttributeValue("source", "#" + axisId + "-interpolation");
+                    samplerElement.Add(inputElement);
+
+                    if (posInTangents[i].Count > 0)
+                    {
+                        inputElement = new XElement(ns + "input");
+                        inputElement.SetAttributeValue("semantic", "IN_TANGENT");
+                        inputElement.SetAttributeValue("source", "#" + axisId + "-intan");
+                        samplerElement.Add(inputElement);
+                    }
+                    if (posOutTangents[i].Count > 0)
+                    {
+                        inputElement = new XElement(ns + "input");
+                        inputElement.SetAttributeValue("semantic", "OUT_TANGENT");
+                        inputElement.SetAttributeValue("source", "#" + axisId + "-outtan");
+                        samplerElement.Add(inputElement);
+                    }
+
+                    XElement channelElement = new XElement(ns + "channel");
+                    channelElement.SetAttributeValue("source", "#" + axisId);
+                    channelElement.SetAttributeValue("target", joint.FormattedName + "/" + "translate." + axisName);
+                    animElement.Add(channelElement);
+                }
+                #endregion
+
+                #region Rotation
+                for (int i = 0; i < 3; i++)
+                {
+                    if (rotValues[i] == null)
+                        continue;
+
+                    if (rotValues[i].Count == 0)
+                        continue;
+
+                    XElement animElement = new XElement(ns + "animation");
+                    libAnimations.Add(animElement);
+
+                    string axisName = "X";
+                    switch (i)
+                    {
+                        case 0:
+                            axisName = "X";
+                            break;
+                        case 1:
+                            axisName = "Y";
+                            break;
+                        case 2:
+                            axisName = "Z";
+                            break;
+                    }
+
+                    string axisId = joint.FormattedName + "-rotate" + axisName + ".ANGLE";
+
+                    string sourceId = axisId + "-input";
+                    string value = "";
+                    foreach (float time in rotTimes[i])
+                        value += time.ToString(CultureInfo.InvariantCulture) + " ";
+                    value = value.Trim();
+                    AddAnimationSource(animElement, sourceId, rotTimes[i].Count, value, new string[] { "float" });
+
+                    sourceId = axisId + "-output";
+                    value = "";
+                    foreach (float output in rotValues[i])
+                        value += output.ToString(CultureInfo.InvariantCulture) + " ";
+                    value = value.Trim();
+                    AddAnimationSource(animElement, sourceId, rotValues[i].Count, value, new string[] { "float" });
+
+                    sourceId = axisId + "-interpolation";
+                    value = "";
+                    foreach (AnimationInterpolation interpolation in rotInterpolations[i])
+                        value += interpolation.ToString() + " ";
+                    value = value.Trim();
+                    AddAnimationSource(animElement, sourceId, rotInterpolations[i].Count, value, new string[] { "name" }, "Name_array");
+
+                    if (posInTangents[i].Count > 0)
+                    {
+                        sourceId = axisId + "-intan";
+                        value = "";
+                        foreach (Vector2 tangent in rotInTangents[i])
+                            value += tangent.X.ToString(CultureInfo.InvariantCulture) + " " + tangent.Y.ToString(CultureInfo.InvariantCulture) + " ";
+                        value = value.Trim();
+                        AddAnimationSource(animElement, sourceId, rotInTangents[i].Count, value, new string[] { "float", "float" });
+                    }
+
+                    if (posOutTangents[i].Count > 0)
+                    {
+                        sourceId = axisId + "-outtan";
+                        value = "";
+                        foreach (Vector2 tangent in rotOutTangents[i])
+                            value += tangent.X.ToString(CultureInfo.InvariantCulture) + " " + tangent.Y.ToString(CultureInfo.InvariantCulture) + " ";
+                        value = value.Trim();
+                        AddAnimationSource(animElement, sourceId, rotOutTangents[i].Count, value, new string[] { "float", "float" });
+                    }
+
+                    XElement samplerElement = new XElement(ns + "sampler");
+                    samplerElement.SetAttributeValue("id", axisId);
+                    animElement.Add(samplerElement);
+
+                    XElement inputElement = new XElement(ns + "input");
+                    inputElement.SetAttributeValue("semantic", "INPUT");
+                    inputElement.SetAttributeValue("source", "#" + axisId + "-input");
+                    samplerElement.Add(inputElement);
+                    inputElement = new XElement(ns + "input");
+                    inputElement.SetAttributeValue("semantic", "OUTPUT");
+                    inputElement.SetAttributeValue("source", "#" + axisId + "-output");
+                    samplerElement.Add(inputElement);
+                    inputElement = new XElement(ns + "input");
+                    inputElement.SetAttributeValue("semantic", "INTERPOLATION");
+                    inputElement.SetAttributeValue("source", "#" + axisId + "-interpolation");
+                    samplerElement.Add(inputElement);
+
+                    if (rotInTangents[i].Count > 0)
+                    {
+                        inputElement = new XElement(ns + "input");
+                        inputElement.SetAttributeValue("semantic", "IN_TANGENT");
+                        inputElement.SetAttributeValue("source", "#" + axisId + "-intan");
+                        samplerElement.Add(inputElement);
+                    }
+                    if (rotInTangents[i].Count > 0)
+                    {
+                        inputElement = new XElement(ns + "input");
+                        inputElement.SetAttributeValue("semantic", "OUT_TANGENT");
+                        inputElement.SetAttributeValue("source", "#" + axisId + "-outtan");
+                        samplerElement.Add(inputElement);
+                    }
+
+                    XElement channelElement = new XElement(ns + "channel");
+                    channelElement.SetAttributeValue("source", "#" + axisId);
+                    channelElement.SetAttributeValue("target", joint.FormattedName + "/" + "rotate" + axisName + ".ANGLE");
+                    animElement.Add(channelElement);
+                }
+                #endregion
+            }
             #endregion
 
             #region visual scenes
@@ -598,14 +848,28 @@ namespace DAEnerys
             }
 
             //Dockpaths
-            XElement holdDockElement = AddNode(lodRootElements[0], "HOLD_DOCK", Matrix4.Identity);
-            
-            foreach(HWDockpath dockpath in HWDockpath.Dockpaths)
+            if (HWDockpath.Dockpaths.Count > 0)
             {
-                XElement dockpathElement = AddNode(holdDockElement, dockpath.FormattedName, Matrix4.Identity);
-                foreach(HWDockSegment segment in dockpath.Segments)
+                XElement holdDockElement = AddNode(lodRootElements[0], "HOLD_DOCK", Matrix4.Identity);
+
+                foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
                 {
-                    XElement segmentElement = AddNode(dockpathElement, segment.FormattedName, segment.RelativeWorldMatrix);
+                    XElement dockpathElement = AddNode(holdDockElement, dockpath.FormattedName, Matrix4.Identity);
+                    foreach (HWDockSegment segment in dockpath.Segments)
+                    {
+                        XElement segmentElement = AddNode(dockpathElement, segment.FormattedName, segment.RelativeWorldMatrix);
+                    }
+                }
+            }
+
+            //Animations
+            if (HWAnimation.Animations.Count > 0)
+            {
+                XElement holdAnimElement = AddNode(lodRootElements[0], "HOLD_ANIM", Matrix4.Identity);
+
+                foreach (HWAnimation animation in HWAnimation.Animations)
+                {
+                    XElement animationElement = AddNode(holdAnimElement, animation.FormattedName, Matrix4.Identity);
                 }
             }
 
@@ -618,7 +882,6 @@ namespace DAEnerys
                     XElement flameElement = AddNode(engineBurnElement, flame.FormattedName, flame.RelativeWorldMatrix);
                 }
             }
-
             #region ROOT_COL
             if (HWCollisionMesh.CollisionMeshes.Count > 0)
             {
@@ -632,6 +895,17 @@ namespace DAEnerys
             }
             #endregion
 
+            //Framerate
+            XElement extra = new XElement(ns + "extra");
+            visualScene.Add(extra);
+
+            XElement tech = new XElement(ns + "technique");
+            tech.SetAttributeValue("profile", "MAX3D");
+            extra.Add(tech);
+
+            XElement framerate = new XElement(ns + "frame_rate");
+            framerate.Value = Importer.Framerate.ToString(CultureInfo.InvariantCulture);
+            tech.Add(framerate);
             #endregion
 
             #region scene
@@ -738,6 +1012,37 @@ namespace DAEnerys
 
             foreach (HWJoint childJoint in joint.Children)
                 AddJointRecursive(newElement, childJoint);
+        }
+
+        private static XElement AddAnimationSource(XElement parentAnimation, string id, int count, string value, string[] types, string arrayName = "float_array")
+        {
+            XElement sourceElement = new XElement(ns + "source");
+            sourceElement.SetAttributeValue("id", id);
+            parentAnimation.Add(sourceElement);
+
+            XElement arrayElement = new XElement(ns + arrayName);
+            arrayElement.SetAttributeValue("id", id + "-array");
+            arrayElement.SetAttributeValue("count", count * types.Length);
+            arrayElement.SetValue(value);
+            sourceElement.Add(arrayElement);
+
+            XElement techniqueElement = new XElement(ns + "technique_common");
+            sourceElement.Add(techniqueElement);
+
+            XElement accessorElement = new XElement(ns + "accessor");
+            accessorElement.SetAttributeValue("source", "#" + id + "-array");
+            accessorElement.SetAttributeValue("count", count);
+            accessorElement.SetAttributeValue("stride", types.Length);
+            techniqueElement.Add(accessorElement);
+
+            foreach (string type in types)
+            {
+                XElement paramElement = new XElement(ns + "param");
+                paramElement.SetAttributeValue("type", type);
+                accessorElement.Add(paramElement);
+            }
+
+            return sourceElement;
         }
 
         private class AddedMesh

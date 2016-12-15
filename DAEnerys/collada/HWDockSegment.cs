@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace DAEnerys
 {
@@ -16,8 +17,8 @@ namespace DAEnerys
         {
             get
             {
-                string tol = "_Tol[" + Tolerance + "]";
-                string speed = "_Spd[" + Speed + "]";
+                string tol = "_Tol[" + Tolerance.ToString(CultureInfo.InvariantCulture) + "]";
+                string speed = "_Spd[" + Speed.ToString(CultureInfo.InvariantCulture) + "]";
 
                 string flags = "";
                 if (Flags.Count > 0)
