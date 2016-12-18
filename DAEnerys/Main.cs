@@ -47,7 +47,7 @@ namespace DAEnerys
         private bool animationPlaying;
         public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
 
-        const int MAX_MATERIALS_ON_MESH = 8;
+        const int MAX_MATERIALS_ON_MESH = 16;
 
         public Main()
         {
@@ -992,8 +992,10 @@ namespace DAEnerys
                 comboBox.Visible = false;
 
             buttonShipMeshLODRemove.Enabled = false;
-            buttonShipMeshLODImport.Enabled = false;
-            buttonShipMeshLODExport.Enabled = false;
+            buttonShipMeshLODImportOBJ.Enabled = false;
+            buttonShipMeshLODExportOBJ.Enabled = false;
+            buttonShipMeshLODExportDAE.Enabled = false;
+            buttonShipMeshLODImportDAE.Enabled = false;
 
             selectedShipMeshLOD = listShipMeshLODs.SelectedIndex;
 
@@ -1003,8 +1005,10 @@ namespace DAEnerys
             List<HWShipMeshLOD> lodMeshes = selectedShipMesh.LODMeshes[selectedShipMeshLOD];
 
             buttonShipMeshLODRemove.Enabled = true;
-            buttonShipMeshLODImport.Enabled = true;
-            buttonShipMeshLODExport.Enabled = true;
+            buttonShipMeshLODImportOBJ.Enabled = true;
+            buttonShipMeshLODExportOBJ.Enabled = true;
+            buttonShipMeshLODExportDAE.Enabled = true;
+            buttonShipMeshLODImportDAE.Enabled = true;
 
             int materialCount = 0;
             foreach (HWShipMeshLOD lodMesh in lodMeshes)
@@ -1043,7 +1047,7 @@ namespace DAEnerys
             else
                 ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem = lodMeshes[materialIndex].Material.Name;
         }
-        private void buttonShipMeshLODExport_Click(object sender, EventArgs e)
+        private void buttonShipMeshLODExportDAE_Click(object sender, EventArgs e)
         {
             HWShipMesh selectedShipMesh = null;
             if (listShipMeshes.SelectedItem != null)
@@ -1059,6 +1063,97 @@ namespace DAEnerys
             if (meshes.Count == 0)
                 return;
 
+            saveColladaMeshDialog.FileName = OpenedFile + "_" + meshes[0].Name + "_LOD" + listShipMeshLODs.SelectedIndex;
+            DialogResult result = saveColladaMeshDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Exporter.ExportMeshes(saveColladaMeshDialog.FileName, meshes);
+            }
+        }
+        private void buttonShipMeshLODImportDAE_Click(object sender, EventArgs e)
+        {
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+
+            if (listShipMeshLODs.SelectedIndex < 0)
+                return;
+
+            List<HWShipMeshLOD> meshes = selectedShipMesh.LODMeshes[listShipMeshLODs.SelectedIndex];
+
+            if (meshes.Count == 0)
+                return;
+
+            DialogResult result = openColladaMeshDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Mesh[] newMeshes = Importer.ImportMeshesFromFile(openColladaMeshDialog.FileName);
+
+                if (newMeshes.Length > meshes.Count)
+                {
+                    for (int i = newMeshes.Length - (newMeshes.Length - meshes.Count); i < newMeshes.Length; i++)
+                    {
+                        HWMaterial material = HWMaterial.DefaultMaterial;
+                        if (meshes.Count - 1 >= i)
+                            material = meshes[i].Material;
+
+                        HWShipMeshLOD newLOD = new HWShipMeshLOD(Importer.ParseAssimpMesh(newMeshes[i]), Matrix4.Identity, material, selectedShipMesh, listShipMeshLODs.SelectedIndex);
+                    }
+                }
+
+                for (int i = 0; i < meshes.Count; i++)
+                {
+                    if (newMeshes.Length - 1 >= i)
+                    {
+                        HWMaterial material = meshes[i].Material;
+                        meshes[i].SetData(Importer.ParseAssimpMesh(newMeshes[i]));
+                        meshes[i].CalculateBoundingBox();
+                        meshes[i].Material = material;
+                    }
+                    else //Remove old mesh
+                    {
+                        meshes[i].Destroy();
+                    }
+                }
+
+                foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LODMeshes[selectedShipMeshLOD])
+                    lodMesh.Visible = true;
+
+                listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+                HWScene.CalibrateSettings();
+            }
+        }
+        private void buttonShipMeshLODExportOBJ_Click(object sender, EventArgs e)
+        {
+            HWShipMesh selectedShipMesh = null;
+            if (listShipMeshes.SelectedItem != null)
+                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+
+            if (listShipMeshLODs.SelectedIndex < 0)
+                return;
+
+            List<HWMesh> meshes = new List<HWMesh>();
+            foreach (HWShipMeshLOD lodMesh in selectedShipMesh.LODMeshes[listShipMeshLODs.SelectedIndex])
+                meshes.Add(lodMesh);
+
+            if (meshes.Count == 0)
+                return;
+
+            bool hasUV2 = false;
+            foreach (HWMesh lodMesh in meshes)
+                if (lodMesh.UVCount > 1)
+                {
+                    hasUV2 = true;
+                    break;
+                }
+
+            if (hasUV2)
+            {
+                DialogResult yesNoResult = MessageBox.Show("This mesh has a second UV-channel, it will get lost when exporting to OBJ. Use the DAE format instead.\n\nDo you want to continue?", "OBJ-format limitations", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                if (yesNoResult == DialogResult.No)
+                    return;
+            }
+
             saveObjDialog.FileName = OpenedFile + "_" + meshes[0].Name + "_LOD" + listShipMeshLODs.SelectedIndex;
             DialogResult result = saveObjDialog.ShowDialog();
             if (result == DialogResult.OK)
@@ -1066,7 +1161,7 @@ namespace DAEnerys
                 ObjExporter.ExportToFile(saveObjDialog.FileName, meshes);
             }
         }
-        private void buttonShipMeshLODImport_Click(object sender, EventArgs e)
+        private void buttonShipMeshLODImportOBJ_Click(object sender, EventArgs e)
         {
             HWShipMesh selectedShipMesh = null;
             if (listShipMeshes.SelectedItem != null)
@@ -1445,6 +1540,11 @@ namespace DAEnerys
             AnimationPlaying = false;
             selectedAnimation = null;
 
+            numericAnimationStartTime.Value = 0;
+            numericAnimationEndTime.Value = 0;
+            numericAnimationLoopStartTime.Value = 0;
+            numericAnimationLoopEndTime.Value = 0;
+
             if (listAnimations.SelectedItem == null)
                 return;
 
@@ -1456,6 +1556,11 @@ namespace DAEnerys
 
             boxAnimationName.Text = selectedAnimation.Name;
             buttonAnimationPlay.Enabled = true;
+
+            numericAnimationStartTime.Value = (decimal)selectedAnimation.StartTime;
+            numericAnimationEndTime.Value = (decimal)selectedAnimation.EndTime;
+            numericAnimationLoopStartTime.Value = (decimal)selectedAnimation.LoopStartTime;
+            numericAnimationLoopEndTime.Value = (decimal)selectedAnimation.LoopEndTime;
 
             foreach (HWJoint joint in selectedAnimation.AnimatedJoints)
             {

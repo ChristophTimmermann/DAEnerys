@@ -125,6 +125,23 @@ namespace DAEnerys
             logStream.Detach();
         }
 
+        public static Mesh[] ImportMeshesFromFile(string path)
+        {
+            AssimpContext importer = new AssimpContext();
+            NormalSmoothingAngleConfig config = new NormalSmoothingAngleConfig(80.0f);
+            importer.SetConfig(config);
+            LogStream logStream = new LogStream(delegate (string msg, string userData)
+            {
+                Console.WriteLine(msg);
+            });
+            logStream.Attach();
+
+            Scene dae = importer.ImportFile(path, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            importer.Dispose();
+
+            return dae.Meshes.ToArray();
+        }
+
         public static Matrix4 GetAssimpNodeTransform(Node assimpNode)
         {
             Matrix4 transform = new Matrix4(assimpNode.Transform.A1, assimpNode.Transform.B1, assimpNode.Transform.C1, assimpNode.Transform.D1, assimpNode.Transform.A2, assimpNode.Transform.B2, assimpNode.Transform.C2, assimpNode.Transform.D2, assimpNode.Transform.A3, assimpNode.Transform.B3, assimpNode.Transform.C3, assimpNode.Transform.D3, assimpNode.Transform.A4, assimpNode.Transform.B4, assimpNode.Transform.C4, assimpNode.Transform.D4);
