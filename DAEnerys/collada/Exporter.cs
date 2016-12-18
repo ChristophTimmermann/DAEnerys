@@ -798,7 +798,7 @@ namespace DAEnerys
             //Ship meshes
             foreach(HWShipMesh shipMesh in HWShipMesh.ShipMeshes)
             {
-                if (shipMesh.LODMeshes[0].Count == 0)
+                if (shipMesh.Meshes.Count == 0)
                     continue;
 
                 AddNode(jointElements[shipMesh.Parent], shipMesh.LODMeshes[0][0].FormattedName, shipMesh.LODMeshes[0][0].Transform, shipMesh.LODMeshes[0].ToArray());
@@ -815,7 +815,7 @@ namespace DAEnerys
             //Engine glows
             foreach (HWEngineGlow engineGlow in HWEngineGlow.EngineGlows)
             {
-                if (engineGlow.LODMeshes[0].Count == 0)
+                if (engineGlow.Meshes.Count == 0)
                     continue;
 
                 AddNode(jointElements[engineGlow.Parent], engineGlow.LODMeshes[0][0].FormattedName, engineGlow.LODMeshes[0][0].Transform, engineGlow.LODMeshes[0].ToArray());
@@ -965,6 +965,7 @@ namespace DAEnerys
             //TODO: Export scale?
 
             Dictionary<string, XElement> addedTechniques = new Dictionary<string, XElement>();
+            List<string> addedMeshes = new List<string>();
             foreach (HWMesh mesh in meshes)
             {
                 XElement geometryInstance = null;
@@ -976,11 +977,12 @@ namespace DAEnerys
                     matName = mesh.Material.Name;
                 }
 
-                if (!addedTechniques.Keys.Contains(meshName))
+                if (!addedTechniques.Keys.Contains(meshName) && !addedMeshes.Contains(meshName))
                 {
                     geometryInstance = new XElement(ns + "instance_geometry");
                     geometryInstance.SetAttributeValue("url", "#" + meshName + "-lib");
                     nodeElement.Add(geometryInstance);
+                    addedMeshes.Add(meshName);
                 }
 
                 if (mesh.Material.Name.Length != 0)

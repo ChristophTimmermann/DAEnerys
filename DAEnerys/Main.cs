@@ -16,6 +16,7 @@ namespace DAEnerys
         public string OpenedFile = "";
 
         public bool Loaded = false;
+        HWCollisionMesh selectedCollisionMesh;
         HWDockpath selectedDockpath;
         HWNavLight selectedNavLight;
         HWEngineBurn selectedEngineBurn;
@@ -43,6 +44,7 @@ namespace DAEnerys
         private bool ignoreShipMeshDoScarCheck;
         private bool ignoreMaterialShaderChanged;
         private bool ignoreShipMeshLODMaterialChanged;
+        private bool ignoreCollisionMeshParentChanged;
 
         private bool animationPlaying;
         public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
@@ -90,7 +92,7 @@ namespace DAEnerys
                 ShipMeshLODMaterialComboBoxes[i] = new ComboBox();
                 ShipMeshLODMaterialComboBoxes[i].Parent = groupShipMeshLODMaterials;
                 ShipMeshLODMaterialComboBoxes[i].Location = new Point(38, 22 + i * 27);
-                ShipMeshLODMaterialComboBoxes[i].Size = new Size(192, 21);
+                ShipMeshLODMaterialComboBoxes[i].Size = new Size(180, 21);
                 ShipMeshLODMaterialComboBoxes[i].DropDownStyle = ComboBoxStyle.DropDownList;
                 ShipMeshLODMaterialComboBoxes[i].Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
                 ShipMeshLODMaterialComboBoxes[i].SelectedIndexChanged += new EventHandler(OnShipMeshLODMaterialChanged);
@@ -209,6 +211,7 @@ namespace DAEnerys
 
             listCollisionMeshes.Items.Clear();
             comboCollisionMeshParent.Items.Clear();
+            listCollisionMeshes_SelectedIndexChanged(this, EventArgs.Empty);
 
             listEngineShapes.Items.Clear();
             comboEngineShapeParent.Items.Clear();
@@ -1178,7 +1181,7 @@ namespace DAEnerys
             DialogResult result = openObjDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                Mesh[] newMeshes = ObjImporter.ImportFromFile(openObjDialog.FileName);
+                Mesh[] newMeshes = ObjImporter.ImportMeshesFromFile(openObjDialog.FileName);
 
                 if (newMeshes.Length > meshes.Count)
                 {
@@ -1420,11 +1423,27 @@ namespace DAEnerys
         //--------------------------------- COLLISION MESHES ---------------------------------//
         private void listCollisionMeshes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            HWCollisionMesh selectedCollisionMesh = null;
+            ignoreCollisionMeshParentChanged = true;
+            comboCollisionMeshParent.SelectedItem = null;
+            ignoreCollisionMeshParentChanged = false;
+
+            comboCollisionMeshParent.Enabled = false;
+            buttonCollisionMeshRemove.Enabled = false;
+
+            buttonCollisionMeshExportDAE.Enabled = false;
+            buttonCollisionMeshImportDAE.Enabled = false;
+            buttonCollisionMeshExportOBJ.Enabled = false;
+            buttonCollisionMeshImportOBJ.Enabled = false;
+
+            selectedCollisionMesh = null;
+
+            if (listCollisionMeshes.SelectedItem == null)
+                return;
+
             //Has to be done with a loop, because of multiple collision meshes with the same name
             foreach (HWCollisionMesh collisionMesh in HWCollisionMesh.CollisionMeshes)
             {
-                if (collisionMesh.CollisionMeshListItemIndex == listCollisionMeshes.SelectedIndex)
+                if (collisionMesh.ItemIndex == listCollisionMeshes.SelectedIndex)
                 {
                     selectedCollisionMesh = collisionMesh;
                     break;
@@ -1432,43 +1451,158 @@ namespace DAEnerys
             }
 
             if (selectedCollisionMesh == null)
-            {
                 return;
-            }
 
-            //Select parent joint in combo box
-            object item = JointComboItems[selectedCollisionMesh.Parent];
-            comboCollisionMeshParent.SelectedItem = item; //Select parent joint in combo box
+            ignoreCollisionMeshParentChanged = true;
+            comboCollisionMeshParent.SelectedItem = JointComboItems[selectedCollisionMesh.Parent];
+            ignoreCollisionMeshParentChanged = false;
+
+            comboCollisionMeshParent.Enabled = true;
+            buttonCollisionMeshRemove.Enabled = true;
+
+            buttonCollisionMeshExportDAE.Enabled = true;
+            buttonCollisionMeshImportDAE.Enabled = true;
+            buttonCollisionMeshExportOBJ.Enabled = true;
+            buttonCollisionMeshImportOBJ.Enabled = true;
+
         }
         public void AddCollisionMesh(HWCollisionMesh mesh)
         {
-            object item = mesh.Name;
-            listCollisionMeshes.Items.Add(item);
-            mesh.CollisionMeshListItemIndex = listCollisionMeshes.Items.Count - 1;
+            listCollisionMeshes.Items.Add(mesh.Parent.Name);
+            mesh.ItemIndex = listCollisionMeshes.Items.Count - 1;
         }
-        private void listCollisionMeshes_ItemCheck(object sender, ItemCheckEventArgs e)
+        public void RemoveCollisionMesh(HWCollisionMesh mesh)
         {
-            if (listCollisionMeshes.SelectedItem != null)
+            for (int i = mesh.ItemIndex + 1; i < listCollisionMeshes.Items.Count; i++)
             {
-                HWCollisionMesh selectedCollisionMesh = null;
-                //Has to be done with a loop, because of multiple collision meshes with the same name
-                foreach (HWCollisionMesh collisionMesh in HWCollisionMesh.CollisionMeshes)
+                foreach (HWCollisionMesh colMesh in HWCollisionMesh.CollisionMeshes)
                 {
-                    if (collisionMesh.CollisionMeshListItemIndex == listCollisionMeshes.SelectedIndex)
+                    if (colMesh.ItemIndex == i)
                     {
-                        selectedCollisionMesh = collisionMesh;
+                        colMesh.ItemIndex--;
                         break;
                     }
                 }
-
-                bool visible = false;
-                if (e.NewValue == CheckState.Checked)
-                    visible = true;
-
-                selectedCollisionMesh.Visible = visible;
-
-                Renderer.Invalidate();
             }
+
+            listCollisionMeshes.Items.Remove(mesh.Parent.Name);
+            mesh.ItemIndex = -1;
+
+            for (int i = 0; i < listCollisionMeshes.Items.Count; i++)
+            {
+                foreach (HWCollisionMesh colMesh in HWCollisionMesh.CollisionMeshes)
+                {
+                    if (colMesh.ItemIndex == i)
+                    {
+                        listCollisionMeshes.SetItemChecked(i, colMesh.Visible);
+                        break;
+                    }
+                }
+            }
+        }
+        private void listCollisionMeshes_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            bool visible = false;
+            if (e.NewValue == CheckState.Checked)
+                visible = true;
+
+            selectedCollisionMesh.Visible = visible;
+
+            Renderer.Invalidate();
+        }
+        private void buttonCollisionMeshRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            selectedCollisionMesh.Destroy();
+            listCollisionMeshes.ClearSelected();
+            listCollisionMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void buttonCollisionMeshAdd_Click(object sender, EventArgs e)
+        {
+            HWCollisionMesh newCollisionMesh = new HWCollisionMesh(new MeshData(), Matrix4.Identity, HWJoint.Root);
+
+            listCollisionMeshes.SelectedIndex = newCollisionMesh.ItemIndex;
+            listCollisionMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void buttonCollisionMeshExportDAE_Click(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            saveColladaMeshDialog.FileName = OpenedFile + "_COL_" + selectedCollisionMesh.Parent.Name;
+            DialogResult result = saveColladaMeshDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                List<HWMesh> meshes = new List<HWMesh>();
+                meshes.Add(selectedCollisionMesh);
+                Exporter.ExportMeshes(saveColladaMeshDialog.FileName, meshes);
+            }
+        }
+        private void buttonCollisionMeshImportDAE_Click(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            DialogResult result = openColladaMeshDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Mesh newMesh = Importer.ImportMeshFromFile(openColladaMeshDialog.FileName);
+
+                selectedCollisionMesh.SetData(Importer.ParseAssimpMesh(newMesh));
+                selectedCollisionMesh.Visible = true;
+
+                listCollisionMeshes.SetItemChecked(selectedCollisionMesh.ItemIndex, true);
+                listCollisionMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+            }
+        }
+        private void buttonCollisionMeshExportOBJ_Click(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            saveObjDialog.FileName = OpenedFile + "_COL_" + selectedCollisionMesh.Parent.Name;
+            DialogResult result = saveObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                List<HWMesh> meshes = new List<HWMesh>();
+                meshes.Add(selectedCollisionMesh);
+                ObjExporter.ExportToFile(saveObjDialog.FileName, meshes);
+            }
+        }
+        private void buttonCollisionMeshImportOBJ_Click(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            DialogResult result = openObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Mesh newMesh = ObjImporter.ImportMeshFromFile(openObjDialog.FileName);
+
+                selectedCollisionMesh.SetData(Importer.ParseAssimpMesh(newMesh));
+                selectedCollisionMesh.Visible = true;
+
+                listCollisionMeshes.SetItemChecked(selectedCollisionMesh.ItemIndex, true);
+                listCollisionMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+            }
+        }
+        private void comboCollisionMeshParent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            if (ignoreCollisionMeshParentChanged)
+                return;
+
+            HWJoint newParent = HWJoint.GetByName((string)comboCollisionMeshParent.SelectedItem);
+            selectedCollisionMesh.Parent = newParent;
+
+            listCollisionMeshes.Items[selectedCollisionMesh.ItemIndex] = selectedCollisionMesh.Parent.Name;
         }
 
         //--------------------------------- ENGINE SHAPES ---------------------------------//

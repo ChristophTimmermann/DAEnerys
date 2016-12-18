@@ -11,19 +11,27 @@ namespace DAEnerys
         {
             get
             {
-                return "COL[" + Name + "]";
+                return "COL[" + Parent.Name + "]";
             }
         }
 
-        public int CollisionMeshListItemIndex;
+        public int ItemIndex;
 
-        public HWCollisionMesh(MeshData data, Matrix4 transform, HWJoint parent, string name) : base(data, transform, new HWMaterial())
+        public HWCollisionMesh(MeshData data, Matrix4 transform, HWJoint parent) : base(data, transform, HWMaterial.DefaultMaterial)
         {
             this.Parent = parent;
-            this.Name = name;
 
             CollisionMeshes.Add(this);
             Program.main.AddCollisionMesh(this);
+        }
+
+        public override void Destroy()
+        {
+            Program.main.RemoveCollisionMesh(this);
+            CollisionMeshes.Remove(this);
+            Parent = null;
+
+            base.Destroy();
         }
     }
 }

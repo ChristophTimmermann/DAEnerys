@@ -226,6 +226,12 @@ namespace DAEnerys
                 data = new byte[height, rowSize];
                 byte[] row = new byte[rowSize];
 
+                if (ptr == 0)
+                {
+                    new Problem(ProblemTypes.WARNING, "Failed to load texture \"" + path + "\".");
+                    return new byte[width, height];
+                }
+
                 for (int i = 0; i < height; i++)
                 {
                     Marshal.Copy(new IntPtr(ptr), row, 0, rowSize);

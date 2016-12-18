@@ -33,6 +33,12 @@ namespace DAEnerys
         public int[] Indices;
         public int UVCount;
 
+        public MeshData()
+        {
+            Vertices = new Vertex[0];
+            Indices = new int[0];
+            UVCount = 1;
+        }
         public MeshData(Vertex[] vertices, int[] indices, int uvCount)
         {
             Vertices = vertices;

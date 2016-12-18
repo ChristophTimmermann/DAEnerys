@@ -31,6 +31,8 @@ namespace DAEnerys
         private static List<COLLADAAnimation> parsedAnimations = new List<COLLADAAnimation>();
         private static List<COLLADAJointAnimation> parsedJointAnimations = new List<COLLADAJointAnimation>();
 
+        private static Queue<COLQueueItem> collisionMeshQueue = new Queue<COLQueueItem>();
+
         private static Node[] lodNodes;
         private static Node colNode;
         private static Node infoNode;
@@ -54,6 +56,8 @@ namespace DAEnerys
 
             parsedAnimations.Clear();
             parsedJointAnimations.Clear();
+
+            collisionMeshQueue.Clear();
 
             lodNodes = new Node[4];
             colNode = null;
@@ -94,6 +98,8 @@ namespace DAEnerys
             LoadMaterials();
 
             ParseNode(Collada.RootNode);
+
+            HandleQueues();
 
             foreach (HWShipMesh shipMesh in HWShipMesh.ShipMeshes) //Set all LOD0 meshes visible by default
             {
@@ -140,6 +146,23 @@ namespace DAEnerys
             importer.Dispose();
 
             return dae.Meshes.ToArray();
+        }
+
+        public static Mesh ImportMeshFromFile(string path)
+        {
+            AssimpContext importer = new AssimpContext();
+            NormalSmoothingAngleConfig config = new NormalSmoothingAngleConfig(80.0f);
+            importer.SetConfig(config);
+            LogStream logStream = new LogStream(delegate (string msg, string userData)
+            {
+                Console.WriteLine(msg);
+            });
+            logStream.Attach();
+
+            Scene dae = importer.ImportFile(path, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            importer.Dispose();
+
+            return dae.Meshes[0];
         }
 
         public static Matrix4 GetAssimpNodeTransform(Node assimpNode)
@@ -571,7 +594,7 @@ namespace DAEnerys
                                     else
                                     {
                                         new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in navlight \"" + assimpNode.Name + "\".");
-                                        failed = true;
+                                        //failed = true;
                                     }
                                 }
                             }
@@ -597,7 +620,7 @@ namespace DAEnerys
                 }
                 if (lightName == "")
                 {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse name of navlight \"" + assimpNode.Name + "\".");
+                    new Problem(ProblemTypes.ERROR, "Failed to parse name of navlight \"" + assimpNode.Name + "\". Skipping navlight.");
                     failed = true;
                 }
                 /*if (type == "")
@@ -722,7 +745,6 @@ namespace DAEnerys
             #endregion
             else if (assimpNode.Name.StartsWith("MULT"))
             {
-                Matrix4 transform = GetAssimpNodeAbsoluteTransform(assimpNode);
                 HWJoint parentJoint = GetNextJointParent(assimpNode);
 
                 foreach (int meshIndex in assimpNode.MeshIndices)
@@ -738,15 +760,14 @@ namespace DAEnerys
             }
             else if (assimpNode.Name.StartsWith("COL"))
             {
-                Matrix4 transform = GetAssimpNodeAbsoluteTransform(assimpNode);
-                HWJoint parentJoint = GetNextJointParent(assimpNode);
-
                 foreach (int meshIndex in assimpNode.MeshIndices)
-                    ParseCollisionMesh(Collada.Meshes[meshIndex], assimpNode, parentJoint);
+                {
+                    //Because collision meshes have to be parsed after all joints
+                    collisionMeshQueue.Enqueue(new COLQueueItem(Collada.Meshes[meshIndex], assimpNode));
+                }
             }
             else if (assimpNode.Name.StartsWith("GLOW"))
             {
-                Matrix4 transform = GetAssimpNodeAbsoluteTransform(assimpNode);
                 HWJoint parentJoint = GetNextJointParent(assimpNode);
 
                 foreach (int meshIndex in assimpNode.MeshIndices)
@@ -754,7 +775,6 @@ namespace DAEnerys
             }
             else if (assimpNode.Name.StartsWith("ETSH"))
             {
-                Matrix4 transform = GetAssimpNodeAbsoluteTransform(assimpNode);
                 HWJoint parentJoint = GetNextJointParent(assimpNode);
 
                 foreach (int meshIndex in assimpNode.MeshIndices)
@@ -901,13 +921,13 @@ namespace DAEnerys
                     material = HWMaterial.Materials[assimpMesh.MaterialIndex];
 
             if (material == null)
-                material = new HWMaterial();
+                material = HWMaterial.DefaultMaterial;
 
             HWShipMeshLOD newLOD = new HWShipMeshLOD(ParseAssimpMesh(assimpMesh), GetAssimpNodeAbsoluteTransform(assimpNode), material, newShipMesh, lod);
         }
-        private static void ParseCollisionMesh(Mesh assimpMesh, Node assimpNode, HWJoint parentJoint)
+        private static void ParseCollisionMesh(Mesh assimpMesh, Node assimpNode)
         {
-            string name = "";
+            string parent = "";
 
             Dictionary<string, string> values = ParseNameParameters(assimpMesh.Name, new string[] { "COL" });
             foreach (KeyValuePair<string, string> pair in values.ToArray())
@@ -915,18 +935,25 @@ namespace DAEnerys
                 switch (pair.Key)
                 {
                     case "COL":
-                        name = pair.Value;
+                        parent = pair.Value;
                         break;
                 }
             }
 
-            if (name == "")
+            if (parent == "")
             {
-                new Problem(ProblemTypes.ERROR, "Failed to parse name of collision mesh \"" + assimpMesh.Name + "\".");
+                new Problem(ProblemTypes.ERROR, "Failed to parse parent of collision mesh \"" + assimpMesh.Name + "\".");
                 return;
             }
 
-            HWCollisionMesh newCollisionMesh = new HWCollisionMesh(ParseAssimpMesh(assimpMesh), GetAssimpNodeTransform(assimpNode), parentJoint, name);
+            HWJoint parentJoint = HWJoint.GetByName(parent);
+            if (parentJoint == null)
+            {
+                new Problem(ProblemTypes.ERROR, "Parent joint \"" + parent + "\" of collision mesh  \"" + assimpMesh.Name + "\" does not exist. Resetting to root");
+                parentJoint = HWJoint.Root;
+            }
+
+            HWCollisionMesh newCollisionMesh = new HWCollisionMesh(ParseAssimpMesh(assimpMesh), GetAssimpNodeTransform(assimpNode), parentJoint);
         }
         private static void ParseEngineGlow(Mesh assimpMesh, Node assimpNode, HWJoint parentJoint)
         {
@@ -1473,6 +1500,15 @@ namespace DAEnerys
             #endregion
         }
 
+        private static void HandleQueues()
+        {
+            while(collisionMeshQueue.Count > 0)
+            {
+                COLQueueItem item = collisionMeshQueue.Dequeue();
+                ParseCollisionMesh(item.AssimpMesh, item.AssimpNode);
+            }
+        }
+
         private class COLLADAJointAnimation
         {
             public string Name;
@@ -1534,6 +1570,18 @@ namespace DAEnerys
         {
             public string Semantic;
             public string Source;
+        }
+
+        private class COLQueueItem
+        {
+            public Mesh AssimpMesh;
+            public Node AssimpNode;
+
+            public COLQueueItem(Mesh assimpMesh, Node assimpNode)
+            {
+                AssimpMesh = assimpMesh;
+                AssimpNode = assimpNode;
+            }
         }
 
         private static string FixCollada(string path)
