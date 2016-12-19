@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -443,9 +443,9 @@ namespace DAEnerys
             // 
             this.buttonShipMeshRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonShipMeshRemove.Enabled = false;
-            this.buttonShipMeshRemove.Location = new System.Drawing.Point(135, 211);
+            this.buttonShipMeshRemove.Location = new System.Drawing.Point(149, 211);
             this.buttonShipMeshRemove.Name = "buttonShipMeshRemove";
-            this.buttonShipMeshRemove.Size = new System.Drawing.Size(106, 23);
+            this.buttonShipMeshRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonShipMeshRemove.TabIndex = 17;
             this.buttonShipMeshRemove.Text = "Remove";
             this.buttonShipMeshRemove.UseVisualStyleBackColor = true;
@@ -455,7 +455,7 @@ namespace DAEnerys
             // 
             this.buttonShipMeshAdd.Location = new System.Drawing.Point(6, 211);
             this.buttonShipMeshAdd.Name = "buttonShipMeshAdd";
-            this.buttonShipMeshAdd.Size = new System.Drawing.Size(98, 23);
+            this.buttonShipMeshAdd.Size = new System.Drawing.Size(92, 23);
             this.buttonShipMeshAdd.TabIndex = 16;
             this.buttonShipMeshAdd.Text = "Add";
             this.buttonShipMeshAdd.UseVisualStyleBackColor = true;
@@ -550,9 +550,9 @@ namespace DAEnerys
             // 
             this.buttonShipMeshLODImportDAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonShipMeshLODImportDAE.Enabled = false;
-            this.buttonShipMeshLODImportDAE.Location = new System.Drawing.Point(129, 130);
+            this.buttonShipMeshLODImportDAE.Location = new System.Drawing.Point(143, 130);
             this.buttonShipMeshLODImportDAE.Name = "buttonShipMeshLODImportDAE";
-            this.buttonShipMeshLODImportDAE.Size = new System.Drawing.Size(106, 23);
+            this.buttonShipMeshLODImportDAE.Size = new System.Drawing.Size(92, 23);
             this.buttonShipMeshLODImportDAE.TabIndex = 7;
             this.buttonShipMeshLODImportDAE.Text = "Import from DAE";
             this.buttonShipMeshLODImportDAE.UseVisualStyleBackColor = true;
@@ -562,9 +562,9 @@ namespace DAEnerys
             // 
             this.buttonShipMeshLODRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonShipMeshLODRemove.Enabled = false;
-            this.buttonShipMeshLODRemove.Location = new System.Drawing.Point(129, 101);
+            this.buttonShipMeshLODRemove.Location = new System.Drawing.Point(143, 101);
             this.buttonShipMeshLODRemove.Name = "buttonShipMeshLODRemove";
-            this.buttonShipMeshLODRemove.Size = new System.Drawing.Size(106, 23);
+            this.buttonShipMeshLODRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonShipMeshLODRemove.TabIndex = 5;
             this.buttonShipMeshLODRemove.Text = "Remove";
             this.buttonShipMeshLODRemove.UseVisualStyleBackColor = true;
@@ -575,7 +575,7 @@ namespace DAEnerys
             this.buttonShipMeshLODExportDAE.Enabled = false;
             this.buttonShipMeshLODExportDAE.Location = new System.Drawing.Point(3, 130);
             this.buttonShipMeshLODExportDAE.Name = "buttonShipMeshLODExportDAE";
-            this.buttonShipMeshLODExportDAE.Size = new System.Drawing.Size(98, 23);
+            this.buttonShipMeshLODExportDAE.Size = new System.Drawing.Size(92, 23);
             this.buttonShipMeshLODExportDAE.TabIndex = 6;
             this.buttonShipMeshLODExportDAE.Text = "Export to DAE";
             this.buttonShipMeshLODExportDAE.UseVisualStyleBackColor = true;
@@ -585,7 +585,7 @@ namespace DAEnerys
             // 
             this.buttonShipMeshLODAdd.Location = new System.Drawing.Point(3, 101);
             this.buttonShipMeshLODAdd.Name = "buttonShipMeshLODAdd";
-            this.buttonShipMeshLODAdd.Size = new System.Drawing.Size(98, 23);
+            this.buttonShipMeshLODAdd.Size = new System.Drawing.Size(92, 23);
             this.buttonShipMeshLODAdd.TabIndex = 4;
             this.buttonShipMeshLODAdd.Text = "Add";
             this.buttonShipMeshLODAdd.UseVisualStyleBackColor = true;
@@ -599,7 +599,7 @@ namespace DAEnerys
             this.groupShipMeshLODMaterials.AutoSize = true;
             this.groupShipMeshLODMaterials.Location = new System.Drawing.Point(3, 188);
             this.groupShipMeshLODMaterials.Name = "groupShipMeshLODMaterials";
-            this.groupShipMeshLODMaterials.Size = new System.Drawing.Size(235, 244);
+            this.groupShipMeshLODMaterials.Size = new System.Drawing.Size(232, 244);
             this.groupShipMeshLODMaterials.TabIndex = 3;
             this.groupShipMeshLODMaterials.TabStop = false;
             this.groupShipMeshLODMaterials.Text = "Assigned materials";
@@ -608,9 +608,9 @@ namespace DAEnerys
             // 
             this.buttonShipMeshLODImportOBJ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonShipMeshLODImportOBJ.Enabled = false;
-            this.buttonShipMeshLODImportOBJ.Location = new System.Drawing.Point(129, 159);
+            this.buttonShipMeshLODImportOBJ.Location = new System.Drawing.Point(143, 159);
             this.buttonShipMeshLODImportOBJ.Name = "buttonShipMeshLODImportOBJ";
-            this.buttonShipMeshLODImportOBJ.Size = new System.Drawing.Size(106, 23);
+            this.buttonShipMeshLODImportOBJ.Size = new System.Drawing.Size(92, 23);
             this.buttonShipMeshLODImportOBJ.TabIndex = 2;
             this.buttonShipMeshLODImportOBJ.Text = "Import from OBJ";
             this.buttonShipMeshLODImportOBJ.UseVisualStyleBackColor = true;
@@ -621,7 +621,7 @@ namespace DAEnerys
             this.buttonShipMeshLODExportOBJ.Enabled = false;
             this.buttonShipMeshLODExportOBJ.Location = new System.Drawing.Point(3, 159);
             this.buttonShipMeshLODExportOBJ.Name = "buttonShipMeshLODExportOBJ";
-            this.buttonShipMeshLODExportOBJ.Size = new System.Drawing.Size(98, 23);
+            this.buttonShipMeshLODExportOBJ.Size = new System.Drawing.Size(92, 23);
             this.buttonShipMeshLODExportOBJ.TabIndex = 1;
             this.buttonShipMeshLODExportOBJ.Text = "Export to OBJ";
             this.buttonShipMeshLODExportOBJ.UseVisualStyleBackColor = true;
@@ -736,9 +736,9 @@ namespace DAEnerys
             // 
             this.buttonMaterialRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonMaterialRemove.Enabled = false;
-            this.buttonMaterialRemove.Location = new System.Drawing.Point(128, 250);
+            this.buttonMaterialRemove.Location = new System.Drawing.Point(148, 250);
             this.buttonMaterialRemove.Name = "buttonMaterialRemove";
-            this.buttonMaterialRemove.Size = new System.Drawing.Size(112, 23);
+            this.buttonMaterialRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonMaterialRemove.TabIndex = 28;
             this.buttonMaterialRemove.Text = "Remove";
             this.buttonMaterialRemove.UseVisualStyleBackColor = true;
@@ -748,7 +748,7 @@ namespace DAEnerys
             // 
             this.buttonMaterialAdd.Location = new System.Drawing.Point(6, 250);
             this.buttonMaterialAdd.Name = "buttonMaterialAdd";
-            this.buttonMaterialAdd.Size = new System.Drawing.Size(111, 23);
+            this.buttonMaterialAdd.Size = new System.Drawing.Size(92, 23);
             this.buttonMaterialAdd.TabIndex = 27;
             this.buttonMaterialAdd.Text = "Add";
             this.buttonMaterialAdd.UseVisualStyleBackColor = true;
@@ -869,9 +869,9 @@ namespace DAEnerys
             // 
             this.buttonCollisionMeshImportDAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCollisionMeshImportDAE.Enabled = false;
-            this.buttonCollisionMeshImportDAE.Location = new System.Drawing.Point(135, 267);
+            this.buttonCollisionMeshImportDAE.Location = new System.Drawing.Point(149, 267);
             this.buttonCollisionMeshImportDAE.Name = "buttonCollisionMeshImportDAE";
-            this.buttonCollisionMeshImportDAE.Size = new System.Drawing.Size(106, 23);
+            this.buttonCollisionMeshImportDAE.Size = new System.Drawing.Size(92, 23);
             this.buttonCollisionMeshImportDAE.TabIndex = 30;
             this.buttonCollisionMeshImportDAE.Text = "Import from DAE";
             this.buttonCollisionMeshImportDAE.UseVisualStyleBackColor = true;
@@ -882,7 +882,7 @@ namespace DAEnerys
             this.buttonCollisionMeshExportDAE.Enabled = false;
             this.buttonCollisionMeshExportDAE.Location = new System.Drawing.Point(6, 267);
             this.buttonCollisionMeshExportDAE.Name = "buttonCollisionMeshExportDAE";
-            this.buttonCollisionMeshExportDAE.Size = new System.Drawing.Size(98, 23);
+            this.buttonCollisionMeshExportDAE.Size = new System.Drawing.Size(92, 23);
             this.buttonCollisionMeshExportDAE.TabIndex = 29;
             this.buttonCollisionMeshExportDAE.Text = "Export to DAE";
             this.buttonCollisionMeshExportDAE.UseVisualStyleBackColor = true;
@@ -892,9 +892,9 @@ namespace DAEnerys
             // 
             this.buttonCollisionMeshImportOBJ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCollisionMeshImportOBJ.Enabled = false;
-            this.buttonCollisionMeshImportOBJ.Location = new System.Drawing.Point(135, 296);
+            this.buttonCollisionMeshImportOBJ.Location = new System.Drawing.Point(149, 296);
             this.buttonCollisionMeshImportOBJ.Name = "buttonCollisionMeshImportOBJ";
-            this.buttonCollisionMeshImportOBJ.Size = new System.Drawing.Size(106, 23);
+            this.buttonCollisionMeshImportOBJ.Size = new System.Drawing.Size(92, 23);
             this.buttonCollisionMeshImportOBJ.TabIndex = 28;
             this.buttonCollisionMeshImportOBJ.Text = "Import from OBJ";
             this.buttonCollisionMeshImportOBJ.UseVisualStyleBackColor = true;
@@ -905,7 +905,7 @@ namespace DAEnerys
             this.buttonCollisionMeshExportOBJ.Enabled = false;
             this.buttonCollisionMeshExportOBJ.Location = new System.Drawing.Point(6, 296);
             this.buttonCollisionMeshExportOBJ.Name = "buttonCollisionMeshExportOBJ";
-            this.buttonCollisionMeshExportOBJ.Size = new System.Drawing.Size(98, 23);
+            this.buttonCollisionMeshExportOBJ.Size = new System.Drawing.Size(92, 23);
             this.buttonCollisionMeshExportOBJ.TabIndex = 27;
             this.buttonCollisionMeshExportOBJ.Text = "Export to OBJ";
             this.buttonCollisionMeshExportOBJ.UseVisualStyleBackColor = true;
@@ -915,9 +915,9 @@ namespace DAEnerys
             // 
             this.buttonCollisionMeshRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCollisionMeshRemove.Enabled = false;
-            this.buttonCollisionMeshRemove.Location = new System.Drawing.Point(135, 211);
+            this.buttonCollisionMeshRemove.Location = new System.Drawing.Point(149, 211);
             this.buttonCollisionMeshRemove.Name = "buttonCollisionMeshRemove";
-            this.buttonCollisionMeshRemove.Size = new System.Drawing.Size(106, 23);
+            this.buttonCollisionMeshRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonCollisionMeshRemove.TabIndex = 24;
             this.buttonCollisionMeshRemove.Text = "Remove";
             this.buttonCollisionMeshRemove.UseVisualStyleBackColor = true;
@@ -927,7 +927,7 @@ namespace DAEnerys
             // 
             this.buttonCollisionMeshAdd.Location = new System.Drawing.Point(6, 211);
             this.buttonCollisionMeshAdd.Name = "buttonCollisionMeshAdd";
-            this.buttonCollisionMeshAdd.Size = new System.Drawing.Size(98, 23);
+            this.buttonCollisionMeshAdd.Size = new System.Drawing.Size(92, 23);
             this.buttonCollisionMeshAdd.TabIndex = 23;
             this.buttonCollisionMeshAdd.Text = "Add";
             this.buttonCollisionMeshAdd.UseVisualStyleBackColor = true;
@@ -1982,6 +1982,8 @@ namespace DAEnerys
             // 
             // numericAnimationLoopEndTime
             // 
+            this.numericAnimationLoopEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericAnimationLoopEndTime.DecimalPlaces = 3;
             this.numericAnimationLoopEndTime.Enabled = false;
             this.numericAnimationLoopEndTime.Increment = new decimal(new int[] {
@@ -1996,12 +1998,14 @@ namespace DAEnerys
             0,
             0});
             this.numericAnimationLoopEndTime.Name = "numericAnimationLoopEndTime";
-            this.numericAnimationLoopEndTime.Size = new System.Drawing.Size(173, 20);
+            this.numericAnimationLoopEndTime.Size = new System.Drawing.Size(178, 20);
             this.numericAnimationLoopEndTime.TabIndex = 43;
             this.numericAnimationLoopEndTime.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             // 
             // numericAnimationLoopStartTime
             // 
+            this.numericAnimationLoopStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericAnimationLoopStartTime.DecimalPlaces = 3;
             this.numericAnimationLoopStartTime.Enabled = false;
             this.numericAnimationLoopStartTime.Increment = new decimal(new int[] {
@@ -2016,7 +2020,7 @@ namespace DAEnerys
             0,
             0});
             this.numericAnimationLoopStartTime.Name = "numericAnimationLoopStartTime";
-            this.numericAnimationLoopStartTime.Size = new System.Drawing.Size(173, 20);
+            this.numericAnimationLoopStartTime.Size = new System.Drawing.Size(178, 20);
             this.numericAnimationLoopStartTime.TabIndex = 42;
             this.numericAnimationLoopStartTime.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             // 
@@ -2031,6 +2035,8 @@ namespace DAEnerys
             // 
             // numericAnimationEndTime
             // 
+            this.numericAnimationEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericAnimationEndTime.DecimalPlaces = 3;
             this.numericAnimationEndTime.Enabled = false;
             this.numericAnimationEndTime.Increment = new decimal(new int[] {
@@ -2045,12 +2051,14 @@ namespace DAEnerys
             0,
             0});
             this.numericAnimationEndTime.Name = "numericAnimationEndTime";
-            this.numericAnimationEndTime.Size = new System.Drawing.Size(173, 20);
+            this.numericAnimationEndTime.Size = new System.Drawing.Size(178, 20);
             this.numericAnimationEndTime.TabIndex = 40;
             this.numericAnimationEndTime.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             // 
             // numericAnimationStartTime
             // 
+            this.numericAnimationStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericAnimationStartTime.DecimalPlaces = 3;
             this.numericAnimationStartTime.Enabled = false;
             this.numericAnimationStartTime.Increment = new decimal(new int[] {
@@ -2065,7 +2073,7 @@ namespace DAEnerys
             0,
             0});
             this.numericAnimationStartTime.Name = "numericAnimationStartTime";
-            this.numericAnimationStartTime.Size = new System.Drawing.Size(173, 20);
+            this.numericAnimationStartTime.Size = new System.Drawing.Size(178, 20);
             this.numericAnimationStartTime.TabIndex = 39;
             this.numericAnimationStartTime.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             // 
@@ -2080,11 +2088,12 @@ namespace DAEnerys
             // 
             // buttonAnimationPlay
             // 
-            this.buttonAnimationPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAnimationPlay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAnimationPlay.Enabled = false;
-            this.buttonAnimationPlay.Location = new System.Drawing.Point(8, 302);
+            this.buttonAnimationPlay.Location = new System.Drawing.Point(3, 302);
             this.buttonAnimationPlay.Name = "buttonAnimationPlay";
-            this.buttonAnimationPlay.Size = new System.Drawing.Size(236, 23);
+            this.buttonAnimationPlay.Size = new System.Drawing.Size(241, 23);
             this.buttonAnimationPlay.TabIndex = 36;
             this.buttonAnimationPlay.Text = "Play";
             this.buttonAnimationPlay.UseVisualStyleBackColor = true;
@@ -2109,9 +2118,9 @@ namespace DAEnerys
             // 
             this.buttonAnimationJointRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAnimationJointRemove.Enabled = false;
-            this.buttonAnimationJointRemove.Location = new System.Drawing.Point(125, 159);
+            this.buttonAnimationJointRemove.Location = new System.Drawing.Point(144, 159);
             this.buttonAnimationJointRemove.Name = "buttonAnimationJointRemove";
-            this.buttonAnimationJointRemove.Size = new System.Drawing.Size(116, 23);
+            this.buttonAnimationJointRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonAnimationJointRemove.TabIndex = 38;
             this.buttonAnimationJointRemove.Text = "Remove";
             this.buttonAnimationJointRemove.UseVisualStyleBackColor = true;
@@ -2121,13 +2130,15 @@ namespace DAEnerys
             this.buttonAnimationJointAdd.Enabled = false;
             this.buttonAnimationJointAdd.Location = new System.Drawing.Point(0, 159);
             this.buttonAnimationJointAdd.Name = "buttonAnimationJointAdd";
-            this.buttonAnimationJointAdd.Size = new System.Drawing.Size(114, 23);
+            this.buttonAnimationJointAdd.Size = new System.Drawing.Size(92, 23);
             this.buttonAnimationJointAdd.TabIndex = 37;
             this.buttonAnimationJointAdd.Text = "Add";
             this.buttonAnimationJointAdd.UseVisualStyleBackColor = true;
             // 
             // listAnimationJoints
             // 
+            this.listAnimationJoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listAnimationJoints.FormattingEnabled = true;
             this.listAnimationJoints.Location = new System.Drawing.Point(0, 19);
             this.listAnimationJoints.Name = "listAnimationJoints";
@@ -2157,9 +2168,9 @@ namespace DAEnerys
             // 
             this.buttonAnimationRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAnimationRemove.Enabled = false;
-            this.buttonAnimationRemove.Location = new System.Drawing.Point(128, 143);
+            this.buttonAnimationRemove.Location = new System.Drawing.Point(147, 143);
             this.buttonAnimationRemove.Name = "buttonAnimationRemove";
-            this.buttonAnimationRemove.Size = new System.Drawing.Size(116, 23);
+            this.buttonAnimationRemove.Size = new System.Drawing.Size(97, 23);
             this.buttonAnimationRemove.TabIndex = 32;
             this.buttonAnimationRemove.Text = "Remove";
             this.buttonAnimationRemove.UseVisualStyleBackColor = true;
@@ -2169,17 +2180,19 @@ namespace DAEnerys
             this.buttonAnimationAdd.Enabled = false;
             this.buttonAnimationAdd.Location = new System.Drawing.Point(3, 143);
             this.buttonAnimationAdd.Name = "buttonAnimationAdd";
-            this.buttonAnimationAdd.Size = new System.Drawing.Size(114, 23);
+            this.buttonAnimationAdd.Size = new System.Drawing.Size(92, 23);
             this.buttonAnimationAdd.TabIndex = 31;
             this.buttonAnimationAdd.Text = "Add";
             this.buttonAnimationAdd.UseVisualStyleBackColor = true;
             // 
             // listAnimations
             // 
+            this.listAnimations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listAnimations.FormattingEnabled = true;
             this.listAnimations.Location = new System.Drawing.Point(3, 3);
             this.listAnimations.Name = "listAnimations";
-            this.listAnimations.Size = new System.Drawing.Size(236, 134);
+            this.listAnimations.Size = new System.Drawing.Size(241, 134);
             this.listAnimations.TabIndex = 3;
             this.listAnimations.SelectedIndexChanged += new System.EventHandler(this.listAnimations_SelectedIndexChanged);
             // 
@@ -2203,9 +2216,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -2213,14 +2226,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle7;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -2229,9 +2242,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -2244,9 +2257,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle6;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
