@@ -540,9 +540,10 @@ namespace DAEnerys
                 Vector3 color = new Vector3(255, 255, 255);
                 float distance = 0.001f;
                 List<NavLightFlag> flags = new List<NavLightFlag>();
+                int sect = 0;
 
                 bool success = false;
-                Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "NAVL", "Type", "Sz", "Ph", "Fr", "Col", "Dist", "Flags" });
+                Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "NAVL", "Type", "Sz", "Ph", "Fr", "Col", "Dist", "Flags", "Sect" });
                 foreach (KeyValuePair<string, string> pair in values.ToArray())
                 {
                     switch (pair.Key)
@@ -598,6 +599,9 @@ namespace DAEnerys
                                     }
                                 }
                             }
+                            break;
+                        case "Sect":
+                            int.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out sect);
                             break;
                     }
                 }
@@ -655,7 +659,7 @@ namespace DAEnerys
                 }*/
 
                 if (!failed)
-                    new HWNavLight(lightName, parentJoint, GetAssimpNodeTransform(assimpNode), navLightStyle, size, phase, frequency, color, distance, flags);
+                    new HWNavLight(lightName, parentJoint, GetAssimpNodeTransform(assimpNode), navLightStyle, size, phase, frequency, color, distance, flags, sect);
             }
             #endregion
             #region EngineBurn

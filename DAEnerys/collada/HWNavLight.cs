@@ -36,8 +36,11 @@ namespace DAEnerys
                     }
                     flags += "]";
                 }
+                string sect = "";
+                if(Sect != 0)
+                    sect = "_Sect[" + Sect.ToString() + "]";
 
-                return "NAVL[" + Name + "]" + type + size + phase + frequency + color + distance + flags;
+                return "NAVL[" + Name + "]" + type + size + phase + frequency + color + distance + flags + sect;
             }
         }
 
@@ -48,6 +51,7 @@ namespace DAEnerys
         public Vector3 Color;
         public float Distance;
         public List<NavLightFlag> Flags;
+        public int Sect;
 
         //Editor
         public EditorIcon Icon;
@@ -85,7 +89,7 @@ namespace DAEnerys
             }
         }
 
-        public HWNavLight(string name, HWJoint parent, Matrix4 transform, HWNavLightStyle style, float size, float phase, float frequency, Vector3 color, float distance, List<NavLightFlag> flags) : base(name, parent, transform)
+        public HWNavLight(string name, HWJoint parent, Matrix4 transform, HWNavLightStyle style, float size, float phase, float frequency, Vector3 color, float distance, List<NavLightFlag> flags, int sect) : base(name, parent, transform)
         {
             Style = style;
             Size = size;
@@ -94,6 +98,7 @@ namespace DAEnerys
             Color = color;
             Distance = distance;
             Flags = flags;
+            Sect = sect;
 
             //If the navlight emits light
             if(Distance > 0)
