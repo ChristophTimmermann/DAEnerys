@@ -151,7 +151,7 @@ namespace DAEnerys
                 effect.Update();
             }
 
-            if(animationPlaying)
+            if (animationPlaying)
                 HWAnimation.Update();
 
             //Only update render if it is needed
@@ -275,11 +275,7 @@ namespace DAEnerys
             numericEngineBurnSpriteIndex.Enabled = false;
 
             //Animations
-            AnimationNames.Clear();
-            listAnimations.Items.Clear();
-            selectedAnimation = null;
-            AnimationPlaying = false;
-            listAnimations_SelectedIndexChanged(this, EventArgs.Empty);
+            ClearAnimations();
 
             foreach (HWDockSegment segment in HWDockSegment.DockSegments)
             {
@@ -318,6 +314,15 @@ namespace DAEnerys
             Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
             Renderer.Invalidate();
+        }
+
+        public void ClearAnimations()
+        {
+            AnimationNames.Clear();
+            listAnimations.Items.Clear();
+            selectedAnimation = null;
+            AnimationPlaying = false;
+            listAnimations_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         //--------------------------------------------------------------------------------------------------------------//
@@ -1195,7 +1200,7 @@ namespace DAEnerys
                     }
                 }
 
-                for(int i = 0; i < meshes.Count; i++)
+                for (int i = 0; i < meshes.Count; i++)
                 {
                     if (newMeshes.Length - 1 >= i)
                     {
@@ -1318,7 +1323,7 @@ namespace DAEnerys
                     if (selectedEngineGlow.LODMeshes[i].Count > 0)
                     {
                         listEngineGlowLODs.Items.Add("LOD " + i);
-                        if(selectedEngineGlow.LODMeshes[i][0].Visible)
+                        if (selectedEngineGlow.LODMeshes[i][0].Visible)
                             listEngineGlowLODs.SetItemChecked(i, true);
                     }
             }
@@ -1627,7 +1632,7 @@ namespace DAEnerys
             //Select parent joint in combo box
             object item = JointComboItems[selectedEngineShape.Parent];
             comboEngineShapeParent.SelectedItem = item; //Select parent joint in combo box
-                
+
         }
         public void AddEngineShape(HWEngineShape mesh)
         {
@@ -1836,7 +1841,7 @@ namespace DAEnerys
                 }
             }
 
-            
+
             int index = listMaterials.Items.IndexOf(selectedMaterial.Name);
             if (index == -1)
                 return;
@@ -2024,12 +2029,6 @@ namespace DAEnerys
             splitContainer2.Panel2Collapsed = !problemsVisible;
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            Renderer.ReloadShaders();
-            Renderer.Invalidate();
-        }
-
         private void buttonShaderSettings_Click(object sender, EventArgs e)
         {
             if (Program.ShaderSettings != null) return;
@@ -2038,14 +2037,29 @@ namespace DAEnerys
             Program.ShaderSettings.Init();
         }
 
-        private void toolStripButton3_Click(object sender, EventArgs e)
-        {
-            //Dump.ADuiePyle();
-        }
-
         private void buttonCheckForUpdates_Click(object sender, EventArgs e)
         {
             Updater.CheckForUpdatesManually();
+        }
+
+        private void buttonExportMAD_Click(object sender, EventArgs e)
+        {
+            if (OpenedFile == "") return;
+            saveMADDialog.FileName = Path.GetFileNameWithoutExtension(OpenedFile) + ".mad";
+            if (saveMADDialog.ShowDialog() == DialogResult.OK)
+            {
+                HWMAD.Export(saveMADDialog.FileName);
+            }
+        }
+
+        private void buttonImportMAD_Click(object sender, EventArgs e)
+        {
+            if (OpenedFile == "") return;
+            openMADDialog.FileName = "";
+            if (openMADDialog.ShowDialog() == DialogResult.OK)
+            {
+                HWMAD.Import(openMADDialog.FileName);
+            }
         }
     }
 }

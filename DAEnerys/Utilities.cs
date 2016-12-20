@@ -19,7 +19,7 @@ namespace DAEnerys
         {
             int count = 0;
             char[] chars = input.ToCharArray();
-            foreach(char character in chars)
+            foreach (char character in chars)
             {
                 if (character == inputCharacter)
                     count++;
@@ -74,6 +74,22 @@ namespace DAEnerys
                 return value;
 
             return (value % rangeZero);
+        }
+
+        public static uint SwapEndian(uint val)
+        {
+            return ((val & 0xff) << 24) |
+                    ((val & 0xff00) << 8) |
+                    ((val >> 8) & 0xff00) |
+                    ((val >> 24) & 0xff);
+        }
+
+        public static int SwapEndian(int val)
+        {
+            return ((val & 0xff) << 24) |
+                    ((val & 0xff00) << 8) |
+                    ((val >> 8) & 0xff00) |
+                    ((val >> 24) & 0xff);
         }
     }
 }

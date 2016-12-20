@@ -44,7 +44,6 @@ namespace DAEnerys
             this.buttonHotkeys = new System.Windows.Forms.ToolStripButton();
             this.buttonCheckForUpdates = new System.Windows.Forms.ToolStripButton();
             this.buttonAbout = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.openColladaDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveColladaDialog = new System.Windows.Forms.SaveFileDialog();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -205,6 +204,10 @@ namespace DAEnerys
             this.browseMaterialTexturesDIFFDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveColladaMeshDialog = new System.Windows.Forms.SaveFileDialog();
             this.openColladaMeshDialog = new System.Windows.Forms.OpenFileDialog();
+            this.buttonImportMAD = new System.Windows.Forms.ToolStripButton();
+            this.buttonExportMAD = new System.Windows.Forms.ToolStripButton();
+            this.openMADDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveMADDialog = new System.Windows.Forms.SaveFileDialog();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -273,12 +276,13 @@ namespace DAEnerys
             this.buttonNew,
             this.buttonOpen,
             this.buttonSave,
+            this.buttonImportMAD,
+            this.buttonExportMAD,
             this.buttonSettings,
             this.buttonShaderSettings,
             this.buttonHotkeys,
             this.buttonCheckForUpdates,
-            this.buttonAbout,
-            this.toolStripButton1});
+            this.buttonAbout});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(1284, 25);
@@ -356,16 +360,6 @@ namespace DAEnerys
             this.buttonAbout.Size = new System.Drawing.Size(60, 22);
             this.buttonAbout.Text = "About";
             this.buttonAbout.Click += new System.EventHandler(this.buttonAbout_Click);
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(114, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Visible = false;
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // openColladaDialog
             // 
@@ -463,7 +457,7 @@ namespace DAEnerys
             // 
             // boxShipMeshName
             // 
-            this.boxShipMeshName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.boxShipMeshName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxShipMeshName.Enabled = false;
             this.boxShipMeshName.Location = new System.Drawing.Point(56, 240);
@@ -496,7 +490,7 @@ namespace DAEnerys
             // 
             // listShipMeshes
             // 
-            this.listShipMeshes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listShipMeshes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listShipMeshes.FormattingEnabled = true;
             this.listShipMeshes.Location = new System.Drawing.Point(6, 6);
@@ -516,7 +510,7 @@ namespace DAEnerys
             // 
             // comboShipMeshParent
             // 
-            this.comboShipMeshParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboShipMeshParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboShipMeshParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboShipMeshParent.Enabled = false;
@@ -529,7 +523,7 @@ namespace DAEnerys
             // 
             // groupShipMeshLODs
             // 
-            this.groupShipMeshLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupShipMeshLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupShipMeshLODs.Controls.Add(this.buttonShipMeshLODImportDAE);
             this.groupShipMeshLODs.Controls.Add(this.buttonShipMeshLODRemove);
@@ -593,8 +587,8 @@ namespace DAEnerys
             // 
             // groupShipMeshLODMaterials
             // 
-            this.groupShipMeshLODMaterials.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupShipMeshLODMaterials.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupShipMeshLODMaterials.AutoSize = true;
             this.groupShipMeshLODMaterials.Location = new System.Drawing.Point(3, 188);
@@ -629,7 +623,7 @@ namespace DAEnerys
             // 
             // listShipMeshLODs
             // 
-            this.listShipMeshLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listShipMeshLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listShipMeshLODs.FormattingEnabled = true;
             this.listShipMeshLODs.Location = new System.Drawing.Point(3, 16);
@@ -664,7 +658,7 @@ namespace DAEnerys
             // 
             // groupProgress
             // 
-            this.groupProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupProgress.Controls.Add(this.trackBarProgress);
             this.groupProgress.Location = new System.Drawing.Point(4, 628);
@@ -688,7 +682,7 @@ namespace DAEnerys
             // 
             // groupThrusterStrength
             // 
-            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupThrusterStrength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupThrusterStrength.Controls.Add(this.trackBarThrusterStrength);
             this.groupThrusterStrength.Location = new System.Drawing.Point(4, 579);
@@ -713,7 +707,7 @@ namespace DAEnerys
             // 
             // boxMaterialName
             // 
-            this.boxMaterialName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.boxMaterialName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxMaterialName.Enabled = false;
             this.boxMaterialName.Location = new System.Drawing.Point(50, 279);
@@ -756,7 +750,7 @@ namespace DAEnerys
             // 
             // comboMaterialShader
             // 
-            this.comboMaterialShader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboMaterialShader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboMaterialShader.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboMaterialShader.Enabled = false;
@@ -769,7 +763,7 @@ namespace DAEnerys
             // 
             // groupMaterialTextures
             // 
-            this.groupMaterialTextures.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupMaterialTextures.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupMaterialTextures.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupMaterialTextures.Controls.Add(this.buttonMaterialTexturesBrowseDIFF);
@@ -783,7 +777,7 @@ namespace DAEnerys
             // 
             // buttonMaterialTexturesBrowseDIFF
             // 
-            this.buttonMaterialTexturesBrowseDIFF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.buttonMaterialTexturesBrowseDIFF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonMaterialTexturesBrowseDIFF.Enabled = false;
             this.buttonMaterialTexturesBrowseDIFF.Location = new System.Drawing.Point(3, 182);
@@ -814,7 +808,7 @@ namespace DAEnerys
             // 
             // comboMaterialFormat
             // 
-            this.comboMaterialFormat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboMaterialFormat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboMaterialFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboMaterialFormat.Enabled = false;
@@ -827,7 +821,7 @@ namespace DAEnerys
             // 
             // listMaterials
             // 
-            this.listMaterials.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listMaterials.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listMaterials.FormattingEnabled = true;
             this.listMaterials.Location = new System.Drawing.Point(6, 6);
@@ -935,7 +929,7 @@ namespace DAEnerys
             // 
             // listCollisionMeshes
             // 
-            this.listCollisionMeshes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listCollisionMeshes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listCollisionMeshes.FormattingEnabled = true;
             this.listCollisionMeshes.Location = new System.Drawing.Point(6, 6);
@@ -956,7 +950,7 @@ namespace DAEnerys
             // 
             // comboCollisionMeshParent
             // 
-            this.comboCollisionMeshParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboCollisionMeshParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboCollisionMeshParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboCollisionMeshParent.Enabled = false;
@@ -1075,7 +1069,7 @@ namespace DAEnerys
             // 
             // boxDockpathName
             // 
-            this.boxDockpathName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.boxDockpathName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxDockpathName.Enabled = false;
             this.boxDockpathName.Location = new System.Drawing.Point(50, 169);
@@ -1094,7 +1088,7 @@ namespace DAEnerys
             // 
             // groupDockpathFlags
             // 
-            this.groupDockpathFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupDockpathFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupDockpathFlags.Controls.Add(this.checkDockpathAjar);
             this.groupDockpathFlags.Controls.Add(this.checkDockpathLatch);
@@ -1159,7 +1153,7 @@ namespace DAEnerys
             // 
             // groupDockpathSegments
             // 
-            this.groupDockpathSegments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupDockpathSegments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupDockpathSegments.Controls.Add(this.groupDockpathSegmentFlags);
             this.groupDockpathSegments.Controls.Add(this.labelDockpathSegmentSpeed);
@@ -1176,7 +1170,7 @@ namespace DAEnerys
             // 
             // groupDockpathSegmentFlags
             // 
-            this.groupDockpathSegmentFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupDockpathSegmentFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupDockpathSegmentFlags.Controls.Add(this.checkDockpathSegmentFlagClip);
             this.groupDockpathSegmentFlags.Controls.Add(this.checkDockpathSegmentFlagUnfocus);
@@ -1313,7 +1307,7 @@ namespace DAEnerys
             // 
             // boxDockpathSegmentSpeed
             // 
-            this.boxDockpathSegmentSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.boxDockpathSegmentSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxDockpathSegmentSpeed.Location = new System.Drawing.Point(77, 96);
             this.boxDockpathSegmentSpeed.Name = "boxDockpathSegmentSpeed";
@@ -1323,7 +1317,7 @@ namespace DAEnerys
             // 
             // boxDockpathSegmentTolerance
             // 
-            this.boxDockpathSegmentTolerance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.boxDockpathSegmentTolerance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxDockpathSegmentTolerance.Location = new System.Drawing.Point(77, 70);
             this.boxDockpathSegmentTolerance.Name = "boxDockpathSegmentTolerance";
@@ -1333,7 +1327,7 @@ namespace DAEnerys
             // 
             // trackBarDockpathSegments
             // 
-            this.trackBarDockpathSegments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.trackBarDockpathSegments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarDockpathSegments.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarDockpathSegments.Location = new System.Drawing.Point(8, 16);
@@ -1345,7 +1339,7 @@ namespace DAEnerys
             // 
             // groupDockpathLinks
             // 
-            this.groupDockpathLinks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupDockpathLinks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupDockpathLinks.Controls.Add(this.listDockpathLinks);
             this.groupDockpathLinks.Location = new System.Drawing.Point(3, 409);
@@ -1367,7 +1361,7 @@ namespace DAEnerys
             // 
             // groupDockpathFamilies
             // 
-            this.groupDockpathFamilies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupDockpathFamilies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupDockpathFamilies.Controls.Add(this.listDockpathFamilies);
             this.groupDockpathFamilies.Location = new System.Drawing.Point(3, 302);
@@ -1389,7 +1383,7 @@ namespace DAEnerys
             // 
             // panelDockpathList
             // 
-            this.panelDockpathList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panelDockpathList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelDockpathList.Controls.Add(this.dockpathList);
             this.panelDockpathList.Location = new System.Drawing.Point(4, 4);
@@ -1424,8 +1418,8 @@ namespace DAEnerys
             // 
             // groupNavLightPreview
             // 
-            this.groupNavLightPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupNavLightPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupNavLightPreview.Controls.Add(this.checkNavLightDrawRadius);
             this.groupNavLightPreview.Location = new System.Drawing.Point(8, 642);
@@ -1448,7 +1442,7 @@ namespace DAEnerys
             // 
             // groupNavLightParameters
             // 
-            this.groupNavLightParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupNavLightParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupNavLightParameters.Controls.Add(this.comboNavLightType);
             this.groupNavLightParameters.Controls.Add(this.labelNavLightDistance);
@@ -1471,7 +1465,7 @@ namespace DAEnerys
             // 
             // comboNavLightType
             // 
-            this.comboNavLightType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboNavLightType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboNavLightType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboNavLightType.Enabled = false;
@@ -1492,7 +1486,7 @@ namespace DAEnerys
             // 
             // numericNavLightDistance
             // 
-            this.numericNavLightDistance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.numericNavLightDistance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericNavLightDistance.DecimalPlaces = 2;
             this.numericNavLightDistance.Enabled = false;
@@ -1519,7 +1513,7 @@ namespace DAEnerys
             // 
             // buttonNavLightColor
             // 
-            this.buttonNavLightColor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.buttonNavLightColor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonNavLightColor.BackColor = System.Drawing.Color.White;
             this.buttonNavLightColor.Enabled = false;
@@ -1541,7 +1535,7 @@ namespace DAEnerys
             // 
             // numericNavLightFrequency
             // 
-            this.numericNavLightFrequency.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.numericNavLightFrequency.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericNavLightFrequency.DecimalPlaces = 2;
             this.numericNavLightFrequency.Enabled = false;
@@ -1568,7 +1562,7 @@ namespace DAEnerys
             // 
             // numericNavLightPhase
             // 
-            this.numericNavLightPhase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.numericNavLightPhase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericNavLightPhase.DecimalPlaces = 2;
             this.numericNavLightPhase.Enabled = false;
@@ -1595,7 +1589,7 @@ namespace DAEnerys
             // 
             // numericNavLightSize
             // 
-            this.numericNavLightSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.numericNavLightSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericNavLightSize.DecimalPlaces = 2;
             this.numericNavLightSize.Enabled = false;
@@ -1622,7 +1616,7 @@ namespace DAEnerys
             // 
             // groupNavLightFlags
             // 
-            this.groupNavLightFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupNavLightFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupNavLightFlags.Controls.Add(this.checkNavLightFlagHighEnd);
             this.groupNavLightFlags.Controls.Add(this.checkNavLightFlagSprite);
@@ -1660,7 +1654,7 @@ namespace DAEnerys
             // 
             // panelNavLightList
             // 
-            this.panelNavLightList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panelNavLightList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelNavLightList.Controls.Add(this.navLightList);
             this.panelNavLightList.Location = new System.Drawing.Point(4, 4);
@@ -1695,7 +1689,7 @@ namespace DAEnerys
             // 
             // groupEngineGlowLODs
             // 
-            this.groupEngineGlowLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupEngineGlowLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupEngineGlowLODs.Controls.Add(this.listEngineGlowLODs);
             this.groupEngineGlowLODs.Location = new System.Drawing.Point(3, 471);
@@ -1730,7 +1724,7 @@ namespace DAEnerys
             // 
             // listEngineGlows
             // 
-            this.listEngineGlows.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listEngineGlows.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listEngineGlows.FormattingEnabled = true;
             this.listEngineGlows.Location = new System.Drawing.Point(3, 3);
@@ -1750,7 +1744,7 @@ namespace DAEnerys
             // 
             // comboEngineGlowParent
             // 
-            this.comboEngineGlowParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboEngineGlowParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboEngineGlowParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEngineGlowParent.Enabled = false;
@@ -1774,7 +1768,7 @@ namespace DAEnerys
             // 
             // panel3
             // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.Controls.Add(this.listEngineShapes);
             this.panel3.Controls.Add(this.labelEngineShapeParent);
@@ -1786,7 +1780,7 @@ namespace DAEnerys
             // 
             // listEngineShapes
             // 
-            this.listEngineShapes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listEngineShapes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listEngineShapes.FormattingEnabled = true;
             this.listEngineShapes.Location = new System.Drawing.Point(3, 3);
@@ -1807,7 +1801,7 @@ namespace DAEnerys
             // 
             // comboEngineShapeParent
             // 
-            this.comboEngineShapeParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboEngineShapeParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboEngineShapeParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.comboEngineShapeParent.Enabled = false;
@@ -1835,7 +1829,7 @@ namespace DAEnerys
             // 
             // comboEngineBurnParent
             // 
-            this.comboEngineBurnParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboEngineBurnParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboEngineBurnParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEngineBurnParent.Enabled = false;
@@ -1856,7 +1850,7 @@ namespace DAEnerys
             // 
             // boxEngineBurnName
             // 
-            this.boxEngineBurnName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.boxEngineBurnName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxEngineBurnName.Enabled = false;
             this.boxEngineBurnName.Location = new System.Drawing.Point(47, 169);
@@ -1875,7 +1869,7 @@ namespace DAEnerys
             // 
             // groupEngineBurnFlames
             // 
-            this.groupEngineBurnFlames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupEngineBurnFlames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupEngineBurnFlames.Controls.Add(this.numericEngineBurnSpriteIndex);
             this.groupEngineBurnFlames.Controls.Add(this.labelEngineBurnFlameSpriteIndex);
@@ -1906,7 +1900,7 @@ namespace DAEnerys
             // 
             // trackBarEngineBurnFlames
             // 
-            this.trackBarEngineBurnFlames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.trackBarEngineBurnFlames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarEngineBurnFlames.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarEngineBurnFlames.Enabled = false;
@@ -1919,7 +1913,7 @@ namespace DAEnerys
             // 
             // panel4
             // 
-            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.Controls.Add(this.listEngineBurns);
             this.panel4.Location = new System.Drawing.Point(4, 4);
@@ -1982,7 +1976,7 @@ namespace DAEnerys
             // 
             // numericAnimationLoopEndTime
             // 
-            this.numericAnimationLoopEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.numericAnimationLoopEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericAnimationLoopEndTime.DecimalPlaces = 3;
             this.numericAnimationLoopEndTime.Enabled = false;
@@ -2004,7 +1998,7 @@ namespace DAEnerys
             // 
             // numericAnimationLoopStartTime
             // 
-            this.numericAnimationLoopStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.numericAnimationLoopStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericAnimationLoopStartTime.DecimalPlaces = 3;
             this.numericAnimationLoopStartTime.Enabled = false;
@@ -2035,7 +2029,7 @@ namespace DAEnerys
             // 
             // numericAnimationEndTime
             // 
-            this.numericAnimationEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.numericAnimationEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericAnimationEndTime.DecimalPlaces = 3;
             this.numericAnimationEndTime.Enabled = false;
@@ -2057,7 +2051,7 @@ namespace DAEnerys
             // 
             // numericAnimationStartTime
             // 
-            this.numericAnimationStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.numericAnimationStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericAnimationStartTime.DecimalPlaces = 3;
             this.numericAnimationStartTime.Enabled = false;
@@ -2088,7 +2082,7 @@ namespace DAEnerys
             // 
             // buttonAnimationPlay
             // 
-            this.buttonAnimationPlay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.buttonAnimationPlay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAnimationPlay.Enabled = false;
             this.buttonAnimationPlay.Location = new System.Drawing.Point(3, 302);
@@ -2101,7 +2095,7 @@ namespace DAEnerys
             // 
             // groupAnimationJoints
             // 
-            this.groupAnimationJoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupAnimationJoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupAnimationJoints.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupAnimationJoints.Controls.Add(this.buttonAnimationJointRemove);
@@ -2137,7 +2131,7 @@ namespace DAEnerys
             // 
             // listAnimationJoints
             // 
-            this.listAnimationJoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listAnimationJoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listAnimationJoints.FormattingEnabled = true;
             this.listAnimationJoints.Location = new System.Drawing.Point(0, 19);
@@ -2147,7 +2141,7 @@ namespace DAEnerys
             // 
             // boxAnimationName
             // 
-            this.boxAnimationName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.boxAnimationName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxAnimationName.Enabled = false;
             this.boxAnimationName.Location = new System.Drawing.Point(66, 172);
@@ -2187,7 +2181,7 @@ namespace DAEnerys
             // 
             // listAnimations
             // 
-            this.listAnimations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listAnimations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listAnimations.FormattingEnabled = true;
             this.listAnimations.Location = new System.Drawing.Point(3, 3);
@@ -2333,6 +2327,37 @@ namespace DAEnerys
             // 
             this.openColladaMeshDialog.Filter = "COLLADA-Files|*.dae|All files|*.*";
             this.openColladaMeshDialog.Title = "Open DAE-file...";
+            // 
+            // buttonImportMAD
+            // 
+            this.buttonImportMAD.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.buttonImportMAD.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonImportMAD.Name = "buttonImportMAD";
+            this.buttonImportMAD.Size = new System.Drawing.Size(77, 22);
+            this.buttonImportMAD.Text = "Import MAD";
+            this.buttonImportMAD.Visible = false;
+            this.buttonImportMAD.Click += new System.EventHandler(this.buttonImportMAD_Click);
+            // 
+            // buttonExportMAD
+            // 
+            this.buttonExportMAD.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.buttonExportMAD.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonExportMAD.Name = "buttonExportMAD";
+            this.buttonExportMAD.Size = new System.Drawing.Size(74, 22);
+            this.buttonExportMAD.Text = "Export MAD";
+            this.buttonExportMAD.Visible = false;
+            this.buttonExportMAD.Click += new System.EventHandler(this.buttonExportMAD_Click);
+            // 
+            // openMADDialog
+            // 
+            this.openMADDialog.DefaultExt = "mad";
+            this.openMADDialog.Filter = "Homeworld Model Animation Definition Files (*.mad)|*.mad|All Files (*.*)|*.*";
+            // 
+            // saveMADDialog
+            // 
+            this.saveMADDialog.DefaultExt = "mad";
+            this.saveMADDialog.Filter = "Homeworld Model Animation Definition Files (*.mad)|*.mad|All Files (*.*)|*.*";
+            // 
             // 
             // Main
             // 
@@ -2521,7 +2546,6 @@ namespace DAEnerys
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView gridProblems;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnProblems;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.GroupBox groupMaterialTextures;
         private System.Windows.Forms.ListBox listMaterialTextures;
         private System.Windows.Forms.Label label3;
@@ -2605,6 +2629,10 @@ namespace DAEnerys
         private System.Windows.Forms.CheckedListBox listCollisionMeshes;
         private System.Windows.Forms.Label labelCollisionMeshParent;
         private System.Windows.Forms.ComboBox comboCollisionMeshParent;
+        private System.Windows.Forms.ToolStripButton buttonImportMAD;
+        private System.Windows.Forms.ToolStripButton buttonExportMAD;
+        private System.Windows.Forms.OpenFileDialog openMADDialog;
+        private System.Windows.Forms.SaveFileDialog saveMADDialog;
+
     }
 }
-
