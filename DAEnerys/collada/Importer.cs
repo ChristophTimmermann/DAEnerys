@@ -246,6 +246,21 @@ namespace DAEnerys
         {
             bool failed = false;
 
+            //Check for parameters in child nodes
+            Node subParams = null;
+            foreach (Node childNode in assimpNode.Children)
+                if (childNode.Name.StartsWith("SUB_PARAMS"))
+                {
+                    subParams = childNode;
+                    break;
+                }
+            if(subParams != null)
+                foreach (Node paramNode in subParams.Children)
+                {
+                    string addedParam = paramNode.Name.Substring(0, paramNode.Name.LastIndexOf(']') + 1);
+                    assimpNode.Name += "_" + addedParam;
+                }
+
             if (assimpNode.Name.StartsWith("ROOT_LOD")) //If node is a root LOD node
             {
                 string[] split = assimpNode.Name.Split('[');
