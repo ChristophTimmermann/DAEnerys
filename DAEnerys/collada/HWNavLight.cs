@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using OpenTK;
 using System.Globalization;
+using System;
 
 namespace DAEnerys
 {
@@ -154,8 +155,9 @@ namespace DAEnerys
                         {
                             state = NavLightState.BOTTOM;
                             brightness = 0;
-                            waitedTime = 0;
+                            waitedTime = phasedTime - Phase;
                         }
+                        Console.WriteLine(phasedTime);
                         phasedTime += (float)Program.ElapsedSeconds;
                         break;
 
@@ -163,7 +165,7 @@ namespace DAEnerys
                         if (waitedTime >= Style.BottomWaitTime)
                         {
                             state = NavLightState.RISE;
-                            waitedTime = 0;
+                            waitedTime = waitedTime - Style.BottomWaitTime;
                         }
                         break;
 
@@ -173,7 +175,7 @@ namespace DAEnerys
                         {
                             state = NavLightState.TOP;
                             brightness = 1;
-                            waitedTime = 0;
+                            waitedTime = waitedTime - Style.ClimbTime;
                         }
                         break;
 
@@ -181,7 +183,7 @@ namespace DAEnerys
                         if (waitedTime >= Style.TopWaitTime)
                         {
                             state = NavLightState.DECAY;
-                            waitedTime = 0;
+                            waitedTime = waitedTime - Style.TopWaitTime;
                         }
                         break;
 
@@ -191,7 +193,7 @@ namespace DAEnerys
                         {
                             state = NavLightState.BOTTOM;
                             brightness = 0;
-                            waitedTime = 0;
+                            waitedTime = waitedTime - Style.DecayTime;
                         }
                         break;
                 }
