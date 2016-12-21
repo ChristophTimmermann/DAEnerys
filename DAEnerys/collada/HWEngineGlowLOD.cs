@@ -4,7 +4,7 @@ namespace DAEnerys
 {
     public class HWEngineGlowLOD : HWMesh
     {
-        public HWEngineGlow GlowMesh;
+        public HWEngineGlow EngineGlow;
         public int LOD;
 
         public override string FormattedName
@@ -19,14 +19,23 @@ namespace DAEnerys
 
         public HWEngineGlowLOD(MeshData data, Matrix4 transform, HWEngineGlow glowMesh, int lod) : base(data, transform, new HWMaterial("fx_eng_glowbasic"))
         {
-            GlowMesh = glowMesh;
+            EngineGlow = glowMesh;
             LOD = lod;
-            Parent = GlowMesh.Parent;
+            Parent = EngineGlow.Parent;
             this.Name = glowMesh.Name;
 
             Translucent = true;
 
-            GlowMesh.AddLODMesh(this);
+            EngineGlow.AddLODMesh(this);
+        }
+
+        public override void Destroy()
+        {
+            EngineGlow.Meshes.Remove(this);
+            EngineGlow.LODMeshes[LOD].Remove(this);
+            EngineGlow = null;
+
+            base.Destroy();
         }
     }
 }

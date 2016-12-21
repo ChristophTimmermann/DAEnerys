@@ -20,6 +20,7 @@ namespace DAEnerys
         HWDockpath selectedDockpath;
         HWNavLight selectedNavLight;
         HWEngineBurn selectedEngineBurn;
+        HWEngineGlow selectedEngineGlow;
         HWMaterial selectedMaterial;
         public HWAnimation selectedAnimation;
 
@@ -30,6 +31,7 @@ namespace DAEnerys
         private int selectedShipMeshLOD;
 
         public Dictionary<object, HWEngineGlow> EngineGlowListItems = new Dictionary<object, HWEngineGlow>();
+        private int selectedEngineGlowLOD;
 
         public Dictionary<HWJoint, object> JointComboItems = new Dictionary<HWJoint, object>();
 
@@ -45,11 +47,13 @@ namespace DAEnerys
         private bool ignoreMaterialShaderChanged;
         private bool ignoreShipMeshLODMaterialChanged;
         private bool ignoreCollisionMeshParentChanged;
+        private bool ignoreEngineGlowListSelectedIndexChanged;
 
         private bool animationPlaying;
         public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
 
         const int MAX_MATERIALS_ON_MESH = 16;
+        const int MAX_LEVEL_OF_DETAIL = 3;
 
         public Main()
         {
@@ -206,8 +210,8 @@ namespace DAEnerys
 
             listEngineGlows.Items.Clear();
             comboEngineGlowParent.Items.Clear();
-            listEngineGlowLODs.Items.Clear();
             EngineGlowListItems.Clear();
+            selectedEngineGlow = null;
 
             listCollisionMeshes.Items.Clear();
             comboCollisionMeshParent.Items.Clear();
@@ -314,6 +318,7 @@ namespace DAEnerys
 
             listMaterials_SelectedIndexChanged(this, EventArgs.Empty);
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
+            listEngineGlows_SelectedIndexChanged(this, EventArgs.Empty);
 
             Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
@@ -869,7 +874,7 @@ namespace DAEnerys
             comboShipMeshParent.Enabled = true; //Enable parent combo box
 
             //Fill LOD list
-            for (int i = 0; i <= 3; i++)
+            for (int i = 0; i <= MAX_LEVEL_OF_DETAIL; i++)
                 if (selectedShipMesh.LODMeshes[i].Count > 0)
                 {
                     listShipMeshLODs.Items.Add("LOD " + i);
@@ -935,6 +940,9 @@ namespace DAEnerys
         }
         private void UpdateShipMeshName(HWShipMesh shipMesh, string newName)
         {
+            if (!listShipMeshes.Items.Contains(shipMesh.Name))
+                return;
+
             //Ship mesh with this name already exists
             if (ShipMeshListItems.ContainsKey(newName))
             {
@@ -1254,9 +1262,9 @@ namespace DAEnerys
             foreach (HWShipMeshLOD lodMesh in lodMeshes)
                 lodMesh.Destroy();
 
-            if (selectedShipMeshLOD < 3)
+            if (selectedShipMeshLOD < MAX_LEVEL_OF_DETAIL)
             {
-                for (int i = selectedShipMeshLOD + 1; i <= 3; i++)
+                for (int i = selectedShipMeshLOD + 1; i <= MAX_LEVEL_OF_DETAIL; i++)
                 {
                     lodMeshes = selectedShipMesh.LODMeshes[i].ToArray();
                     foreach (HWShipMeshLOD lodMesh in lodMeshes)
@@ -1269,12 +1277,9 @@ namespace DAEnerys
             }
 
             listShipMeshLODs.Items.RemoveAt(selectedShipMeshLOD);
-
-            listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
-
             listShipMeshLODs.ClearSelected();
 
-            listShipMeshLODs_SelectedIndexChanged(this, EventArgs.Empty);
+            listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
 
             HWScene.FindBiggestMesh();
         }
@@ -1284,24 +1289,37 @@ namespace DAEnerys
                 return;
 
             int lowestLOD = -1;
-            for (int i = 0; i <= 3; i++)
+            for (int i = 0; i <= MAX_LEVEL_OF_DETAIL; i++)
                 if (selectedShipMesh.LODMeshes[i].Count > 0)
                     lowestLOD = i;
 
+            if (lowestLOD > MAX_LEVEL_OF_DETAIL - 1)
+                return;
+
             HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new MeshData(new Vertex[0], new int[0], 0), Matrix4.Identity, HWMaterial.DefaultMaterial, selectedShipMesh, lowestLOD + 1);
-            newLODMesh.Visible = true;
 
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
             listShipMeshLODs.SelectedIndex = lowestLOD + 1;
+            listShipMeshLODs_SelectedIndexChanged(this, EventArgs.Empty);
         }
         //--------------------------------- ENGINE GLOW MESHES ---------------------------------//
         private void listEngineGlows_SelectedIndexChanged(object sender, EventArgs e)
         {
-            listEngineGlowLODs.Items.Clear(); //Clear LOD list
+            if (ignoreEngineGlowListSelectedIndexChanged)
+                return;
+
+            selectedEngineGlow = null;
+
+            listEngineGlowLODs.Items.Clear();
+            buttonEngineGlowRemove.Enabled = false;
+            buttonEngineGlowLODAdd.Enabled = false;
+            boxEngineGlowName.Enabled = false;
+            boxEngineGlowName.Clear();
+
+            comboEngineGlowParent.Enabled = false;
 
             comboEngineGlowParent.SelectedIndex = 0; //Select root joint in combo box
 
-            HWEngineGlow selectedEngineGlow = null;
             if (listEngineGlows.SelectedItem != null)
             {
                 selectedEngineGlow = EngineGlowListItems[listEngineGlows.SelectedItem];
@@ -1309,30 +1327,45 @@ namespace DAEnerys
 
             if (selectedEngineGlow != null)
             {
-                //Select parent joint in combo box
-                object item = JointComboItems[selectedEngineGlow.Parent];
-                comboEngineGlowParent.SelectedItem = item; //Select parent joint in combo box
+                buttonEngineGlowRemove.Enabled = true;
+                buttonEngineGlowLODAdd.Enabled = true;
+
+                boxEngineGlowName.Enabled = true;
+                boxEngineGlowName.Text = selectedEngineGlow.Name;
+
+                comboEngineGlowParent.Enabled = true;
+                comboEngineGlowParent.SelectedItem = selectedEngineGlow.Parent.Name; //Select parent joint in combo box
 
                 //Fill LOD list
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i <= MAX_LEVEL_OF_DETAIL; i++)
                     if (selectedEngineGlow.LODMeshes[i].Count > 0)
                     {
                         listEngineGlowLODs.Items.Add("LOD " + i);
-                        if(selectedEngineGlow.LODMeshes[i][0].Visible)
+                        if (selectedEngineGlow.LODMeshes[i][0].Visible)
                             listEngineGlowLODs.SetItemChecked(i, true);
                     }
+
+                if (selectedEngineGlow.LODMeshes[0].Count > 0)
+                    listEngineGlowLODs.SelectedIndex = 0;
+                else
+                    listEngineGlowLODs.ClearSelected();
             }
         }
         public void AddEngineGlow(HWEngineGlow glow)
         {
             object item = glow.Name;
             listEngineGlows.Items.Add(item);
-            glow.EngineGlowListItem = item;
             EngineGlowListItems.Add(item, glow);
+        }
+        public void RemoveEngineGlow(HWEngineGlow glow)
+        {
+            listEngineGlows.Items.Remove(glow.Name);
+            EngineGlowListItems.Remove(glow.Name);
         }
         private void listEngineGlowLODs_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            HWEngineGlow selectedEngineGlow = EngineGlowListItems[listEngineGlows.SelectedItem];
+            if (selectedEngineGlow == null)
+                return;
 
             bool visible = false;
             if (e.NewValue == CheckState.Checked)
@@ -1343,6 +1376,220 @@ namespace DAEnerys
 
             Renderer.InvalidateView();
             Renderer.Invalidate();
+        }
+        private void buttonEngineGlowRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineGlow == null)
+                return;
+
+            selectedEngineGlow.Destroy();
+            listEngineGlows.ClearSelected();
+            listEngineGlows_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void buttonEngineGlowAdd_Click(object sender, EventArgs e)
+        {
+            int indexOffset = 1;
+            string newName = "EngineGlow" + (listEngineGlows.Items.Count + indexOffset);
+            while (listEngineGlows.Items.Contains(newName))
+            {
+                indexOffset++;
+                newName = "EngineGlow" + (listEngineGlows.Items.Count + indexOffset);
+            }
+
+            HWEngineGlow newEngineGlow = new HWEngineGlow(HWJoint.Root, newName);
+
+            listEngineGlows.SelectedItem = newEngineGlow.Name;
+        }
+        private void boxEngineGlowName_Leave(object sender, EventArgs e)
+        {
+            if (selectedEngineGlow == null)
+                return;
+
+            UpdateEngineGlowName(selectedEngineGlow, boxEngineGlowName.Text);
+        }
+        private void boxEngineGlowName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedEngineGlow == null)
+                return;
+
+            UpdateEngineGlowName(selectedEngineGlow, boxEngineGlowName.Text);
+        }
+        private void UpdateEngineGlowName(HWEngineGlow glowMesh, string newName)
+        {
+            if (!listEngineGlows.Items.Contains(glowMesh.Name))
+                return;
+
+            //Engine glow with this name already exists
+            if (EngineGlowListItems.ContainsKey(newName))
+            {
+                HWEngineGlow existingEngineGlow = EngineGlowListItems[newName];
+                if (existingEngineGlow != glowMesh)
+                {
+                    MessageBox.Show("An engine glow with this name already exists.", "Error while changing engine glow name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxEngineGlowName.Text = glowMesh.Name;
+                    boxEngineGlowName.Focus();
+                    return;
+                }
+            }
+
+            ignoreEngineGlowListSelectedIndexChanged = true;
+            int index = listEngineGlows.Items.IndexOf(selectedEngineGlow.Name);
+            EngineGlowListItems.Remove(selectedEngineGlow.Name);
+            listEngineGlows.Items.Remove(selectedEngineGlow.Name);
+            selectedEngineGlow.Name = boxEngineGlowName.Text;
+            listEngineGlows.Items.Insert(index, selectedEngineGlow.Name);
+            EngineGlowListItems.Add(selectedEngineGlow.Name, selectedEngineGlow);
+            listEngineGlows.SelectedItem = selectedEngineGlow.Name;
+            ignoreEngineGlowListSelectedIndexChanged = false;
+        }
+        private void comboEngineGlowParent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedEngineGlow == null)
+                return;
+
+            HWJoint newParent = HWJoint.GetByName((string)comboEngineGlowParent.SelectedItem);
+            selectedEngineGlow.Parent = newParent;
+        }
+        private void listEngineGlowLODs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            buttonEngineGlowLODRemove.Enabled = false;
+            buttonEngineGlowLODImportOBJ.Enabled = false;
+            buttonEngineGlowLODExportOBJ.Enabled = false;
+            buttonEngineGlowLODExportDAE.Enabled = false;
+            buttonEngineGlowLODImportDAE.Enabled = false;
+
+            selectedEngineGlowLOD = listEngineGlowLODs.SelectedIndex;
+
+            if (selectedEngineGlowLOD == -1)
+                return;
+
+            buttonEngineGlowLODRemove.Enabled = true;
+            buttonEngineGlowLODImportOBJ.Enabled = true;
+            buttonEngineGlowLODExportOBJ.Enabled = true;
+            buttonEngineGlowLODExportDAE.Enabled = true;
+            buttonEngineGlowLODImportDAE.Enabled = true;
+        }
+        private void buttonEngineGlowLODExportDAE_Click(object sender, EventArgs e)
+        {
+            HWEngineGlow selectedEngineGlow = null;
+            if (listEngineGlows.SelectedItem != null)
+                selectedEngineGlow = EngineGlowListItems[listEngineGlows.SelectedItem];
+
+            if (listEngineGlowLODs.SelectedIndex < 0)
+                return;
+
+            saveColladaMeshDialog.FileName = OpenedFile + "_" + selectedEngineGlow.Name + "_LOD" + listEngineGlowLODs.SelectedIndex;
+            DialogResult result = saveColladaMeshDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                List<HWMesh> meshes = new List<HWMesh>();
+                meshes.Add(selectedEngineGlow.LODMeshes[listEngineGlowLODs.SelectedIndex][0]);
+                Exporter.ExportMeshes(saveColladaMeshDialog.FileName, meshes);
+            }
+        }
+        private void buttonEngineGlowLODImportDAE_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineGlow == null)
+                return;
+
+            DialogResult result = openColladaMeshDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Mesh newMesh = Importer.ImportMeshFromFile(openColladaMeshDialog.FileName);
+
+                selectedEngineGlow.LODMeshes[selectedEngineGlowLOD][0].SetData(Importer.ParseAssimpMesh(newMesh));
+                selectedEngineGlow.LODMeshes[selectedEngineGlowLOD][0].Visible = true;
+
+                listEngineGlowLODs.SetItemChecked(selectedEngineGlowLOD, true);
+                listEngineGlowLODs_SelectedIndexChanged(this, EventArgs.Empty);
+            }
+        }
+        private void buttonEngineGlowLODExportOBJ_Click(object sender, EventArgs e)
+        {
+            HWEngineGlow selectedEngineGlow = null;
+            if (listEngineGlows.SelectedItem != null)
+                selectedEngineGlow = EngineGlowListItems[listEngineGlows.SelectedItem];
+
+            if (listEngineGlowLODs.SelectedIndex < 0)
+                return;
+
+            saveObjDialog.FileName = OpenedFile + "_" + selectedEngineGlow.Name + "_LOD" + listEngineGlowLODs.SelectedIndex;
+            DialogResult result = saveObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                List<HWMesh> meshes = new List<HWMesh>();
+                meshes.Add(selectedEngineGlow.LODMeshes[listEngineGlowLODs.SelectedIndex][0]);
+                ObjExporter.ExportToFile(saveObjDialog.FileName, meshes);
+            }
+        }
+        private void buttonEngineGlowLODImportOBJ_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineGlow == null)
+                return;
+
+            DialogResult result = openObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Mesh newMesh = ObjImporter.ImportMeshFromFile(openObjDialog.FileName);
+
+                selectedEngineGlow.LODMeshes[selectedEngineGlowLOD][0].SetData(Importer.ParseAssimpMesh(newMesh));
+                selectedEngineGlow.LODMeshes[selectedEngineGlowLOD][0].Visible = true;
+
+                listEngineGlowLODs.SetItemChecked(selectedEngineGlowLOD, true);
+                listEngineGlowLODs_SelectedIndexChanged(this, EventArgs.Empty);
+            }
+        }
+        private void buttonEngineGlowLODRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineGlow == null)
+                return;
+            if (selectedEngineGlowLOD == -1)
+                return;
+
+            HWEngineGlowLOD[] lodMeshes = selectedEngineGlow.LODMeshes[selectedEngineGlowLOD].ToArray();
+            foreach (HWEngineGlowLOD lodMesh in lodMeshes)
+                lodMesh.Destroy();
+
+            if (selectedEngineGlowLOD < MAX_LEVEL_OF_DETAIL)
+            {
+                for (int i = selectedEngineGlowLOD + 1; i <= MAX_LEVEL_OF_DETAIL; i++)
+                {
+                    lodMeshes = selectedEngineGlow.LODMeshes[i].ToArray();
+                    foreach (HWEngineGlowLOD lodMesh in lodMeshes)
+                    {
+                        lodMesh.LOD -= 1;
+                        selectedEngineGlow.LODMeshes[i].Remove(lodMesh);
+                        selectedEngineGlow.LODMeshes[i - 1].Add(lodMesh);
+                    }
+                }
+            }
+
+            listEngineGlowLODs.Items.RemoveAt(selectedEngineGlowLOD);
+            listEngineGlowLODs.ClearSelected();
+
+            listEngineGlows_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void buttonEngineGlowLODAdd_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineGlow == null)
+                return;
+
+            int lowestLOD = -1;
+            for (int i = 0; i <= MAX_LEVEL_OF_DETAIL; i++)
+                if (selectedEngineGlow.LODMeshes[i].Count > 0)
+                    lowestLOD = i;
+
+            if (lowestLOD > MAX_LEVEL_OF_DETAIL - 1)
+                return;
+
+            HWEngineGlowLOD newLODMesh = new HWEngineGlowLOD(new MeshData(new Vertex[0], new int[0], 0), Matrix4.Identity, selectedEngineGlow, lowestLOD + 1);
+
+            listEngineGlows_SelectedIndexChanged(this, EventArgs.Empty);
+            listEngineGlowLODs.SelectedIndex = lowestLOD + 1;
+            listEngineGlowLODs_SelectedIndexChanged(this, EventArgs.Empty);
         }
         //--------------------------------- ENGINE BURNS ---------------------------------//
         public void AddEngineBurn(HWEngineBurn engineBurn)

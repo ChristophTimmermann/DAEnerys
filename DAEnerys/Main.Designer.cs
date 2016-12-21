@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -153,12 +153,21 @@ namespace DAEnerys
             this.panelNavLightList = new System.Windows.Forms.Panel();
             this.navLightList = new System.Windows.Forms.CheckedListBox();
             this.tabEngineGlows = new System.Windows.Forms.TabPage();
-            this.groupEngineGlowLODs = new System.Windows.Forms.GroupBox();
-            this.listEngineGlowLODs = new System.Windows.Forms.CheckedListBox();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.buttonEngineGlowRemove = new System.Windows.Forms.Button();
+            this.buttonEngineGlowAdd = new System.Windows.Forms.Button();
+            this.boxEngineGlowName = new System.Windows.Forms.TextBox();
+            this.labelEngineGlowName = new System.Windows.Forms.Label();
             this.listEngineGlows = new System.Windows.Forms.ListBox();
             this.labelEngineGlowParent = new System.Windows.Forms.Label();
             this.comboEngineGlowParent = new System.Windows.Forms.ComboBox();
+            this.groupEngineGlowLODs = new System.Windows.Forms.GroupBox();
+            this.buttonEngineGlowLODImportDAE = new System.Windows.Forms.Button();
+            this.buttonEngineGlowLODRemove = new System.Windows.Forms.Button();
+            this.buttonEngineGlowLODExportDAE = new System.Windows.Forms.Button();
+            this.buttonEngineGlowLODAdd = new System.Windows.Forms.Button();
+            this.buttonEngineGlowLODImportOBJ = new System.Windows.Forms.Button();
+            this.buttonEngineGlowLODExportOBJ = new System.Windows.Forms.Button();
+            this.listEngineGlowLODs = new System.Windows.Forms.CheckedListBox();
             this.tabEngineShapes = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.listEngineShapes = new System.Windows.Forms.CheckedListBox();
@@ -246,7 +255,6 @@ namespace DAEnerys
             this.panelNavLightList.SuspendLayout();
             this.tabEngineGlows.SuspendLayout();
             this.groupEngineGlowLODs.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.tabEngineShapes.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabEngineBurns.SuspendLayout();
@@ -1683,8 +1691,14 @@ namespace DAEnerys
             // tabEngineGlows
             // 
             this.tabEngineGlows.AutoScroll = true;
+            this.tabEngineGlows.Controls.Add(this.buttonEngineGlowRemove);
+            this.tabEngineGlows.Controls.Add(this.buttonEngineGlowAdd);
+            this.tabEngineGlows.Controls.Add(this.boxEngineGlowName);
+            this.tabEngineGlows.Controls.Add(this.labelEngineGlowName);
+            this.tabEngineGlows.Controls.Add(this.listEngineGlows);
+            this.tabEngineGlows.Controls.Add(this.labelEngineGlowParent);
+            this.tabEngineGlows.Controls.Add(this.comboEngineGlowParent);
             this.tabEngineGlows.Controls.Add(this.groupEngineGlowLODs);
-            this.tabEngineGlows.Controls.Add(this.panel2);
             this.tabEngineGlows.Location = new System.Drawing.Point(4, 76);
             this.tabEngineGlows.Name = "tabEngineGlows";
             this.tabEngineGlows.Padding = new System.Windows.Forms.Padding(3);
@@ -1693,59 +1707,67 @@ namespace DAEnerys
             this.tabEngineGlows.Text = "Engine Glows";
             this.tabEngineGlows.UseVisualStyleBackColor = true;
             // 
-            // groupEngineGlowLODs
+            // buttonEngineGlowRemove
             // 
-            this.groupEngineGlowLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.buttonEngineGlowRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEngineGlowRemove.Enabled = false;
+            this.buttonEngineGlowRemove.Location = new System.Drawing.Point(149, 211);
+            this.buttonEngineGlowRemove.Name = "buttonEngineGlowRemove";
+            this.buttonEngineGlowRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineGlowRemove.TabIndex = 26;
+            this.buttonEngineGlowRemove.Text = "Remove";
+            this.buttonEngineGlowRemove.UseVisualStyleBackColor = true;
+            this.buttonEngineGlowRemove.Click += new System.EventHandler(this.buttonEngineGlowRemove_Click);
+            // 
+            // buttonEngineGlowAdd
+            // 
+            this.buttonEngineGlowAdd.Location = new System.Drawing.Point(6, 211);
+            this.buttonEngineGlowAdd.Name = "buttonEngineGlowAdd";
+            this.buttonEngineGlowAdd.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineGlowAdd.TabIndex = 25;
+            this.buttonEngineGlowAdd.Text = "Add";
+            this.buttonEngineGlowAdd.UseVisualStyleBackColor = true;
+            this.buttonEngineGlowAdd.Click += new System.EventHandler(this.buttonEngineGlowAdd_Click);
+            // 
+            // boxEngineGlowName
+            // 
+            this.boxEngineGlowName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupEngineGlowLODs.Controls.Add(this.listEngineGlowLODs);
-            this.groupEngineGlowLODs.Location = new System.Drawing.Point(3, 471);
-            this.groupEngineGlowLODs.Name = "groupEngineGlowLODs";
-            this.groupEngineGlowLODs.Size = new System.Drawing.Size(238, 219);
-            this.groupEngineGlowLODs.TabIndex = 1;
-            this.groupEngineGlowLODs.TabStop = false;
-            this.groupEngineGlowLODs.Text = "Level of detail(s)";
+            this.boxEngineGlowName.Enabled = false;
+            this.boxEngineGlowName.Location = new System.Drawing.Point(56, 240);
+            this.boxEngineGlowName.Name = "boxEngineGlowName";
+            this.boxEngineGlowName.Size = new System.Drawing.Size(185, 20);
+            this.boxEngineGlowName.TabIndex = 28;
+            this.boxEngineGlowName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxEngineGlowName_KeyPress);
+            this.boxEngineGlowName.Leave += new System.EventHandler(this.boxEngineGlowName_Leave);
             // 
-            // listEngineGlowLODs
+            // labelEngineGlowName
             // 
-            this.listEngineGlowLODs.CheckOnClick = true;
-            this.listEngineGlowLODs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listEngineGlowLODs.FormattingEnabled = true;
-            this.listEngineGlowLODs.Location = new System.Drawing.Point(3, 16);
-            this.listEngineGlowLODs.Name = "listEngineGlowLODs";
-            this.listEngineGlowLODs.Size = new System.Drawing.Size(232, 200);
-            this.listEngineGlowLODs.TabIndex = 0;
-            this.listEngineGlowLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineGlowLODs_ItemCheck);
-            // 
-            // panel2
-            // 
-            this.panel2.AutoScroll = true;
-            this.panel2.Controls.Add(this.listEngineGlows);
-            this.panel2.Controls.Add(this.labelEngineGlowParent);
-            this.panel2.Controls.Add(this.comboEngineGlowParent);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(3, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(241, 462);
-            this.panel2.TabIndex = 0;
+            this.labelEngineGlowName.AutoSize = true;
+            this.labelEngineGlowName.Location = new System.Drawing.Point(6, 243);
+            this.labelEngineGlowName.Name = "labelEngineGlowName";
+            this.labelEngineGlowName.Size = new System.Drawing.Size(41, 13);
+            this.labelEngineGlowName.TabIndex = 27;
+            this.labelEngineGlowName.Text = "Name: ";
             // 
             // listEngineGlows
             // 
             this.listEngineGlows.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listEngineGlows.FormattingEnabled = true;
-            this.listEngineGlows.Location = new System.Drawing.Point(3, 3);
+            this.listEngineGlows.Location = new System.Drawing.Point(6, 6);
             this.listEngineGlows.Name = "listEngineGlows";
-            this.listEngineGlows.Size = new System.Drawing.Size(235, 420);
-            this.listEngineGlows.TabIndex = 10;
+            this.listEngineGlows.Size = new System.Drawing.Size(235, 199);
+            this.listEngineGlows.TabIndex = 24;
             this.listEngineGlows.SelectedIndexChanged += new System.EventHandler(this.listEngineGlows_SelectedIndexChanged);
             // 
             // labelEngineGlowParent
             // 
             this.labelEngineGlowParent.AutoSize = true;
-            this.labelEngineGlowParent.Location = new System.Drawing.Point(5, 441);
+            this.labelEngineGlowParent.Location = new System.Drawing.Point(6, 269);
             this.labelEngineGlowParent.Name = "labelEngineGlowParent";
             this.labelEngineGlowParent.Size = new System.Drawing.Size(44, 13);
-            this.labelEngineGlowParent.TabIndex = 9;
+            this.labelEngineGlowParent.TabIndex = 23;
             this.labelEngineGlowParent.Text = "Parent: ";
             // 
             // comboEngineGlowParent
@@ -1755,10 +1777,109 @@ namespace DAEnerys
             this.comboEngineGlowParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEngineGlowParent.Enabled = false;
             this.comboEngineGlowParent.FormattingEnabled = true;
-            this.comboEngineGlowParent.Location = new System.Drawing.Point(53, 438);
+            this.comboEngineGlowParent.Location = new System.Drawing.Point(56, 266);
             this.comboEngineGlowParent.Name = "comboEngineGlowParent";
             this.comboEngineGlowParent.Size = new System.Drawing.Size(185, 21);
-            this.comboEngineGlowParent.TabIndex = 8;
+            this.comboEngineGlowParent.TabIndex = 22;
+            this.comboEngineGlowParent.SelectedIndexChanged += new System.EventHandler(this.comboEngineGlowParent_SelectedIndexChanged);
+            // 
+            // groupEngineGlowLODs
+            // 
+            this.groupEngineGlowLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupEngineGlowLODs.Controls.Add(this.buttonEngineGlowLODImportDAE);
+            this.groupEngineGlowLODs.Controls.Add(this.buttonEngineGlowLODRemove);
+            this.groupEngineGlowLODs.Controls.Add(this.buttonEngineGlowLODExportDAE);
+            this.groupEngineGlowLODs.Controls.Add(this.buttonEngineGlowLODAdd);
+            this.groupEngineGlowLODs.Controls.Add(this.buttonEngineGlowLODImportOBJ);
+            this.groupEngineGlowLODs.Controls.Add(this.buttonEngineGlowLODExportOBJ);
+            this.groupEngineGlowLODs.Controls.Add(this.listEngineGlowLODs);
+            this.groupEngineGlowLODs.Location = new System.Drawing.Point(3, 293);
+            this.groupEngineGlowLODs.Name = "groupEngineGlowLODs";
+            this.groupEngineGlowLODs.Size = new System.Drawing.Size(238, 462);
+            this.groupEngineGlowLODs.TabIndex = 21;
+            this.groupEngineGlowLODs.TabStop = false;
+            this.groupEngineGlowLODs.Text = "Level of detail(s)";
+            // 
+            // buttonEngineGlowLODImportDAE
+            // 
+            this.buttonEngineGlowLODImportDAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEngineGlowLODImportDAE.Enabled = false;
+            this.buttonEngineGlowLODImportDAE.Location = new System.Drawing.Point(143, 130);
+            this.buttonEngineGlowLODImportDAE.Name = "buttonEngineGlowLODImportDAE";
+            this.buttonEngineGlowLODImportDAE.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineGlowLODImportDAE.TabIndex = 7;
+            this.buttonEngineGlowLODImportDAE.Text = "Import from DAE";
+            this.buttonEngineGlowLODImportDAE.UseVisualStyleBackColor = true;
+            this.buttonEngineGlowLODImportDAE.Click += new System.EventHandler(this.buttonEngineGlowLODImportDAE_Click);
+            // 
+            // buttonEngineGlowLODRemove
+            // 
+            this.buttonEngineGlowLODRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEngineGlowLODRemove.Enabled = false;
+            this.buttonEngineGlowLODRemove.Location = new System.Drawing.Point(143, 101);
+            this.buttonEngineGlowLODRemove.Name = "buttonEngineGlowLODRemove";
+            this.buttonEngineGlowLODRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineGlowLODRemove.TabIndex = 5;
+            this.buttonEngineGlowLODRemove.Text = "Remove";
+            this.buttonEngineGlowLODRemove.UseVisualStyleBackColor = true;
+            this.buttonEngineGlowLODRemove.Click += new System.EventHandler(this.buttonEngineGlowLODRemove_Click);
+            // 
+            // buttonEngineGlowLODExportDAE
+            // 
+            this.buttonEngineGlowLODExportDAE.Enabled = false;
+            this.buttonEngineGlowLODExportDAE.Location = new System.Drawing.Point(3, 130);
+            this.buttonEngineGlowLODExportDAE.Name = "buttonEngineGlowLODExportDAE";
+            this.buttonEngineGlowLODExportDAE.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineGlowLODExportDAE.TabIndex = 6;
+            this.buttonEngineGlowLODExportDAE.Text = "Export to DAE";
+            this.buttonEngineGlowLODExportDAE.UseVisualStyleBackColor = true;
+            this.buttonEngineGlowLODExportDAE.Click += new System.EventHandler(this.buttonEngineGlowLODExportDAE_Click);
+            // 
+            // buttonEngineGlowLODAdd
+            // 
+            this.buttonEngineGlowLODAdd.Location = new System.Drawing.Point(3, 101);
+            this.buttonEngineGlowLODAdd.Name = "buttonEngineGlowLODAdd";
+            this.buttonEngineGlowLODAdd.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineGlowLODAdd.TabIndex = 4;
+            this.buttonEngineGlowLODAdd.Text = "Add";
+            this.buttonEngineGlowLODAdd.UseVisualStyleBackColor = true;
+            this.buttonEngineGlowLODAdd.Click += new System.EventHandler(this.buttonEngineGlowLODAdd_Click);
+            // 
+            // buttonEngineGlowLODImportOBJ
+            // 
+            this.buttonEngineGlowLODImportOBJ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEngineGlowLODImportOBJ.Enabled = false;
+            this.buttonEngineGlowLODImportOBJ.Location = new System.Drawing.Point(143, 159);
+            this.buttonEngineGlowLODImportOBJ.Name = "buttonEngineGlowLODImportOBJ";
+            this.buttonEngineGlowLODImportOBJ.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineGlowLODImportOBJ.TabIndex = 2;
+            this.buttonEngineGlowLODImportOBJ.Text = "Import from OBJ";
+            this.buttonEngineGlowLODImportOBJ.UseVisualStyleBackColor = true;
+            this.buttonEngineGlowLODImportOBJ.Click += new System.EventHandler(this.buttonEngineGlowLODImportOBJ_Click);
+            // 
+            // buttonEngineGlowLODExportOBJ
+            // 
+            this.buttonEngineGlowLODExportOBJ.Enabled = false;
+            this.buttonEngineGlowLODExportOBJ.Location = new System.Drawing.Point(3, 159);
+            this.buttonEngineGlowLODExportOBJ.Name = "buttonEngineGlowLODExportOBJ";
+            this.buttonEngineGlowLODExportOBJ.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineGlowLODExportOBJ.TabIndex = 1;
+            this.buttonEngineGlowLODExportOBJ.Text = "Export to OBJ";
+            this.buttonEngineGlowLODExportOBJ.UseVisualStyleBackColor = true;
+            this.buttonEngineGlowLODExportOBJ.Click += new System.EventHandler(this.buttonEngineGlowLODExportOBJ_Click);
+            // 
+            // listEngineGlowLODs
+            // 
+            this.listEngineGlowLODs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listEngineGlowLODs.FormattingEnabled = true;
+            this.listEngineGlowLODs.Location = new System.Drawing.Point(3, 16);
+            this.listEngineGlowLODs.Name = "listEngineGlowLODs";
+            this.listEngineGlowLODs.Size = new System.Drawing.Size(232, 79);
+            this.listEngineGlowLODs.TabIndex = 0;
+            this.listEngineGlowLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineGlowLODs_ItemCheck);
+            this.listEngineGlowLODs.SelectedIndexChanged += new System.EventHandler(this.listEngineGlowLODs_SelectedIndexChanged);
             // 
             // tabEngineShapes
             // 
@@ -2216,9 +2337,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle37;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -2226,14 +2347,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle39.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle39;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -2242,9 +2363,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle40;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -2257,9 +2378,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle38;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -2405,9 +2526,8 @@ namespace DAEnerys
             this.groupNavLightFlags.PerformLayout();
             this.panelNavLightList.ResumeLayout(false);
             this.tabEngineGlows.ResumeLayout(false);
+            this.tabEngineGlows.PerformLayout();
             this.groupEngineGlowLODs.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.tabEngineShapes.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
@@ -2504,12 +2624,6 @@ namespace DAEnerys
         private System.Windows.Forms.Panel panelNavLightList;
         private System.Windows.Forms.CheckedListBox navLightList;
         private System.Windows.Forms.TabPage tabEngineGlows;
-        private System.Windows.Forms.GroupBox groupEngineGlowLODs;
-        private System.Windows.Forms.CheckedListBox listEngineGlowLODs;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.ListBox listEngineGlows;
-        private System.Windows.Forms.Label labelEngineGlowParent;
-        private System.Windows.Forms.ComboBox comboEngineGlowParent;
         private System.Windows.Forms.ToolStripButton buttonHotkeys;
         private System.Windows.Forms.TabPage tabEngineShapes;
         private System.Windows.Forms.Panel panel3;
@@ -2605,6 +2719,21 @@ namespace DAEnerys
         private System.Windows.Forms.CheckedListBox listCollisionMeshes;
         private System.Windows.Forms.Label labelCollisionMeshParent;
         private System.Windows.Forms.ComboBox comboCollisionMeshParent;
+        private System.Windows.Forms.Button buttonEngineGlowRemove;
+        private System.Windows.Forms.Button buttonEngineGlowAdd;
+        private System.Windows.Forms.TextBox boxEngineGlowName;
+        private System.Windows.Forms.Label labelEngineGlowName;
+        private System.Windows.Forms.ListBox listEngineGlows;
+        private System.Windows.Forms.Label labelEngineGlowParent;
+        private System.Windows.Forms.ComboBox comboEngineGlowParent;
+        private System.Windows.Forms.GroupBox groupEngineGlowLODs;
+        private System.Windows.Forms.Button buttonEngineGlowLODImportDAE;
+        private System.Windows.Forms.Button buttonEngineGlowLODRemove;
+        private System.Windows.Forms.Button buttonEngineGlowLODExportDAE;
+        private System.Windows.Forms.Button buttonEngineGlowLODAdd;
+        private System.Windows.Forms.Button buttonEngineGlowLODImportOBJ;
+        private System.Windows.Forms.Button buttonEngineGlowLODExportOBJ;
+        private System.Windows.Forms.CheckedListBox listEngineGlowLODs;
     }
 }
 

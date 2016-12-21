@@ -20,7 +20,12 @@ namespace DAEnerys
                 }
             }
         }
-        public string Name;
+
+        private string name;
+        public string Name
+        {
+            get { return name; } set { name = value; foreach (HWShipMeshLOD mesh in Meshes) mesh.Name = value; }
+        }
 
         public List<ShipMeshTag> Tags = new List<ShipMeshTag>();
 

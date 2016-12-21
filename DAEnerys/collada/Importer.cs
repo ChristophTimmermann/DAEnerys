@@ -74,7 +74,7 @@ namespace DAEnerys
 
             LogStream logStream = new LogStream(delegate (string msg, string userData)
             {
-                Console.WriteLine(msg);
+                Log.WriteLine(msg);
             });
             logStream.Attach();
 
@@ -84,7 +84,8 @@ namespace DAEnerys
             //Blender Homeworld Toolkit fix
             string fixedColladaPath = FixCollada(fileName);
 
-            Collada = importer.ImportFile(fixedColladaPath, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            //Collada = importer.ImportFile(fixedColladaPath, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            Collada = importer.ImportFile(fixedColladaPath, PostProcessSteps.JoinIdenticalVertices | PostProcessSteps.Triangulate | PostProcessSteps.ValidateDataStructure);
             importer.Dispose();
 
             //Manual parsing
@@ -138,11 +139,11 @@ namespace DAEnerys
             importer.SetConfig(config);
             LogStream logStream = new LogStream(delegate (string msg, string userData)
             {
-                Console.WriteLine(msg);
+                Log.WriteLine(msg);
             });
             logStream.Attach();
 
-            Scene dae = importer.ImportFile(path, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            Scene dae = importer.ImportFile(path, PostProcessSteps.JoinIdenticalVertices | PostProcessSteps.Triangulate | PostProcessSteps.ValidateDataStructure);
             importer.Dispose();
 
             return dae.Meshes.ToArray();
@@ -155,11 +156,11 @@ namespace DAEnerys
             importer.SetConfig(config);
             LogStream logStream = new LogStream(delegate (string msg, string userData)
             {
-                Console.WriteLine(msg);
+                Log.WriteLine(msg);
             });
             logStream.Attach();
 
-            Scene dae = importer.ImportFile(path, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            Scene dae = importer.ImportFile(path, PostProcessSteps.JoinIdenticalVertices | PostProcessSteps.Triangulate | PostProcessSteps.ValidateDataStructure);
             importer.Dispose();
 
             return dae.Meshes[0];

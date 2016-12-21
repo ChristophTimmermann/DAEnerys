@@ -6,13 +6,28 @@ namespace DAEnerys
     {
         public static List<HWEngineGlow> EngineGlows = new List<HWEngineGlow>();
 
-        public HWJoint Parent;
-        public string Name;
+        private HWJoint parent;
+        public HWJoint Parent
+        {
+            get { return parent; }
+            set
+            {
+                parent = value;
+                foreach (HWEngineGlowLOD mesh in Meshes)
+                {
+                    mesh.Parent = value;
+                }
+            }
+        }
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set { name = value; foreach (HWEngineGlowLOD mesh in Meshes) mesh.Name = value; }
+        }
 
         public List<HWEngineGlowLOD> Meshes = new List<HWEngineGlowLOD>();
         public List<HWEngineGlowLOD>[] LODMeshes = new List<HWEngineGlowLOD>[4];
-
-        public object EngineGlowListItem;
 
         public HWEngineGlow(HWJoint parent, string name)
         {
@@ -38,6 +53,16 @@ namespace DAEnerys
                 foreach (List<HWEngineGlowLOD> list in engineGlow.LODMeshes)
                     foreach (HWEngineGlowLOD lodMesh in list)
                         lodMesh.Scale.Z = Renderer.ThrusterInterpolation;
+        }
+
+        public void Destroy()
+        {
+            EngineGlows.Remove(this);
+            Program.main.RemoveEngineGlow(this);
+            HWEngineGlowLOD[] lodMeshes = Meshes.ToArray();
+            for (int i = 0; i < lodMeshes.Length; i++)
+                lodMeshes[i].Destroy();
+            Parent = null;
         }
     }
 }
