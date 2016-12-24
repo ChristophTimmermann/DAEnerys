@@ -15,6 +15,43 @@ namespace DAEnerys
 
         public int NavLightListItemIndex;
 
+        public override HWElement Parent
+        {
+            get
+            {
+                return base.Parent;
+            }
+
+            set
+            {
+                base.Parent = value;
+                if (Icon != null)
+                    Icon.Position = WorldMatrix.ExtractTranslation();
+                if (RenderIcosphere != null)
+                    RenderIcosphere.ModelMatrix = RenderIcosphere.ModelMatrix.ClearTranslation() * Matrix4.CreateTranslation(WorldMatrix.ExtractTranslation());
+                if (RenderLight != null)
+                    RenderLight.Position = new Vector4(WorldMatrix.ExtractTranslation(), RenderLight.Position.W);
+            }
+        }
+
+        public override Vector3 RelativePosition
+        {
+            get
+            {
+                return base.RelativePosition;
+            }
+            set
+            {
+                base.RelativePosition = value;
+                if (Icon != null)
+                    Icon.Position = WorldMatrix.ExtractTranslation();
+                if (RenderIcosphere != null)
+                    RenderIcosphere.ModelMatrix = RenderIcosphere.ModelMatrix.ClearTranslation() * Matrix4.CreateTranslation(WorldMatrix.ExtractTranslation());
+                if (RenderLight != null)
+                    RenderLight.Position = new Vector4(WorldMatrix.ExtractTranslation(), RenderLight.Position.W);
+            }
+        }
+
         public override string FormattedName
         {
             get
@@ -38,20 +75,26 @@ namespace DAEnerys
                     flags += "]";
                 }
                 string sect = "";
-                if(Sect != 0)
+                if (Sect != 0)
                     sect = "_Sect[" + Sect.ToString() + "]";
 
                 return "NAVL[" + Name + "]" + type + size + phase + frequency + color + distance + flags + sect;
             }
         }
 
-        public HWNavLightStyle Style;
+        private HWNavLightStyle style;
+        public HWNavLightStyle Style { get { return style; } set { style = value; Reset(); Renderer.Invalidate(); } }
         public float Size;
-        public float Phase;
-        public float Frequency;
-        public Vector3 Color;
-        public float Distance;
-        public List<NavLightFlag> Flags;
+        private float phase;
+        public float Phase { get { return phase; } set { phase = value; Reset(); Renderer.Invalidate(); } }
+        private float frequency;
+        public float Frequency { get { return frequency; } set { frequency = value; Reset(); Renderer.Invalidate(); } }
+        private Vector3 color;
+        public Vector3 Color { get { return color; } set { color = value; Setup(); } }
+        private float distance;
+        public float Distance { get { return distance; } set { distance = value; Setup(); } }
+        private List<NavLightFlag> flags = new List<NavLightFlag>();
+        public List<NavLightFlag> Flags { get { return flags; } set { flags = value; Setup(); } }
         public int Sect;
 
         //Editor
@@ -75,8 +118,8 @@ namespace DAEnerys
             set
             {
                 visible = value;
-                
-                if(RenderLight != null)
+
+                if (RenderLight != null)
                     RenderLight.Enabled = value;
 
                 if (RenderSprite != null)
@@ -101,8 +144,35 @@ namespace DAEnerys
             Flags = flags;
             Sect = sect;
 
+            Setup();
+
+            NavLights.Add(this);
+            Program.main.AddNavLight(this);
+
+            Visible = true;
+            Program.main.CheckNavLightVisible(this, true); //Set all navlights visible by default
+        }
+
+        private void Setup()
+        {
+            if (RenderLight != null)
+            {
+                RenderLight.Destroy();
+                RenderLight = null;
+            }
+            if (RenderIcosphere != null)
+            {
+                RenderIcosphere.Destroy();
+                RenderIcosphere = null;
+            }
+            if (Icon != null)
+            {
+                Icon.Destroy();
+                Icon = null;
+            }
+
             //If the navlight emits light
-            if(Distance > 0)
+            if (Distance > 0)
             {
                 if (!Style.NoSelfLight)
                 {
@@ -112,11 +182,11 @@ namespace DAEnerys
                 RenderIcosphere.Scale = new Vector3(distance);
                 RenderIcosphere.NeverDrawInFront = true;
                 RenderIcosphere.Wireframe = true;
-                RenderIcosphere.Visible = false;
+                RenderIcosphere.Visible = Program.main.DrawNavLightRadius;
             }
 
             //If the navlight has a sprite
-            if(Flags.Contains(NavLightFlag.Sprite))
+            if (Flags.Contains(NavLightFlag.Sprite))
             {
                 /*RenderSprite = new EditorIcon(Node.AbsolutePosition, HWData.NavLightSprite);
                 RenderSprite.BlackIsTransparent = true;
@@ -132,16 +202,10 @@ namespace DAEnerys
             Icon.VertexColored = false;
             Icon.Material.DiffuseColor = Color;
 
-            if (Phase > 0)
-                state = NavLightState.SHIFT;
-            else
-                state = NavLightState.BOTTOM;
+            Reset();
 
-            NavLights.Add(this);
-            Program.main.AddNavLight(this);
-
-            Visible = true;
-            Program.main.CheckNavLightVisible(this, true); //Set all navlights visible by default
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         public void Update()
@@ -157,7 +221,6 @@ namespace DAEnerys
                             brightness = 0;
                             waitedTime = phasedTime - Phase;
                         }
-                        Console.WriteLine(phasedTime);
                         phasedTime += (float)Program.ElapsedSeconds;
                         break;
 
@@ -222,12 +285,52 @@ namespace DAEnerys
 
             waitedTime += (float)Program.ElapsedSeconds * Frequency;
         }
+
+        public static HWNavLight GetByName(string name)
+        {
+            foreach (HWNavLight light in NavLights)
+                if (light.Name == name)
+                    return light;
+
+            return null;
+        }
+
+        public void Reset()
+        {
+            foreach (HWNavLight navLight in HWNavLight.NavLights)
+            {
+                if (navLight.Phase > 0)
+                    navLight.state = NavLightState.SHIFT;
+                else
+                    navLight.state = NavLightState.BOTTOM;
+
+                navLight.brightness = 0;
+                navLight.waitedTime = 0;
+                navLight.phasedTime = 0;
+            }
+        }
+
+        public override void Destroy()
+        {
+            NavLights.Remove(this);
+            Program.main.RemoveNavLight(this);
+            Icon.Destroy();
+            if (RenderIcosphere != null)
+                RenderIcosphere.Destroy();
+            if (RenderSprite != null)
+                RenderSprite.Destroy();
+            if (RenderLight != null)
+                RenderLight.Destroy();
+
+            base.Destroy();
+        }
     }
 
+    [Flags]
     public enum NavLightFlag
     {
-        Sprite = 1,
-        HighEnd = 2,
+        Sprite = 0,
+        HighEnd = 1,
     }
 
     enum NavLightState

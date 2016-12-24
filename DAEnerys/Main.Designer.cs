@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -132,6 +132,20 @@ namespace DAEnerys
             this.panelDockpathList = new System.Windows.Forms.Panel();
             this.dockpathList = new System.Windows.Forms.CheckedListBox();
             this.tabNavLights = new System.Windows.Forms.TabPage();
+            this.groupNavLightPosition = new System.Windows.Forms.GroupBox();
+            this.numericNavLightPositionZ = new System.Windows.Forms.NumericUpDown();
+            this.labelNavLightPositionZ = new System.Windows.Forms.Label();
+            this.numericNavLightPositionY = new System.Windows.Forms.NumericUpDown();
+            this.labelNavLightPositionY = new System.Windows.Forms.Label();
+            this.numericNavLightPositionX = new System.Windows.Forms.NumericUpDown();
+            this.labelNavLightPositionX = new System.Windows.Forms.Label();
+            this.labelNavLightParent = new System.Windows.Forms.Label();
+            this.comboNavLightParent = new System.Windows.Forms.ComboBox();
+            this.boxNavLightName = new System.Windows.Forms.TextBox();
+            this.labelNavLightName = new System.Windows.Forms.Label();
+            this.listNavLights = new System.Windows.Forms.CheckedListBox();
+            this.buttonNavLightRemove = new System.Windows.Forms.Button();
+            this.buttonNavLightAdd = new System.Windows.Forms.Button();
             this.groupNavLightPreview = new System.Windows.Forms.GroupBox();
             this.checkNavLightDrawRadius = new System.Windows.Forms.CheckBox();
             this.groupNavLightParameters = new System.Windows.Forms.GroupBox();
@@ -150,8 +164,6 @@ namespace DAEnerys
             this.groupNavLightFlags = new System.Windows.Forms.GroupBox();
             this.checkNavLightFlagHighEnd = new System.Windows.Forms.CheckBox();
             this.checkNavLightFlagSprite = new System.Windows.Forms.CheckBox();
-            this.panelNavLightList = new System.Windows.Forms.Panel();
-            this.navLightList = new System.Windows.Forms.CheckedListBox();
             this.tabEngineGlows = new System.Windows.Forms.TabPage();
             this.buttonEngineGlowRemove = new System.Windows.Forms.Button();
             this.buttonEngineGlowAdd = new System.Windows.Forms.Button();
@@ -214,6 +226,7 @@ namespace DAEnerys
             this.browseMaterialTexturesDIFFDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveColladaMeshDialog = new System.Windows.Forms.SaveFileDialog();
             this.openColladaMeshDialog = new System.Windows.Forms.OpenFileDialog();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -245,6 +258,10 @@ namespace DAEnerys
             this.groupDockpathFamilies.SuspendLayout();
             this.panelDockpathList.SuspendLayout();
             this.tabNavLights.SuspendLayout();
+            this.groupNavLightPosition.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightPositionZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightPositionY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightPositionX)).BeginInit();
             this.groupNavLightPreview.SuspendLayout();
             this.groupNavLightParameters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericNavLightDistance)).BeginInit();
@@ -252,7 +269,6 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.numericNavLightPhase)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericNavLightSize)).BeginInit();
             this.groupNavLightFlags.SuspendLayout();
-            this.panelNavLightList.SuspendLayout();
             this.tabEngineGlows.SuspendLayout();
             this.groupEngineGlowLODs.SuspendLayout();
             this.tabEngineShapes.SuspendLayout();
@@ -1419,10 +1435,17 @@ namespace DAEnerys
             // tabNavLights
             // 
             this.tabNavLights.AutoScroll = true;
+            this.tabNavLights.Controls.Add(this.groupNavLightPosition);
+            this.tabNavLights.Controls.Add(this.labelNavLightParent);
+            this.tabNavLights.Controls.Add(this.comboNavLightParent);
+            this.tabNavLights.Controls.Add(this.boxNavLightName);
+            this.tabNavLights.Controls.Add(this.labelNavLightName);
+            this.tabNavLights.Controls.Add(this.listNavLights);
+            this.tabNavLights.Controls.Add(this.buttonNavLightRemove);
+            this.tabNavLights.Controls.Add(this.buttonNavLightAdd);
             this.tabNavLights.Controls.Add(this.groupNavLightPreview);
             this.tabNavLights.Controls.Add(this.groupNavLightParameters);
             this.tabNavLights.Controls.Add(this.groupNavLightFlags);
-            this.tabNavLights.Controls.Add(this.panelNavLightList);
             this.tabNavLights.Location = new System.Drawing.Point(4, 76);
             this.tabNavLights.Name = "tabNavLights";
             this.tabNavLights.Size = new System.Drawing.Size(247, 756);
@@ -1430,15 +1453,207 @@ namespace DAEnerys
             this.tabNavLights.Text = "NavLights";
             this.tabNavLights.UseVisualStyleBackColor = true;
             // 
+            // groupNavLightPosition
+            // 
+            this.groupNavLightPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupNavLightPosition.Controls.Add(this.numericNavLightPositionZ);
+            this.groupNavLightPosition.Controls.Add(this.labelNavLightPositionZ);
+            this.groupNavLightPosition.Controls.Add(this.numericNavLightPositionY);
+            this.groupNavLightPosition.Controls.Add(this.labelNavLightPositionY);
+            this.groupNavLightPosition.Controls.Add(this.numericNavLightPositionX);
+            this.groupNavLightPosition.Controls.Add(this.labelNavLightPositionX);
+            this.groupNavLightPosition.Location = new System.Drawing.Point(6, 338);
+            this.groupNavLightPosition.Name = "groupNavLightPosition";
+            this.groupNavLightPosition.Size = new System.Drawing.Size(235, 93);
+            this.groupNavLightPosition.TabIndex = 25;
+            this.groupNavLightPosition.TabStop = false;
+            this.groupNavLightPosition.Text = "Position";
+            // 
+            // numericNavLightPositionZ
+            // 
+            this.numericNavLightPositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericNavLightPositionZ.DecimalPlaces = 4;
+            this.numericNavLightPositionZ.Enabled = false;
+            this.numericNavLightPositionZ.Location = new System.Drawing.Point(72, 66);
+            this.numericNavLightPositionZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericNavLightPositionZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericNavLightPositionZ.Name = "numericNavLightPositionZ";
+            this.numericNavLightPositionZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericNavLightPositionZ.Size = new System.Drawing.Size(157, 20);
+            this.numericNavLightPositionZ.TabIndex = 27;
+            this.numericNavLightPositionZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericNavLightPositionZ.ValueChanged += new System.EventHandler(this.numericNavLightPosition_ValueChanged);
+            // 
+            // labelNavLightPositionZ
+            // 
+            this.labelNavLightPositionZ.AutoSize = true;
+            this.labelNavLightPositionZ.Location = new System.Drawing.Point(6, 68);
+            this.labelNavLightPositionZ.Name = "labelNavLightPositionZ";
+            this.labelNavLightPositionZ.Size = new System.Drawing.Size(17, 13);
+            this.labelNavLightPositionZ.TabIndex = 26;
+            this.labelNavLightPositionZ.Text = "Z:";
+            // 
+            // numericNavLightPositionY
+            // 
+            this.numericNavLightPositionY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericNavLightPositionY.DecimalPlaces = 4;
+            this.numericNavLightPositionY.Enabled = false;
+            this.numericNavLightPositionY.Location = new System.Drawing.Point(72, 40);
+            this.numericNavLightPositionY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericNavLightPositionY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericNavLightPositionY.Name = "numericNavLightPositionY";
+            this.numericNavLightPositionY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericNavLightPositionY.Size = new System.Drawing.Size(157, 20);
+            this.numericNavLightPositionY.TabIndex = 25;
+            this.numericNavLightPositionY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericNavLightPositionY.ValueChanged += new System.EventHandler(this.numericNavLightPosition_ValueChanged);
+            // 
+            // labelNavLightPositionY
+            // 
+            this.labelNavLightPositionY.AutoSize = true;
+            this.labelNavLightPositionY.Location = new System.Drawing.Point(6, 42);
+            this.labelNavLightPositionY.Name = "labelNavLightPositionY";
+            this.labelNavLightPositionY.Size = new System.Drawing.Size(17, 13);
+            this.labelNavLightPositionY.TabIndex = 24;
+            this.labelNavLightPositionY.Text = "Y:";
+            // 
+            // numericNavLightPositionX
+            // 
+            this.numericNavLightPositionX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericNavLightPositionX.DecimalPlaces = 4;
+            this.numericNavLightPositionX.Enabled = false;
+            this.numericNavLightPositionX.Location = new System.Drawing.Point(72, 14);
+            this.numericNavLightPositionX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericNavLightPositionX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericNavLightPositionX.Name = "numericNavLightPositionX";
+            this.numericNavLightPositionX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericNavLightPositionX.Size = new System.Drawing.Size(157, 20);
+            this.numericNavLightPositionX.TabIndex = 23;
+            this.numericNavLightPositionX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericNavLightPositionX.ValueChanged += new System.EventHandler(this.numericNavLightPosition_ValueChanged);
+            // 
+            // labelNavLightPositionX
+            // 
+            this.labelNavLightPositionX.AutoSize = true;
+            this.labelNavLightPositionX.Location = new System.Drawing.Point(6, 16);
+            this.labelNavLightPositionX.Name = "labelNavLightPositionX";
+            this.labelNavLightPositionX.Size = new System.Drawing.Size(17, 13);
+            this.labelNavLightPositionX.TabIndex = 22;
+            this.labelNavLightPositionX.Text = "X:";
+            // 
+            // labelNavLightParent
+            // 
+            this.labelNavLightParent.AutoSize = true;
+            this.labelNavLightParent.Location = new System.Drawing.Point(3, 314);
+            this.labelNavLightParent.Name = "labelNavLightParent";
+            this.labelNavLightParent.Size = new System.Drawing.Size(44, 13);
+            this.labelNavLightParent.TabIndex = 24;
+            this.labelNavLightParent.Text = "Parent: ";
+            // 
+            // comboNavLightParent
+            // 
+            this.comboNavLightParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboNavLightParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboNavLightParent.Enabled = false;
+            this.comboNavLightParent.FormattingEnabled = true;
+            this.comboNavLightParent.Location = new System.Drawing.Point(56, 311);
+            this.comboNavLightParent.Name = "comboNavLightParent";
+            this.comboNavLightParent.Size = new System.Drawing.Size(185, 21);
+            this.comboNavLightParent.TabIndex = 23;
+            this.comboNavLightParent.SelectedIndexChanged += new System.EventHandler(this.comboNavLightParent_SelectedIndexChanged);
+            // 
+            // boxNavLightName
+            // 
+            this.boxNavLightName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.boxNavLightName.Enabled = false;
+            this.boxNavLightName.Location = new System.Drawing.Point(56, 285);
+            this.boxNavLightName.Name = "boxNavLightName";
+            this.boxNavLightName.Size = new System.Drawing.Size(185, 20);
+            this.boxNavLightName.TabIndex = 22;
+            this.boxNavLightName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxNavLightName_KeyPress);
+            this.boxNavLightName.Leave += new System.EventHandler(this.boxNavLightName_Leave);
+            // 
+            // labelNavLightName
+            // 
+            this.labelNavLightName.AutoSize = true;
+            this.labelNavLightName.Location = new System.Drawing.Point(3, 288);
+            this.labelNavLightName.Name = "labelNavLightName";
+            this.labelNavLightName.Size = new System.Drawing.Size(41, 13);
+            this.labelNavLightName.TabIndex = 21;
+            this.labelNavLightName.Text = "Name: ";
+            // 
+            // listNavLights
+            // 
+            this.listNavLights.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listNavLights.FormattingEnabled = true;
+            this.listNavLights.Location = new System.Drawing.Point(6, 6);
+            this.listNavLights.Name = "listNavLights";
+            this.listNavLights.Size = new System.Drawing.Size(235, 244);
+            this.listNavLights.TabIndex = 20;
+            this.listNavLights.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listNavLights_ItemCheck);
+            this.listNavLights.SelectedIndexChanged += new System.EventHandler(this.listNavLights_SelectedIndexChanged);
+            // 
+            // buttonNavLightRemove
+            // 
+            this.buttonNavLightRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonNavLightRemove.Enabled = false;
+            this.buttonNavLightRemove.Location = new System.Drawing.Point(149, 256);
+            this.buttonNavLightRemove.Name = "buttonNavLightRemove";
+            this.buttonNavLightRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonNavLightRemove.TabIndex = 19;
+            this.buttonNavLightRemove.Text = "Remove";
+            this.buttonNavLightRemove.UseVisualStyleBackColor = true;
+            this.buttonNavLightRemove.Click += new System.EventHandler(this.buttonNavLightRemove_Click);
+            // 
+            // buttonNavLightAdd
+            // 
+            this.buttonNavLightAdd.Location = new System.Drawing.Point(6, 256);
+            this.buttonNavLightAdd.Name = "buttonNavLightAdd";
+            this.buttonNavLightAdd.Size = new System.Drawing.Size(92, 23);
+            this.buttonNavLightAdd.TabIndex = 18;
+            this.buttonNavLightAdd.Text = "Add";
+            this.buttonNavLightAdd.UseVisualStyleBackColor = true;
+            this.buttonNavLightAdd.Click += new System.EventHandler(this.buttonNavLightAdd_Click);
+            // 
             // groupNavLightPreview
             // 
-            this.groupNavLightPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupNavLightPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupNavLightPreview.Controls.Add(this.checkNavLightDrawRadius);
-            this.groupNavLightPreview.Location = new System.Drawing.Point(8, 642);
+            this.groupNavLightPreview.Location = new System.Drawing.Point(6, 677);
             this.groupNavLightPreview.Name = "groupNavLightPreview";
-            this.groupNavLightPreview.Size = new System.Drawing.Size(231, 145);
+            this.groupNavLightPreview.Size = new System.Drawing.Size(235, 43);
             this.groupNavLightPreview.TabIndex = 14;
             this.groupNavLightPreview.TabStop = false;
             this.groupNavLightPreview.Text = "Preview";
@@ -1470,9 +1685,9 @@ namespace DAEnerys
             this.groupNavLightParameters.Controls.Add(this.labelNavLightSize);
             this.groupNavLightParameters.Controls.Add(this.numericNavLightSize);
             this.groupNavLightParameters.Controls.Add(this.labelNavLightType);
-            this.groupNavLightParameters.Location = new System.Drawing.Point(8, 402);
+            this.groupNavLightParameters.Location = new System.Drawing.Point(6, 437);
             this.groupNavLightParameters.Name = "groupNavLightParameters";
-            this.groupNavLightParameters.Size = new System.Drawing.Size(232, 185);
+            this.groupNavLightParameters.Size = new System.Drawing.Size(235, 185);
             this.groupNavLightParameters.TabIndex = 13;
             this.groupNavLightParameters.TabStop = false;
             this.groupNavLightParameters.Text = "Parameters";
@@ -1486,8 +1701,9 @@ namespace DAEnerys
             this.comboNavLightType.FormattingEnabled = true;
             this.comboNavLightType.Location = new System.Drawing.Point(72, 19);
             this.comboNavLightType.Name = "comboNavLightType";
-            this.comboNavLightType.Size = new System.Drawing.Size(154, 21);
+            this.comboNavLightType.Size = new System.Drawing.Size(157, 21);
             this.comboNavLightType.TabIndex = 24;
+            this.comboNavLightType.SelectedIndexChanged += new System.EventHandler(this.comboNavLightType_SelectedIndexChanged);
             // 
             // labelNavLightDistance
             // 
@@ -1512,9 +1728,10 @@ namespace DAEnerys
             0});
             this.numericNavLightDistance.Name = "numericNavLightDistance";
             this.numericNavLightDistance.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericNavLightDistance.Size = new System.Drawing.Size(154, 20);
+            this.numericNavLightDistance.Size = new System.Drawing.Size(157, 20);
             this.numericNavLightDistance.TabIndex = 22;
             this.numericNavLightDistance.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericNavLightDistance.ValueChanged += new System.EventHandler(this.numericNavLightDistance_ValueChanged);
             // 
             // labelNavLightColor
             // 
@@ -1534,9 +1751,10 @@ namespace DAEnerys
             this.buttonNavLightColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonNavLightColor.Location = new System.Drawing.Point(72, 123);
             this.buttonNavLightColor.Name = "buttonNavLightColor";
-            this.buttonNavLightColor.Size = new System.Drawing.Size(154, 20);
+            this.buttonNavLightColor.Size = new System.Drawing.Size(157, 20);
             this.buttonNavLightColor.TabIndex = 20;
             this.buttonNavLightColor.UseVisualStyleBackColor = false;
+            this.buttonNavLightColor.Click += new System.EventHandler(this.buttonNavLightColor_Click);
             // 
             // labelNavLightFrequency
             // 
@@ -1553,6 +1771,11 @@ namespace DAEnerys
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericNavLightFrequency.DecimalPlaces = 2;
             this.numericNavLightFrequency.Enabled = false;
+            this.numericNavLightFrequency.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.numericNavLightFrequency.Location = new System.Drawing.Point(72, 97);
             this.numericNavLightFrequency.Maximum = new decimal(new int[] {
             1000,
@@ -1561,9 +1784,10 @@ namespace DAEnerys
             0});
             this.numericNavLightFrequency.Name = "numericNavLightFrequency";
             this.numericNavLightFrequency.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericNavLightFrequency.Size = new System.Drawing.Size(154, 20);
+            this.numericNavLightFrequency.Size = new System.Drawing.Size(157, 20);
             this.numericNavLightFrequency.TabIndex = 18;
             this.numericNavLightFrequency.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericNavLightFrequency.ValueChanged += new System.EventHandler(this.numericNavLightFrequency_ValueChanged);
             // 
             // label4
             // 
@@ -1580,6 +1804,11 @@ namespace DAEnerys
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericNavLightPhase.DecimalPlaces = 2;
             this.numericNavLightPhase.Enabled = false;
+            this.numericNavLightPhase.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.numericNavLightPhase.Location = new System.Drawing.Point(72, 71);
             this.numericNavLightPhase.Maximum = new decimal(new int[] {
             1000,
@@ -1588,9 +1817,10 @@ namespace DAEnerys
             0});
             this.numericNavLightPhase.Name = "numericNavLightPhase";
             this.numericNavLightPhase.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericNavLightPhase.Size = new System.Drawing.Size(154, 20);
+            this.numericNavLightPhase.Size = new System.Drawing.Size(157, 20);
             this.numericNavLightPhase.TabIndex = 16;
             this.numericNavLightPhase.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericNavLightPhase.ValueChanged += new System.EventHandler(this.numericNavLightPhase_ValueChanged);
             // 
             // labelNavLightSize
             // 
@@ -1607,6 +1837,11 @@ namespace DAEnerys
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericNavLightSize.DecimalPlaces = 2;
             this.numericNavLightSize.Enabled = false;
+            this.numericNavLightSize.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.numericNavLightSize.Location = new System.Drawing.Point(72, 45);
             this.numericNavLightSize.Maximum = new decimal(new int[] {
             1000,
@@ -1615,9 +1850,10 @@ namespace DAEnerys
             0});
             this.numericNavLightSize.Name = "numericNavLightSize";
             this.numericNavLightSize.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericNavLightSize.Size = new System.Drawing.Size(154, 20);
+            this.numericNavLightSize.Size = new System.Drawing.Size(157, 20);
             this.numericNavLightSize.TabIndex = 14;
             this.numericNavLightSize.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericNavLightSize.ValueChanged += new System.EventHandler(this.numericNavLightSize_ValueChanged);
             // 
             // labelNavLightType
             // 
@@ -1634,9 +1870,9 @@ namespace DAEnerys
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupNavLightFlags.Controls.Add(this.checkNavLightFlagHighEnd);
             this.groupNavLightFlags.Controls.Add(this.checkNavLightFlagSprite);
-            this.groupNavLightFlags.Location = new System.Drawing.Point(8, 593);
+            this.groupNavLightFlags.Location = new System.Drawing.Point(6, 628);
             this.groupNavLightFlags.Name = "groupNavLightFlags";
-            this.groupNavLightFlags.Size = new System.Drawing.Size(232, 43);
+            this.groupNavLightFlags.Size = new System.Drawing.Size(235, 43);
             this.groupNavLightFlags.TabIndex = 12;
             this.groupNavLightFlags.TabStop = false;
             this.groupNavLightFlags.Text = "Flags";
@@ -1646,13 +1882,14 @@ namespace DAEnerys
             this.checkNavLightFlagHighEnd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkNavLightFlagHighEnd.AutoSize = true;
             this.checkNavLightFlagHighEnd.Enabled = false;
-            this.checkNavLightFlagHighEnd.Location = new System.Drawing.Point(157, 19);
+            this.checkNavLightFlagHighEnd.Location = new System.Drawing.Point(160, 19);
             this.checkNavLightFlagHighEnd.Name = "checkNavLightFlagHighEnd";
             this.checkNavLightFlagHighEnd.Size = new System.Drawing.Size(69, 17);
             this.checkNavLightFlagHighEnd.TabIndex = 10;
             this.checkNavLightFlagHighEnd.Text = "High-end";
             this.checkNavLightFlagHighEnd.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.checkNavLightFlagHighEnd.UseVisualStyleBackColor = true;
+            this.checkNavLightFlagHighEnd.CheckedChanged += new System.EventHandler(this.checkNavLightFlagHighEnd_CheckedChanged);
             // 
             // checkNavLightFlagSprite
             // 
@@ -1665,28 +1902,7 @@ namespace DAEnerys
             this.checkNavLightFlagSprite.Text = "Sprite";
             this.checkNavLightFlagSprite.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.checkNavLightFlagSprite.UseVisualStyleBackColor = true;
-            // 
-            // panelNavLightList
-            // 
-            this.panelNavLightList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelNavLightList.Controls.Add(this.navLightList);
-            this.panelNavLightList.Location = new System.Drawing.Point(4, 4);
-            this.panelNavLightList.Name = "panelNavLightList";
-            this.panelNavLightList.Size = new System.Drawing.Size(240, 392);
-            this.panelNavLightList.TabIndex = 0;
-            // 
-            // navLightList
-            // 
-            this.navLightList.CheckOnClick = true;
-            this.navLightList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.navLightList.FormattingEnabled = true;
-            this.navLightList.Location = new System.Drawing.Point(0, 0);
-            this.navLightList.Name = "navLightList";
-            this.navLightList.Size = new System.Drawing.Size(240, 392);
-            this.navLightList.TabIndex = 7;
-            this.navLightList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.navLightList_ItemCheck);
-            this.navLightList.SelectedIndexChanged += new System.EventHandler(this.navLightList_SelectedIndexChanged);
+            this.checkNavLightFlagSprite.CheckedChanged += new System.EventHandler(this.checkNavLightFlagSprite_CheckedChanged);
             // 
             // tabEngineGlows
             // 
@@ -2337,9 +2553,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle37;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -2347,14 +2563,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle39.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle39;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle11;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -2363,9 +2579,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle40;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle12;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -2378,9 +2594,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle38;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle10;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -2455,6 +2671,13 @@ namespace DAEnerys
             this.openColladaMeshDialog.Filter = "COLLADA-Files|*.dae|All files|*.*";
             this.openColladaMeshDialog.Title = "Open DAE-file...";
             // 
+            // colorDialog
+            // 
+            this.colorDialog.AnyColor = true;
+            this.colorDialog.Color = System.Drawing.Color.Gray;
+            this.colorDialog.FullOpen = true;
+            this.colorDialog.SolidColorOnly = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2514,6 +2737,12 @@ namespace DAEnerys
             this.groupDockpathFamilies.ResumeLayout(false);
             this.panelDockpathList.ResumeLayout(false);
             this.tabNavLights.ResumeLayout(false);
+            this.tabNavLights.PerformLayout();
+            this.groupNavLightPosition.ResumeLayout(false);
+            this.groupNavLightPosition.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightPositionZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightPositionY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericNavLightPositionX)).EndInit();
             this.groupNavLightPreview.ResumeLayout(false);
             this.groupNavLightPreview.PerformLayout();
             this.groupNavLightParameters.ResumeLayout(false);
@@ -2524,7 +2753,6 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.numericNavLightSize)).EndInit();
             this.groupNavLightFlags.ResumeLayout(false);
             this.groupNavLightFlags.PerformLayout();
-            this.panelNavLightList.ResumeLayout(false);
             this.tabEngineGlows.ResumeLayout(false);
             this.tabEngineGlows.PerformLayout();
             this.groupEngineGlowLODs.ResumeLayout(false);
@@ -2621,8 +2849,6 @@ namespace DAEnerys
         private System.Windows.Forms.GroupBox groupNavLightFlags;
         private System.Windows.Forms.CheckBox checkNavLightFlagHighEnd;
         private System.Windows.Forms.CheckBox checkNavLightFlagSprite;
-        private System.Windows.Forms.Panel panelNavLightList;
-        private System.Windows.Forms.CheckedListBox navLightList;
         private System.Windows.Forms.TabPage tabEngineGlows;
         private System.Windows.Forms.ToolStripButton buttonHotkeys;
         private System.Windows.Forms.TabPage tabEngineShapes;
@@ -2734,6 +2960,21 @@ namespace DAEnerys
         private System.Windows.Forms.Button buttonEngineGlowLODImportOBJ;
         private System.Windows.Forms.Button buttonEngineGlowLODExportOBJ;
         private System.Windows.Forms.CheckedListBox listEngineGlowLODs;
+        private System.Windows.Forms.CheckedListBox listNavLights;
+        private System.Windows.Forms.Button buttonNavLightRemove;
+        private System.Windows.Forms.Button buttonNavLightAdd;
+        private System.Windows.Forms.TextBox boxNavLightName;
+        private System.Windows.Forms.Label labelNavLightName;
+        private System.Windows.Forms.Label labelNavLightParent;
+        private System.Windows.Forms.ComboBox comboNavLightParent;
+        private System.Windows.Forms.GroupBox groupNavLightPosition;
+        private System.Windows.Forms.NumericUpDown numericNavLightPositionX;
+        private System.Windows.Forms.Label labelNavLightPositionX;
+        private System.Windows.Forms.NumericUpDown numericNavLightPositionZ;
+        private System.Windows.Forms.Label labelNavLightPositionZ;
+        private System.Windows.Forms.NumericUpDown numericNavLightPositionY;
+        private System.Windows.Forms.Label labelNavLightPositionY;
+        private System.Windows.Forms.ColorDialog colorDialog;
     }
 }
 

@@ -46,5 +46,14 @@
             HWData.NavLightStyles.Add(this);
             Program.main.AddNavLightStyle(this);
         }
+
+        public static HWNavLightStyle GetByName(string name)
+        {
+            foreach (HWNavLightStyle style in HWData.NavLightStyles)
+                if (style.Name == name)
+                    return style;
+
+            return null;
+        }
     }
 }

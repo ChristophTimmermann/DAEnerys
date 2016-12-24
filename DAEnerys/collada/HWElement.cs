@@ -12,6 +12,9 @@ namespace DAEnerys
             {
                 parent = value;
                 CalculateWorldMatrix();
+
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
             }
         }
 
@@ -25,7 +28,7 @@ namespace DAEnerys
         public OpenTK.Quaternion AbsoluteRotation;
         public Vector3 AbsoluteScale { get { return WorldMatrix.ExtractScale(); } }
 
-        public Vector3 RelativePosition { get { return Vector3.TransformPosition(Vector3.Zero, RelativeWorldMatrix); } }
+        public virtual Vector3 RelativePosition { get { return Vector3.TransformPosition(Vector3.Zero, RelativeWorldMatrix); } set { RelativeWorldMatrix = RelativeWorldMatrix.ClearTranslation() * Matrix4.CreateTranslation(value); CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } }
         public Vector3 RelativeRotation
         {
             get

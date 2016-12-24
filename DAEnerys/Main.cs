@@ -48,6 +48,8 @@ namespace DAEnerys
         private bool ignoreShipMeshLODMaterialChanged;
         private bool ignoreCollisionMeshParentChanged;
         private bool ignoreEngineGlowListSelectedIndexChanged;
+        private bool ignoreNavLightValuesChanged;
+        private bool ignoreNavLightListSelectedIndexChanged;
 
         private bool animationPlaying;
         public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
@@ -155,7 +157,7 @@ namespace DAEnerys
                 effect.Update();
             }
 
-            if(animationPlaying)
+            if (animationPlaying)
                 HWAnimation.Update();
 
             //Only update render if it is needed
@@ -257,15 +259,8 @@ namespace DAEnerys
             selectedDockpath = null;
 
             //Navlights
-            comboNavLightType.SelectedItem = null;
-            navLightList.Items.Clear();
-            numericNavLightSize.Value = 0;
-            numericNavLightPhase.Value = 0;
-            numericNavLightFrequency.Value = 0;
-            buttonNavLightColor.BackColor = Color.White;
-            numericNavLightDistance.Value = 0;
-            checkNavLightFlagSprite.Checked = false;
-            checkNavLightFlagHighEnd.Checked = false;
+            listNavLights.Items.Clear();
+            comboNavLightParent.Items.Clear();
             selectedNavLight = null;
 
             //Engine burns
@@ -303,12 +298,6 @@ namespace DAEnerys
             comboMaterialFormat.Items.Add("DXT5");
             comboMaterialFormat.Items.Add("8888");
 
-            comboShipMeshParent.SelectedItem = 0;
-            comboCollisionMeshParent.SelectedItem = 0;
-            comboEngineGlowParent.SelectedItem = 0;
-            comboEngineShapeParent.SelectedItem = 0;
-            comboEngineBurnParent.SelectedItem = 0;
-
             problemsVisible = false;
             splitContainer2.Panel2Collapsed = true;
             Problem.Problems.Clear();
@@ -319,6 +308,7 @@ namespace DAEnerys
             listMaterials_SelectedIndexChanged(this, EventArgs.Empty);
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
             listEngineGlows_SelectedIndexChanged(this, EventArgs.Empty);
+            listNavLights_SelectedIndexChanged(this, EventArgs.Empty);
 
             Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
@@ -403,6 +393,7 @@ namespace DAEnerys
             comboEngineGlowParent.Items.Add(item);
             comboEngineShapeParent.Items.Add(item);
             comboEngineBurnParent.Items.Add(item);
+            comboNavLightParent.Items.Add(item);
         }
         public void RemoveJoint(HWJoint joint)
         {
@@ -626,10 +617,14 @@ namespace DAEnerys
         //--------------------------------- NAVLIGHTS ---------------------------------//
         public void AddNavLight(HWNavLight navLight)
         {
-            navLightList.Items.Add(navLight.Name);
-            navLight.NavLightListItemIndex = navLightList.Items.Count - 1;
+            listNavLights.Items.Add(navLight.Name);
+            navLight.NavLightListItemIndex = listNavLights.Items.Count - 1;
         }
-        private void navLightList_ItemCheck(object sender, ItemCheckEventArgs e)
+        public void RemoveNavLight(HWNavLight navLight)
+        {
+            listNavLights.Items.Remove(navLight.Name);
+        }
+        private void listNavLights_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             bool newValue = false;
 
@@ -638,7 +633,7 @@ namespace DAEnerys
 
             foreach (HWNavLight navLight in HWNavLight.NavLights)
             {
-                if (navLight.Name == navLightList.Items[e.Index].ToString())
+                if (navLight.Name == listNavLights.Items[e.Index].ToString())
                 {
                     navLight.Visible = newValue;
                 }
@@ -647,50 +642,94 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
-        private void navLightList_SelectedIndexChanged(object sender, EventArgs e)
+        private void listNavLights_SelectedIndexChanged(object sender, EventArgs e)
         {
-            comboNavLightType.SelectedIndex = 0;
+            if (ignoreNavLightListSelectedIndexChanged)
+                return;
+
+            selectedNavLight = null;
+
+            boxNavLightName.Clear();
+            comboNavLightParent.SelectedIndex = 0;
+            comboNavLightType.SelectedItem = null;
             numericNavLightSize.Value = 0;
             numericNavLightPhase.Value = 0;
             numericNavLightFrequency.Value = 0;
             buttonNavLightColor.BackColor = Color.White;
             numericNavLightDistance.Value = 0;
 
+            numericNavLightPositionX.Enabled = false;
+            numericNavLightPositionY.Enabled = false;
+            numericNavLightPositionZ.Enabled = false;
+
+            comboNavLightParent.Enabled = false;
+            boxNavLightName.Enabled = false;
+            buttonNavLightRemove.Enabled = false;
+            comboNavLightType.Enabled = false;
+            numericNavLightSize.Enabled = false;
+            numericNavLightPhase.Enabled = false;
+            numericNavLightFrequency.Enabled = false;
+            buttonNavLightColor.Enabled = false;
+            numericNavLightDistance.Enabled = false;
+            checkNavLightFlagSprite.Enabled = false;
+            checkNavLightFlagHighEnd.Enabled = false;
+
             checkNavLightFlagSprite.Checked = false;
             checkNavLightFlagHighEnd.Checked = false;
 
-            HWNavLight navLight = null;
-
-            if (navLightList.SelectedItem != null)
+            if (listNavLights.SelectedItem != null)
             {
                 foreach (HWNavLight light in HWNavLight.NavLights)
                 {
-                    if (light.Name == navLightList.SelectedItem.ToString())
+                    if (light.Name == listNavLights.SelectedItem.ToString())
                     {
-                        navLight = light;
+                        selectedNavLight = light;
                         break;
                     }
                 }
             }
 
-            if (navLight != null)
+            if (selectedNavLight != null)
             {
-                comboNavLightType.SelectedItem = navLight.Style.Name;
-                numericNavLightSize.Value = (decimal)navLight.Size;
-                numericNavLightPhase.Value = (decimal)navLight.Phase;
-                numericNavLightFrequency.Value = (decimal)navLight.Frequency;
+                numericNavLightPositionX.Enabled = true;
+                numericNavLightPositionY.Enabled = true;
+                numericNavLightPositionZ.Enabled = true;
 
-                int red = (int)Math.Round((float)(navLight.Color.X * 255));
-                int green = (int)Math.Round((float)(navLight.Color.Y * 255));
-                int blue = (int)Math.Round((float)(navLight.Color.Z * 255));
+                comboNavLightParent.Enabled = true;
+                boxNavLightName.Enabled = true;
+                buttonNavLightRemove.Enabled = true;
+                comboNavLightType.Enabled = true;
+                numericNavLightSize.Enabled = true;
+                numericNavLightPhase.Enabled = true;
+                numericNavLightFrequency.Enabled = true;
+                buttonNavLightColor.Enabled = true;
+                numericNavLightDistance.Enabled = true;
+                checkNavLightFlagSprite.Enabled = true;
+                checkNavLightFlagHighEnd.Enabled = true;
+
+                ignoreNavLightValuesChanged = true;
+                numericNavLightPositionX.Value = (decimal)selectedNavLight.RelativePosition.X;
+                numericNavLightPositionY.Value = (decimal)selectedNavLight.RelativePosition.Y;
+                numericNavLightPositionZ.Value = (decimal)selectedNavLight.RelativePosition.Z;
+
+                boxNavLightName.Text = selectedNavLight.Name;
+                comboNavLightParent.SelectedItem = selectedNavLight.Parent.Name;
+                comboNavLightType.SelectedItem = selectedNavLight.Style.Name;
+                numericNavLightSize.Value = (decimal)selectedNavLight.Size;
+                numericNavLightPhase.Value = (decimal)selectedNavLight.Phase;
+                numericNavLightFrequency.Value = (decimal)selectedNavLight.Frequency;
+
+                int red = (int)Math.Round((float)(selectedNavLight.Color.X * 255));
+                int green = (int)Math.Round((float)(selectedNavLight.Color.Y * 255));
+                int blue = (int)Math.Round((float)(selectedNavLight.Color.Z * 255));
                 red = Math.Min(red, 255);
                 green = Math.Min(green, 255);
                 blue = Math.Min(blue, 255);
                 buttonNavLightColor.BackColor = Color.FromArgb(255, red, green, blue);
 
-                numericNavLightDistance.Value = (decimal)navLight.Distance;
+                numericNavLightDistance.Value = (decimal)selectedNavLight.Distance;
 
-                foreach (NavLightFlag flag in navLight.Flags)
+                foreach (NavLightFlag flag in selectedNavLight.Flags)
                 {
                     switch (flag)
                     {
@@ -703,7 +742,7 @@ namespace DAEnerys
                     }
                 }
 
-                selectedNavLight = navLight;
+                ignoreNavLightValuesChanged = false;
             }
         }
         public void AddNavLightStyle(HWNavLightStyle navLightStyle)
@@ -712,7 +751,7 @@ namespace DAEnerys
         }
         public void CheckNavLightVisible(HWNavLight navLight, bool visible)
         {
-            navLightList.SetItemChecked(navLight.NavLightListItemIndex, visible);
+            listNavLights.SetItemChecked(navLight.NavLightListItemIndex, visible);
         }
         private void checkNavLightDrawRadius_CheckedChanged(object sender, EventArgs e)
         {
@@ -736,7 +775,199 @@ namespace DAEnerys
                 }
             }
 
+            Renderer.InvalidateView();
             Renderer.Invalidate();
+        }
+        private void numericNavLightPosition_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            selectedNavLight.RelativePosition = new Vector3((float)numericNavLightPositionX.Value, (float)numericNavLightPositionY.Value, (float)numericNavLightPositionZ.Value);
+        }
+        private void boxNavLightName_Leave(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            UpdateNavLightName(selectedNavLight, boxNavLightName.Text);
+        }
+        private void boxNavLightName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedNavLight == null)
+                return;
+
+            UpdateNavLightName(selectedNavLight, boxNavLightName.Text);
+        }
+        private void UpdateNavLightName(HWNavLight navLight, string newName)
+        {
+            if (!listNavLights.Items.Contains(navLight.Name))
+                return;
+
+            //Ship mesh with this name already exists
+            if (listNavLights.Items.Contains(newName))
+            {
+                HWNavLight existingNavLight = HWNavLight.GetByName(newName);
+                if (existingNavLight != navLight)
+                {
+                    MessageBox.Show("A navlight with this name already exists.", "Error while changing navlight name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxNavLightName.Text = navLight.Name;
+                    boxNavLightName.Focus();
+                    return;
+                }
+            }
+
+            ignoreNavLightListSelectedIndexChanged = true;
+            int index = listNavLights.Items.IndexOf(navLight.Name);
+            listNavLights.Items.Remove(navLight.Name);
+            listNavLights.Items.Remove(navLight.Name);
+            navLight.Name = boxNavLightName.Text;
+            listNavLights.Items.Insert(index, navLight.Name);
+            listNavLights.SelectedItem = navLight.Name;
+            CheckNavLightVisible(navLight, navLight.Visible);
+            ignoreNavLightListSelectedIndexChanged = false;
+        }
+        private void buttonNavLightRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            selectedNavLight.Destroy();
+            listNavLights.ClearSelected();
+            listNavLights_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void buttonNavLightAdd_Click(object sender, EventArgs e)
+        {
+            int indexOffset = 1;
+            string newName = "NavLight" + (listNavLights.Items.Count + indexOffset);
+            while (listNavLights.Items.Contains(newName))
+            {
+                indexOffset++;
+                newName = "NavLight" + (listNavLights.Items.Count + indexOffset);
+            }
+
+            HWNavLightStyle style = null;
+            if (HWData.NavLightStyles.Count > 0)
+                style = HWData.NavLightStyles[0];
+
+            HWNavLight newNavLight = new HWNavLight(newName, HWJoint.Root, Matrix4.Identity, style, 1, 0, 1, Vector3.One, 5, new List<NavLightFlag>(), 0);
+
+            listNavLights.SelectedItem = newNavLight.Name;
+        }
+        private void comboNavLightParent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            HWJoint newParent = HWJoint.GetByName((string)comboNavLightParent.SelectedItem);
+            selectedNavLight.Parent = newParent;
+        }
+        private void comboNavLightType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            selectedNavLight.Style = HWNavLightStyle.GetByName((string)comboNavLightType.SelectedItem);
+        }
+        private void numericNavLightSize_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            selectedNavLight.Size = (float)numericNavLightSize.Value;
+        }
+        private void numericNavLightPhase_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            selectedNavLight.Phase = (float)numericNavLightPhase.Value;
+        }
+        private void numericNavLightFrequency_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            selectedNavLight.Frequency = (float)numericNavLightFrequency.Value;
+        }
+        private void buttonNavLightColor_Click(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            colorDialog.Color = buttonNavLightColor.BackColor;
+            DialogResult result = colorDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                selectedNavLight.Color = new Vector3((float)colorDialog.Color.R / 255, (float)colorDialog.Color.G / 255, (float)colorDialog.Color.B / 255);
+                buttonNavLightColor.BackColor = Color.FromArgb((int)Math.Round(selectedNavLight.Color.X * 255), (int)Math.Round(selectedNavLight.Color.Y * 255), (int)Math.Round(selectedNavLight.Color.Z * 255));
+            }
+        }
+        private void numericNavLightDistance_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            selectedNavLight.Distance = (float)numericNavLightDistance.Value;
+        }
+        private void checkNavLightFlagSprite_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            List<NavLightFlag> flags = selectedNavLight.Flags;
+            flags.Remove(NavLightFlag.Sprite);
+
+            if(checkNavLightFlagSprite.Checked)
+                flags.Add(NavLightFlag.Sprite);
+
+            selectedNavLight.Flags = flags;
+        }
+        private void checkNavLightFlagHighEnd_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selectedNavLight == null)
+                return;
+
+            if (ignoreNavLightValuesChanged)
+                return;
+
+            List<NavLightFlag> flags = selectedNavLight.Flags;
+            flags.Remove(NavLightFlag.HighEnd);
+
+            if (checkNavLightFlagHighEnd.Checked)
+                flags.Add(NavLightFlag.HighEnd);
+
+            selectedNavLight.Flags = flags;
         }
 
         //--------------------------------- MISC ---------------------------------//
@@ -753,28 +984,23 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
-
         public void glControl_MouseDown(object sender, MouseEventArgs e)
         {
             Program.Camera.MouseDown(e);
         }
-
         public void glControl_MouseUp(object sender, MouseEventArgs e)
         {
             Program.Camera.MouseUp(e);
         }
-
         public void glControl_KeyDown(object sender, KeyEventArgs e)
         {
             ActionKey.KeyDown(e);
             Program.Camera.KeyDown(e);
         }
-
         public void glControl_KeyUp(object sender, KeyEventArgs e)
         {
             ActionKey.KeyUp(e);
         }
-
         private void jointsTree_AfterCheck(object sender, TreeViewEventArgs e)
         {
             bool newValue = e.Node.Checked;
@@ -792,28 +1018,26 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
-
         private void buttonSettings_Click(object sender, EventArgs e)
         {
-            if (Program.settings != null) return;
+            if (Program.settings != null)
+                return;
             Program.settings = new Settings();
             Program.settings.Visible = true;
             Program.settings.Init();
         }
-
         private void buttonHotkeys_Click(object sender, EventArgs e)
         {
-            if (Program.hotkeys != null) return;
+            if (Program.hotkeys != null)
+                return;
             Program.hotkeys = new Hotkeys();
             Program.hotkeys.Visible = true;
             Program.hotkeys.Init();
         }
-
         public void glControl_Enter(object sender, EventArgs e)
         {
             Program.GLControl.Focus();
         }
-
         public void glControl_Leave(object sender, EventArgs e)
         {
             this.Focus();
@@ -1203,7 +1427,7 @@ namespace DAEnerys
                     }
                 }
 
-                for(int i = 0; i < meshes.Count; i++)
+                for (int i = 0; i < meshes.Count; i++)
                 {
                     if (newMeshes.Length - 1 >= i)
                     {
@@ -1246,7 +1470,8 @@ namespace DAEnerys
                 newName = "ShipMesh" + (listShipMeshes.Items.Count + indexOffset);
             }
 
-            List<ShipMeshTag> tags = new List<ShipMeshTag>(); tags.Add(ShipMeshTag.DoScar);
+            List<ShipMeshTag> tags = new List<ShipMeshTag>();
+            tags.Add(ShipMeshTag.DoScar);
             HWShipMesh newShipMesh = new HWShipMesh(HWJoint.Root, newName, tags);
 
             listShipMeshes.SelectedItem = newShipMesh.ListItem;
@@ -1874,7 +2099,7 @@ namespace DAEnerys
             //Select parent joint in combo box
             object item = JointComboItems[selectedEngineShape.Parent];
             comboEngineShapeParent.SelectedItem = item; //Select parent joint in combo box
-                
+
         }
         public void AddEngineShape(HWEngineShape mesh)
         {
@@ -2083,7 +2308,7 @@ namespace DAEnerys
                 }
             }
 
-            
+
             int index = listMaterials.Items.IndexOf(selectedMaterial.Name);
             if (index == -1)
                 return;
@@ -2279,7 +2504,8 @@ namespace DAEnerys
 
         private void buttonShaderSettings_Click(object sender, EventArgs e)
         {
-            if (Program.ShaderSettings != null) return;
+            if (Program.ShaderSettings != null)
+                return;
             Program.ShaderSettings = new ShaderSettings();
             Program.ShaderSettings.Visible = true;
             Program.ShaderSettings.Init();

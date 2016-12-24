@@ -18,6 +18,11 @@ namespace DAEnerys
             Lights.Add(this);
         }
 
+        public void Destroy()
+        {
+            Lights.Remove(this);
+        }
+
         public Vector4 Position;
         public Vector3 Color = new Vector3();
         public float Attenuation;

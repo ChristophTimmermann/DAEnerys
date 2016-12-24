@@ -31,6 +31,9 @@ namespace DAEnerys
         public EditorMesh()
         {
             EditorScene.meshes.Add(this);
+
+            Renderer.InvalidateMeshData();
+            Renderer.Invalidate();
         }
 
         public virtual void Destroy()

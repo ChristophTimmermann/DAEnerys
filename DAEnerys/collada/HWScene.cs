@@ -26,10 +26,14 @@ namespace DAEnerys
         {
             float volume = (-Min.X + Max.X) * (-Min.Y + Max.Y) * (-Min.Z + Max.Z);
             List<float> values = new List<float>();
-            values.Add(-Min.X); values.Add(-Min.Y); values.Add(-Min.Z);
-            values.Add(Max.X); values.Add(Max.Y); values.Add(Max.Z);
+            values.Add(-Min.X);
+            values.Add(-Min.Y);
+            values.Add(-Min.Z);
+            values.Add(Max.X);
+            values.Add(Max.Y);
+            values.Add(Max.Z);
             float farthest = 0;
-            foreach(float value in values)
+            foreach (float value in values)
             {
                 if (value > farthest)
                     farthest = value;
@@ -39,6 +43,7 @@ namespace DAEnerys
 
             float jointSize = 1;
             float markerSize = 1;
+            float iconSize = 1;
             if (BiggestMesh != null)
             {
                 if (BiggestMesh != null)
@@ -48,6 +53,9 @@ namespace DAEnerys
 
                     markerSize = farthest / 65 / HWJoint.Root.AbsoluteScale.X;
                     markerSize = Math.Max(markerSize, 0.01f);
+
+                    iconSize = farthest / 20 / HWJoint.Root.AbsoluteScale.X;
+                    iconSize = Math.Max(iconSize, 1);
                 }
             }
 
@@ -56,7 +64,7 @@ namespace DAEnerys
 
             Program.Camera.MinZoom = farthest / 40;
             Program.Camera.MaxZoom = farthest * 40;
-            if(setZoom)
+            if (setZoom)
                 Program.Camera.Zoom = farthest * 2f;
             Program.Camera.ZoomSpeed = farthest * 10;
             Program.Camera.CalculatedZoom = Program.Camera.Zoom;
@@ -88,7 +96,7 @@ namespace DAEnerys
             //Check if there are multiple dockpaths with the same name
             foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
             {
-                if(!dockpathNames.Contains(dockpath.Name))
+                if (!dockpathNames.Contains(dockpath.Name))
                     dockpathNames.Add(dockpath.Name);
                 else
                     new Problem(ProblemTypes.WARNING, "There are multiple dockpaths with the same name \"" + dockpath.Name + "\".");
@@ -97,7 +105,7 @@ namespace DAEnerys
             //Check if there is a non-existent linked path
             foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
             {
-                foreach(string link in dockpath.Links)
+                foreach (string link in dockpath.Links)
                 {
                     if (!dockpathNames.Contains(link))
                         new Problem(ProblemTypes.WARNING, "The dockpath \"" + dockpath.Name + "\" is linked to the non-existent dockpath \"" + link + "\".");
@@ -105,9 +113,9 @@ namespace DAEnerys
             }
             #endregion
 
-            foreach(HWMaterial material in HWMaterial.Materials)
+            foreach (HWMaterial material in HWMaterial.Materials)
             {
-                if(material.Shader == "thruster")
+                if (material.Shader == "thruster")
                 {
                     if (material.DiffuseOffTexture == null)
                         new Problem(ProblemTypes.WARNING, "Material \"" + material.Name + "\" uses the \"thruster\" shader but has no DIFX texture.");
@@ -137,7 +145,7 @@ namespace DAEnerys
             Min = Vector3.Zero;
             Max = Vector3.Zero;
 
-            foreach(HWNavLight navLight in HWNavLight.NavLights)
+            foreach (HWNavLight navLight in HWNavLight.NavLights)
             {
                 Light.Lights.Remove(navLight.RenderLight);
             }
