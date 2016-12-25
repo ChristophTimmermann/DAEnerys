@@ -90,14 +90,16 @@ namespace DAEnerys
             {
                 ShipMeshLODMaterialLabels[i] = new Label();
                 ShipMeshLODMaterialLabels[i].Parent = groupShipMeshLODMaterials;
-                ShipMeshLODMaterialLabels[i].Location = new Point(6, 25 + i * 27);
+                ShipMeshLODMaterialLabels[i].Location = new Point(6, 25);
+                //ShipMeshLODMaterialLabels[i].Location = new Point(6, 25 + i * 27);
                 ShipMeshLODMaterialLabels[i].Text = "#" + i;
                 ShipMeshLODMaterialLabels[i].AutoSize = true;
                 ShipMeshLODMaterialLabels[i].Visible = false;
 
                 ShipMeshLODMaterialComboBoxes[i] = new ComboBox();
                 ShipMeshLODMaterialComboBoxes[i].Parent = groupShipMeshLODMaterials;
-                ShipMeshLODMaterialComboBoxes[i].Location = new Point(38, 22 + i * 27);
+                ShipMeshLODMaterialComboBoxes[i].Location = new Point(38, 22);
+                //ShipMeshLODMaterialComboBoxes[i].Location = new Point(38, 22 + i * 27);
                 ShipMeshLODMaterialComboBoxes[i].Size = new Size(180, 21);
                 ShipMeshLODMaterialComboBoxes[i].DropDownStyle = ComboBoxStyle.DropDownList;
                 ShipMeshLODMaterialComboBoxes[i].Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
@@ -1222,9 +1224,15 @@ namespace DAEnerys
         private void listShipMeshLODs_SelectedIndexChanged(object sender, EventArgs e)
         {
             foreach (Label label in ShipMeshLODMaterialLabels)
+            {
+                label.Location = new Point(6, 25);
                 label.Visible = false;
+            }
             foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
+            {
+                comboBox.Location = new Point(38, 22);
                 comboBox.Visible = false;
+            }
 
             buttonShipMeshLODRemove.Enabled = false;
             buttonShipMeshLODImportOBJ.Enabled = false;
@@ -1252,9 +1260,11 @@ namespace DAEnerys
 
             for (int i = 0; i < materialCount; i++)
             {
+                ShipMeshLODMaterialLabels[i].Location = new Point(6, 25 + i * 27);
                 ShipMeshLODMaterialLabels[i].Visible = true;
-                ShipMeshLODMaterialComboBoxes[i].Visible = true;
 
+                ShipMeshLODMaterialComboBoxes[i].Location = new Point(38, 22 + i * 27);
+                ShipMeshLODMaterialComboBoxes[i].Visible = true;
                 ShipMeshLODMaterialComboBoxes[i].SelectedItem = lodMeshes[i].Material.Name;
             }
         }
