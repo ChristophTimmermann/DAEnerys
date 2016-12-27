@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using OpenTK.Graphics;
 using Assimp;
 using System.Linq;
+using System.Media;
 
 namespace DAEnerys
 {
@@ -426,6 +427,8 @@ namespace DAEnerys
 
             joint.TreeNode = newNode;
 
+            jointsTree.Sort();
+
             comboJointParent.Items.Add(joint.Name);
             comboShipMeshParent.Items.Add(joint.Name);
             comboCollisionMeshParent.Items.Add(joint.Name);
@@ -451,6 +454,8 @@ namespace DAEnerys
             object item = joint.Name;
 
             RemoveJointFromCombos(joint);
+
+            jointsTree.Sort();
         }
         private void AddJointToCombos(HWJoint joint)
         {
@@ -476,6 +481,30 @@ namespace DAEnerys
         {
             joint.TreeNode.Parent.Nodes.Remove(joint.TreeNode);
             newParent.TreeNode.Nodes.Add(joint.TreeNode);
+
+            jointsTree.Sort();
+        }
+        private void AddJointToJointParentComboRecursive(HWJoint joint)
+        {
+            foreach (HWElement child in joint.Children)
+            {
+                HWJoint childJoint = child as HWJoint;
+                if (childJoint != null)
+                    AddJointToJointParentComboRecursive(childJoint);
+            }
+
+            comboJointParent.Items.Add(joint.Name);
+        }
+        private void RemoveJointFromJointParentComboRecursive(HWJoint joint)
+        {
+            foreach(HWElement child in joint.Children)
+            {
+                HWJoint childJoint = child as HWJoint;
+                if (childJoint != null)
+                    RemoveJointFromJointParentComboRecursive(childJoint);
+            }
+
+            comboJointParent.Items.Remove(joint.Name);
         }
         private void jointsTree_AfterCheck(object sender, TreeViewEventArgs e)
         {
@@ -499,8 +528,7 @@ namespace DAEnerys
             if (ignoreJointSelection)
                 return;
 
-            if(selectedJoint != null)
-                comboJointParent.Items.Add(selectedJoint.Name);
+            comboJointParent.Items.Clear();
 
             selectedJoint = null;
 
@@ -551,10 +579,15 @@ namespace DAEnerys
 
             boxJointName.Text = selectedJoint.Name;
             
+            foreach(HWJoint joint in HWJoint.Joints)
+            {
+                comboJointParent.Items.Add(joint.Name);
+            }
+
+            RemoveJointFromJointParentComboRecursive(selectedJoint);
+
             if(selectedJoint.Parent != null)
                 comboJointParent.SelectedItem = selectedJoint.Parent.Name;
-
-            comboJointParent.Items.Remove(selectedJoint.Name);
 
             numericJointPositionX.Enabled = true;
             numericJointPositionX.Value = (decimal)selectedJoint.LocalPosition.X;
@@ -688,6 +721,71 @@ namespace DAEnerys
             jointsTree.SelectedNode = selectedJoint.TreeNode;
             selectedJoint.TreeNode.EnsureVisible();
             jointsTree.Focus();
+        }
+        private bool IsJointDescendantOf(HWJoint joint, HWJoint parent)
+        {
+            HWJoint jointChecking = (HWJoint)joint.Parent;
+            while (jointChecking != null)
+            {
+                if (jointChecking == parent)
+                    return true;
+
+                jointChecking = (HWJoint)jointChecking.Parent;
+            }
+
+            return false;
+        }
+        private void jointsTree_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            DoDragDrop(e.Item, DragDropEffects.Move);
+        }
+        private void jointsTree_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+        private void jointsTree_DragDrop(object sender, DragEventArgs e)
+        {
+            TreeNode NewNode;
+
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
+            {
+                Point pt = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
+                TreeNode DestinationNode = ((TreeView)sender).GetNodeAt(pt);
+
+                if (DestinationNode == null)
+                {
+                    SystemSounds.Beep.Play();
+                    return;
+                }
+
+                NewNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode");
+
+                if (NewNode == DestinationNode)
+                {
+                    SystemSounds.Beep.Play();
+                    return;
+                }
+
+                HWJoint draggedJoint = HWJoint.GetByName(NewNode.Text);
+                HWJoint newParent = HWJoint.GetByName((string)DestinationNode.Text);
+
+                if (IsJointDescendantOf(newParent, draggedJoint))
+                {
+                    SystemSounds.Beep.Play();
+                    return;
+                }
+
+                ignoreJointSelection = true;
+
+                draggedJoint.Parent = newParent;
+                SetJointParent(draggedJoint, newParent);
+
+                ignoreJointSelection = false;
+
+                jointsTree.SelectedNode = draggedJoint.TreeNode;
+                draggedJoint.TreeNode.EnsureVisible();
+                jointsTree.Focus();
+            }
         }
 
         //--------------------------------- DOCKPATHS ---------------------------------//
