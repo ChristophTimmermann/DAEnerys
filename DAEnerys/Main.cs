@@ -50,6 +50,7 @@ namespace DAEnerys
         private bool ignoreNavLightValuesChanged;
         private bool ignoreNavLightListSelectedIndexChanged;
         private bool ignoreJointValuesChanged;
+        private bool ignoreJointSelection;
 
         private bool animationPlaying;
         public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.Invalidate(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
@@ -471,6 +472,11 @@ namespace DAEnerys
             comboEngineBurnParent.Items.Remove(joint.Name);
             comboNavLightParent.Items.Remove(joint.Name);
         }
+        private void SetJointParent(HWJoint joint, HWJoint newParent)
+        {
+            joint.TreeNode.Parent.Nodes.Remove(joint.TreeNode);
+            newParent.TreeNode.Nodes.Add(joint.TreeNode);
+        }
         private void jointsTree_AfterCheck(object sender, TreeViewEventArgs e)
         {
             bool newValue = e.Node.Checked;
@@ -490,6 +496,9 @@ namespace DAEnerys
         }
         private void jointsTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            if (ignoreJointSelection)
+                return;
+
             if(selectedJoint != null)
                 comboJointParent.Items.Add(selectedJoint.Name);
 
@@ -658,6 +667,27 @@ namespace DAEnerys
 
 
             selectedJoint.LocalRotation = OpenTK.Quaternion.FromEulerAngles(eulerAngles);
+        }
+        private void comboJointParent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedJoint == null)
+                return;
+
+            if (ignoreJointValuesChanged)
+                return;
+
+            ignoreJointSelection = true;
+
+            HWJoint newParent = HWJoint.GetByName((string)comboJointParent.SelectedItem);
+
+            selectedJoint.Parent = newParent;
+            SetJointParent(selectedJoint, newParent);
+
+            ignoreJointSelection = false;
+
+            jointsTree.SelectedNode = selectedJoint.TreeNode;
+            selectedJoint.TreeNode.EnsureVisible();
+            jointsTree.Focus();
         }
 
         //--------------------------------- DOCKPATHS ---------------------------------//
