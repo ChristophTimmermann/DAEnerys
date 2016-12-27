@@ -99,7 +99,7 @@ namespace DAEnerys
             ModelMatrix *= Transform;
 
             if(Parent != null)
-                ModelMatrix *= Parent.WorldMatrix;
+                ModelMatrix *= Parent.GlobalWorldMatrix;
 
             ModelViewProjectionMatrix = ModelMatrix * Renderer.ViewProjection;
         }

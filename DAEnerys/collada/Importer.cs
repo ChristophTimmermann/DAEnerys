@@ -287,7 +287,7 @@ namespace DAEnerys
                             transform.ClearTranslation();
                             OpenTK.Quaternion rot = transform.ExtractRotation();
                             transform *= Matrix4.CreateFromQuaternion(rot.Inverted());
-                            HWJoint.Root.RelativeWorldMatrix = transform;
+                            HWJoint.Root.LocalWorldMatrix = transform;
                             HWJoint.Root.CalculateWorldMatrix();
 
                             nodeJoints.Add(assimpNode, HWJoint.Root);

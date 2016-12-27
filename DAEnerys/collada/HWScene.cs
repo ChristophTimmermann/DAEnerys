@@ -48,13 +48,13 @@ namespace DAEnerys
             {
                 if (BiggestMesh != null)
                 {
-                    jointSize = farthest / 60 / HWJoint.Root.AbsoluteScale.X;
+                    jointSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
                     jointSize = Math.Max(jointSize, 0.3f);
 
-                    markerSize = farthest / 65 / HWJoint.Root.AbsoluteScale.X;
+                    markerSize = farthest / 65 / HWJoint.Root.GlobalScale.X;
                     markerSize = Math.Max(markerSize, 0.01f);
 
-                    iconSize = farthest / 20 / HWJoint.Root.AbsoluteScale.X;
+                    iconSize = farthest / 20 / HWJoint.Root.GlobalScale.X;
                     iconSize = Math.Max(iconSize, 1);
                 }
             }
@@ -169,6 +169,8 @@ namespace DAEnerys
             HWEngineBurn.EngineBurns.Clear();
             HWEngineFlame.EngineFlames.Clear();
             HWAnimation.Animations.Clear();
+
+            HWElement.Elements.Clear();
 
             HWJoint.Root = new HWJoint("Root", null, Matrix4.Identity);
             HWJoint.Root.TreeNode.Expand();

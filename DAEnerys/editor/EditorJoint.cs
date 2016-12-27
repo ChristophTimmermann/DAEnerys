@@ -110,7 +110,7 @@ namespace DAEnerys
             float realSize = Size;
 
             Scale = new Vector3(realSize, realSize, realSize);
-            ModelMatrix = Matrix4.CreateScale(Scale) * Joint.WorldMatrix;
+            ModelMatrix = Matrix4.CreateScale(Scale) * Joint.GlobalWorldMatrix;
         }
     }
 }

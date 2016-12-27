@@ -52,7 +52,7 @@ namespace DAEnerys
         private bool ignoreNavLightListSelectedIndexChanged;
 
         private bool animationPlaying;
-        public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.CalculateWorldMatrix(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
+        public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.Invalidate(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
 
         const int MAX_MATERIALS_ON_MESH = 16;
         const int MAX_LEVEL_OF_DETAIL = 3;
@@ -140,6 +140,8 @@ namespace DAEnerys
             Program.DeltaCounter.Start();
 
             Program.Camera.Update();
+
+            HWElement.UpdateInvalids();
 
             int visibleNavLights = 0;
             foreach (HWNavLight navLight in HWNavLight.NavLights)
@@ -710,9 +712,9 @@ namespace DAEnerys
                 checkNavLightFlagHighEnd.Enabled = true;
 
                 ignoreNavLightValuesChanged = true;
-                numericNavLightPositionX.Value = (decimal)selectedNavLight.RelativePosition.X;
-                numericNavLightPositionY.Value = (decimal)selectedNavLight.RelativePosition.Y;
-                numericNavLightPositionZ.Value = (decimal)selectedNavLight.RelativePosition.Z;
+                numericNavLightPositionX.Value = (decimal)selectedNavLight.LocalPosition.X;
+                numericNavLightPositionY.Value = (decimal)selectedNavLight.LocalPosition.Y;
+                numericNavLightPositionZ.Value = (decimal)selectedNavLight.LocalPosition.Z;
 
                 boxNavLightName.Text = selectedNavLight.Name;
                 comboNavLightParent.SelectedItem = selectedNavLight.Parent.Name;
@@ -788,7 +790,7 @@ namespace DAEnerys
             if (ignoreNavLightValuesChanged)
                 return;
 
-            selectedNavLight.RelativePosition = new Vector3((float)numericNavLightPositionX.Value, (float)numericNavLightPositionY.Value, (float)numericNavLightPositionZ.Value);
+            selectedNavLight.LocalPosition = new Vector3((float)numericNavLightPositionX.Value, (float)numericNavLightPositionY.Value, (float)numericNavLightPositionZ.Value);
         }
         private void boxNavLightName_Leave(object sender, EventArgs e)
         {

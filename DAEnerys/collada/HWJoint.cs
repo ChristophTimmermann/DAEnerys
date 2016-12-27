@@ -14,34 +14,7 @@ namespace DAEnerys
         public HWAnimationChannel RotationChannel = new HWAnimationChannel();
         public HWAnimationChannel ScalingChannel = new HWAnimationChannel();
 
-        public List<HWElement> Children = new List<HWElement>();
         public List<HWMesh> Meshes = new List<HWMesh>();
-
-        public override HWElement Parent
-        {
-            get { return parent; }
-            set
-            {
-                if (parent != null)
-                {
-                    HWJoint parentJoint = parent as HWJoint;
-
-                    if(parentJoint != null)
-                        parentJoint.Children.Remove(this);
-                }
-                parent = value;
-                if (parent != null)
-                {
-                    HWJoint parentJoint = parent as HWJoint;
-
-                    if (parentJoint != null)
-                        parentJoint.Children.Add(this);
-                }
-                CalculateWorldMatrix();
-                Renderer.InvalidateView();
-                Renderer.Invalidate();
-            }
-        }
 
         public EditorJoint EditorJoint;
 
@@ -87,15 +60,31 @@ namespace DAEnerys
 
         public override void CalculateWorldMatrix()
         {
+            invalid = false;
+
             if (AnimationMatrix == Matrix4.Identity)
-                WorldMatrix = RelativeWorldMatrix;
+            {
+                LocalWorldMatrix = Matrix4.CreateFromQuaternion(localRotation);
+                LocalWorldMatrix *= Matrix4.CreateScale(localScale);
+                LocalWorldMatrix *= Matrix4.CreateTranslation(localPosition);
+            }
             else
-                WorldMatrix = AnimationMatrix;
+                LocalWorldMatrix = AnimationMatrix;
+
+            GlobalWorldMatrix = LocalWorldMatrix;
+
+            GlobalPosition = GlobalWorldMatrix.ExtractTranslation();
+            GlobalRotation = GlobalWorldMatrix.ExtractRotation();
+            GlobalScale = GlobalWorldMatrix.ExtractScale();
 
             if (Parent != null)
-                WorldMatrix *= Parent.WorldMatrix;
+                GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
 
-            AbsoluteRotation = WorldMatrix.ExtractRotation();
+            foreach (HWMesh mesh in Meshes)
+                mesh.CalculateModelMatrix();
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
     }
 }

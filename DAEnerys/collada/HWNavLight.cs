@@ -15,43 +15,6 @@ namespace DAEnerys
 
         public int NavLightListItemIndex;
 
-        public override HWElement Parent
-        {
-            get
-            {
-                return base.Parent;
-            }
-
-            set
-            {
-                base.Parent = value;
-                if (Icon != null)
-                    Icon.Position = WorldMatrix.ExtractTranslation();
-                if (RenderIcosphere != null)
-                    RenderIcosphere.ModelMatrix = RenderIcosphere.ModelMatrix.ClearTranslation() * Matrix4.CreateTranslation(WorldMatrix.ExtractTranslation());
-                if (RenderLight != null)
-                    RenderLight.Position = new Vector4(WorldMatrix.ExtractTranslation(), RenderLight.Position.W);
-            }
-        }
-
-        public override Vector3 RelativePosition
-        {
-            get
-            {
-                return base.RelativePosition;
-            }
-            set
-            {
-                base.RelativePosition = value;
-                if (Icon != null)
-                    Icon.Position = WorldMatrix.ExtractTranslation();
-                if (RenderIcosphere != null)
-                    RenderIcosphere.ModelMatrix = RenderIcosphere.ModelMatrix.ClearTranslation() * Matrix4.CreateTranslation(WorldMatrix.ExtractTranslation());
-                if (RenderLight != null)
-                    RenderLight.Position = new Vector4(WorldMatrix.ExtractTranslation(), RenderLight.Position.W);
-            }
-        }
-
         public override string FormattedName
         {
             get
@@ -176,7 +139,7 @@ namespace DAEnerys
             {
                 if (!Style.NoSelfLight)
                 {
-                    RenderLight = new Light(new Vector4(AbsolutePosition, 1), color, 1 / distance, 0);
+                    RenderLight = new Light(new Vector4(GlobalPosition, 1), color, 1 / distance, 0);
                 }
                 RenderIcosphere = new EditorIcosphere(this, color);
                 RenderIcosphere.Scale = new Vector3(distance);
@@ -195,7 +158,7 @@ namespace DAEnerys
                 RenderSprite.Material.DiffuseColor = Color;*/
             }
 
-            Icon = new EditorIcon(AbsolutePosition, EditorIcon.LightbulbTexture);
+            Icon = new EditorIcon(GlobalPosition, EditorIcon.LightbulbTexture);
             Icon.Visible = true;
             Icon.Size = IconSize;
             Icon.DrawAboveShip = true;
@@ -323,6 +286,16 @@ namespace DAEnerys
                 RenderLight.Destroy();
 
             base.Destroy();
+        }
+
+        public override void CalculateWorldMatrix()
+        {
+            base.CalculateWorldMatrix();
+
+            if(Icon != null)
+                Icon.Position = GlobalPosition;
+            if(RenderLight != null)
+                RenderLight.Position = new Vector4(GlobalPosition, 1);
         }
     }
 

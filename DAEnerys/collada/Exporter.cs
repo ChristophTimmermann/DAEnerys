@@ -790,9 +790,11 @@ namespace DAEnerys
             //Joints
             jointElements.Add(HWJoint.Root, lodRootElements[0]);
 
-            foreach(HWJoint joint in HWJoint.Root.Children)
+            foreach (HWElement child in HWJoint.Root.Children)
             {
-                AddJointRecursive(lodRootElements[0], joint);
+                HWJoint childJoint = child as HWJoint;
+                if (childJoint != null)
+                    AddJointRecursive(lodRootElements[0], childJoint);
             }
 
             //Ship meshes
@@ -838,13 +840,13 @@ namespace DAEnerys
             //Markers
             foreach(HWMarker marker in HWMarker.Markers)
             {
-                AddNode(jointElements[(HWJoint)marker.Parent], marker.FormattedName, marker.RelativeWorldMatrix);
+                AddNode(jointElements[(HWJoint)marker.Parent], marker.FormattedName, marker.LocalWorldMatrix);
             }
 
             //Navlights
             foreach(HWNavLight navLight in HWNavLight.NavLights)
             {
-                AddNode(jointElements[(HWJoint)navLight.Parent], navLight.FormattedName, navLight.RelativeWorldMatrix);
+                AddNode(jointElements[(HWJoint)navLight.Parent], navLight.FormattedName, navLight.LocalWorldMatrix);
             }
 
             //Dockpaths
@@ -857,7 +859,7 @@ namespace DAEnerys
                     XElement dockpathElement = AddNode(holdDockElement, dockpath.FormattedName, Matrix4.Identity);
                     foreach (HWDockSegment segment in dockpath.Segments)
                     {
-                        XElement segmentElement = AddNode(dockpathElement, segment.FormattedName, segment.RelativeWorldMatrix);
+                        XElement segmentElement = AddNode(dockpathElement, segment.FormattedName, segment.LocalWorldMatrix);
                     }
                 }
             }
@@ -876,10 +878,10 @@ namespace DAEnerys
             //Engine burns
             foreach (HWEngineBurn engineBurn in HWEngineBurn.EngineBurns)
             {
-                XElement engineBurnElement = AddNode(jointElements[(HWJoint)engineBurn.Parent], engineBurn.FormattedName, engineBurn.RelativeWorldMatrix);
+                XElement engineBurnElement = AddNode(jointElements[(HWJoint)engineBurn.Parent], engineBurn.FormattedName, engineBurn.LocalWorldMatrix);
                 foreach (HWEngineFlame flame in engineBurn.Flames)
                 {
-                    XElement flameElement = AddNode(engineBurnElement, flame.FormattedName, flame.RelativeWorldMatrix);
+                    XElement flameElement = AddNode(engineBurnElement, flame.FormattedName, flame.LocalWorldMatrix);
                 }
             }
             #region ROOT_COL
@@ -891,7 +893,7 @@ namespace DAEnerys
 
                 XElement rootCol = AddNode(visualScene, "ROOT_COL", transform);
                 foreach (HWCollisionMesh collisionMesh in HWCollisionMesh.CollisionMeshes)
-                    AddNode(rootCol, collisionMesh.FormattedName, collisionMesh.Parent.WorldMatrix, new HWMesh[] { collisionMesh });
+                    AddNode(rootCol, collisionMesh.FormattedName, collisionMesh.Parent.GlobalWorldMatrix, new HWMesh[] { collisionMesh });
             }
             #endregion
 
@@ -1016,11 +1018,15 @@ namespace DAEnerys
 
         private static void AddJointRecursive(XElement parentElement, HWJoint joint)
         {
-            XElement newElement = AddNode(parentElement, joint.FormattedName, joint.RelativeWorldMatrix);
+            XElement newElement = AddNode(parentElement, joint.FormattedName, joint.LocalWorldMatrix);
             jointElements.Add(joint, newElement);
 
-            foreach (HWJoint childJoint in joint.Children)
-                AddJointRecursive(newElement, childJoint);
+            foreach (HWElement child in joint.Children)
+            {
+                HWJoint childJoint = child as HWJoint;
+                if(childJoint != null)
+                    AddJointRecursive(newElement, childJoint);
+            }
         }
 
         private static XElement AddAnimationSource(XElement parentAnimation, string id, int count, string value, string[] types, string arrayName = "float_array")

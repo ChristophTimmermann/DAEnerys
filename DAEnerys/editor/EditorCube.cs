@@ -98,7 +98,7 @@ namespace DAEnerys
         /// </summary>
         public override void CalculateModelMatrix()
         {
-            ModelMatrix = Matrix4.CreateScale(Scale) * Element.WorldMatrix;
+            ModelMatrix = Matrix4.CreateScale(Scale) * Element.GlobalWorldMatrix;
         }
     }
 }

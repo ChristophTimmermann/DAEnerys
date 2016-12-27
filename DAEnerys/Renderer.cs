@@ -396,14 +396,6 @@ namespace DAEnerys
                 ViewProjection = View * Matrix4.CreateOrthographic(aspectRatioWidthOrtho, aspectRatioHeightOrtho, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
 
             // Update model view matrices
-            foreach (HWMesh mesh in HWMesh.Meshes)
-            {
-                if (mesh.Visible)
-                {
-                    mesh.CalculateModelMatrix();
-                }
-            }
-
             foreach (EditorMesh mesh in EditorScene.meshes)
             {
                 if (mesh.Visible)

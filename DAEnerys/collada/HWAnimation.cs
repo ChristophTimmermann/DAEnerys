@@ -100,7 +100,7 @@ namespace DAEnerys
 
                 Matrix4 newMatrix = rotationMatrix * translationMatrix;
                 joint.AnimationMatrix = newMatrix;
-                joint.CalculateWorldMatrix();
+                joint.Invalidate();
             }
 
             AnimationTime += (float)Program.ElapsedSeconds;
@@ -111,7 +111,7 @@ namespace DAEnerys
                 foreach (HWJoint joint in HWJoint.Joints)
                 {
                     joint.AnimationMatrix = Matrix4.Identity;
-                    joint.CalculateWorldMatrix();
+                    joint.Invalidate();
                 }
             }
 
@@ -121,12 +121,12 @@ namespace DAEnerys
 
         private static Matrix4 UpdateTranslation(HWJoint joint)
         {
-            Vector3 pos = joint.RelativePosition;
+            Vector3 pos = joint.LocalPosition;
 
             for (int i = 0; i < 3; i++)
             {
                 if (joint.PositionChannel.Axes[i].Times.Count == 0)
-                    return joint.RelativeWorldMatrix.ClearRotation().ClearScale();
+                    return joint.LocalWorldMatrix.ClearRotation().ClearScale();
 
                 int keyIndex = 0;
                 for (int t = 0; t < joint.PositionChannel.Axes[i].Times.Count - 1; t++)
@@ -201,12 +201,14 @@ namespace DAEnerys
         }
         private static Matrix4 UpdateRotation(HWJoint joint)
         {
-            Vector3 rot = joint.RelativeRotation;
+            Vector3 rot; float angle;
+            joint.LocalRotation.ToAxisAngle(out rot, out angle);
+            rot *= angle;
 
             for (int i = 0; i < 3; i++)
             {
                 if (joint.RotationChannel.Axes[i].Times.Count == 0)
-                return joint.RelativeWorldMatrix.ClearTranslation().ClearScale();
+                return joint.LocalWorldMatrix.ClearTranslation().ClearScale();
 
                 int keyIndex = 0;
                 for (int t = 0; t < joint.RotationChannel.Axes[i].Times.Count - 1; t++)

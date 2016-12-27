@@ -108,7 +108,7 @@ namespace DAEnerys
 
             for(int i = 0; i < Segments.Count - 1; i++) //1 line less than segments
             {
-                EditorLine line = new EditorLine(Segments[i].AbsolutePosition, Segments[i + 1].AbsolutePosition, Color.Red, Color.Red);
+                EditorLine line = new EditorLine(Segments[i].GlobalPosition, Segments[i + 1].GlobalPosition, Color.Red, Color.Red);
                 Lines.Add(line);
             }
         }
