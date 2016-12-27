@@ -83,14 +83,15 @@ namespace DAEnerys
 
         public virtual void Destroy()
         {
+            HWElement[] children = Children.ToArray();
             if (this.Parent != null)
             {
-                foreach (HWElement child in Children)
+                foreach (HWElement child in children)
                     child.Parent = this.Parent;
             }
             else
             {
-                foreach (HWElement child in Children)
+                foreach (HWElement child in children)
                     child.Parent = null;
             }
 

@@ -84,6 +84,9 @@ namespace DAEnerys
                 comboBackground.SelectedItem = "";
 
             checkCheckForUpdates.Checked = Updater.CheckForUpdatesOnStart;
+
+            numericPositionIncrement.Value = (decimal)Program.main.PositionIncrement;
+            numericRotationIncrement.Value = (decimal)Program.main.RotationIncrement;
         }
 
         private void numericJointSize_ValueChanged(object sender, EventArgs e)
@@ -234,7 +237,9 @@ namespace DAEnerys
                 new XElement("drawVisualizationsInFront", Renderer.DrawVisualizationsInFront),
                 new XElement("enableVSync", Renderer.EnableVSync),
                 new XElement("disableLighting", Renderer.DisableLighting),
-                new XElement("checkForUpdatesOnStart", Updater.CheckForUpdatesOnStart));
+                new XElement("checkForUpdatesOnStart", Updater.CheckForUpdatesOnStart),
+                new XElement("positionIncrement", Program.main.PositionIncrement),
+                new XElement("rotationIncrement", Program.main.RotationIncrement));
 
             foreach (string dataPath in HWData.DataPaths)
             {
@@ -360,6 +365,16 @@ namespace DAEnerys
                             bool checkForUpdatesOnStart = false;
                             bool.TryParse(element.Value, out checkForUpdatesOnStart);
                             Updater.CheckForUpdatesOnStart = checkForUpdatesOnStart;
+                            break;
+                        case "positionIncrement":
+                            float posInc = 1f;
+                            float.TryParse(element.Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out posInc);
+                            Program.main.PositionIncrement = posInc;
+                            break;
+                        case "rotationIncrement":
+                            float rotInc = 4.5f;
+                            float.TryParse(element.Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out rotInc);
+                            Program.main.RotationIncrement = rotInc;
                             break;
                         case "dataPath":
                             HWData.DataPaths.Add(element.Value);
@@ -487,6 +502,14 @@ namespace DAEnerys
         public void comboBackground_SelectedIndexChanged(object sender, EventArgs e)
         {
             SavedBackground = (string)comboBackground.SelectedItem;
+        }
+        private void numericPositionIncrement_ValueChanged(object sender, EventArgs e)
+        {
+            Program.main.PositionIncrement = (float)numericPositionIncrement.Value;
+        }
+        private void numericRotationIncrement_ValueChanged(object sender, EventArgs e)
+        {
+            Program.main.RotationIncrement = (float)numericRotationIncrement.Value;
         }
     }
 }

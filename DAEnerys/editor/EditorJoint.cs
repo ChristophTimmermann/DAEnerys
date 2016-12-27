@@ -20,7 +20,6 @@ namespace DAEnerys
         {
             base.Destroy();
 
-            Mesh = null;
             Joint = null;
             JointMaterial = null;
         }

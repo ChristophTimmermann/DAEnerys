@@ -16,6 +16,7 @@ namespace DAEnerys
         public string OpenedFile = "";
 
         public bool Loaded = false;
+        HWJoint selectedJoint;
         HWCollisionMesh selectedCollisionMesh;
         HWDockpath selectedDockpath;
         HWNavLight selectedNavLight;
@@ -33,8 +34,6 @@ namespace DAEnerys
         public Dictionary<object, HWEngineGlow> EngineGlowListItems = new Dictionary<object, HWEngineGlow>();
         private int selectedEngineGlowLOD;
 
-        public Dictionary<HWJoint, object> JointComboItems = new Dictionary<HWJoint, object>();
-
         public Dictionary<string, HWMaterial> MaterialNames = new Dictionary<string, HWMaterial>();
         public Dictionary<string, HWAnimation> AnimationNames = new Dictionary<string, HWAnimation>();
 
@@ -50,12 +49,47 @@ namespace DAEnerys
         private bool ignoreEngineGlowListSelectedIndexChanged;
         private bool ignoreNavLightValuesChanged;
         private bool ignoreNavLightListSelectedIndexChanged;
+        private bool ignoreJointValuesChanged;
 
         private bool animationPlaying;
         public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.Invalidate(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
 
         const int MAX_MATERIALS_ON_MESH = 16;
         const int MAX_LEVEL_OF_DETAIL = 3;
+
+        private float positionIncrement = 1;
+        public float PositionIncrement
+        {
+            get { return positionIncrement; }
+            set
+            {
+                positionIncrement = value;
+                decimal increment = (decimal)value;
+
+                numericJointPositionX.Increment = increment;
+                numericJointPositionY.Increment = increment;
+                numericJointPositionZ.Increment = increment;
+
+                numericNavLightPositionX.Increment = increment;
+                numericNavLightPositionY.Increment = increment;
+                numericNavLightPositionZ.Increment = increment;
+            }
+        }
+
+        private float rotationIncrement = 4.5f;
+        public float RotationIncrement
+        {
+            get { return rotationIncrement; }
+            set
+            {
+                rotationIncrement = value;
+                decimal increment = (decimal)value;
+
+                numericJointRotationX.Increment = increment;
+                numericJointRotationY.Increment = increment;
+                numericJointRotationZ.Increment = increment;
+            }
+        }
 
         public Main()
         {
@@ -194,7 +228,7 @@ namespace DAEnerys
 
         private void Clear()
         {
-            JointComboItems.Clear();
+            comboJointParent.Items.Clear();
 
             listShipMeshes.Items.Clear();
             comboShipMeshParent.Items.Clear();
@@ -309,6 +343,7 @@ namespace DAEnerys
 
             this.Text = "DAEnerys";
 
+            jointsTree_AfterSelect(this, new TreeViewEventArgs(null));
             listMaterials_SelectedIndexChanged(this, EventArgs.Empty);
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
             listEngineGlows_SelectedIndexChanged(this, EventArgs.Empty);
@@ -377,6 +412,8 @@ namespace DAEnerys
         {
             listBoxMarkers.Items.Add(marker.Name);
         }
+
+        //--------------------------------- JOINTS ---------------------------------//
         public void AddJoint(HWJoint joint, HWJoint parent)
         {
             TreeNode newNode = new TreeNode(joint.Name);
@@ -388,16 +425,13 @@ namespace DAEnerys
 
             joint.TreeNode = newNode;
 
-            object item = joint.Name;
-            JointComboItems.Add(joint, item);
-            joint.ComboItem = item;
-
-            comboShipMeshParent.Items.Add(item);
-            comboCollisionMeshParent.Items.Add(item);
-            comboEngineGlowParent.Items.Add(item);
-            comboEngineShapeParent.Items.Add(item);
-            comboEngineBurnParent.Items.Add(item);
-            comboNavLightParent.Items.Add(item);
+            comboJointParent.Items.Add(joint.Name);
+            comboShipMeshParent.Items.Add(joint.Name);
+            comboCollisionMeshParent.Items.Add(joint.Name);
+            comboEngineGlowParent.Items.Add(joint.Name);
+            comboEngineShapeParent.Items.Add(joint.Name);
+            comboEngineBurnParent.Items.Add(joint.Name);
+            comboNavLightParent.Items.Add(joint.Name);
         }
         public void RemoveJoint(HWJoint joint)
         {
@@ -413,22 +447,217 @@ namespace DAEnerys
 
             jointsTree.Nodes.Remove(joint.TreeNode);
 
-            JointComboItems.Remove(joint);
-            joint.ComboItem = null;
             object item = joint.Name;
 
-            //Remove joint from ship mesh parents
-            comboShipMeshParent.Items.Remove(item);
+            RemoveJointFromCombos(joint);
+        }
+        private void AddJointToCombos(HWJoint joint)
+        {
+            comboJointParent.Items.Add(joint.Name);
+            comboShipMeshParent.Items.Add(joint.Name);
+            comboCollisionMeshParent.Items.Add(joint.Name);
+            comboEngineGlowParent.Items.Add(joint.Name);
+            comboEngineShapeParent.Items.Add(joint.Name);
+            comboEngineBurnParent.Items.Add(joint.Name);
+            comboNavLightParent.Items.Add(joint.Name);
+        }
+        private void RemoveJointFromCombos(HWJoint joint)
+        {
+            comboJointParent.Items.Remove(joint.Name);
+            comboShipMeshParent.Items.Remove(joint.Name);
+            comboCollisionMeshParent.Items.Remove(joint.Name);
+            comboEngineGlowParent.Items.Remove(joint.Name);
+            comboEngineShapeParent.Items.Remove(joint.Name);
+            comboEngineBurnParent.Items.Remove(joint.Name);
+            comboNavLightParent.Items.Remove(joint.Name);
+        }
+        private void jointsTree_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            bool newValue = e.Node.Checked;
 
-            comboCollisionMeshParent.Items.Remove(item);
+            //TODO: Optimize
+            foreach (HWJoint joint in HWJoint.Joints)
+            {
+                if (joint.TreeNode == e.Node)
+                {
+                    joint.EditorJoint.Visible = newValue;
+                    break;
+                }
+            }
 
-            //Remove joint from engine glow parents
-            comboEngineGlowParent.Items.Remove(item);
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+        private void jointsTree_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if(selectedJoint != null)
+                comboJointParent.Items.Add(selectedJoint.Name);
 
-            //Remove joint from engine shape parents
-            comboEngineShapeParent.Items.Remove(item);
+            selectedJoint = null;
 
-            comboEngineBurnParent.Items.Remove(item);
+            ignoreJointValuesChanged = true;
+
+            buttonJointRemove.Enabled = false;
+            boxJointName.Clear();
+            boxJointName.Enabled = false;
+            comboJointParent.SelectedItem = "";
+            comboJointParent.Enabled = false;
+
+            numericJointPositionX.Value = 0;
+            numericJointPositionX.Enabled = false;
+            numericJointPositionY.Value = 0;
+            numericJointPositionY.Enabled = false;
+            numericJointPositionZ.Value = 0;
+            numericJointPositionZ.Enabled = false;
+
+            numericJointRotationX.Value = 0;
+            numericJointRotationX.Enabled = false;
+            numericJointRotationY.Value = 0;
+            numericJointRotationY.Enabled = false;
+            numericJointRotationZ.Value = 0;
+            numericJointRotationZ.Enabled = false;
+
+            foreach (HWJoint joint in HWJoint.Joints)
+            {
+                if (joint.TreeNode == e.Node)
+                {
+                    selectedJoint = joint;
+                    break;
+                }
+            }
+
+            ignoreJointValuesChanged = false;
+
+            if (selectedJoint == null)
+                return;
+
+            ignoreJointValuesChanged = true;
+
+            if (selectedJoint != HWJoint.Root)
+            {
+                buttonJointRemove.Enabled = true;
+                boxJointName.Enabled = true;
+                comboJointParent.Enabled = true;
+            }
+
+            boxJointName.Text = selectedJoint.Name;
+            
+            if(selectedJoint.Parent != null)
+                comboJointParent.SelectedItem = selectedJoint.Parent.Name;
+
+            comboJointParent.Items.Remove(selectedJoint.Name);
+
+            numericJointPositionX.Enabled = true;
+            numericJointPositionX.Value = (decimal)selectedJoint.LocalPosition.X;
+            numericJointPositionY.Enabled = true;
+            numericJointPositionY.Value = (decimal)selectedJoint.LocalPosition.Y;
+            numericJointPositionZ.Enabled = true;
+            numericJointPositionZ.Value = (decimal)selectedJoint.LocalPosition.Z;
+
+            Vector3 axis; float angle;
+            selectedJoint.LocalRotation.ToAxisAngle(out axis, out angle);
+            axis *= angle;
+
+            numericJointRotationX.Enabled = true;
+            numericJointRotationX.Value = (decimal)MathHelper.RadiansToDegrees(axis.X);
+            numericJointRotationY.Enabled = true;
+            numericJointRotationY.Value = (decimal)MathHelper.RadiansToDegrees(axis.Y);
+            numericJointRotationZ.Enabled = true;
+            numericJointRotationZ.Value = (decimal)MathHelper.RadiansToDegrees(axis.Z);
+
+            ignoreJointValuesChanged = false;
+        }
+        private void buttonJointRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedJoint == null)
+                return;
+
+            selectedJoint.Destroy();
+        }
+        private void buttonJointAdd_Click(object sender, EventArgs e)
+        {
+            HWJoint parent = selectedJoint;
+            if (selectedJoint == null)
+                parent = HWJoint.Root;
+
+            int indexOffset = 1;
+            string newName = "Joint" + (HWJoint.Joints.Count + indexOffset);
+            while (HWJoint.GetByName(newName) != null)
+            {
+                indexOffset++;
+                newName = "Joint" + (HWJoint.Joints.Count + indexOffset);
+            }
+
+            HWJoint newJoint = new HWJoint(newName, parent, Matrix4.Identity);
+            jointsTree.SelectedNode = newJoint.TreeNode;
+            newJoint.TreeNode.EnsureVisible();
+            jointsTree.Focus();
+        }
+        private void boxJointName_Leave(object sender, EventArgs e)
+        {
+            if (selectedJoint == null)
+                return;
+
+            UpdateJointName(selectedJoint, boxJointName.Text);
+        }
+        private void boxJointName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedJoint == null)
+                return;
+
+            UpdateJointName(selectedJoint, boxJointName.Text);
+        }
+        private void UpdateJointName(HWJoint joint, string newName)
+        {
+            if (HWJoint.GetByName(joint.Name) == null)
+                return;
+
+            //Joint with this name already exists
+            if (HWJoint.GetByName(newName) != null)
+            {
+                HWJoint existingJoint = HWJoint.GetByName(newName);
+                if (existingJoint != joint)
+                {
+                    MessageBox.Show("A joint with this name already exists.", "Error while changing joint name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxJointName.Text = joint.Name;
+                    boxJointName.Focus();
+                    return;
+                }
+            }
+
+            RemoveJointFromCombos(joint);
+            joint.Name = boxJointName.Text;
+            joint.TreeNode.Text = joint.Name;
+            AddJointToCombos(joint);
+        }
+        private void numericJointPosition_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedJoint == null)
+                return;
+
+            if (ignoreJointValuesChanged)
+                return;
+
+            selectedJoint.LocalPosition = new Vector3((float)numericJointPositionX.Value, (float)numericJointPositionY.Value, (float)numericJointPositionZ.Value);
+        }
+        private void numericJointRotation_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedJoint == null)
+                return;
+
+            if (ignoreJointValuesChanged)
+                return;
+
+            float x = MathHelper.DegreesToRadians((float)numericJointRotationX.Value);
+            float y = MathHelper.DegreesToRadians((float)numericJointRotationY.Value);
+            float z = MathHelper.DegreesToRadians((float)numericJointRotationZ.Value);
+            Vector3 eulerAngles = new Vector3(z, y, x);
+
+
+            selectedJoint.LocalRotation = OpenTK.Quaternion.FromEulerAngles(eulerAngles);
         }
 
         //--------------------------------- DOCKPATHS ---------------------------------//
@@ -1005,23 +1234,6 @@ namespace DAEnerys
         {
             ActionKey.KeyUp(e);
         }
-        private void jointsTree_AfterCheck(object sender, TreeViewEventArgs e)
-        {
-            bool newValue = e.Node.Checked;
-
-            //TODO: Optimize
-            foreach (HWJoint joint in HWJoint.Joints)
-            {
-                if (joint.TreeNode == e.Node)
-                {
-                    joint.EditorJoint.Visible = newValue;
-                    break;
-                }
-            }
-
-            Renderer.InvalidateView();
-            Renderer.Invalidate();
-        }
         private void buttonSettings_Click(object sender, EventArgs e)
         {
             if (Program.settings != null)
@@ -1095,9 +1307,7 @@ namespace DAEnerys
             boxShipMeshName.Enabled = true;
             boxShipMeshName.Text = selectedShipMesh.Name;
 
-            //Select parent joint in combo box
-            object item = JointComboItems[selectedShipMesh.Parent];
-            comboShipMeshParent.SelectedItem = item; //Select parent joint in combo box
+            comboShipMeshParent.SelectedItem = selectedShipMesh.Parent.Name; //Select parent joint in combo box
 
             comboShipMeshParent.Enabled = true; //Enable parent combo box
 
@@ -1873,7 +2083,7 @@ namespace DAEnerys
                 boxEngineBurnName.Text = engineBurn.Name;
                 HWJoint jointParent = (HWJoint)engineBurn.Parent;
 
-                comboEngineBurnParent.SelectedItem = jointParent.ComboItem;
+                comboEngineBurnParent.SelectedItem = jointParent.Name;
 
                 selectedEngineBurn = engineBurn;
 
@@ -1938,7 +2148,7 @@ namespace DAEnerys
                 return;
 
             ignoreCollisionMeshParentChanged = true;
-            comboCollisionMeshParent.SelectedItem = JointComboItems[selectedCollisionMesh.Parent];
+            comboCollisionMeshParent.SelectedItem = selectedCollisionMesh.Parent.Name;
             ignoreCollisionMeshParentChanged = false;
 
             comboCollisionMeshParent.Enabled = true;
@@ -2108,10 +2318,7 @@ namespace DAEnerys
             if (selectedEngineShape == null)
                 return;
 
-            //Select parent joint in combo box
-            object item = JointComboItems[selectedEngineShape.Parent];
-            comboEngineShapeParent.SelectedItem = item; //Select parent joint in combo box
-
+            comboEngineShapeParent.SelectedItem = selectedEngineShape.Parent.Name; //Select parent joint in combo box
         }
         public void AddEngineShape(HWEngineShape mesh)
         {

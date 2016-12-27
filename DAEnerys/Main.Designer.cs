@@ -95,6 +95,26 @@ namespace DAEnerys
             this.labelCollisionMeshParent = new System.Windows.Forms.Label();
             this.comboCollisionMeshParent = new System.Windows.Forms.ComboBox();
             this.tabJoints = new System.Windows.Forms.TabPage();
+            this.groupJointRotation = new System.Windows.Forms.GroupBox();
+            this.numericJointRotationZ = new System.Windows.Forms.NumericUpDown();
+            this.labelJointRotationZ = new System.Windows.Forms.Label();
+            this.numericJointRotationY = new System.Windows.Forms.NumericUpDown();
+            this.labelJointRotationY = new System.Windows.Forms.Label();
+            this.numericJointRotationX = new System.Windows.Forms.NumericUpDown();
+            this.labelJointRotationX = new System.Windows.Forms.Label();
+            this.groupJointPosition = new System.Windows.Forms.GroupBox();
+            this.numericJointPositionZ = new System.Windows.Forms.NumericUpDown();
+            this.labelJointPositionZ = new System.Windows.Forms.Label();
+            this.numericJointPositionY = new System.Windows.Forms.NumericUpDown();
+            this.labelJointPositionY = new System.Windows.Forms.Label();
+            this.numericJointPositionX = new System.Windows.Forms.NumericUpDown();
+            this.labelJointPositionX = new System.Windows.Forms.Label();
+            this.labelJointParent = new System.Windows.Forms.Label();
+            this.comboJointParent = new System.Windows.Forms.ComboBox();
+            this.boxJointName = new System.Windows.Forms.TextBox();
+            this.labelJointName = new System.Windows.Forms.Label();
+            this.buttonJointRemove = new System.Windows.Forms.Button();
+            this.buttonJointAdd = new System.Windows.Forms.Button();
             this.jointsTree = new System.Windows.Forms.TreeView();
             this.tabMarkers = new System.Windows.Forms.TabPage();
             this.splitTabMarkers = new System.Windows.Forms.SplitContainer();
@@ -243,6 +263,14 @@ namespace DAEnerys
             this.groupMaterialTextures.SuspendLayout();
             this.tabCollisionMeshes.SuspendLayout();
             this.tabJoints.SuspendLayout();
+            this.groupJointRotation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointRotationZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointRotationY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointRotationX)).BeginInit();
+            this.groupJointPosition.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointPositionZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointPositionY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointPositionX)).BeginInit();
             this.tabMarkers.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitTabMarkers)).BeginInit();
             this.splitTabMarkers.Panel1.SuspendLayout();
@@ -548,6 +576,7 @@ namespace DAEnerys
             this.comboShipMeshParent.Location = new System.Drawing.Point(56, 266);
             this.comboShipMeshParent.Name = "comboShipMeshParent";
             this.comboShipMeshParent.Size = new System.Drawing.Size(185, 21);
+            this.comboShipMeshParent.Sorted = true;
             this.comboShipMeshParent.TabIndex = 12;
             this.comboShipMeshParent.SelectedIndexChanged += new System.EventHandler(this.comboShipMeshParent_SelectedIndexChanged);
             // 
@@ -989,12 +1018,21 @@ namespace DAEnerys
             this.comboCollisionMeshParent.Location = new System.Drawing.Point(56, 240);
             this.comboCollisionMeshParent.Name = "comboCollisionMeshParent";
             this.comboCollisionMeshParent.Size = new System.Drawing.Size(185, 21);
+            this.comboCollisionMeshParent.Sorted = true;
             this.comboCollisionMeshParent.TabIndex = 20;
             this.comboCollisionMeshParent.SelectedIndexChanged += new System.EventHandler(this.comboCollisionMeshParent_SelectedIndexChanged);
             // 
             // tabJoints
             // 
             this.tabJoints.AutoScroll = true;
+            this.tabJoints.Controls.Add(this.groupJointRotation);
+            this.tabJoints.Controls.Add(this.groupJointPosition);
+            this.tabJoints.Controls.Add(this.labelJointParent);
+            this.tabJoints.Controls.Add(this.comboJointParent);
+            this.tabJoints.Controls.Add(this.boxJointName);
+            this.tabJoints.Controls.Add(this.labelJointName);
+            this.tabJoints.Controls.Add(this.buttonJointRemove);
+            this.tabJoints.Controls.Add(this.buttonJointAdd);
             this.tabJoints.Controls.Add(this.jointsTree);
             this.tabJoints.Location = new System.Drawing.Point(4, 76);
             this.tabJoints.Name = "tabJoints";
@@ -1004,15 +1042,329 @@ namespace DAEnerys
             this.tabJoints.Text = "Joints";
             this.tabJoints.UseVisualStyleBackColor = true;
             // 
+            // groupJointRotation
+            // 
+            this.groupJointRotation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupJointRotation.Controls.Add(this.numericJointRotationZ);
+            this.groupJointRotation.Controls.Add(this.labelJointRotationZ);
+            this.groupJointRotation.Controls.Add(this.numericJointRotationY);
+            this.groupJointRotation.Controls.Add(this.labelJointRotationY);
+            this.groupJointRotation.Controls.Add(this.numericJointRotationX);
+            this.groupJointRotation.Controls.Add(this.labelJointRotationX);
+            this.groupJointRotation.Location = new System.Drawing.Point(6, 599);
+            this.groupJointRotation.Name = "groupJointRotation";
+            this.groupJointRotation.Size = new System.Drawing.Size(235, 93);
+            this.groupJointRotation.TabIndex = 33;
+            this.groupJointRotation.TabStop = false;
+            this.groupJointRotation.Text = "Rotation";
+            // 
+            // numericJointRotationZ
+            // 
+            this.numericJointRotationZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericJointRotationZ.DecimalPlaces = 4;
+            this.numericJointRotationZ.Enabled = false;
+            this.numericJointRotationZ.Increment = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.numericJointRotationZ.Location = new System.Drawing.Point(72, 66);
+            this.numericJointRotationZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericJointRotationZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericJointRotationZ.Name = "numericJointRotationZ";
+            this.numericJointRotationZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericJointRotationZ.Size = new System.Drawing.Size(157, 20);
+            this.numericJointRotationZ.TabIndex = 27;
+            this.numericJointRotationZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericJointRotationZ.ValueChanged += new System.EventHandler(this.numericJointRotation_ValueChanged);
+            // 
+            // labelJointRotationZ
+            // 
+            this.labelJointRotationZ.AutoSize = true;
+            this.labelJointRotationZ.Location = new System.Drawing.Point(6, 68);
+            this.labelJointRotationZ.Name = "labelJointRotationZ";
+            this.labelJointRotationZ.Size = new System.Drawing.Size(17, 13);
+            this.labelJointRotationZ.TabIndex = 26;
+            this.labelJointRotationZ.Text = "Z:";
+            // 
+            // numericJointRotationY
+            // 
+            this.numericJointRotationY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericJointRotationY.DecimalPlaces = 4;
+            this.numericJointRotationY.Enabled = false;
+            this.numericJointRotationY.Increment = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.numericJointRotationY.Location = new System.Drawing.Point(72, 40);
+            this.numericJointRotationY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericJointRotationY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericJointRotationY.Name = "numericJointRotationY";
+            this.numericJointRotationY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericJointRotationY.Size = new System.Drawing.Size(157, 20);
+            this.numericJointRotationY.TabIndex = 25;
+            this.numericJointRotationY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericJointRotationY.ValueChanged += new System.EventHandler(this.numericJointRotation_ValueChanged);
+            // 
+            // labelJointRotationY
+            // 
+            this.labelJointRotationY.AutoSize = true;
+            this.labelJointRotationY.Location = new System.Drawing.Point(6, 42);
+            this.labelJointRotationY.Name = "labelJointRotationY";
+            this.labelJointRotationY.Size = new System.Drawing.Size(17, 13);
+            this.labelJointRotationY.TabIndex = 24;
+            this.labelJointRotationY.Text = "Y:";
+            // 
+            // numericJointRotationX
+            // 
+            this.numericJointRotationX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericJointRotationX.DecimalPlaces = 4;
+            this.numericJointRotationX.Enabled = false;
+            this.numericJointRotationX.Increment = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.numericJointRotationX.Location = new System.Drawing.Point(72, 14);
+            this.numericJointRotationX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericJointRotationX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericJointRotationX.Name = "numericJointRotationX";
+            this.numericJointRotationX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericJointRotationX.Size = new System.Drawing.Size(157, 20);
+            this.numericJointRotationX.TabIndex = 23;
+            this.numericJointRotationX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericJointRotationX.ValueChanged += new System.EventHandler(this.numericJointRotation_ValueChanged);
+            // 
+            // labelJointRotationX
+            // 
+            this.labelJointRotationX.AutoSize = true;
+            this.labelJointRotationX.Location = new System.Drawing.Point(6, 16);
+            this.labelJointRotationX.Name = "labelJointRotationX";
+            this.labelJointRotationX.Size = new System.Drawing.Size(17, 13);
+            this.labelJointRotationX.TabIndex = 22;
+            this.labelJointRotationX.Text = "X:";
+            // 
+            // groupJointPosition
+            // 
+            this.groupJointPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupJointPosition.Controls.Add(this.numericJointPositionZ);
+            this.groupJointPosition.Controls.Add(this.labelJointPositionZ);
+            this.groupJointPosition.Controls.Add(this.numericJointPositionY);
+            this.groupJointPosition.Controls.Add(this.labelJointPositionY);
+            this.groupJointPosition.Controls.Add(this.numericJointPositionX);
+            this.groupJointPosition.Controls.Add(this.labelJointPositionX);
+            this.groupJointPosition.Location = new System.Drawing.Point(6, 500);
+            this.groupJointPosition.Name = "groupJointPosition";
+            this.groupJointPosition.Size = new System.Drawing.Size(235, 93);
+            this.groupJointPosition.TabIndex = 32;
+            this.groupJointPosition.TabStop = false;
+            this.groupJointPosition.Text = "Position";
+            // 
+            // numericJointPositionZ
+            // 
+            this.numericJointPositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericJointPositionZ.DecimalPlaces = 4;
+            this.numericJointPositionZ.Enabled = false;
+            this.numericJointPositionZ.Location = new System.Drawing.Point(72, 66);
+            this.numericJointPositionZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericJointPositionZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericJointPositionZ.Name = "numericJointPositionZ";
+            this.numericJointPositionZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericJointPositionZ.Size = new System.Drawing.Size(157, 20);
+            this.numericJointPositionZ.TabIndex = 27;
+            this.numericJointPositionZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericJointPositionZ.ValueChanged += new System.EventHandler(this.numericJointPosition_ValueChanged);
+            // 
+            // labelJointPositionZ
+            // 
+            this.labelJointPositionZ.AutoSize = true;
+            this.labelJointPositionZ.Location = new System.Drawing.Point(6, 68);
+            this.labelJointPositionZ.Name = "labelJointPositionZ";
+            this.labelJointPositionZ.Size = new System.Drawing.Size(17, 13);
+            this.labelJointPositionZ.TabIndex = 26;
+            this.labelJointPositionZ.Text = "Z:";
+            // 
+            // numericJointPositionY
+            // 
+            this.numericJointPositionY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericJointPositionY.DecimalPlaces = 4;
+            this.numericJointPositionY.Enabled = false;
+            this.numericJointPositionY.Location = new System.Drawing.Point(72, 40);
+            this.numericJointPositionY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericJointPositionY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericJointPositionY.Name = "numericJointPositionY";
+            this.numericJointPositionY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericJointPositionY.Size = new System.Drawing.Size(157, 20);
+            this.numericJointPositionY.TabIndex = 25;
+            this.numericJointPositionY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericJointPositionY.ValueChanged += new System.EventHandler(this.numericJointPosition_ValueChanged);
+            // 
+            // labelJointPositionY
+            // 
+            this.labelJointPositionY.AutoSize = true;
+            this.labelJointPositionY.Location = new System.Drawing.Point(6, 42);
+            this.labelJointPositionY.Name = "labelJointPositionY";
+            this.labelJointPositionY.Size = new System.Drawing.Size(17, 13);
+            this.labelJointPositionY.TabIndex = 24;
+            this.labelJointPositionY.Text = "Y:";
+            // 
+            // numericJointPositionX
+            // 
+            this.numericJointPositionX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericJointPositionX.DecimalPlaces = 4;
+            this.numericJointPositionX.Enabled = false;
+            this.numericJointPositionX.Location = new System.Drawing.Point(72, 14);
+            this.numericJointPositionX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericJointPositionX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericJointPositionX.Name = "numericJointPositionX";
+            this.numericJointPositionX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericJointPositionX.Size = new System.Drawing.Size(157, 20);
+            this.numericJointPositionX.TabIndex = 23;
+            this.numericJointPositionX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericJointPositionX.ValueChanged += new System.EventHandler(this.numericJointPosition_ValueChanged);
+            // 
+            // labelJointPositionX
+            // 
+            this.labelJointPositionX.AutoSize = true;
+            this.labelJointPositionX.Location = new System.Drawing.Point(6, 16);
+            this.labelJointPositionX.Name = "labelJointPositionX";
+            this.labelJointPositionX.Size = new System.Drawing.Size(17, 13);
+            this.labelJointPositionX.TabIndex = 22;
+            this.labelJointPositionX.Text = "X:";
+            // 
+            // labelJointParent
+            // 
+            this.labelJointParent.AutoSize = true;
+            this.labelJointParent.Location = new System.Drawing.Point(8, 476);
+            this.labelJointParent.Name = "labelJointParent";
+            this.labelJointParent.Size = new System.Drawing.Size(44, 13);
+            this.labelJointParent.TabIndex = 31;
+            this.labelJointParent.Text = "Parent: ";
+            // 
+            // comboJointParent
+            // 
+            this.comboJointParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboJointParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboJointParent.Enabled = false;
+            this.comboJointParent.FormattingEnabled = true;
+            this.comboJointParent.Location = new System.Drawing.Point(56, 473);
+            this.comboJointParent.Name = "comboJointParent";
+            this.comboJointParent.Size = new System.Drawing.Size(185, 21);
+            this.comboJointParent.Sorted = true;
+            this.comboJointParent.TabIndex = 30;
+            // 
+            // boxJointName
+            // 
+            this.boxJointName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.boxJointName.Enabled = false;
+            this.boxJointName.Location = new System.Drawing.Point(56, 447);
+            this.boxJointName.Name = "boxJointName";
+            this.boxJointName.Size = new System.Drawing.Size(185, 20);
+            this.boxJointName.TabIndex = 29;
+            this.boxJointName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxJointName_KeyPress);
+            this.boxJointName.Leave += new System.EventHandler(this.boxJointName_Leave);
+            // 
+            // labelJointName
+            // 
+            this.labelJointName.AutoSize = true;
+            this.labelJointName.Location = new System.Drawing.Point(8, 450);
+            this.labelJointName.Name = "labelJointName";
+            this.labelJointName.Size = new System.Drawing.Size(41, 13);
+            this.labelJointName.TabIndex = 28;
+            this.labelJointName.Text = "Name: ";
+            // 
+            // buttonJointRemove
+            // 
+            this.buttonJointRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonJointRemove.Enabled = false;
+            this.buttonJointRemove.Location = new System.Drawing.Point(149, 418);
+            this.buttonJointRemove.Name = "buttonJointRemove";
+            this.buttonJointRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonJointRemove.TabIndex = 27;
+            this.buttonJointRemove.Text = "Remove";
+            this.buttonJointRemove.UseVisualStyleBackColor = true;
+            this.buttonJointRemove.Click += new System.EventHandler(this.buttonJointRemove_Click);
+            // 
+            // buttonJointAdd
+            // 
+            this.buttonJointAdd.Location = new System.Drawing.Point(6, 418);
+            this.buttonJointAdd.Name = "buttonJointAdd";
+            this.buttonJointAdd.Size = new System.Drawing.Size(92, 23);
+            this.buttonJointAdd.TabIndex = 26;
+            this.buttonJointAdd.Text = "Add";
+            this.buttonJointAdd.UseVisualStyleBackColor = true;
+            this.buttonJointAdd.Click += new System.EventHandler(this.buttonJointAdd_Click);
+            // 
             // jointsTree
             // 
+            this.jointsTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.jointsTree.CheckBoxes = true;
-            this.jointsTree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jointsTree.Location = new System.Drawing.Point(3, 3);
+            this.jointsTree.Location = new System.Drawing.Point(6, 6);
             this.jointsTree.Name = "jointsTree";
-            this.jointsTree.Size = new System.Drawing.Size(241, 750);
+            this.jointsTree.Size = new System.Drawing.Size(235, 406);
             this.jointsTree.TabIndex = 0;
             this.jointsTree.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.jointsTree_AfterCheck);
+            this.jointsTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.jointsTree_AfterSelect);
             // 
             // tabMarkers
             // 
@@ -1589,6 +1941,7 @@ namespace DAEnerys
             this.comboNavLightParent.Location = new System.Drawing.Point(56, 311);
             this.comboNavLightParent.Name = "comboNavLightParent";
             this.comboNavLightParent.Size = new System.Drawing.Size(185, 21);
+            this.comboNavLightParent.Sorted = true;
             this.comboNavLightParent.TabIndex = 23;
             this.comboNavLightParent.SelectedIndexChanged += new System.EventHandler(this.comboNavLightParent_SelectedIndexChanged);
             // 
@@ -1928,7 +2281,7 @@ namespace DAEnerys
             // 
             this.buttonEngineGlowRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEngineGlowRemove.Enabled = false;
-            this.buttonEngineGlowRemove.Location = new System.Drawing.Point(149, 211);
+            this.buttonEngineGlowRemove.Location = new System.Drawing.Point(132, 211);
             this.buttonEngineGlowRemove.Name = "buttonEngineGlowRemove";
             this.buttonEngineGlowRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonEngineGlowRemove.TabIndex = 26;
@@ -1953,7 +2306,7 @@ namespace DAEnerys
             this.boxEngineGlowName.Enabled = false;
             this.boxEngineGlowName.Location = new System.Drawing.Point(56, 240);
             this.boxEngineGlowName.Name = "boxEngineGlowName";
-            this.boxEngineGlowName.Size = new System.Drawing.Size(185, 20);
+            this.boxEngineGlowName.Size = new System.Drawing.Size(168, 20);
             this.boxEngineGlowName.TabIndex = 28;
             this.boxEngineGlowName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxEngineGlowName_KeyPress);
             this.boxEngineGlowName.Leave += new System.EventHandler(this.boxEngineGlowName_Leave);
@@ -1974,7 +2327,7 @@ namespace DAEnerys
             this.listEngineGlows.FormattingEnabled = true;
             this.listEngineGlows.Location = new System.Drawing.Point(6, 6);
             this.listEngineGlows.Name = "listEngineGlows";
-            this.listEngineGlows.Size = new System.Drawing.Size(235, 199);
+            this.listEngineGlows.Size = new System.Drawing.Size(218, 199);
             this.listEngineGlows.TabIndex = 24;
             this.listEngineGlows.SelectedIndexChanged += new System.EventHandler(this.listEngineGlows_SelectedIndexChanged);
             // 
@@ -1996,7 +2349,8 @@ namespace DAEnerys
             this.comboEngineGlowParent.FormattingEnabled = true;
             this.comboEngineGlowParent.Location = new System.Drawing.Point(56, 266);
             this.comboEngineGlowParent.Name = "comboEngineGlowParent";
-            this.comboEngineGlowParent.Size = new System.Drawing.Size(185, 21);
+            this.comboEngineGlowParent.Size = new System.Drawing.Size(168, 21);
+            this.comboEngineGlowParent.Sorted = true;
             this.comboEngineGlowParent.TabIndex = 22;
             this.comboEngineGlowParent.SelectedIndexChanged += new System.EventHandler(this.comboEngineGlowParent_SelectedIndexChanged);
             // 
@@ -2013,7 +2367,7 @@ namespace DAEnerys
             this.groupEngineGlowLODs.Controls.Add(this.listEngineGlowLODs);
             this.groupEngineGlowLODs.Location = new System.Drawing.Point(3, 293);
             this.groupEngineGlowLODs.Name = "groupEngineGlowLODs";
-            this.groupEngineGlowLODs.Size = new System.Drawing.Size(238, 462);
+            this.groupEngineGlowLODs.Size = new System.Drawing.Size(221, 462);
             this.groupEngineGlowLODs.TabIndex = 21;
             this.groupEngineGlowLODs.TabStop = false;
             this.groupEngineGlowLODs.Text = "Level of detail(s)";
@@ -2022,7 +2376,7 @@ namespace DAEnerys
             // 
             this.buttonEngineGlowLODImportDAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEngineGlowLODImportDAE.Enabled = false;
-            this.buttonEngineGlowLODImportDAE.Location = new System.Drawing.Point(143, 130);
+            this.buttonEngineGlowLODImportDAE.Location = new System.Drawing.Point(126, 130);
             this.buttonEngineGlowLODImportDAE.Name = "buttonEngineGlowLODImportDAE";
             this.buttonEngineGlowLODImportDAE.Size = new System.Drawing.Size(92, 23);
             this.buttonEngineGlowLODImportDAE.TabIndex = 7;
@@ -2034,7 +2388,7 @@ namespace DAEnerys
             // 
             this.buttonEngineGlowLODRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEngineGlowLODRemove.Enabled = false;
-            this.buttonEngineGlowLODRemove.Location = new System.Drawing.Point(143, 101);
+            this.buttonEngineGlowLODRemove.Location = new System.Drawing.Point(126, 101);
             this.buttonEngineGlowLODRemove.Name = "buttonEngineGlowLODRemove";
             this.buttonEngineGlowLODRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonEngineGlowLODRemove.TabIndex = 5;
@@ -2067,7 +2421,7 @@ namespace DAEnerys
             // 
             this.buttonEngineGlowLODImportOBJ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEngineGlowLODImportOBJ.Enabled = false;
-            this.buttonEngineGlowLODImportOBJ.Location = new System.Drawing.Point(143, 159);
+            this.buttonEngineGlowLODImportOBJ.Location = new System.Drawing.Point(126, 159);
             this.buttonEngineGlowLODImportOBJ.Name = "buttonEngineGlowLODImportOBJ";
             this.buttonEngineGlowLODImportOBJ.Size = new System.Drawing.Size(92, 23);
             this.buttonEngineGlowLODImportOBJ.TabIndex = 2;
@@ -2093,7 +2447,7 @@ namespace DAEnerys
             this.listEngineGlowLODs.FormattingEnabled = true;
             this.listEngineGlowLODs.Location = new System.Drawing.Point(3, 16);
             this.listEngineGlowLODs.Name = "listEngineGlowLODs";
-            this.listEngineGlowLODs.Size = new System.Drawing.Size(232, 79);
+            this.listEngineGlowLODs.Size = new System.Drawing.Size(215, 79);
             this.listEngineGlowLODs.TabIndex = 0;
             this.listEngineGlowLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineGlowLODs_ItemCheck);
             this.listEngineGlowLODs.SelectedIndexChanged += new System.EventHandler(this.listEngineGlowLODs_SelectedIndexChanged);
@@ -2147,12 +2501,13 @@ namespace DAEnerys
             // 
             this.comboEngineShapeParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboEngineShapeParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
+            this.comboEngineShapeParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEngineShapeParent.Enabled = false;
             this.comboEngineShapeParent.FormattingEnabled = true;
             this.comboEngineShapeParent.Location = new System.Drawing.Point(56, 412);
             this.comboEngineShapeParent.Name = "comboEngineShapeParent";
             this.comboEngineShapeParent.Size = new System.Drawing.Size(182, 21);
+            this.comboEngineShapeParent.Sorted = true;
             this.comboEngineShapeParent.TabIndex = 8;
             // 
             // tabEngineBurns
@@ -2181,6 +2536,7 @@ namespace DAEnerys
             this.comboEngineBurnParent.Location = new System.Drawing.Point(47, 195);
             this.comboEngineBurnParent.Name = "comboEngineBurnParent";
             this.comboEngineBurnParent.Size = new System.Drawing.Size(195, 21);
+            this.comboEngineBurnParent.Sorted = true;
             this.comboEngineBurnParent.TabIndex = 15;
             // 
             // labelEngineBurnParent
@@ -2718,6 +3074,17 @@ namespace DAEnerys
             this.tabCollisionMeshes.ResumeLayout(false);
             this.tabCollisionMeshes.PerformLayout();
             this.tabJoints.ResumeLayout(false);
+            this.tabJoints.PerformLayout();
+            this.groupJointRotation.ResumeLayout(false);
+            this.groupJointRotation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointRotationZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointRotationY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointRotationX)).EndInit();
+            this.groupJointPosition.ResumeLayout(false);
+            this.groupJointPosition.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointPositionZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointPositionY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericJointPositionX)).EndInit();
             this.tabMarkers.ResumeLayout(false);
             this.splitTabMarkers.Panel1.ResumeLayout(false);
             this.splitTabMarkers.Panel2.ResumeLayout(false);
@@ -2976,6 +3343,26 @@ namespace DAEnerys
         private System.Windows.Forms.NumericUpDown numericNavLightPositionY;
         private System.Windows.Forms.Label labelNavLightPositionY;
         private System.Windows.Forms.ColorDialog colorDialog;
+        private System.Windows.Forms.GroupBox groupJointPosition;
+        private System.Windows.Forms.NumericUpDown numericJointPositionZ;
+        private System.Windows.Forms.Label labelJointPositionZ;
+        private System.Windows.Forms.NumericUpDown numericJointPositionY;
+        private System.Windows.Forms.Label labelJointPositionY;
+        private System.Windows.Forms.NumericUpDown numericJointPositionX;
+        private System.Windows.Forms.Label labelJointPositionX;
+        private System.Windows.Forms.Label labelJointParent;
+        private System.Windows.Forms.ComboBox comboJointParent;
+        private System.Windows.Forms.TextBox boxJointName;
+        private System.Windows.Forms.Label labelJointName;
+        private System.Windows.Forms.Button buttonJointRemove;
+        private System.Windows.Forms.Button buttonJointAdd;
+        private System.Windows.Forms.GroupBox groupJointRotation;
+        private System.Windows.Forms.NumericUpDown numericJointRotationZ;
+        private System.Windows.Forms.Label labelJointRotationZ;
+        private System.Windows.Forms.NumericUpDown numericJointRotationY;
+        private System.Windows.Forms.Label labelJointRotationY;
+        private System.Windows.Forms.NumericUpDown numericJointRotationX;
+        private System.Windows.Forms.Label labelJointRotationX;
     }
 }
 

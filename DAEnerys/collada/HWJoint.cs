@@ -27,7 +27,6 @@ namespace DAEnerys
         }
 
         public TreeNode TreeNode;
-        public object ComboItem;
 
         public HWJoint(string name, HWJoint parent, Matrix4 transform) : base(name, parent, transform)
         {
@@ -45,6 +44,27 @@ namespace DAEnerys
             Joints.Remove(this);
             EditorJoint.Destroy();
             EditorJoint = null;
+
+            HWMesh[] meshes = Meshes.ToArray();
+            foreach(HWMesh mesh in meshes)
+            {
+                HWShipMeshLOD shipMeshLOD = mesh as HWShipMeshLOD;
+                HWEngineGlowLOD engineGlowLOD = mesh as HWEngineGlowLOD;
+
+                HWJoint newParent = HWJoint.Root;
+                HWJoint jointParent = this.Parent as HWJoint;
+                if (jointParent != null)
+                    newParent = jointParent;
+
+                if (shipMeshLOD != null)
+                    shipMeshLOD.ShipMesh.Parent = newParent;
+                else if (engineGlowLOD != null)
+                    engineGlowLOD.EngineGlow.Parent = newParent;
+                else
+                    mesh.Parent = newParent;
+            }
+            
+            Meshes.Clear();
 
             base.Destroy();
         }
