@@ -50,7 +50,7 @@ namespace DAEnerys
     public abstract class GenericMesh : Element
     {
         private bool visible = false;
-        public virtual bool Visible { get { return visible; } set { visible = value; } }
+        public virtual bool Visible { get { return visible; } set { visible = value; Renderer.InvalidateView(); Renderer.Invalidate(); } }
 
         public override Element Parent
         {

@@ -8,6 +8,9 @@ namespace DAEnerys
     {
         public static List<HWMarker> Markers = new List<HWMarker>();
 
+        private static bool displayMarkers = false;
+        public static bool DisplayMarkers { get { return displayMarkers; } set { displayMarkers = value; foreach (HWMarker marker in Markers) marker.EditorMarker.Visible = value; } }
+
         public EditorMarker EditorMarker;
 
         public override string FormattedName
@@ -25,12 +28,23 @@ namespace DAEnerys
 
             //Visualization
             EditorMarker = new EditorMarker(this);
+            EditorMarker.Visible = DisplayMarkers;
+        }
+
+        public static HWMarker GetByName(string name)
+        {
+            foreach (HWMarker marker in Markers)
+                if (marker.Name == name)
+                    return marker;
+
+            return null;
         }
 
         public override void Destroy()
         {
             base.Destroy();
 
+            Program.main.RemoveMarker(this);
             Markers.Remove(this);
             EditorMarker.Destroy();
             EditorMarker = null;

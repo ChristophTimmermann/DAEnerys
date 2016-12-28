@@ -6,8 +6,8 @@ using System.IO;
 using System.Collections.Generic;
 using OpenTK.Graphics;
 using Assimp;
-using System.Linq;
 using System.Media;
+using static Extensions.Utilities;
 
 namespace DAEnerys
 {
@@ -24,6 +24,7 @@ namespace DAEnerys
         HWEngineBurn selectedEngineBurn;
         HWEngineGlow selectedEngineGlow;
         HWMaterial selectedMaterial;
+        HWMarker selectedMarker;
         public HWAnimation selectedAnimation;
 
         public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
@@ -52,6 +53,8 @@ namespace DAEnerys
         private bool ignoreNavLightListSelectedIndexChanged;
         private bool ignoreJointValuesChanged;
         private bool ignoreJointSelection;
+        private bool ignoreMarkerListSelectedIndexChanged;
+        private bool ignoreMarkerValuesChanged;
 
         private bool animationPlaying;
         public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.Invalidate(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
@@ -232,6 +235,8 @@ namespace DAEnerys
         {
             comboJointParent.Items.Clear();
 
+            comboMarkerParent.Items.Clear();
+
             listShipMeshes.Items.Clear();
             comboShipMeshParent.Items.Clear();
             checkShipMeshDoScar.Checked = false;
@@ -272,8 +277,8 @@ namespace DAEnerys
 
             jointsTree.Nodes.Clear();
 
-            listBoxMarkers.Items.Clear();
-            checkboxDrawMarkers.Checked = false;
+            listMarkers.Items.Clear();
+            checkDrawMarkers.Checked = false;
 
             //Dockpaths
             dockpathList.Items.Clear();
@@ -350,6 +355,7 @@ namespace DAEnerys
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
             listEngineGlows_SelectedIndexChanged(this, EventArgs.Empty);
             listNavLights_SelectedIndexChanged(this, EventArgs.Empty);
+            listMarkers_SelectedIndexChanged(this, EventArgs.Empty);
 
             Renderer.InvalidateMeshData();
             Renderer.InvalidateView();
@@ -410,11 +416,6 @@ namespace DAEnerys
             Log.Close();
         }
 
-        public void AddMarker(HWMarker marker)
-        {
-            listBoxMarkers.Items.Add(marker.Name);
-        }
-
         //--------------------------------- JOINTS ---------------------------------//
         public void AddJoint(HWJoint joint, HWJoint parent)
         {
@@ -429,13 +430,7 @@ namespace DAEnerys
 
             jointsTree.Sort();
 
-            comboJointParent.Items.Add(joint.Name);
-            comboShipMeshParent.Items.Add(joint.Name);
-            comboCollisionMeshParent.Items.Add(joint.Name);
-            comboEngineGlowParent.Items.Add(joint.Name);
-            comboEngineShapeParent.Items.Add(joint.Name);
-            comboEngineBurnParent.Items.Add(joint.Name);
-            comboNavLightParent.Items.Add(joint.Name);
+            AddJointToCombos(joint);
         }
         public void RemoveJoint(HWJoint joint)
         {
@@ -466,6 +461,7 @@ namespace DAEnerys
             comboEngineShapeParent.Items.Add(joint.Name);
             comboEngineBurnParent.Items.Add(joint.Name);
             comboNavLightParent.Items.Add(joint.Name);
+            comboMarkerParent.Items.Add(joint.Name);
         }
         private void RemoveJointFromCombos(HWJoint joint)
         {
@@ -476,6 +472,7 @@ namespace DAEnerys
             comboEngineShapeParent.Items.Remove(joint.Name);
             comboEngineBurnParent.Items.Remove(joint.Name);
             comboNavLightParent.Items.Remove(joint.Name);
+            comboMarkerParent.Items.Remove(joint.Name);
         }
         private void SetJointParent(HWJoint joint, HWJoint newParent)
         {
@@ -606,16 +603,13 @@ namespace DAEnerys
             numericJointPositionZ.Enabled = true;
             numericJointPositionZ.Value = (decimal)selectedJoint.LocalPosition.Z;
 
-            Vector3 axis; float angle;
-            selectedJoint.LocalRotation.ToAxisAngle(out axis, out angle);
-            axis *= angle;
-
+            Vector3 eulerAngles = Extensions.Utilities.ToEulerAngles(selectedJoint.LocalRotation);
             numericJointRotationX.Enabled = true;
-            numericJointRotationX.Value = (decimal)MathHelper.RadiansToDegrees(axis.X);
+            numericJointRotationX.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Z);
             numericJointRotationY.Enabled = true;
-            numericJointRotationY.Value = (decimal)MathHelper.RadiansToDegrees(axis.Y);
+            numericJointRotationY.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Y);
             numericJointRotationZ.Enabled = true;
-            numericJointRotationZ.Value = (decimal)MathHelper.RadiansToDegrees(axis.Z);
+            numericJointRotationZ.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.X);
 
             ignoreJointValuesChanged = false;
         }
@@ -707,7 +701,6 @@ namespace DAEnerys
             float y = MathHelper.DegreesToRadians((float)numericJointRotationY.Value);
             float z = MathHelper.DegreesToRadians((float)numericJointRotationZ.Value);
             Vector3 eulerAngles = new Vector3(z, y, x);
-
 
             selectedJoint.LocalRotation = OpenTK.Quaternion.FromEulerAngles(eulerAngles);
         }
@@ -1343,17 +1336,184 @@ namespace DAEnerys
             selectedNavLight.Flags = flags;
         }
 
-        //--------------------------------- MISC ---------------------------------//
-        private void checkboxDrawMarkers_CheckedChanged(object sender, EventArgs e)
+        //--------------------------------- MARKERS ---------------------------------//
+        public void AddMarker(HWMarker marker)
         {
-            foreach (HWMarker marker in HWMarker.Markers)
+            listMarkers.Items.Add(marker.Name);
+        }
+        public void RemoveMarker(HWMarker marker)
+        {
+            listMarkers.Items.Remove(marker.Name);
+        }
+        private void checkDrawMarkers_CheckedChanged(object sender, EventArgs e)
+        {
+            HWMarker.DisplayMarkers = checkDrawMarkers.Checked;
+        }
+        private void listMarkers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ignoreMarkerListSelectedIndexChanged)
+                return;
+
+            if (selectedMarker != null)
+                selectedMarker.EditorMarker.Color = new Vector3(1, 1, 0);
+
+            ignoreMarkerValuesChanged = true;
+
+            buttonMarkerRemove.Enabled = false;
+            boxMarkerName.Enabled = false;
+            comboMarkerParent.Enabled = false;
+
+            numericMarkerPositionX.Enabled = false;
+            numericMarkerPositionY.Enabled = false;
+            numericMarkerPositionZ.Enabled = false;
+
+            numericMarkerRotationX.Enabled = false;
+            numericMarkerRotationY.Enabled = false;
+            numericMarkerRotationZ.Enabled = false;
+
+            boxMarkerName.Clear();
+            comboMarkerParent.SelectedItem = "";
+
+            numericMarkerPositionX.Value = 0;
+            numericMarkerPositionY.Value = 0;
+            numericMarkerPositionZ.Value = 0;
+
+            numericMarkerRotationX.Value = 0;
+            numericMarkerRotationY.Value = 0;
+            numericMarkerRotationZ.Value = 0;
+
+            ignoreMarkerValuesChanged = false;
+
+            selectedMarker = HWMarker.GetByName((string)listMarkers.SelectedItem);
+            if (selectedMarker == null)
+                return;
+
+            selectedMarker.EditorMarker.Color = new Vector3(1, 0, 0);
+
+            ignoreMarkerValuesChanged = true;
+
+            buttonMarkerRemove.Enabled = true;
+            boxMarkerName.Enabled = true;
+            comboMarkerParent.Enabled = true;
+
+            numericMarkerPositionX.Enabled = true;
+            numericMarkerPositionY.Enabled = true;
+            numericMarkerPositionZ.Enabled = true;
+
+            numericMarkerRotationX.Enabled = true;
+            numericMarkerRotationY.Enabled = true;
+            numericMarkerRotationZ.Enabled = true;
+
+            boxMarkerName.Text = selectedMarker.Name;
+
+            HWJoint parentJoint = selectedMarker.Parent as HWJoint;
+            if (parentJoint != null)
+                comboMarkerParent.SelectedItem = parentJoint.Name;
+
+            numericMarkerPositionX.Value = (decimal)selectedMarker.LocalPosition.X;
+            numericMarkerPositionY.Value = (decimal)selectedMarker.LocalPosition.Y;
+            numericMarkerPositionZ.Value = (decimal)selectedMarker.LocalPosition.Z;
+
+            Vector3 eulerAngles = Extensions.Utilities.ToEulerAngles(selectedMarker.LocalRotation);
+            numericMarkerRotationX.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Z);
+            numericMarkerRotationY.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Y);
+            numericMarkerRotationZ.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.X);
+
+            ignoreMarkerValuesChanged = false;
+        }
+        private void buttonMarkerRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedMarker == null)
+                return;
+
+            selectedMarker.Destroy();
+            listMarkers.ClearSelected();
+            listMarkers_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void buttonMarkerAdd_Click(object sender, EventArgs e)
+        {
+            int indexOffset = 1;
+            string newName = "marker" + (listMarkers.Items.Count + indexOffset);
+            while (listMarkers.Items.Contains(newName))
             {
-                marker.EditorMarker.Visible = checkboxDrawMarkers.Checked;
+                indexOffset++;
+                newName = "marker" + (listMarkers.Items.Count + indexOffset);
             }
 
-            Renderer.InvalidateView();
-            Renderer.Invalidate();
+            HWMarker newMarker = new HWMarker(newName, HWJoint.Root, Matrix4.Identity);
+            listMarkers.SelectedItem = newMarker.Name;
         }
+        private void boxMarkerName_Leave(object sender, EventArgs e)
+        {
+            if (selectedMarker == null)
+                return;
+
+            UpdateMarkerName(selectedMarker, boxMarkerName.Text);
+        }
+        private void boxMarkerName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedMarker == null)
+                return;
+
+            UpdateMarkerName(selectedMarker, boxMarkerName.Text);
+        }
+        private void UpdateMarkerName(HWMarker marker, string newName)
+        {
+            if (!listMarkers.Items.Contains(marker.Name))
+                return;
+
+            //Marker with this name already exists
+            if (listMarkers.Items.Contains(newName))
+            {
+                HWMarker existingMarker = HWMarker.GetByName(newName);
+                if (existingMarker != marker)
+                {
+                    MessageBox.Show("A marker with this name already exists.", "Error while changing marker name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxMarkerName.Text = marker.Name;
+                    boxMarkerName.Focus();
+                    return;
+                }
+            }
+
+            ignoreMarkerListSelectedIndexChanged = true;
+            int index = listMarkers.Items.IndexOf(marker.Name);
+            listMarkers.Items.Remove(marker.Name);
+            marker.Name = boxMarkerName.Text;
+            listMarkers.Items.Insert(index, marker.Name);
+            listMarkers.SelectedItem = marker.Name;
+            ignoreMarkerListSelectedIndexChanged = false;
+        }
+        private void numericMarkerPosition_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedMarker == null)
+                return;
+
+            if (ignoreMarkerValuesChanged)
+                return;
+
+            selectedMarker.LocalPosition = new Vector3((float)numericMarkerPositionX.Value, (float)numericMarkerPositionY.Value, (float)numericMarkerPositionZ.Value);
+        }
+        private void numericMarkerRotation_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedMarker == null)
+                return;
+
+            if (ignoreMarkerValuesChanged)
+                return;
+
+            float x = MathHelper.DegreesToRadians((float)numericMarkerRotationX.Value);
+            float y = MathHelper.DegreesToRadians((float)numericMarkerRotationY.Value);
+            float z = MathHelper.DegreesToRadians((float)numericMarkerRotationZ.Value);
+            Vector3 eulerAngles = new Vector3(z, y, x);
+
+            selectedMarker.LocalRotation = OpenTK.Quaternion.FromEulerAngles(eulerAngles);
+        }
+
+        //--------------------------------- MISC ---------------------------------//
+
         public void glControl_MouseDown(object sender, MouseEventArgs e)
         {
             Program.Camera.MouseDown(e);
