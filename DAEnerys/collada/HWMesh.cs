@@ -9,8 +9,8 @@ namespace DAEnerys
 
         public Matrix4 Transform;
 
-        private HWJoint parent;
-        public virtual HWJoint Parent
+        new private HWJoint parent;
+        new public virtual HWJoint Parent
         {
             get { return parent; }
             set
@@ -21,7 +21,7 @@ namespace DAEnerys
                 if (parent != null)
                     parent.Meshes.Add(this);
 
-                CalculateModelMatrix();
+                CalculateWorldMatrix();
                 Renderer.InvalidateView(); Renderer.Invalidate();
             }
         }
@@ -73,8 +73,9 @@ namespace DAEnerys
             private set { }
         }
 
-        public HWMesh(MeshData data, Matrix4 transform, HWMaterial material)
+        public HWMesh(MeshData data, HWJoint parent, Matrix4 transform, HWMaterial material) : base(parent, transform)
         {
+            Parent = parent;
             Transform = transform.ClearTranslation();
             //Transform *= Matrix4.CreateFromQuaternion(Transform.ExtractRotation());
 
@@ -85,23 +86,20 @@ namespace DAEnerys
             Material = material;
         }
 
-        public virtual void Destroy()
+        public override void Destroy()
         {
-            Parent = null;
+            base.Destroy();
+
             HWMesh.Meshes.Remove(this);
             Renderer.InvalidateMeshData();
             Renderer.Invalidate();
         }
 
-        public void CalculateModelMatrix()
+        public override void CalculateWorldMatrix()
         {
-            ModelMatrix = Matrix4.CreateScale(Scale);
-            ModelMatrix *= Transform;
+            base.CalculateWorldMatrix();
 
-            if(Parent != null)
-                ModelMatrix *= Parent.GlobalWorldMatrix;
-
-            ModelViewProjectionMatrix = ModelMatrix * Renderer.ViewProjection;
+            ModelViewProjectionMatrix = GlobalWorldMatrix * Renderer.ViewProjection;
         }
     }
 }

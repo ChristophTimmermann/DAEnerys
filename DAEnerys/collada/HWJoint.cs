@@ -101,7 +101,7 @@ namespace DAEnerys
                 GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
 
             foreach (HWMesh mesh in Meshes)
-                mesh.CalculateModelMatrix();
+                mesh.CalculateWorldMatrix();
 
             Renderer.InvalidateView();
             Renderer.Invalidate();

@@ -8,7 +8,7 @@ namespace DAEnerys
     {
         public static List<HWMarker> Markers = new List<HWMarker>();
 
-        public EditorLine[] Lines = new EditorLine[3];
+        public EditorMarker EditorMarker;
 
         public override string FormattedName
         {
@@ -18,39 +18,22 @@ namespace DAEnerys
             }
         }
 
-        private static float markerSize = 1;
-        public static float MarkerSize
-        {
-            get { return markerSize; }
-            set { markerSize = value; SetMarkerSize(); }
-        }
-
         public HWMarker(string name, HWJoint parent, Matrix4 transform) : base(name, parent, transform)
         {
             Markers.Add(this);
             Program.main.AddMarker(this);
-            float realSize = markerSize;
 
-            Lines[0] = new EditorLine(GlobalPosition + new Vector3(0, -realSize, 0), GlobalPosition + new Vector3(0, realSize, 0), Color.Red, Color.Red);
-            Lines[1] = new EditorLine(GlobalPosition + new Vector3(-realSize, 0, 0), GlobalPosition + new Vector3(realSize, 0, 0), Color.Red, Color.Red);
-            Lines[2] = new EditorLine(GlobalPosition + new Vector3(0, 0, -realSize), GlobalPosition + new Vector3(0, 0, realSize), Color.Red, Color.Red);
+            //Visualization
+            EditorMarker = new EditorMarker(this);
         }
 
-        public static void SetMarkerSize()
+        public override void Destroy()
         {
-            float realSize = markerSize;
+            base.Destroy();
 
-            foreach(HWMarker marker in Markers)
-            {
-                marker.Lines[0].Start = marker.GlobalPosition + new Vector3(0, -realSize, 0);
-                marker.Lines[0].End = marker.GlobalPosition + new Vector3(0, realSize, 0);
-
-                marker.Lines[1].Start = marker.GlobalPosition + new Vector3(-realSize, 0, 0);
-                marker.Lines[1].End = marker.GlobalPosition + new Vector3(realSize, 0, 0);
-
-                marker.Lines[2].Start = marker.GlobalPosition + new Vector3(0, 0, -realSize);
-                marker.Lines[2].End = marker.GlobalPosition + new Vector3(0, 0, realSize);
-            }
+            Markers.Remove(this);
+            EditorMarker.Destroy();
+            EditorMarker = null;
         }
     }
 }

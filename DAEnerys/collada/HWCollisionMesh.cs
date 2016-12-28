@@ -17,7 +17,7 @@ namespace DAEnerys
 
         public int ItemIndex;
 
-        public HWCollisionMesh(MeshData data, Matrix4 transform, HWJoint parent) : base(data, transform, HWMaterial.DefaultMaterial)
+        public HWCollisionMesh(MeshData data, Matrix4 transform, HWJoint parent) : base(data, parent, transform, HWMaterial.DefaultMaterial)
         {
             this.Parent = parent;
 

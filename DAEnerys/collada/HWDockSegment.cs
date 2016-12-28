@@ -52,10 +52,10 @@ namespace DAEnerys
             Dockpath.Segments.Add(this);
 
             Icosphere = new EditorIcosphere(this, new Vector3(1, 0, 0));
-            Icosphere.Scale = new Vector3(5, 5, 5);
+            Icosphere.LocalScale = new Vector3(5);
 
             ToleranceIcosphere = new EditorIcosphere(this, new Vector3(1, 1, 0));
-            ToleranceIcosphere.Scale = new Vector3(Tolerance);
+            ToleranceIcosphere.LocalScale = new Vector3(Tolerance);
             ToleranceIcosphere.Wireframe = true;
             ToleranceIcosphere.Visible = false;
 

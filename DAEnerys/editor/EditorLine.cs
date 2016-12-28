@@ -5,20 +5,17 @@ namespace DAEnerys
 {
     public class EditorLine : EditorMesh
     {
-        public static new Vector3 Scale = Vector3.One;
+        private Vector3 startColor = Vector3.One;
+        public Vector3 StartColor { get { return startColor; } set { startColor = value; UpdateData(); } }
+        private Vector3 endColor = Vector3.One;
+        public Vector3 EndColor { get { return endColor; } set { endColor = value; UpdateData(); } }
 
-        private Color startColor;
-        public Color StartColor { get { return startColor; } set { startColor = value; Colors = GetColorData(); } }
-        private Color endColor;
-        public Color EndColor { get { return endColor; } set { endColor = value; Colors = GetColorData(); } }
+        private Vector3 start = Vector3.Zero;
+        public Vector3 Start { get { return start; } set { start = value; UpdateData(); } }
+        private Vector3 end = new Vector3(10, 10, 10);
+        public Vector3 End { get { return end; } set { end = value; UpdateData(); } }
 
-        public Vector3 Start;
-        public Vector3 End;
-
-        public override int VertexCount { get { return 2; } }
-        public override int IndiceCount { get { return 2; } }
-
-        public EditorLine(Vector3 start, Vector3 end, Color startColor, Color endColor) : base()
+        public EditorLine(Vector3 start, Vector3 end, Vector3 startColor, Vector3 endColor, Element parent) : base(new MeshData(), parent, null)
         {
             this.StartColor = startColor;
             this.EndColor = endColor;
@@ -26,55 +23,24 @@ namespace DAEnerys
             this.Start = start;
             this.End = end;
 
-            Vertices = GetVertices();
-            Normals = GetNormals();
-            Indices = GetIndices();
-            Colors = GetColorData();
-            TextureCoords = GetTextureCoords();
+            this.VertexColored = true;
         }
 
-        public override Vector3[] GetVertices()
+        private void UpdateData()
         {
-            return new Vector3[] { Start, End };
-        }
+            Vertex[] vertices = new Vertex[2];
+            vertices[0] = new Vertex();
+            vertices[0].Position = start;
+            vertices[0].Color = startColor;
 
-        public override Vector3[] GetNormals()
-        {
-            return new Vector3[0];
-        }
+            vertices[1] = new Vertex();
+            vertices[1].Position = end;
+            vertices[1].Color = endColor;
 
-        public override int[] GetIndices(int offset = 0)
-        {
             int[] indices = { 0, 1 };
 
-            if (offset != 0)
-            {
-                for (int i = 0; i < indices.Length; i++)
-                {
-                    indices[i] += offset;
-                }
-            }
-
-            return indices;
-        }
-
-        public override Vector3[] GetColorData()
-        {
-            Vector3[] colorData = { new Vector3(StartColor.R, StartColor.G, StartColor.B), new Vector3(EndColor.R, EndColor.G, EndColor.B) };
-            return colorData;
-        }
-
-        public override Vector2[] GetTextureCoords()
-        {
-            return new Vector2[0];
-        }
-
-        /// <summary>
-        /// Calculates the model matrix from transforms
-        /// </summary>
-        public override void CalculateModelMatrix()
-        {
-            ModelMatrix = Matrix4.CreateScale(Scale);
+            MeshData data = new MeshData(vertices, indices, 0);
+            SetData(data);
         }
     }
 }

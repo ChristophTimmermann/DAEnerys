@@ -55,7 +55,7 @@ namespace DAEnerys
 
             for(int i = 0; i < Flames.Count - 1; i++) //1 line less than flames
             {
-                EditorLine line = new EditorLine(Flames[i].GlobalPosition, Flames[i + 1].GlobalPosition, Color.White, Color.White);
+                EditorLine line = new EditorLine(Flames[i].GlobalPosition, Flames[i + 1].GlobalPosition, Vector3.One, Vector3.One, null);
                 Lines.Add(line);
             }
         }
@@ -88,7 +88,7 @@ namespace DAEnerys
             EngineBurn.Flames.Add(this);
 
             Cube = new EditorCube(this, Vector3.One);
-            Cube.Scale = new Vector3(0.25f, 0.25f, 0.25f);
+            Cube.LocalScale = new Vector3(0.25f);
 
             EngineFlames.Add(this);
 

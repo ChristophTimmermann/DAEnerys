@@ -44,6 +44,7 @@ namespace DAEnerys
             float jointSize = 1;
             float markerSize = 1;
             float iconSize = 1;
+
             if (BiggestMesh != null)
             {
                 if (BiggestMesh != null)
@@ -51,7 +52,7 @@ namespace DAEnerys
                     jointSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
                     jointSize = Math.Max(jointSize, 0.3f);
 
-                    markerSize = farthest / 65 / HWJoint.Root.GlobalScale.X;
+                    markerSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
                     markerSize = Math.Max(markerSize, 0.01f);
 
                     iconSize = farthest / 20 / HWJoint.Root.GlobalScale.X;
@@ -70,22 +71,13 @@ namespace DAEnerys
             Program.Camera.CalculatedZoom = Program.Camera.Zoom;
 
             EditorJoint.Size = jointSize;
-            HWMarker.MarkerSize = markerSize;
+            EditorMarker.Size = markerSize;
             HWNavLight.IconSize = farthest / 55;
             Program.Camera.ClipDistance = farClip;
             Program.Camera.NearClipDistance = nearClip;
             Renderer.MinClipDistance = Min.Z * 1.2f;
             Renderer.MaxClipDistance = Max.Z * 1.2f;
             Renderer.ClipDistance = Renderer.MaxClipDistance;
-
-            //Update line vertices
-            foreach (HWMarker marker in HWMarker.Markers)
-            {
-                foreach (EditorLine line in marker.Lines)
-                {
-                    line.Vertices = line.GetVertices();
-                }
-            }
         }
 
         public static void CheckForProblems()
@@ -170,7 +162,8 @@ namespace DAEnerys
             HWEngineFlame.EngineFlames.Clear();
             HWAnimation.Animations.Clear();
 
-            HWElement.Elements.Clear();
+            HWElement.HWElements.Clear();
+            Element.Elements.Clear();
 
             HWJoint.Root = new HWJoint("Root", null, Matrix4.Identity);
             HWJoint.Root.TreeNode.Expand();

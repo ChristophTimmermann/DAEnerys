@@ -33,7 +33,6 @@ namespace DAEnerys
             }
         }
 
-        public HWTexture DiffuseTexture;
         public HWTexture GlowTexture;
         public HWTexture DiffuseOffTexture;
         public HWTexture GlowOffTexture;
@@ -48,22 +47,21 @@ namespace DAEnerys
 
         public List<HWImage> Images = new List<HWImage>();
 
-        public HWMaterial()
+        public HWMaterial() : base(Vector3.One)
         {
             Materials.Add(this);
         }
 
-        public HWMaterial(string shader)
+        public HWMaterial(string shader) : base(Vector3.One)
         {
             Shader = shader;
 
             Materials.Add(this);
         }
 
-        public HWMaterial(string name, Vector3 diffuse, Vector3 specular, float specexponent = 1.0f, float opacity = 1.0f)
+        public HWMaterial(string name, Vector3 diffuse, Vector3 specular, float specexponent = 1.0f, float opacity = 1.0f) : base(diffuse)
         {
             Name = name;
-            DiffuseColor = diffuse;
             SpecularColor = specular;
             SpecularExponent = specexponent;
             Opacity = opacity;

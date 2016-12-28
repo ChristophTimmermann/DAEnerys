@@ -47,17 +47,27 @@ namespace DAEnerys
         }
     }
 
-    public abstract class GenericMesh
+    public abstract class GenericMesh : Element
     {
         private bool visible = false;
         public virtual bool Visible { get { return visible; } set { visible = value; } }
 
+        public override Element Parent
+        {
+            get { return base.Parent; }
+            set
+            {
+                base.Parent = value;
+
+                CalculateWorldMatrix();
+                Renderer.InvalidateView();
+                Renderer.Invalidate();
+            }
+        }
         public bool Shaded = true;
         public bool Translucent = false;
-        public bool VertexColored = true;
-        public Vector3 Scale = Vector3.One;
+        public bool VertexColored = false;
 
-        public Matrix4 ModelMatrix = Matrix4.Identity;
         public Matrix4 ModelViewProjectionMatrix = Matrix4.Identity;
 
         public Vertex[] VertexList;
@@ -147,8 +157,13 @@ namespace DAEnerys
 
         public int UVCount { get; private set; } = 0;
 
-        private GenericMaterial material = new GenericMaterial();
+        private GenericMaterial material;
         public GenericMaterial Material { get { return material; } set { material = value; Renderer.Invalidate(); } }
+
+        public GenericMesh(Element parent, Matrix4 transform) : base(parent, transform)
+        {
+
+        }
 
         public int[] GetIndices(int offset = 0)
         {

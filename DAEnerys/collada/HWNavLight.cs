@@ -142,7 +142,7 @@ namespace DAEnerys
                     RenderLight = new Light(new Vector4(GlobalPosition, 1), color, 1 / distance, 0);
                 }
                 RenderIcosphere = new EditorIcosphere(this, color);
-                RenderIcosphere.Scale = new Vector3(distance);
+                RenderIcosphere.LocalScale = new Vector3(distance);
                 RenderIcosphere.NeverDrawInFront = true;
                 RenderIcosphere.Wireframe = true;
                 RenderIcosphere.Visible = Program.main.DrawNavLightRadius;
@@ -158,7 +158,7 @@ namespace DAEnerys
                 RenderSprite.Material.DiffuseColor = Color;*/
             }
 
-            Icon = new EditorIcon(GlobalPosition, EditorIcon.LightbulbTexture);
+            Icon = new EditorIcon(this, EditorIcon.LightbulbTexture);
             Icon.Visible = true;
             Icon.Size = IconSize;
             Icon.DrawAboveShip = true;

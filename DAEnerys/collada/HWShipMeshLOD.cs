@@ -22,12 +22,11 @@ namespace DAEnerys
             }
         }
 
-        public HWShipMeshLOD(MeshData data, Matrix4 transform, HWMaterial material, HWShipMesh shipMesh, int lod) : base(data, transform, material)
+        public HWShipMeshLOD(MeshData data, Matrix4 transform, HWMaterial material, HWShipMesh shipMesh, int lod) : base(data, shipMesh.Parent, transform, material)
         {
             ShipMesh = shipMesh;
             LOD = lod;
             Name = shipMesh.Name;
-            Parent = shipMesh.Parent;
 
             ShipMesh.AddLODMesh(this);
 
@@ -51,7 +50,7 @@ namespace DAEnerys
 
             foreach (Vector3 vertex in Vertices)
             {
-                Vector3 computedVertex = (Matrix4.CreateTranslation(vertex) * ModelMatrix).ExtractTranslation();
+                Vector3 computedVertex = (Matrix4.CreateTranslation(vertex) * GlobalWorldMatrix).ExtractTranslation();
                 //Vector3 computedVertex = Vector3.Add(vertex, Parent.AbsolutePosition);
                 min.X = Math.Min(min.X, computedVertex.X);
                 min.Y = Math.Min(min.Y, computedVertex.Y);

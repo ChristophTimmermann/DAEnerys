@@ -1,4 +1,4 @@
-﻿using OpenTK;
+﻿/*using OpenTK;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -28,9 +28,6 @@ namespace DAEnerys
             }
             private set { }
         }
-
-        public override int VertexCount { get { return Mesh.VertexCount; } }
-        public override int IndiceCount { get { return Indices.Length; } }
         
         public static HWTexture Texture = null; // new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/lightbulb.tga"), true, true);
 
@@ -176,3 +173,4 @@ namespace DAEnerys
         protected virtual void __Update() { }
     }
 }
+*/

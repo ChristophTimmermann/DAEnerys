@@ -17,11 +17,10 @@ namespace DAEnerys
             }
         }
 
-        public HWEngineGlowLOD(MeshData data, Matrix4 transform, HWEngineGlow glowMesh, int lod) : base(data, transform, new HWMaterial("fx_eng_glowbasic"))
+        public HWEngineGlowLOD(MeshData data, Matrix4 transform, HWEngineGlow glowMesh, int lod) : base(data, glowMesh.Parent, transform, new HWMaterial("fx_eng_glowbasic"))
         {
             EngineGlow = glowMesh;
             LOD = lod;
-            Parent = EngineGlow.Parent;
             this.Name = glowMesh.Name;
 
             Translucent = true;

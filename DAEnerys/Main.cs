@@ -188,23 +188,23 @@ namespace DAEnerys
                 navLight.Update();
             }
 
-            int visibleEffects = 0;
+            /*int visibleEffects = 0;
             foreach (EditorEffect effect in EditorScene.effects)
             {
                 if (effect.IsRunning)
                     visibleEffects++;
 
                 effect.Update();
-            }
+            }*/
 
             if (animationPlaying)
                 HWAnimation.Update();
 
             //Only update render if it is needed
-            if (visibleNavLights > 0 || visibleEffects > 0)
+            if (visibleNavLights > 0/* || visibleEffects > 0*/)
                 Renderer.Invalidate();
-            if (visibleEffects > 0)
-                Renderer.InvalidateMeshData();
+            /*if (visibleEffects > 0)
+                Renderer.InvalidateMeshData();*/
 
             //Rainbow.Update();
         }
@@ -497,11 +497,18 @@ namespace DAEnerys
         }
         private void RemoveJointFromJointParentComboRecursive(HWJoint joint)
         {
-            foreach(HWElement child in joint.Children)
+            foreach(Element child in joint.Children)
             {
-                HWJoint childJoint = child as HWJoint;
-                if (childJoint != null)
-                    RemoveJointFromJointParentComboRecursive(childJoint);
+                HWElement hwChild = child as HWElement;
+
+                if (hwChild == null)
+                    return;
+
+                HWJoint childJoint = hwChild as HWJoint;
+                if (childJoint == null)
+                    return;
+
+                RemoveJointFromJointParentComboRecursive(childJoint);
             }
 
             comboJointParent.Items.Remove(joint.Name);
@@ -586,8 +593,11 @@ namespace DAEnerys
 
             RemoveJointFromJointParentComboRecursive(selectedJoint);
 
-            if(selectedJoint.Parent != null)
-                comboJointParent.SelectedItem = selectedJoint.Parent.Name;
+            if (selectedJoint.Parent != null)
+            {
+                HWJoint parentJoint = selectedJoint.Parent as HWJoint;
+                comboJointParent.SelectedItem = parentJoint.Name;
+            }
 
             numericJointPositionX.Enabled = true;
             numericJointPositionX.Value = (decimal)selectedJoint.LocalPosition.X;
@@ -909,8 +919,8 @@ namespace DAEnerys
             //Reset line colors
             foreach (EditorLine line in selectedDockpath.Lines)
             {
-                line.StartColor = Color.Red;
-                line.EndColor = Color.Red;
+                line.StartColor = new Vector3(1, 0, 0);
+                line.EndColor = new Vector3(1, 0, 0);
             }
 
             HWDockSegment selectedSegment = selectedDockpath.Segments[trackBarDockpathSegments.Value];
@@ -1074,7 +1084,9 @@ namespace DAEnerys
                 numericNavLightPositionZ.Value = (decimal)selectedNavLight.LocalPosition.Z;
 
                 boxNavLightName.Text = selectedNavLight.Name;
-                comboNavLightParent.SelectedItem = selectedNavLight.Parent.Name;
+
+                HWJoint parentJoint = selectedNavLight.Parent as HWJoint;
+                comboNavLightParent.SelectedItem = parentJoint.Name;
                 comboNavLightType.SelectedItem = selectedNavLight.Style.Name;
                 numericNavLightSize.Value = (decimal)selectedNavLight.Size;
                 numericNavLightPhase.Value = (decimal)selectedNavLight.Phase;
@@ -1336,10 +1348,7 @@ namespace DAEnerys
         {
             foreach (HWMarker marker in HWMarker.Markers)
             {
-                foreach (EditorLine line in marker.Lines)
-                {
-                    line.Visible = checkboxDrawMarkers.Checked;
-                }
+                marker.EditorMarker.Visible = checkboxDrawMarkers.Checked;
             }
 
             Renderer.InvalidateView();

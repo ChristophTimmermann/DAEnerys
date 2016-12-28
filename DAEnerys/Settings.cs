@@ -21,7 +21,7 @@ namespace DAEnerys
         public void Init()
         {
             numericJointSize.Value = (decimal)EditorJoint.Size;
-            numericMarkerSize.Value = (decimal)HWMarker.MarkerSize;
+            numericMarkerSize.Value = (decimal)EditorMarker.Size;
             numericZoomSpeed.Value = (decimal)Program.Camera.ZoomSpeed;
             numericFarClip.Value = (decimal)Program.Camera.ClipDistance;
             numericNearClip.Value = (decimal)Program.Camera.NearClipDistance;
@@ -99,16 +99,7 @@ namespace DAEnerys
 
         private void numericMarkerSize_ValueChanged(object sender, EventArgs e)
         {
-            HWMarker.MarkerSize = (float)numericMarkerSize.Value;
-
-            //Update line vertices
-            foreach (HWMarker marker in HWMarker.Markers)
-            {
-                foreach (EditorLine line in marker.Lines)
-                {
-                    line.Vertices = line.GetVertices();
-                }
-            }
+            EditorMarker.Size = (float)numericMarkerSize.Value;
 
             Renderer.InvalidateMeshData();
             Renderer.InvalidateView();

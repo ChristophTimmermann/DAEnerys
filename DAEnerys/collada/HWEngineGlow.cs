@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using OpenTK;
+using System.Collections.Generic;
 
 namespace DAEnerys
 {
@@ -52,7 +53,7 @@ namespace DAEnerys
             foreach(HWEngineGlow engineGlow in EngineGlows)
                 foreach (List<HWEngineGlowLOD> list in engineGlow.LODMeshes)
                     foreach (HWEngineGlowLOD lodMesh in list)
-                        lodMesh.Scale.Z = Renderer.ThrusterInterpolation;
+                        lodMesh.LocalScale = new Vector3(1, 1, Renderer.ThrusterInterpolation);
         }
 
         public void Destroy()

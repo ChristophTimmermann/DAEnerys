@@ -10,5 +10,11 @@ namespace DAEnerys
         public float Opacity = 1.0f;
 
         public string DiffusePath = "";
+        public HWTexture DiffuseTexture;
+
+        public GenericMaterial(Vector3 diffuseColor)
+        {
+            DiffuseColor = diffuseColor;
+        }
     }
 }

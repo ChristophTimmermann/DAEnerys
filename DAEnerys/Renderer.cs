@@ -356,7 +356,7 @@ namespace DAEnerys
                 foreach (EditorMesh mesh in EditorScene.meshes)
                 {
                     editor_verts.AddRange(mesh.Vertices);
-                    editor_uv0.AddRange(mesh.TextureCoords);
+                    editor_uv0.AddRange(mesh.UV0);
                     editor_colors.AddRange(mesh.Colors);
                     editor_inds.AddRange(mesh.GetIndices(editor_vertcount).ToList());
                     editor_vertcount += mesh.VertexCount;
@@ -394,15 +394,6 @@ namespace DAEnerys
                 ViewProjection = View * Matrix4.CreatePerspectiveFieldOfView(Program.Camera.FieldOfView, aspectRatio, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
             else
                 ViewProjection = View * Matrix4.CreateOrthographic(aspectRatioWidthOrtho, aspectRatioHeightOrtho, Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
-
-            // Update model view matrices
-            foreach (EditorMesh mesh in EditorScene.meshes)
-            {
-                if (mesh.Visible)
-                {
-                    mesh.CalculateModelMatrix();
-                }
-            }
         }
 
         public static void Render()
@@ -558,7 +549,7 @@ namespace DAEnerys
                 surface.LinkAttrib(mesh_uv1_buffer, "inUV1", 2, false);
                 //surface.LinkAttrib(mesh_uv2_buffer, "inUV2", 2, false);
 
-                surface["modelview"] = mesh.ModelMatrix;
+                surface["modelview"] = mesh.GlobalWorldMatrix;
 
                 Matrix4 mat_keylight = Matrix4.Identity;
                 Matrix4 mat_altlight = Matrix4.Identity;
@@ -686,7 +677,7 @@ namespace DAEnerys
                 if (mesh.Wireframe)
                     GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 
-                Matrix4 model = mesh.ModelMatrix;
+                Matrix4 model = mesh.GlobalWorldMatrix;
                 Matrix4 camera = Program.Camera.GetViewMatrix();
                 Matrix4 projection = Matrix4.Identity;
                 if (!Program.Camera.Orthographic)
@@ -747,11 +738,11 @@ namespace DAEnerys
                     GL.Uniform1(editor_shader.GetUniform("blackIsTransparent"), 0);
 
                 if (mesh.GetType() == typeof(EditorLine))
-                    GL.DrawElements(BeginMode.Lines, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(int));
+                    GL.DrawElements(BeginMode.Lines, mesh.IndexCount, DrawElementsType.UnsignedInt, index * sizeof(int));
                 else
-                    GL.DrawElements(BeginMode.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, index * sizeof(int));
+                    GL.DrawElements(BeginMode.Triangles, mesh.IndexCount, DrawElementsType.UnsignedInt, index * sizeof(int));
             }
-            return mesh.IndiceCount;
+            return mesh.IndexCount;
         }
 
         public static void Resize()

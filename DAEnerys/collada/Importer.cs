@@ -1063,7 +1063,8 @@ namespace DAEnerys
                 vertex.Position = new Vector3(assimpMesh.Vertices[i].X, assimpMesh.Vertices[i].Y, assimpMesh.Vertices[i].Z);
                 if (assimpMesh.Normals.Count - 1 >= i)
                     vertex.Normal = new Vector3(assimpMesh.Normals[i].X, assimpMesh.Normals[i].Y, assimpMesh.Normals[i].Z);
-                vertex.Color = Vector3.One; //Meh
+                if (assimpMesh.VertexColorChannelCount > 0)
+                    vertex.Color = new Vector3(assimpMesh.VertexColorChannels[0][i].R, assimpMesh.VertexColorChannels[0][i].G, assimpMesh.VertexColorChannels[0][i].B);
 
                 if (assimpMesh.TextureCoordinateChannelCount > 0)
                     vertex.UV0 = new Vector2(assimpMesh.TextureCoordinateChannels[0][i].X, assimpMesh.TextureCoordinateChannels[0][i].Y);
