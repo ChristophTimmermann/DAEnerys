@@ -87,7 +87,7 @@ namespace DAEnerys
 
             EngineBurn.Flames.Add(this);
 
-            Cube = new EditorCube(this, new Vector3(1, 1, 1));
+            Cube = new EditorCube(this, Vector3.One);
             Cube.Scale = new Vector3(0.25f, 0.25f, 0.25f);
 
             EngineFlames.Add(this);

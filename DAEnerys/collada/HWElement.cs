@@ -78,6 +78,8 @@ namespace DAEnerys
 
             this.Parent = parent;
 
+            CalculateWorldMatrix();
+
             Elements.Add(this);
         }
 
