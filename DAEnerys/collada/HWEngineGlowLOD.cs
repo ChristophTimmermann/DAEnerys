@@ -17,7 +17,7 @@ namespace DAEnerys
             }
         }
 
-        public HWEngineGlowLOD(MeshData data, Matrix4 transform, HWEngineGlow glowMesh, int lod) : base(data, glowMesh.Parent, transform, new HWMaterial("fx_eng_glowbasic"))
+        public HWEngineGlowLOD(MeshData data, Vector3 pos, Vector3 rot, Vector3 scale, HWEngineGlow glowMesh, int lod) : base(data, glowMesh.Parent, pos, rot, scale, new HWMaterial("fx_eng_glowbasic"))
         {
             EngineGlow = glowMesh;
             LOD = lod;

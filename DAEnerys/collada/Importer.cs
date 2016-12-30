@@ -22,9 +22,12 @@ namespace DAEnerys
         private static XDocument doc;
         private static XNamespace ns;
 
-        private static Dictionary<Node, HWJoint> nodeJoints = new Dictionary<Node, HWJoint>();
-        private static Dictionary<Node, HWDockpath> nodeDockpaths = new Dictionary<Node, HWDockpath>();
-        private static Dictionary<Node, HWEngineBurn> nodeEngineBurns = new Dictionary<Node, HWEngineBurn>();
+        private static List<string> visualSceneInstances = new List<string>();
+        private static List<COLLADANode> rootNodes = new List<COLLADANode>();
+
+        private static Dictionary<COLLADANode, HWJoint> nodeJoints = new Dictionary<COLLADANode, HWJoint>();
+        private static Dictionary<COLLADANode, HWDockpath> nodeDockpaths = new Dictionary<COLLADANode, HWDockpath>();
+        private static Dictionary<COLLADANode, HWEngineBurn> nodeEngineBurns = new Dictionary<COLLADANode, HWEngineBurn>();
 
         private static Dictionary<HWJoint, string> jointColladaNames = new Dictionary<HWJoint, string>();
 
@@ -33,11 +36,11 @@ namespace DAEnerys
 
         private static Queue<COLQueueItem> collisionMeshQueue = new Queue<COLQueueItem>();
 
-        private static Node[] lodNodes;
-        private static Node colNode;
-        private static Node infoNode;
-        private static Node holdDockNode;
-        private static Node holdAnimNode;
+        private static COLLADANode[] lodNodes;
+        private static COLLADANode colNode;
+        private static COLLADANode infoNode;
+        private static COLLADANode holdDockNode;
+        private static COLLADANode holdAnimNode;
 
         private static bool goblinWarningShown;
 
@@ -59,7 +62,10 @@ namespace DAEnerys
 
             collisionMeshQueue.Clear();
 
-            lodNodes = new Node[4];
+            visualSceneInstances.Clear();
+            rootNodes.Clear();
+
+            lodNodes = new COLLADANode[4];
             colNode = null;
             infoNode = null;
             holdDockNode = null;
@@ -98,7 +104,10 @@ namespace DAEnerys
 
             LoadMaterials();
 
-            ParseNode(Collada.RootNode);
+            ManualParseNodes();
+
+            foreach (COLLADANode rootNode in rootNodes)
+                ParseNode(rootNode);
 
             HandleQueues();
 
@@ -166,34 +175,40 @@ namespace DAEnerys
             return dae.Meshes[0];
         }
 
-        public static Matrix4 GetAssimpNodeTransform(Node assimpNode)
+        public static COLLADATransform GetColladaNodeTransform(COLLADANode colladaNode)
         {
-            Matrix4 transform = new Matrix4(assimpNode.Transform.A1, assimpNode.Transform.B1, assimpNode.Transform.C1, assimpNode.Transform.D1, assimpNode.Transform.A2, assimpNode.Transform.B2, assimpNode.Transform.C2, assimpNode.Transform.D2, assimpNode.Transform.A3, assimpNode.Transform.B3, assimpNode.Transform.C3, assimpNode.Transform.D3, assimpNode.Transform.A4, assimpNode.Transform.B4, assimpNode.Transform.C4, assimpNode.Transform.D4);
-            transform = transform.ClearScale(); //Ignore scale
-            return transform;
+            Vector3 axis = colladaNode.Transform.Rotation;
+            float x = MathHelper.RadiansToDegrees(axis.X);
+            float y = MathHelper.RadiansToDegrees(axis.Y);
+            float z = MathHelper.RadiansToDegrees(axis.Z);
+            axis = new Vector3(x, y, z);
+            Console.WriteLine(colladaNode.Name + " | " + axis);
+
+            return colladaNode.Transform;
         }
-        private static Matrix4 GetAssimpNodeAbsoluteTransform(Node assimpNode)
+
+        private static COLLADATransform GetColladaNodeAbsoluteTransform(COLLADANode colladaNode)
         {
-            Matrix4 transform = GetAssimpNodeTransform(assimpNode);
-            Node assimpParent = assimpNode.Parent;
+            Matrix4 transform = colladaNode.Transform.GetMatrix();
+            COLLADANode colladaParent = colladaNode.Parent;
 
             //Get the list of all transforms to apply to this joint
             List<Matrix4> parentTransforms = new List<Matrix4>();
-            while (assimpParent != null)
+            while (colladaParent != null)
             {
                 //Don't add joint transforms to this
-                if (nodeJoints.ContainsKey(assimpParent) || assimpParent == Collada.RootNode)
+                if (nodeJoints.ContainsKey(colladaParent) || colladaParent.AssimpNode == Collada.RootNode)
                 {
-                    assimpParent = assimpParent.Parent;
+                    colladaParent = colladaParent.Parent;
                     continue;
                 }
 
-                Matrix4 parentTransform = GetAssimpNodeTransform(assimpParent);
-                if (lodNodes.Contains(assimpParent) || assimpParent == colNode) //If ROOT_XXX
+                Matrix4 parentTransform = colladaParent.Transform.GetMatrix();
+                if (lodNodes.Contains(colladaParent) || colladaParent == colNode) //If ROOT_XXX
                     parentTransform = parentTransform.ClearTranslation(); //Ignore root translation
 
                 parentTransforms.Add(parentTransform);
-                assimpParent = assimpParent.Parent;
+                colladaParent = colladaParent.Parent;
             }
             parentTransforms.Reverse();
 
@@ -201,14 +216,19 @@ namespace DAEnerys
             foreach (Matrix4 parentTranslation in parentTransforms)
                 transform *= parentTranslation;
 
-            return transform;
+            Vector3 pos = transform.ExtractTranslation();
+            OpenTK.Quaternion quat = transform.ExtractRotation();
+            Vector3 rot = Extensions.Utilities.ToEulerAngles(quat);
+            Vector3 scale = transform.ExtractScale();
+
+            return new COLLADATransform(pos, rot, scale);
         }
-        private static bool IsAssimpNodeDescendantOf(Node assimpNode, Node assimpParent)
+        private static bool IsColladaNodeDescendantOf(COLLADANode colladaNode, COLLADANode colladaParent)
         {
-            Node nodeChecking = assimpNode.Parent;
+            COLLADANode nodeChecking = colladaNode.Parent;
             while (nodeChecking != null)
             {
-                if (nodeChecking == assimpParent)
+                if (nodeChecking == colladaParent)
                     return true;
 
                 nodeChecking = nodeChecking.Parent;
@@ -216,55 +236,55 @@ namespace DAEnerys
 
             return false;
         }
-        private static bool IsAssimpNodeUnderAnyRootNode(Node assimpNode)
+        private static bool IsColladaNodeUnderAnyRootNode(COLLADANode colladaNode)
         {
             for (int i = 0; i < 3; i++)
-                if (IsAssimpNodeDescendantOf(assimpNode, lodNodes[i]))
+                if (IsColladaNodeDescendantOf(colladaNode, lodNodes[i]))
                     return true;
 
             return false;
         }
-        private static HWJoint GetNextJointParent(Node assimpNode)
+        private static HWJoint GetNextJointParent(COLLADANode colladaNode)
         {
-            Node assimpParent = assimpNode.Parent;
+            COLLADANode colladaParent = colladaNode.Parent;
             HWJoint jointParent = HWJoint.Root;
 
-            while (assimpParent != null)
+            while (colladaParent != null)
             {
-                if (nodeJoints.ContainsKey(assimpParent))
+                if (nodeJoints.ContainsKey(colladaParent))
                 {
-                    jointParent = nodeJoints[assimpParent];
+                    jointParent = nodeJoints[colladaParent];
                     break;
                 }
 
-                assimpParent = assimpParent.Parent;
+                colladaParent = colladaParent.Parent;
             }
 
             return jointParent;
         }
 
-        public static void ParseNode(Node assimpNode)
+        public static void ParseNode(COLLADANode colladaNode)
         {
             bool failed = false;
 
             //Check for parameters in child nodes
-            Node subParams = null;
-            foreach (Node childNode in assimpNode.Children)
+            COLLADANode subParams = null;
+            foreach (COLLADANode childNode in colladaNode.Children)
                 if (childNode.Name.StartsWith("SUB_PARAMS"))
                 {
                     subParams = childNode;
                     break;
                 }
             if(subParams != null)
-                foreach (Node paramNode in subParams.Children)
+                foreach (COLLADANode paramNode in subParams.Children)
                 {
                     string addedParam = paramNode.Name.Substring(0, paramNode.Name.LastIndexOf(']') + 1);
-                    assimpNode.Name += "_" + addedParam;
+                    colladaNode.Name += "_" + addedParam;
                 }
 
-            if (assimpNode.Name.StartsWith("ROOT_LOD")) //If node is a root LOD node
+            if (colladaNode.Name.StartsWith("ROOT_LOD")) //If node is a root LOD node
             {
-                string[] split = assimpNode.Name.Split('[');
+                string[] split = colladaNode.Name.Split('[');
 
                 if (split.Length > 1)
                 {
@@ -279,64 +299,65 @@ namespace DAEnerys
                         if (lodNodes[lod] != null)
                             new Problem(ProblemTypes.ERROR, "There are multiple \"ROOT_LOD[" + lod + "]\" nodes.");
 
-                        lodNodes[lod] = assimpNode;
+                        lodNodes[lod] = colladaNode;
 
                         if (lod == 0)
                         {
-                            Matrix4 transform = GetAssimpNodeAbsoluteTransform(assimpNode);
-                            transform.ClearTranslation();
-                            OpenTK.Quaternion rot = transform.ExtractRotation();
-                            transform *= Matrix4.CreateFromQuaternion(rot.Inverted());
-                            HWJoint.Root.LocalWorldMatrix = transform;
+                            COLLADATransform transform = GetColladaNodeTransform(colladaNode);
+                            transform.Position = Vector3.Zero;
+ 
+                            //OpenTK.Quaternion rot = transform.ExtractRotation();
+                            //transform *= Matrix4.CreateFromQuaternion(rot.Inverted());
+                            HWJoint.Root.LocalWorldMatrix = transform.GetMatrix();
                             HWJoint.Root.CalculateWorldMatrix();
 
-                            nodeJoints.Add(assimpNode, HWJoint.Root);
+                            nodeJoints.Add(colladaNode, HWJoint.Root);
                         }
                     }
                 }
             }
-            else if (assimpNode.Name.StartsWith("ROOT_COL")) //If node is a root COL node
+            else if (colladaNode.Name.StartsWith("ROOT_COL")) //If node is a root COL node
             {
                 if (colNode != null)
                     new Problem(ProblemTypes.ERROR, "There are multiple \"ROOT_COL\" nodes.");
 
-                colNode = assimpNode;
+                colNode = colladaNode;
             }
-            else if (assimpNode.Name.StartsWith("ROOT_INFO")) //If node is a root INFO node
+            else if (colladaNode.Name.StartsWith("ROOT_INFO")) //If node is a root INFO node
             {
                 if (infoNode != null)
                     new Problem(ProblemTypes.ERROR, "There are multiple \"ROOT_INFO\" nodes.");
 
-                infoNode = assimpNode;
+                infoNode = colladaNode;
             }
-            else if (assimpNode.Name == "HOLD_DOCK") //If node is the holder for dockpaths
+            else if (colladaNode.Name == "HOLD_DOCK") //If node is the holder for dockpaths
             {
                 if (holdDockNode != null)
                     new Problem(ProblemTypes.ERROR, "There are multiple \"HOLD_DOCK\" nodes.");
 
-                holdDockNode = assimpNode;
+                holdDockNode = colladaNode;
             }
-            else if (assimpNode.Name == "HOLD_ANIM") //If node is the holder for animations
+            else if (colladaNode.Name == "HOLD_ANIM") //If node is the holder for animations
             {
                 if (holdAnimNode != null)
                     new Problem(ProblemTypes.ERROR, "There are multiple \"HOLD_ANIM\" nodes.");
 
-                holdAnimNode = assimpNode;
+                holdAnimNode = colladaNode;
             }
-            else if (assimpNode.Name.StartsWith("JNT")) //If node is a joint
+            else if (colladaNode.Name.StartsWith("JNT")) //If node is a joint
             {
-                if (!IsAssimpNodeUnderAnyRootNode(assimpNode))
+                if (!IsColladaNodeUnderAnyRootNode(colladaNode))
                 {
-                    new Problem(ProblemTypes.ERROR, "The joint \"" + assimpNode.Name + "\" is not under any \"ROOT_LOD[X]\" node.");
+                    new Problem(ProblemTypes.ERROR, "The joint \"" + colladaNode.Name + "\" is not under any \"ROOT_LOD[X]\" node.");
                     failed = true;
                 }
 
                 if (!failed)
                 {
-                    HWJoint parentJoint = GetNextJointParent(assimpNode);
+                    HWJoint parentJoint = GetNextJointParent(colladaNode);
                     string jointName = "";
 
-                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "JNT" });
+                    Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "JNT" });
                     foreach (KeyValuePair<string, string> pair in values.ToArray())
                     {
                         switch (pair.Key)
@@ -349,25 +370,27 @@ namespace DAEnerys
 
                     if (jointName == "")
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse name of joint \"" + assimpNode.Name + "\".");
+                        new Problem(ProblemTypes.ERROR, "Failed to parse name of joint \"" + colladaNode.Name + "\".");
                         failed = true;
                     }
 
                     if (!failed)
                     {
-                        HWJoint newJoint = new HWJoint(jointName, parentJoint, GetAssimpNodeAbsoluteTransform(assimpNode));
-                        nodeJoints.Add(assimpNode, newJoint);
-                        jointColladaNames.Add(newJoint, assimpNode.Name);
+                        COLLADATransform transform = GetColladaNodeTransform(colladaNode);
+
+                        HWJoint newJoint = new HWJoint(jointName, parentJoint, transform.Position, transform.Rotation, transform.Scale);
+                        nodeJoints.Add(colladaNode, newJoint);
+                        jointColladaNames.Add(newJoint, colladaNode.Name);
                     }
                 }
             }
-            else if (assimpNode.Name.StartsWith("MARK")) //If node is a marker
+            else if (colladaNode.Name.StartsWith("MARK")) //If node is a marker
             {
-                HWJoint parentJoint = GetNextJointParent(assimpNode);
+                HWJoint parentJoint = GetNextJointParent(colladaNode);
 
                 string markerName = "";
 
-                Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "MARK" });
+                Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "MARK" });
                 foreach (KeyValuePair<string, string> pair in values.ToArray())
                 {
                     switch (pair.Key)
@@ -380,19 +403,22 @@ namespace DAEnerys
 
                 if (markerName == "")
                 {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse name of marker \"" + assimpNode.Name + "\".");
+                    new Problem(ProblemTypes.ERROR, "Failed to parse name of marker \"" + colladaNode.Name + "\".");
                     failed = true;
                 }
 
-                if(!failed)
-                    new HWMarker(markerName, parentJoint, GetAssimpNodeAbsoluteTransform(assimpNode));
+                if (!failed)
+                {
+                    COLLADATransform transform = GetColladaNodeTransform(colladaNode);
+                    HWMarker newMarker = new HWMarker(markerName, parentJoint, transform.Position, transform.Rotation, transform.Scale);
+                }
             }
             #region Dockpath
-            else if (assimpNode.Name.StartsWith("DOCK")) //If node is a dockpath
+            else if (colladaNode.Name.StartsWith("DOCK")) //If node is a dockpath
             {
-                if (assimpNode.Parent != holdDockNode)
+                if (colladaNode.Parent != holdDockNode)
                 {
-                    new Problem(ProblemTypes.ERROR, "The dockpath \"" + assimpNode.Name + "\" is not under the \"HOLD_DOCK\" node.");
+                    new Problem(ProblemTypes.ERROR, "The dockpath \"" + colladaNode.Name + "\" is not under the \"HOLD_DOCK\" node.");
                     failed = true;
                 }
 
@@ -405,7 +431,7 @@ namespace DAEnerys
                     int animationIndex = 0;
 
                     bool success = false;
-                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "DOCK", "Fam", "Link", "Flags", "MAD" });
+                    Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "DOCK", "Fam", "Link", "Flags", "MAD" });
                     foreach(KeyValuePair<string, string> pair in values.ToArray())
                     {
                         switch (pair.Key)
@@ -454,23 +480,23 @@ namespace DAEnerys
                     if (!failed)
                     {
                         HWDockpath newDockpath = new HWDockpath(pathName, families, links, flags, animationIndex);
-                        nodeDockpaths.Add(assimpNode, newDockpath);
+                        nodeDockpaths.Add(colladaNode, newDockpath);
                     }
                 }
             }
             #endregion
 
             #region DockSegment
-            else if (assimpNode.Name.StartsWith("SEG")) //If node is a docksegment
+            else if (colladaNode.Name.StartsWith("SEG")) //If node is a docksegment
             {
                 HWDockpath dockpath = null;
-                if (nodeDockpaths.ContainsKey(assimpNode.Parent))
-                    dockpath = nodeDockpaths[assimpNode.Parent];
+                if (nodeDockpaths.ContainsKey(colladaNode.Parent))
+                    dockpath = nodeDockpaths[colladaNode.Parent];
 
                 //Check if segment is child of dockpath
                 if (dockpath == null)
                 {
-                    new Problem(ProblemTypes.WARNING, "Dockpath segment \"" + assimpNode.Name + "\" is not a child of a dockpath.");
+                    new Problem(ProblemTypes.WARNING, "Dockpath segment \"" + colladaNode.Name + "\" is not a child of a dockpath.");
                     failed = true;
                 }
 
@@ -482,7 +508,7 @@ namespace DAEnerys
                     List<DockSegmentFlag> flags = new List<DockSegmentFlag>();
 
                     bool success = false;
-                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "SEG", "Tol", "Spd", "Flags",  });
+                    Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "SEG", "Tol", "Spd", "Flags",  });
                     foreach (KeyValuePair<string, string> pair in values.ToArray())
                     {
                         switch (pair.Key)
@@ -510,7 +536,7 @@ namespace DAEnerys
                                             flags.Add(newFlag);
                                         else
                                         {
-                                            new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in dockpath segment \"" + assimpNode.Name + "\".");
+                                            new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in dockpath segment \"" + colladaNode.Name + "\".");
                                             failed = true;
                                         }
                                     }
@@ -521,32 +547,35 @@ namespace DAEnerys
 
                     if (id == -1)
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse ID of dockpath segment \"" + assimpNode.Name + "\".");
+                        new Problem(ProblemTypes.ERROR, "Failed to parse ID of dockpath segment \"" + colladaNode.Name + "\".");
                         failed = true;
                     }
 
                     if (tolerance == -1)
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse tolerance of dockpath segment \"" + assimpNode.Name + "\".");
+                        new Problem(ProblemTypes.ERROR, "Failed to parse tolerance of dockpath segment \"" + colladaNode.Name + "\".");
                         failed = true;
                     }
 
                     if (speed == -1)
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse speed of dockpath segment \"" + assimpNode.Name + "\".");
+                        new Problem(ProblemTypes.ERROR, "Failed to parse speed of dockpath segment \"" + colladaNode.Name + "\".");
                         failed = true;
                     }
 
-                    if(!failed)
-                        new HWDockSegment(dockpath, GetAssimpNodeAbsoluteTransform(assimpNode), id, tolerance, speed, flags);
+                    if (!failed)
+                    {
+                        COLLADATransform transform = GetColladaNodeTransform(colladaNode);
+                        new HWDockSegment(dockpath, transform.Position, transform.Rotation, transform.Scale, id, tolerance, speed, flags);
+                    }
                 }
             }
             #endregion
 
             #region NavLight
-            else if (assimpNode.Name.StartsWith("NAVL")) //If node is a navlight
+            else if (colladaNode.Name.StartsWith("NAVL")) //If node is a navlight
             {
-                HWJoint parentJoint = GetNextJointParent(assimpNode);
+                HWJoint parentJoint = GetNextJointParent(colladaNode);
 
                 string lightName = "";
                 string type = "default";
@@ -559,7 +588,7 @@ namespace DAEnerys
                 int sect = 0;
 
                 bool success = false;
-                Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "NAVL", "Type", "Sz", "Ph", "Fr", "Col", "Dist", "Flags", "Sect" });
+                Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "NAVL", "Type", "Sz", "Ph", "Fr", "Col", "Dist", "Flags", "Sect" });
                 foreach (KeyValuePair<string, string> pair in values.ToArray())
                 {
                     switch (pair.Key)
@@ -610,7 +639,7 @@ namespace DAEnerys
                                         flags.Add(newFlag);
                                     else
                                     {
-                                        new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in navlight \"" + assimpNode.Name + "\".");
+                                        new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in navlight \"" + colladaNode.Name + "\".");
                                         //failed = true;
                                     }
                                 }
@@ -640,7 +669,7 @@ namespace DAEnerys
                 }
                 if (lightName == "")
                 {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse name of navlight \"" + assimpNode.Name + "\". Skipping navlight.");
+                    new Problem(ProblemTypes.ERROR, "Failed to parse name of navlight \"" + colladaNode.Name + "\". Skipping navlight.");
                     failed = true;
                 }
                 /*if (type == "")
@@ -675,19 +704,19 @@ namespace DAEnerys
                 }*/
 
                 if (!failed)
-                    new HWNavLight(lightName, parentJoint, GetAssimpNodeTransform(assimpNode), navLightStyle, size, phase, frequency, color, distance, flags, sect);
+                    new HWNavLight(lightName, parentJoint, colladaNode.Transform.Position, navLightStyle, size, phase, frequency, color, distance, flags, sect);
             }
             #endregion
             #region EngineBurn
-            else if (assimpNode.Name.StartsWith("BURN"))
+            else if (colladaNode.Name.StartsWith("BURN"))
             {
-                HWJoint parentJoint = GetNextJointParent(assimpNode);
+                HWJoint parentJoint = GetNextJointParent(colladaNode);
 
                 if (!failed)
                 {
                     string burnName = "";
 
-                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "BURN" });
+                    Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "BURN" });
                     foreach (KeyValuePair<string, string> pair in values.ToArray())
                     {
                         switch (pair.Key)
@@ -700,29 +729,29 @@ namespace DAEnerys
 
                     if (burnName == "")
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse name of engine burn \"" + assimpNode.Name + "\".");
+                        new Problem(ProblemTypes.ERROR, "Failed to parse name of engine burn \"" + colladaNode.Name + "\".");
                         failed = true;
                     }
 
                     if (!failed)
                     {
-                        HWEngineBurn newBurn = new HWEngineBurn(burnName, parentJoint, GetAssimpNodeTransform(assimpNode));
-                        nodeEngineBurns.Add(assimpNode, newBurn);
+                        HWEngineBurn newBurn = new HWEngineBurn(burnName, parentJoint, colladaNode.Transform.Position, colladaNode.Transform.Rotation, colladaNode.Transform.Scale);
+                        nodeEngineBurns.Add(colladaNode, newBurn);
                     }
                 }
             }
             #endregion
             #region EngineFlame
-            else if (assimpNode.Name.StartsWith("Flame"))
+            else if (colladaNode.Name.StartsWith("Flame"))
             {
                 HWEngineBurn engineBurn = null;
-                if (nodeEngineBurns.ContainsKey(assimpNode.Parent))
-                    engineBurn = nodeEngineBurns[assimpNode.Parent];
+                if (nodeEngineBurns.ContainsKey(colladaNode.Parent))
+                    engineBurn = nodeEngineBurns[colladaNode.Parent];
 
                 //Check if segment is child of engine burn
                 if (engineBurn == null)
                 {
-                    new Problem(ProblemTypes.WARNING, "Engine burn flame \"" + assimpNode.Name + "\" is not a child of an engine burn.");
+                    new Problem(ProblemTypes.WARNING, "Engine burn flame \"" + colladaNode.Name + "\" is not a child of an engine burn.");
                     failed = true;
                 }
 
@@ -731,7 +760,7 @@ namespace DAEnerys
                     int spriteIndex = -1;
                     int divIndex = -1;
 
-                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "Flame", "Div" });
+                    Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "Flame", "Div" });
                     foreach (KeyValuePair<string, string> pair in values.ToArray())
                     {
                         switch (pair.Key)
@@ -747,30 +776,31 @@ namespace DAEnerys
 
                     if(spriteIndex == -1)
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse sprite index of engine flame \"" + assimpNode.Name + "\".");
+                        new Problem(ProblemTypes.ERROR, "Failed to parse sprite index of engine flame \"" + colladaNode.Name + "\".");
                         failed = true;
                     }
                     if (divIndex == -1)
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse division index of engine flame \"" + assimpNode.Name + "\".");
+                        new Problem(ProblemTypes.ERROR, "Failed to parse division index of engine flame \"" + colladaNode.Name + "\".");
                         failed = true;
                     }
 
                     if (!failed)
                     {
-                        HWEngineFlame newFlame = new HWEngineFlame(engineBurn, GetAssimpNodeAbsoluteTransform(assimpNode), divIndex, spriteIndex);
+                        COLLADATransform transform = GetColladaNodeTransform(colladaNode);
+                        HWEngineFlame newFlame = new HWEngineFlame(engineBurn, transform.Position, transform.Rotation, transform.Scale, divIndex, spriteIndex);
                     }
                 }
             }
             #endregion
-            else if (assimpNode.Name.StartsWith("MULT"))
+            else if (colladaNode.Name.StartsWith("MULT"))
             {
-                HWJoint parentJoint = GetNextJointParent(assimpNode);
+                HWJoint parentJoint = GetNextJointParent(colladaNode);
 
-                foreach (int meshIndex in assimpNode.MeshIndices)
-                    ParseShipMesh(Collada.Meshes[meshIndex], assimpNode, parentJoint);
+                foreach (int meshIndex in colladaNode.MeshIndices)
+                    ParseShipMesh(Collada.Meshes[meshIndex], colladaNode, parentJoint);
             }
-            else if (assimpNode.Name.StartsWith("GOBG")) //deprecated
+            else if (colladaNode.Name.StartsWith("GOBG")) //deprecated
             {
                 if (!goblinWarningShown)
                 {
@@ -778,33 +808,33 @@ namespace DAEnerys
                     goblinWarningShown = true;
                 }
             }
-            else if (assimpNode.Name.StartsWith("COL"))
+            else if (colladaNode.Name.StartsWith("COL"))
             {
-                foreach (int meshIndex in assimpNode.MeshIndices)
+                foreach (int meshIndex in colladaNode.MeshIndices)
                 {
                     //Because collision meshes have to be parsed after all joints
-                    collisionMeshQueue.Enqueue(new COLQueueItem(Collada.Meshes[meshIndex], assimpNode));
+                    collisionMeshQueue.Enqueue(new COLQueueItem(Collada.Meshes[meshIndex], colladaNode));
                 }
             }
-            else if (assimpNode.Name.StartsWith("GLOW"))
+            else if (colladaNode.Name.StartsWith("GLOW"))
             {
-                HWJoint parentJoint = GetNextJointParent(assimpNode);
+                HWJoint parentJoint = GetNextJointParent(colladaNode);
 
-                foreach (int meshIndex in assimpNode.MeshIndices)
-                    ParseEngineGlow(Collada.Meshes[meshIndex], assimpNode, parentJoint);
+                foreach (int meshIndex in colladaNode.MeshIndices)
+                    ParseEngineGlow(Collada.Meshes[meshIndex], colladaNode, parentJoint);
             }
-            else if (assimpNode.Name.StartsWith("ETSH"))
+            else if (colladaNode.Name.StartsWith("ETSH"))
             {
-                HWJoint parentJoint = GetNextJointParent(assimpNode);
+                HWJoint parentJoint = GetNextJointParent(colladaNode);
 
-                foreach (int meshIndex in assimpNode.MeshIndices)
-                    ParseEngineShape(Collada.Meshes[meshIndex], assimpNode, parentJoint);
+                foreach (int meshIndex in colladaNode.MeshIndices)
+                    ParseEngineShape(Collada.Meshes[meshIndex], colladaNode, parentJoint);
             }
-            else if (assimpNode.Name.StartsWith("ANIM")) //If node is an animation
+            else if (colladaNode.Name.StartsWith("ANIM")) //If node is an animation
             {
-                if (assimpNode.Parent != holdAnimNode)
+                if (colladaNode.Parent != holdAnimNode)
                 {
-                    new Problem(ProblemTypes.ERROR, "The animation \"" + assimpNode.Name + "\" is not under the \"HOLD_ANIM\" node.");
+                    new Problem(ProblemTypes.ERROR, "The animation \"" + colladaNode.Name + "\" is not under the \"HOLD_ANIM\" node.");
                     failed = true;
                 }
 
@@ -821,7 +851,7 @@ namespace DAEnerys
                     int loopEndFrame = 0;
                     AnimationType type = AnimationType.TIME;
 
-                    Dictionary<string, string> values = ParseNameParameters(assimpNode.Name, new string[] { "ANIM", "ST", "STF", "EN", "ENF", "LS", "LSF", "LE", "LEF" });
+                    Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "ANIM", "ST", "STF", "EN", "ENF", "LS", "LSF", "LE", "LEF" });
                     foreach (KeyValuePair<string, string> pair in values.ToArray())
                     {
                         switch (pair.Key)
@@ -860,7 +890,7 @@ namespace DAEnerys
 
                     if (animName == "")
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse name of animation \"" + assimpNode.Name + "\".");
+                        new Problem(ProblemTypes.ERROR, "Failed to parse name of animation \"" + colladaNode.Name + "\".");
                         failed = true;
                     }
 
@@ -871,11 +901,11 @@ namespace DAEnerys
                 }
             }
 
-            foreach (Node childNode in assimpNode.Children)
+            foreach (COLLADANode childNode in colladaNode.Children)
                 ParseNode(childNode);
         }
 
-        private static void ParseShipMesh(Mesh assimpMesh, Node assimpNode, HWJoint parentJoint)
+        private static void ParseShipMesh(Mesh assimpMesh, COLLADANode colladaNode, HWJoint parentJoint)
         {
             string name = "";
             int lod = 0;
@@ -914,7 +944,7 @@ namespace DAEnerys
                 return;
             }
 
-            if (!IsAssimpNodeDescendantOf(assimpNode, lodNodes[lod]))
+            if (!IsColladaNodeDescendantOf(colladaNode, lodNodes[lod]))
             {
                 new Problem(ProblemTypes.WARNING, "Ship mesh \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
                 return;
@@ -943,9 +973,10 @@ namespace DAEnerys
             if (material == null)
                 material = HWMaterial.DefaultMaterial;
 
-            HWShipMeshLOD newLOD = new HWShipMeshLOD(ParseAssimpMesh(assimpMesh), GetAssimpNodeAbsoluteTransform(assimpNode), material, newShipMesh, lod);
+            COLLADATransform transform = GetColladaNodeTransform(colladaNode);
+            HWShipMeshLOD newLOD = new HWShipMeshLOD(ParseAssimpMesh(assimpMesh), transform.Position, transform.Rotation, transform.Scale, material, newShipMesh, lod);
         }
-        private static void ParseCollisionMesh(Mesh assimpMesh, Node assimpNode)
+        private static void ParseCollisionMesh(Mesh assimpMesh, COLLADANode colladaNode)
         {
             string parent = "";
 
@@ -973,9 +1004,9 @@ namespace DAEnerys
                 parentJoint = HWJoint.Root;
             }
 
-            HWCollisionMesh newCollisionMesh = new HWCollisionMesh(ParseAssimpMesh(assimpMesh), GetAssimpNodeTransform(assimpNode), parentJoint);
+            HWCollisionMesh newCollisionMesh = new HWCollisionMesh(ParseAssimpMesh(assimpMesh), colladaNode.Transform.Position, colladaNode.Transform.Rotation, colladaNode.Transform.Scale, parentJoint);
         }
-        private static void ParseEngineGlow(Mesh assimpMesh, Node assimpNode, HWJoint parentJoint)
+        private static void ParseEngineGlow(Mesh assimpMesh, COLLADANode colladaNode, HWJoint parentJoint)
         {
             string name = "";
             int lod = -1;
@@ -1006,7 +1037,7 @@ namespace DAEnerys
                 return;
             }
 
-            if (!IsAssimpNodeDescendantOf(assimpNode, lodNodes[lod]))
+            if (!IsColladaNodeDescendantOf(colladaNode, lodNodes[lod]))
             {
                 new Problem(ProblemTypes.WARNING, "Engine glow \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
                 return;
@@ -1027,9 +1058,9 @@ namespace DAEnerys
             else if(lod == 0)
                 newGlowMesh.Parent = parentJoint;
 
-            HWEngineGlowLOD newLOD = new HWEngineGlowLOD(ParseAssimpMesh(assimpMesh), GetAssimpNodeTransform(assimpNode), newGlowMesh, lod);
+            HWEngineGlowLOD newLOD = new HWEngineGlowLOD(ParseAssimpMesh(assimpMesh), colladaNode.Transform.Position, colladaNode.Transform.Rotation, colladaNode.Transform.Scale, newGlowMesh, lod);
         }
-        private static void ParseEngineShape(Mesh assimpMesh, Node assimpNode, HWJoint parentJoint)
+        private static void ParseEngineShape(Mesh assimpMesh, COLLADANode colladaNode, HWJoint parentJoint)
         {
             string name = "";
 
@@ -1050,7 +1081,7 @@ namespace DAEnerys
                 return;
             }
 
-            HWEngineShape newEngineShape = new HWEngineShape(ParseAssimpMesh(assimpMesh), GetAssimpNodeTransform(assimpNode), parentJoint, name);
+            HWEngineShape newEngineShape = new HWEngineShape(ParseAssimpMesh(assimpMesh), colladaNode.Transform.Position, colladaNode.Transform.Rotation, colladaNode.Transform.Scale, parentJoint, name);
         }
 
         public static MeshData ParseAssimpMesh(Mesh assimpMesh)
@@ -1300,6 +1331,27 @@ namespace DAEnerys
             }
             #endregion
 
+            #region Scene
+            List<XElement> scenes = doc.Descendants(ns + "scene").ToList();
+            XElement scene = null;
+            if (scenes.Count > 0)
+                scene = scenes[0];
+
+            if (scene != null)
+            {
+                List<XElement> visualSceneInstanceElements = scene.Descendants(ns + "instance_visual_scene").ToList();
+                foreach(XElement visualSceneInstance in visualSceneInstanceElements)
+                {
+                    string url = visualSceneInstance.Attribute("url").Value;
+                    if (url.Length > 0)
+                    {
+                        url = url.Substring(1);
+                        visualSceneInstances.Add(url);
+                    }
+                }
+            }
+            #endregion
+
             #region Animations
             List<XElement> animLibraries = doc.Descendants(ns + "library_animations").ToList();
             XElement animLibrary = null;
@@ -1521,15 +1573,233 @@ namespace DAEnerys
             #endregion
         }
 
+        private static void ManualParseNodes()
+        {
+            #region Nodes
+            List<XElement> visualScenesLibraries = doc.Descendants(ns + "library_visual_scenes").ToList();
+            XElement visualScenesLibrary = null;
+            if (visualScenesLibraries.Count > 0)
+                visualScenesLibrary = visualScenesLibraries[0];
+
+            if (visualScenesLibrary != null)
+            {
+                List<XElement> visualSceneElements = visualScenesLibrary.Descendants(ns + "visual_scene").ToList();
+                List<XElement> instancedVisualSceneElements = new List<XElement>();
+
+                foreach (string visualSceneInstance in visualSceneInstances)
+                {
+                    foreach (XElement visualSceneElement in visualSceneElements)
+                    {
+                        if (visualSceneElement.Attribute("id").Value == visualSceneInstance)
+                        {
+                            instancedVisualSceneElements.Add(visualSceneElement);
+                        }
+                    }
+                }
+
+                foreach (XElement visualScene in instancedVisualSceneElements)
+                {
+                    List<XElement> rootNodeElements = visualScene.Elements(ns + "node").ToList();
+                    foreach (XElement rootNode in rootNodeElements)
+                        rootNodes.Add(ParseColladaNode(rootNode, null));
+                }
+            }
+            #endregion
+        }
+
+        private static COLLADANode ParseColladaNode(XElement nodeElement, COLLADANode parentNode)
+        {
+            string name = "";
+            string id = "";
+            string sid = "";
+
+            XAttribute attrib = nodeElement.Attribute("name");
+            if(attrib != null)
+                name = attrib.Value;
+            attrib = nodeElement.Attribute("id");
+            if (attrib != null)
+                id = attrib.Value;
+            attrib = nodeElement.Attribute("sid");
+            if (attrib != null)
+                sid = attrib.Value;
+
+            Vector3 pos = Vector3.Zero;
+            Vector3 rot = Vector3.Zero;
+            Vector3 scale = Vector3.One;
+
+            List<int> meshIndices = new List<int>();
+
+            XElement translateElement = nodeElement.Element(ns + "translate");
+            if (translateElement != null)
+            {
+                string value = translateElement.Value;
+                string[] split = value.Trim().Split(' ');
+                float posX = float.Parse(split[0], NumberStyles.Float, CultureInfo.InvariantCulture);
+                float posY = float.Parse(split[1], NumberStyles.Float, CultureInfo.InvariantCulture);
+                float posZ = float.Parse(split[2], NumberStyles.Float, CultureInfo.InvariantCulture);
+                pos = new Vector3(posX, posY, posZ);
+            }
+
+            float x = 0;
+            float y = 0;
+            float z = 0;
+            XElement[] rotateElements = nodeElement.Elements(ns + "rotate").ToArray();
+            foreach (XElement rotateElement in rotateElements)
+            {
+                string rotateSID = "";
+                XAttribute sidAttrib = rotateElement.Attribute("sid");
+                if(sidAttrib != null)
+                    rotateSID = sidAttrib.Value;
+
+                if (rotateSID == "rotateX")
+                {
+                    string value = rotateElement.Value;
+                    string[] split = value.Trim().Split(' ');
+                    x = float.Parse(split[3], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    x = MathHelper.DegreesToRadians(x);
+                }
+                else if (rotateSID == "rotateY")
+                {
+                    string value = rotateElement.Value;
+                    string[] split = value.Trim().Split(' ');
+                    y = float.Parse(split[3], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    y = MathHelper.DegreesToRadians(y);
+                }
+                else if (rotateSID == "rotateZ")
+                {
+                    string value = rotateElement.Value;
+                    string[] split = value.Trim().Split(' ');
+                    z = float.Parse(split[3], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    z = MathHelper.DegreesToRadians(z);
+                }
+                else
+                {
+                    string value = rotateElement.Value;
+                    string[] split = value.Trim().Split(' ');
+
+                    x = float.Parse(split[0], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    y = float.Parse(split[1], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    z = float.Parse(split[2], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    float w = float.Parse(split[3], NumberStyles.Float, CultureInfo.InvariantCulture);
+
+                    OpenTK.Quaternion quat = new OpenTK.Quaternion(x, y, z, w);
+                    Vector3 axis; float angle;
+                    quat.ToAxisAngle(out axis, out angle);
+                    axis *= angle;
+
+                    x = axis.X;
+                    y = axis.Y;
+                    z = axis.Z;
+                }
+            }
+            rot = new Vector3(x, y, z);
+
+            XElement scaleElement = nodeElement.Element(ns + "scale");
+            if (scaleElement != null)
+            {
+                if (scaleElement.Attribute("sid").Value == "scale")
+                {
+                    string value = scaleElement.Value;
+                    string[] split = value.Trim().Split(' ');
+                    x = float.Parse(split[0], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    y = float.Parse(split[1], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    z = float.Parse(split[2], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    //scale = new Vector3(x, y, z);
+                }
+            }
+
+            Node assimpNode = Collada.RootNode.FindNode(name);
+            if (assimpNode != null)
+                meshIndices = assimpNode.MeshIndices;
+
+            /*XElement[] geometryInstanceElements = nodeElement.Elements(ns + "instance_geometry").ToArray();
+            foreach (XElement geometryInstanceElement in geometryInstanceElements)
+            {
+                string url = geometryInstanceElement.Attribute("url").Value;
+                List<string> materialTargets = new List<string>();
+
+                XElement bindMaterialElement = geometryInstanceElement.Element(ns + "bind_material");
+                if(bindMaterialElement != null)
+                {
+                    XElement techniqueCommonElement = bindMaterialElement.Element(ns + "technique_common");
+                    if (techniqueCommonElement != null)
+                    {
+                        XElement[] instanceMaterialElements = techniqueCommonElement.Elements(ns + "instance_material").ToArray();
+                        foreach (XElement instanceMaterialElement in instanceMaterialElements)
+                        {
+                            string target = instanceMaterialElement.Attribute("target").Value;
+                            if (target == string.Empty)
+                                continue;
+
+                            materialTargets.Add(target);
+                        }
+                    }
+                }
+            }*/
+
+            COLLADANode newNode = new COLLADANode(name, new COLLADATransform(pos, rot, scale), meshIndices.ToArray(), parentNode, assimpNode);
+            XElement[] childElements = nodeElement.Elements(ns + "node").ToArray();
+            foreach (XElement childElement in childElements)
+                ParseColladaNode(childElement, newNode);
+
+            return newNode;
+        }
+
         private static void HandleQueues()
         {
             while(collisionMeshQueue.Count > 0)
             {
                 COLQueueItem item = collisionMeshQueue.Dequeue();
-                ParseCollisionMesh(item.AssimpMesh, item.AssimpNode);
+                ParseCollisionMesh(item.AssimpMesh, item.ColladaNode);
             }
         }
 
+        public class COLLADATransform
+        {
+            public Vector3 Position;
+            public Vector3 Rotation;
+            public Vector3 Scale;
+
+            public COLLADATransform(Vector3 pos, Vector3 rot, Vector3 scale)
+            {
+                Position = pos;
+                Rotation = rot;
+                Scale = scale;
+            }
+
+            public Matrix4 GetMatrix()
+            {
+                Matrix4 matrix = Matrix4.CreateRotationX(Rotation.X) * Matrix4.CreateRotationY(Rotation.Y) * Matrix4.CreateRotationZ(Rotation.Z);
+                matrix *= Matrix4.CreateTranslation(Position);
+                return matrix;
+            }
+        }
+        public class COLLADANode
+        {
+            public string Name;
+            public COLLADATransform Transform;
+
+            public Node AssimpNode;
+
+            public COLLADANode Parent;
+            public List<COLLADANode> Children = new List<COLLADANode>();
+
+            public int[] MeshIndices = new int[0];
+
+            public COLLADANode(string name, COLLADATransform transform, int[] meshIndices, COLLADANode parent, Node assimpNode)
+            {
+                Name = name;
+                Transform = transform;
+
+                AssimpNode = assimpNode;
+
+                MeshIndices = meshIndices;
+
+                Parent = parent;
+                if (Parent != null)
+                    Parent.Children.Add(this);
+            }
+        }
         private class COLLADAJointAnimation
         {
             public string Name;
@@ -1596,12 +1866,12 @@ namespace DAEnerys
         private class COLQueueItem
         {
             public Mesh AssimpMesh;
-            public Node AssimpNode;
+            public COLLADANode ColladaNode;
 
-            public COLQueueItem(Mesh assimpMesh, Node assimpNode)
+            public COLQueueItem(Mesh assimpMesh, COLLADANode colladaNode)
             {
                 AssimpMesh = assimpMesh;
-                AssimpNode = assimpNode;
+                ColladaNode = colladaNode;
             }
         }
 

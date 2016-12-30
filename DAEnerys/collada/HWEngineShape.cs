@@ -17,7 +17,7 @@ namespace DAEnerys
 
         public int EngineShapeListItemIndex;
 
-        public HWEngineShape(MeshData data, Matrix4 transform, HWJoint parent, string name) : base(data, parent, transform, HWMaterial.DefaultMaterial)
+        public HWEngineShape(MeshData data, Vector3 pos, Vector3 rot, Vector3 scale, HWJoint parent, string name) : base(data, parent, pos, rot, scale, HWMaterial.DefaultMaterial)
         {
             Parent = parent;
             Name = name;

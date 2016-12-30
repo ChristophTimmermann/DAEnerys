@@ -160,7 +160,11 @@ namespace DAEnerys
         private GenericMaterial material;
         public GenericMaterial Material { get { return material; } set { material = value; Renderer.Invalidate(); } }
 
-        public GenericMesh(Element parent, Matrix4 transform) : base(parent, transform)
+        public GenericMesh(Element parent) : this(parent, Vector3.Zero, Vector3.Zero, Vector3.One)
+        {
+
+        }
+        public GenericMesh(Element parent, Vector3 pos, Vector3 rot, Vector3 scale) : base(parent, pos, rot, scale)
         {
 
         }

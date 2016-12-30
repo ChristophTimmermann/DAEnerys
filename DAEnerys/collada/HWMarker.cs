@@ -21,7 +21,11 @@ namespace DAEnerys
             }
         }
 
-        public HWMarker(string name, HWJoint parent, Matrix4 transform) : base(name, parent, transform)
+        public HWMarker(string name, HWJoint parent) : this(name, parent, Vector3.Zero, Vector3.Zero, Vector3.One)
+        {
+
+        }
+        public HWMarker(string name, HWJoint parent, Vector3 pos, Vector3 rot, Vector3 scale) : base(name, parent, pos, rot, scale)
         {
             Markers.Add(this);
             Program.main.AddMarker(this);

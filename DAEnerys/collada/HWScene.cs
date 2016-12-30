@@ -165,7 +165,7 @@ namespace DAEnerys
             HWElement.HWElements.Clear();
             Element.Elements.Clear();
 
-            HWJoint.Root = new HWJoint("Root", null, Matrix4.Identity);
+            HWJoint.Root = new HWJoint("Root", null);
             HWJoint.Root.TreeNode.Expand();
         }
     }

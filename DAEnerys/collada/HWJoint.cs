@@ -28,7 +28,11 @@ namespace DAEnerys
 
         public TreeNode TreeNode;
 
-        public HWJoint(string name, HWJoint parent, Matrix4 transform) : base(name, parent, transform)
+        public HWJoint(string name, HWJoint parent) : this(name, parent, Vector3.Zero, Vector3.Zero, Vector3.One)
+        {
+
+        }
+        public HWJoint(string name, HWJoint parent, Vector3 pos, Vector3 rot, Vector3 scale) : base(name, parent, pos, rot, scale)
         {
             Joints.Add(this);
 
@@ -84,7 +88,7 @@ namespace DAEnerys
 
             if (AnimationMatrix == Matrix4.Identity)
             {
-                LocalWorldMatrix = Matrix4.CreateFromQuaternion(localRotation);
+                LocalWorldMatrix = Matrix4.CreateRotationX(LocalRotation.X) * Matrix4.CreateRotationY(LocalRotation.Y) * Matrix4.CreateRotationZ(LocalRotation.Z);
                 LocalWorldMatrix *= Matrix4.CreateScale(localScale);
                 LocalWorldMatrix *= Matrix4.CreateTranslation(localPosition);
             }

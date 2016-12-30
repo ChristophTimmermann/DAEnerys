@@ -22,7 +22,7 @@ namespace DAEnerys
             }
         }
 
-        public HWShipMeshLOD(MeshData data, Matrix4 transform, HWMaterial material, HWShipMesh shipMesh, int lod) : base(data, shipMesh.Parent, transform, material)
+        public HWShipMeshLOD(MeshData data, Vector3 pos, Vector3 rot, Vector3 scale, HWMaterial material, HWShipMesh shipMesh, int lod) : base(data, shipMesh.Parent, pos, rot, scale, material)
         {
             ShipMesh = shipMesh;
             LOD = lod;

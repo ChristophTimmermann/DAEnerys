@@ -45,8 +45,8 @@ namespace DAEnerys
                 Invalidate();
             }
         }
-        protected Quaternion localRotation = Quaternion.Identity;
-        public Quaternion LocalRotation
+        protected Vector3 localRotation = Vector3.Zero;
+        public Vector3 LocalRotation
         {
             get
             {
@@ -65,11 +65,15 @@ namespace DAEnerys
 
         public List<Element> Children = new List<Element>();
 
-        public Element(Element parent, Matrix4 transform)
+        public Element(Element parent) : this(parent, Vector3.Zero, Vector3.Zero, Vector3.One)
         {
-            LocalPosition = transform.ExtractTranslation();
-            LocalRotation = transform.ExtractRotation();
-            LocalScale = transform.ExtractScale();
+
+        }
+        public Element(Element parent, Vector3 pos, Vector3 rot, Vector3 scale)
+        {
+            LocalPosition = pos;
+            LocalRotation = rot;
+            LocalScale = scale;
 
             this.Parent = parent;
 
@@ -126,7 +130,7 @@ namespace DAEnerys
         {
             invalid = false;
 
-            LocalWorldMatrix = Matrix4.CreateFromQuaternion(localRotation);
+            LocalWorldMatrix = Matrix4.CreateRotationX(LocalRotation.X) * Matrix4.CreateRotationY(LocalRotation.Y) * Matrix4.CreateRotationZ(LocalRotation.Z);
             LocalWorldMatrix *= Matrix4.CreateScale(localScale);
             LocalWorldMatrix *= Matrix4.CreateTranslation(localPosition);
 

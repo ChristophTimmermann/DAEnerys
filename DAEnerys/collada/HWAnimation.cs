@@ -1,11 +1,11 @@
-﻿using OpenTK;
+﻿using Extensions;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Extensions;
 
 namespace DAEnerys
 {
@@ -60,7 +60,7 @@ namespace DAEnerys
 
         public List<HWJoint> AnimatedJoints = new List<HWJoint>();
 
-        public HWAnimation(string name, float startTime, int startFrame, float endTime, int endFrame, float loopStartTime, int loopStartFrame, float loopEndTime, int loopEndFrame, AnimationType type) : base(name, HWJoint.Root, Matrix4.Identity)
+        public HWAnimation(string name, float startTime, int startFrame, float endTime, int endFrame, float loopStartTime, int loopStartFrame, float loopEndTime, int loopEndFrame, AnimationType type) : base(name, HWJoint.Root)
         {
             StartTime = startTime;
             StartFrame = startFrame;
@@ -202,9 +202,7 @@ namespace DAEnerys
         }
         private static Matrix4 UpdateRotation(HWJoint joint)
         {
-            Vector3 rot; float angle;
-            joint.LocalRotation.ToAxisAngle(out rot, out angle);
-            rot *= angle;
+            Vector3 rot = joint.LocalRotation;
 
             for (int i = 0; i < 3; i++)
             {

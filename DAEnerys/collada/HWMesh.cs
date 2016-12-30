@@ -7,8 +7,6 @@ namespace DAEnerys
     {
         public static List<HWMesh> Meshes = new List<HWMesh>();
 
-        public Matrix4 Transform;
-
         new private HWJoint parent;
         new public virtual HWJoint Parent
         {
@@ -29,7 +27,7 @@ namespace DAEnerys
         public string Name;
         public abstract string FormattedName { get; }
 
-        private HWMaterial material = new HWMaterial();
+        private HWMaterial material = HWMaterial.DefaultMaterial;
         new public HWMaterial Material { get { return material; } set { material = value; Renderer.Invalidate(); } }
 
         private bool MinMaxSet = false;
@@ -73,11 +71,9 @@ namespace DAEnerys
             private set { }
         }
 
-        public HWMesh(MeshData data, HWJoint parent, Matrix4 transform, HWMaterial material) : base(parent, transform)
+        public HWMesh(MeshData data, HWJoint parent, Vector3 pos, Vector3 rot, Vector3 scale, HWMaterial material) : base(parent, pos, rot, scale)
         {
             Parent = parent;
-            Transform = transform.ClearTranslation();
-            //Transform *= Matrix4.CreateFromQuaternion(Transform.ExtractRotation());
 
             Meshes.Add(this);
 

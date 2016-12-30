@@ -603,13 +603,13 @@ namespace DAEnerys
             numericJointPositionZ.Enabled = true;
             numericJointPositionZ.Value = (decimal)selectedJoint.LocalPosition.Z;
 
-            Vector3 eulerAngles = Extensions.Utilities.ToEulerAngles(selectedJoint.LocalRotation);
+            Vector3 eulerAngles = selectedJoint.LocalRotation;
             numericJointRotationX.Enabled = true;
-            numericJointRotationX.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Z);
+            numericJointRotationX.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.X);
             numericJointRotationY.Enabled = true;
             numericJointRotationY.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Y);
             numericJointRotationZ.Enabled = true;
-            numericJointRotationZ.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.X);
+            numericJointRotationZ.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Z);
 
             ignoreJointValuesChanged = false;
         }
@@ -634,7 +634,7 @@ namespace DAEnerys
                 newName = "Joint" + (HWJoint.Joints.Count + indexOffset);
             }
 
-            HWJoint newJoint = new HWJoint(newName, parent, Matrix4.Identity);
+            HWJoint newJoint = new HWJoint(newName, parent);
             jointsTree.SelectedNode = newJoint.TreeNode;
             newJoint.TreeNode.EnsureVisible();
             jointsTree.Focus();
@@ -700,9 +700,9 @@ namespace DAEnerys
             float x = MathHelper.DegreesToRadians((float)numericJointRotationX.Value);
             float y = MathHelper.DegreesToRadians((float)numericJointRotationY.Value);
             float z = MathHelper.DegreesToRadians((float)numericJointRotationZ.Value);
-            Vector3 eulerAngles = new Vector3(z, y, x);
+            Vector3 eulerAngles = new Vector3(x, y, z);
 
-            selectedJoint.LocalRotation = OpenTK.Quaternion.FromEulerAngles(eulerAngles);
+            selectedJoint.LocalRotation = eulerAngles;
         }
         private void comboJointParent_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1222,7 +1222,7 @@ namespace DAEnerys
             if (HWData.NavLightStyles.Count > 0)
                 style = HWData.NavLightStyles[0];
 
-            HWNavLight newNavLight = new HWNavLight(newName, HWJoint.Root, Matrix4.Identity, style, 1, 0, 1, Vector3.One, 5, new List<NavLightFlag>(), 0);
+            HWNavLight newNavLight = new HWNavLight(newName, HWJoint.Root, Vector3.Zero, style, 1, 0, 1, Vector3.One, 5, new List<NavLightFlag>(), 0);
 
             listNavLights.SelectedItem = newNavLight.Name;
         }
@@ -1414,10 +1414,10 @@ namespace DAEnerys
             numericMarkerPositionY.Value = (decimal)selectedMarker.LocalPosition.Y;
             numericMarkerPositionZ.Value = (decimal)selectedMarker.LocalPosition.Z;
 
-            Vector3 eulerAngles = Extensions.Utilities.ToEulerAngles(selectedMarker.LocalRotation);
-            numericMarkerRotationX.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Z);
+            Vector3 eulerAngles = selectedMarker.LocalRotation;
+            numericMarkerRotationX.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.X);
             numericMarkerRotationY.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Y);
-            numericMarkerRotationZ.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.X);
+            numericMarkerRotationZ.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.Z);
 
             ignoreMarkerValuesChanged = false;
         }
@@ -1440,7 +1440,7 @@ namespace DAEnerys
                 newName = "marker" + (listMarkers.Items.Count + indexOffset);
             }
 
-            HWMarker newMarker = new HWMarker(newName, HWJoint.Root, Matrix4.Identity);
+            HWMarker newMarker = new HWMarker(newName, HWJoint.Root);
             listMarkers.SelectedItem = newMarker.Name;
         }
         private void boxMarkerName_Leave(object sender, EventArgs e)
@@ -1507,9 +1507,9 @@ namespace DAEnerys
             float x = MathHelper.DegreesToRadians((float)numericMarkerRotationX.Value);
             float y = MathHelper.DegreesToRadians((float)numericMarkerRotationY.Value);
             float z = MathHelper.DegreesToRadians((float)numericMarkerRotationZ.Value);
-            Vector3 eulerAngles = new Vector3(z, y, x);
+            Vector3 eulerAngles = new Vector3(x, y, z);
 
-            selectedMarker.LocalRotation = OpenTK.Quaternion.FromEulerAngles(eulerAngles);
+            selectedMarker.LocalRotation = eulerAngles;
         }
 
         //--------------------------------- MISC ---------------------------------//
@@ -1851,7 +1851,7 @@ namespace DAEnerys
                         if (meshes.Count - 1 >= i)
                             material = meshes[i].Material;
 
-                        HWShipMeshLOD newLOD = new HWShipMeshLOD(Importer.ParseAssimpMesh(newMeshes[i]), Matrix4.Identity, material, selectedShipMesh, listShipMeshLODs.SelectedIndex);
+                        HWShipMeshLOD newLOD = new HWShipMeshLOD(Importer.ParseAssimpMesh(newMeshes[i]), Vector3.Zero, Vector3.Zero, Vector3.One, material, selectedShipMesh, listShipMeshLODs.SelectedIndex);
                     }
                 }
 
@@ -1942,7 +1942,7 @@ namespace DAEnerys
                         if (meshes.Count - 1 >= i)
                             material = meshes[i].Material;
 
-                        HWShipMeshLOD newLOD = new HWShipMeshLOD(Importer.ParseAssimpMesh(newMeshes[i]), Matrix4.Identity, material, selectedShipMesh, listShipMeshLODs.SelectedIndex);
+                        HWShipMeshLOD newLOD = new HWShipMeshLOD(Importer.ParseAssimpMesh(newMeshes[i]), Vector3.Zero, Vector3.Zero, Vector3.One, material, selectedShipMesh, listShipMeshLODs.SelectedIndex);
                     }
                 }
 
@@ -2040,7 +2040,7 @@ namespace DAEnerys
             if (lowestLOD > MAX_LEVEL_OF_DETAIL - 1)
                 return;
 
-            HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new MeshData(new Vertex[0], new int[0], 0), Matrix4.Identity, HWMaterial.DefaultMaterial, selectedShipMesh, lowestLOD + 1);
+            HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new MeshData(new Vertex[0], new int[0], 0), Vector3.Zero, Vector3.Zero, Vector3.One, HWMaterial.DefaultMaterial, selectedShipMesh, lowestLOD + 1);
 
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
             listShipMeshLODs.SelectedIndex = lowestLOD + 1;
@@ -2329,7 +2329,7 @@ namespace DAEnerys
             if (lowestLOD > MAX_LEVEL_OF_DETAIL - 1)
                 return;
 
-            HWEngineGlowLOD newLODMesh = new HWEngineGlowLOD(new MeshData(new Vertex[0], new int[0], 0), Matrix4.Identity, selectedEngineGlow, lowestLOD + 1);
+            HWEngineGlowLOD newLODMesh = new HWEngineGlowLOD(new MeshData(new Vertex[0], new int[0], 0), Vector3.Zero, Vector3.Zero, Vector3.One, selectedEngineGlow, lowestLOD + 1);
 
             listEngineGlows_SelectedIndexChanged(this, EventArgs.Empty);
             listEngineGlowLODs.SelectedIndex = lowestLOD + 1;
@@ -2515,7 +2515,7 @@ namespace DAEnerys
         }
         private void buttonCollisionMeshAdd_Click(object sender, EventArgs e)
         {
-            HWCollisionMesh newCollisionMesh = new HWCollisionMesh(new MeshData(), Matrix4.Identity, HWJoint.Root);
+            HWCollisionMesh newCollisionMesh = new HWCollisionMesh(new MeshData(), Vector3.Zero, Vector3.Zero, Vector3.One, HWJoint.Root);
 
             listCollisionMeshes.SelectedIndex = newCollisionMesh.ItemIndex;
             listCollisionMeshes_SelectedIndexChanged(this, EventArgs.Empty);

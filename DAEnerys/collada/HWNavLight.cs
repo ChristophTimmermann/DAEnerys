@@ -96,7 +96,7 @@ namespace DAEnerys
             }
         }
 
-        public HWNavLight(string name, HWJoint parent, Matrix4 transform, HWNavLightStyle style, float size, float phase, float frequency, Vector3 color, float distance, List<NavLightFlag> flags, int sect) : base(name, parent, transform)
+        public HWNavLight(string name, HWJoint parent, Vector3 pos, HWNavLightStyle style, float size, float phase, float frequency, Vector3 color, float distance, List<NavLightFlag> flags, int sect) : base(name, parent, pos, Vector3.Zero, Vector3.One)
         {
             Style = style;
             Size = size;

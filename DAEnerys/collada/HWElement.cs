@@ -10,7 +10,11 @@ namespace DAEnerys
         public string Name;
         public abstract string FormattedName { get; }
 
-        public HWElement(string name, HWElement parent, Matrix4 transform) : base(parent, transform)
+        public HWElement(string name, HWElement parent) : this(name, parent, Vector3.Zero, Vector3.Zero, Vector3.One)
+        {
+
+        }
+        public HWElement(string name, HWElement parent, Vector3 pos, Vector3 rot, Vector3 scale) : base(parent, pos, rot, scale)
         {
             Name = name;
 
@@ -28,7 +32,7 @@ namespace DAEnerys
         {
             invalid = false;
 
-            LocalWorldMatrix = Matrix4.CreateFromQuaternion(localRotation);
+            LocalWorldMatrix = Matrix4.CreateRotationX(LocalRotation.X) * Matrix4.CreateRotationY(LocalRotation.Y) * Matrix4.CreateRotationZ(LocalRotation.Z);
             LocalWorldMatrix *= Matrix4.CreateScale(localScale);
             LocalWorldMatrix *= Matrix4.CreateTranslation(localPosition);
 

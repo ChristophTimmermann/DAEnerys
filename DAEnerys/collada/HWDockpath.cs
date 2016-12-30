@@ -87,7 +87,7 @@ namespace DAEnerys
             }
         }
 
-        public HWDockpath(string name, string[] families, string[] links, List<DockpathFlag> flags, int animationIndex) : base(name, HWJoint.Root, Matrix4.Identity)
+        public HWDockpath(string name, string[] families, string[] links, List<DockpathFlag> flags, int animationIndex) : base(name, HWJoint.Root)
         {
             Name = name;
             Families = families;

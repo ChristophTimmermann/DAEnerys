@@ -752,15 +752,15 @@ namespace DAEnerys
             libVisualScenes.Add(visualScene);
 
             #region ROOT_INFO
-            XElement rootInfo = AddNode(visualScene, "ROOT_INFO", Matrix4.Identity);
-            AddNode(rootInfo, "Class[MultiMesh]_Version[512]", Matrix4.Identity);
+            XElement rootInfo = AddNode(visualScene, "ROOT_INFO");
+            AddNode(rootInfo, "Class[MultiMesh]_Version[512]");
 
             int uvSets = 1;
             foreach (HWShipMesh shipMesh in HWShipMesh.ShipMeshes)
                 foreach (HWShipMeshLOD shipMeshLOD in shipMesh.Meshes)
                     if (shipMeshLOD.UVCount > uvSets)
                         uvSets = shipMeshLOD.UVCount;
-            AddNode(rootInfo, "UVSets[" + uvSets + "]", Matrix4.Identity);
+            AddNode(rootInfo, "UVSets[" + uvSets + "]");
             #endregion
 
             #region ROOT_LOD[X]
@@ -781,8 +781,7 @@ namespace DAEnerys
                 {
                     //Offset the LOD roots so they are clean when importing with 3d software
                     Vector3 pos = new Vector3(100 * lod, 0, 0);
-                    Matrix4 transform = Matrix4.CreateTranslation(pos);
-                    lodRootElements[lod] = AddNode(visualScene, "ROOT_LOD[" + lod + "]", transform);
+                    lodRootElements[lod] = AddNode(visualScene, "ROOT_LOD[" + lod + "]", pos, Vector3.Zero, Vector3.One);
                 }
             }
             #endregion
@@ -790,7 +789,7 @@ namespace DAEnerys
             //Joints
             jointElements.Add(HWJoint.Root, lodRootElements[0]);
 
-            foreach (HWElement child in HWJoint.Root.Children)
+            foreach (Element child in HWJoint.Root.Children)
             {
                 HWJoint childJoint = child as HWJoint;
                 if (childJoint != null)
@@ -803,14 +802,14 @@ namespace DAEnerys
                 if (shipMesh.Meshes.Count == 0)
                     continue;
 
-                AddNode(jointElements[shipMesh.Parent], shipMesh.LODMeshes[0][0].FormattedName, shipMesh.LODMeshes[0][0].Transform, shipMesh.LODMeshes[0].ToArray());
+                AddNode(jointElements[shipMesh.Parent], shipMesh.LODMeshes[0][0].FormattedName, shipMesh.LODMeshes[0][0].LocalPosition, shipMesh.LODMeshes[0][0].LocalRotation, shipMesh.LODMeshes[0][0].LocalScale, shipMesh.LODMeshes[0].ToArray());
 
                 for(int lod = 1; lod <= 3; lod++)
                 {
                     if (shipMesh.LODMeshes[lod].Count == 0)
                         continue;
 
-                    AddNode(lodRootElements[lod], shipMesh.LODMeshes[lod][0].FormattedName, shipMesh.LODMeshes[lod][0].Transform, shipMesh.LODMeshes[lod].ToArray());
+                    AddNode(lodRootElements[lod], shipMesh.LODMeshes[lod][0].FormattedName, shipMesh.LODMeshes[lod][0].LocalPosition, shipMesh.LODMeshes[lod][0].LocalRotation, shipMesh.LODMeshes[lod][0].LocalScale, shipMesh.LODMeshes[lod].ToArray());
                 }
             }
 
@@ -820,46 +819,46 @@ namespace DAEnerys
                 if (engineGlow.Meshes.Count == 0)
                     continue;
 
-                AddNode(jointElements[engineGlow.Parent], engineGlow.LODMeshes[0][0].FormattedName, engineGlow.LODMeshes[0][0].Transform, engineGlow.LODMeshes[0].ToArray());
+                AddNode(jointElements[engineGlow.Parent], engineGlow.LODMeshes[0][0].FormattedName, engineGlow.LODMeshes[0][0].LocalPosition, engineGlow.LODMeshes[0][0].LocalRotation, engineGlow.LODMeshes[0][0].LocalScale, engineGlow.LODMeshes[0].ToArray());
 
                 for (int lod = 1; lod <= 3; lod++)
                 {
                     if (engineGlow.LODMeshes[lod].Count == 0)
                         continue;
 
-                    AddNode(lodRootElements[lod], engineGlow.LODMeshes[lod][0].FormattedName, engineGlow.LODMeshes[lod][0].Transform, engineGlow.LODMeshes[lod].ToArray());
+                    AddNode(lodRootElements[lod], engineGlow.LODMeshes[lod][0].FormattedName, engineGlow.LODMeshes[lod][0].LocalPosition, engineGlow.LODMeshes[lod][0].LocalRotation, engineGlow.LODMeshes[lod][0].LocalScale, engineGlow.LODMeshes[lod].ToArray());
                 }
             }
 
             //Engine shapes
             foreach(HWEngineShape engineShape in HWEngineShape.EngineShapes)
             {
-                AddNode(jointElements[engineShape.Parent], engineShape.FormattedName, engineShape.Transform, new HWMesh[] { engineShape });
+                AddNode(jointElements[engineShape.Parent], engineShape.FormattedName, engineShape.LocalPosition, engineShape.LocalRotation, engineShape.LocalScale, new HWMesh[] { engineShape });
             }
 
             //Markers
             foreach(HWMarker marker in HWMarker.Markers)
             {
-                AddNode(jointElements[(HWJoint)marker.Parent], marker.FormattedName, marker.LocalWorldMatrix);
+                AddNode(jointElements[(HWJoint)marker.Parent], marker.FormattedName, marker.LocalPosition, marker.LocalRotation, marker.LocalScale);
             }
 
             //Navlights
             foreach(HWNavLight navLight in HWNavLight.NavLights)
             {
-                AddNode(jointElements[(HWJoint)navLight.Parent], navLight.FormattedName, navLight.LocalWorldMatrix);
+                AddNode(jointElements[(HWJoint)navLight.Parent], navLight.FormattedName, navLight.LocalPosition, navLight.LocalRotation, navLight.LocalScale);
             }
 
             //Dockpaths
             if (HWDockpath.Dockpaths.Count > 0)
             {
-                XElement holdDockElement = AddNode(lodRootElements[0], "HOLD_DOCK", Matrix4.Identity);
+                XElement holdDockElement = AddNode(lodRootElements[0], "HOLD_DOCK");
 
                 foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
                 {
-                    XElement dockpathElement = AddNode(holdDockElement, dockpath.FormattedName, Matrix4.Identity);
+                    XElement dockpathElement = AddNode(holdDockElement, dockpath.FormattedName);
                     foreach (HWDockSegment segment in dockpath.Segments)
                     {
-                        XElement segmentElement = AddNode(dockpathElement, segment.FormattedName, segment.LocalWorldMatrix);
+                        XElement segmentElement = AddNode(dockpathElement, segment.FormattedName, segment.LocalPosition, segment.LocalRotation, segment.LocalScale);
                     }
                 }
             }
@@ -867,21 +866,21 @@ namespace DAEnerys
             //Animations
             if (HWAnimation.Animations.Count > 0)
             {
-                XElement holdAnimElement = AddNode(lodRootElements[0], "HOLD_ANIM", Matrix4.Identity);
+                XElement holdAnimElement = AddNode(lodRootElements[0], "HOLD_ANIM");
 
                 foreach (HWAnimation animation in HWAnimation.Animations)
                 {
-                    XElement animationElement = AddNode(holdAnimElement, animation.FormattedName, Matrix4.Identity);
+                    XElement animationElement = AddNode(holdAnimElement, animation.FormattedName);
                 }
             }
 
             //Engine burns
             foreach (HWEngineBurn engineBurn in HWEngineBurn.EngineBurns)
             {
-                XElement engineBurnElement = AddNode(jointElements[(HWJoint)engineBurn.Parent], engineBurn.FormattedName, engineBurn.LocalWorldMatrix);
+                XElement engineBurnElement = AddNode(jointElements[(HWJoint)engineBurn.Parent], engineBurn.FormattedName, engineBurn.LocalPosition, engineBurn.LocalRotation, engineBurn.LocalScale);
                 foreach (HWEngineFlame flame in engineBurn.Flames)
                 {
-                    XElement flameElement = AddNode(engineBurnElement, flame.FormattedName, flame.LocalWorldMatrix);
+                    XElement flameElement = AddNode(engineBurnElement, flame.FormattedName, flame.LocalPosition, flame.LocalRotation, flame.LocalScale);
                 }
             }
             #region ROOT_COL
@@ -889,11 +888,18 @@ namespace DAEnerys
             {
                 //Offset the COL root so it's clean when importing with 3d software
                 Vector3 pos = new Vector3(-100, 0, 0);
-                Matrix4 transform = Matrix4.CreateTranslation(pos);
 
-                XElement rootCol = AddNode(visualScene, "ROOT_COL", transform);
+                XElement rootCol = AddNode(visualScene, "ROOT_COL", pos, Vector3.Zero, Vector3.One);
                 foreach (HWCollisionMesh collisionMesh in HWCollisionMesh.CollisionMeshes)
-                    AddNode(rootCol, collisionMesh.FormattedName, collisionMesh.Parent.GlobalWorldMatrix, new HWMesh[] { collisionMesh });
+                {
+                    Vector3 colPos = collisionMesh.Parent.GlobalPosition;
+                    Vector3 rot; float angle;
+                    collisionMesh.Parent.GlobalRotation.ToAxisAngle(out rot, out angle);
+                    rot *= angle;
+                    Vector3 scale = collisionMesh.Parent.GlobalScale;
+
+                    AddNode(rootCol, collisionMesh.FormattedName, colPos, rot, scale, new HWMesh[] { collisionMesh });
+                }
             }
             #endregion
 
@@ -922,27 +928,26 @@ namespace DAEnerys
             doc.Save(path);
         }
 
-        private static XElement AddNode(XElement parentElement, string name, Matrix4 transform)
+        private static XElement AddNode(XElement parentElement, string name)
         {
-            return AddNode(parentElement, name, transform, new HWMesh[0]);
+            return AddNode(parentElement, name, Vector3.Zero, Vector3.Zero, Vector3.One);
         }
-        private static XElement AddNode(XElement parentElement, string name, Matrix4 transform, HWMesh[] meshes, bool formattedName = true)
+        private static XElement AddNode(XElement parentElement, string name, Vector3 pos, Vector3 rot, Vector3 scale)
+        {
+            return AddNode(parentElement, name, pos, rot, scale, new HWMesh[0]);
+        }
+        private static XElement AddNode(XElement parentElement, string name, Vector3 pos, Vector3 rot, Vector3 scale, HWMesh[] meshes, bool formattedName = true)
         {
             XElement nodeElement = new XElement(ns + "node");
             nodeElement.SetAttributeValue("name", name);
             nodeElement.SetAttributeValue("id", name);
             nodeElement.SetAttributeValue("sid", name);
 
-            Vector3 pos = transform.ExtractTranslation();
-
-            Vector3 rot = Vector3.Zero;
-            float angle = 0;
-            transform.ExtractRotation().ToAxisAngle(out rot, out angle);
-            rot *= angle;
+            Vector3 rotDegrees;
             float x = MathHelper.RadiansToDegrees(rot.X);
             float y = MathHelper.RadiansToDegrees(rot.Y);
             float z = MathHelper.RadiansToDegrees(rot.Z);
-            rot = new Vector3(x, y, z);
+            rotDegrees = new Vector3(x, y, z);
 
             XElement translate = new XElement(ns + "translate");
             translate.SetAttributeValue("sid", "translate");
@@ -951,17 +956,17 @@ namespace DAEnerys
 
             XElement rotate = new XElement(ns + "rotate");
             rotate.SetAttributeValue("sid", "rotateZ");
-            rotate.SetValue("0 0 1 " + rot.Z.ToString(CultureInfo.InvariantCulture));
+            rotate.SetValue("0 0 1 " + rotDegrees.Z.ToString(CultureInfo.InvariantCulture));
             nodeElement.Add(rotate);
 
             rotate = new XElement(ns + "rotate");
             rotate.SetAttributeValue("sid", "rotateY");
-            rotate.SetValue("0 1 0 " + rot.Y.ToString(CultureInfo.InvariantCulture));
+            rotate.SetValue("0 1 0 " + rotDegrees.Y.ToString(CultureInfo.InvariantCulture));
             nodeElement.Add(rotate);
 
             rotate = new XElement(ns + "rotate");
             rotate.SetAttributeValue("sid", "rotateX");
-            rotate.SetValue("1 0 0 " + rot.X.ToString(CultureInfo.InvariantCulture));
+            rotate.SetValue("1 0 0 " + rotDegrees.X.ToString(CultureInfo.InvariantCulture));
             nodeElement.Add(rotate);
 
             //TODO: Export scale?
@@ -1018,10 +1023,10 @@ namespace DAEnerys
 
         private static void AddJointRecursive(XElement parentElement, HWJoint joint)
         {
-            XElement newElement = AddNode(parentElement, joint.FormattedName, joint.LocalWorldMatrix);
+            XElement newElement = AddNode(parentElement, joint.FormattedName, joint.LocalPosition, joint.LocalRotation, joint.LocalScale);
             jointElements.Add(joint, newElement);
 
-            foreach (HWElement child in joint.Children)
+            foreach (Element child in joint.Children)
             {
                 HWJoint childJoint = child as HWJoint;
                 if(childJoint != null)
@@ -1592,7 +1597,7 @@ namespace DAEnerys
             visualScene.SetAttributeValue("name", "scene");
             libVisualScenes.Add(visualScene);
 
-            AddNode(visualScene, meshes[0].Name, Matrix4.Identity, new HWMesh[] { meshes[0] }, false);
+            AddNode(visualScene, meshes[0].Name, Vector3.Zero, Vector3.Zero, Vector3.One, new HWMesh[] { meshes[0] }, false);
             #endregion
 
             #region scene

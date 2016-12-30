@@ -38,7 +38,7 @@ namespace DAEnerys
             }
         }
 
-        public HWEngineBurn(string name, HWJoint parent, Matrix4 transform) : base(name, parent, transform)
+        public HWEngineBurn(string name, HWJoint parent, Vector3 pos, Vector3 rot, Vector3 scale) : base(name, parent, pos, rot, scale)
         {
             Name = name;
 
@@ -79,7 +79,7 @@ namespace DAEnerys
         public HWEngineBurn EngineBurn;
         public EditorCube Cube;
 
-        public HWEngineFlame(HWEngineBurn engineBurn, Matrix4 transform, int id, int spriteIndex) : base("", engineBurn, transform)
+        public HWEngineFlame(HWEngineBurn engineBurn, Vector3 pos, Vector3 rot, Vector3 scale, int id, int spriteIndex) : base("", engineBurn, pos, rot, scale)
         {
             EngineBurn = engineBurn;
             DivIndex = id;

@@ -9,7 +9,7 @@ namespace DAEnerys
         public bool Wireframe = false;
         public bool DrawAboveShip = false;
 
-        public EditorMesh(MeshData data, Element parent, GenericMaterial material) : base(parent, Matrix4.Identity)
+        public EditorMesh(MeshData data, Element parent, GenericMaterial material) : base(parent)
         {
             SetData(data);
 

@@ -41,7 +41,7 @@ namespace DAEnerys
         public EditorIcosphere Icosphere;
         public EditorIcosphere ToleranceIcosphere;
 
-        public HWDockSegment(HWDockpath dockpath, Matrix4 transform, int id, float tolerance, float speed, List<DockSegmentFlag> flags) : base("", HWJoint.Root, transform)
+        public HWDockSegment(HWDockpath dockpath, Vector3 pos, Vector3 rot, Vector3 scale, int id, float tolerance, float speed, List<DockSegmentFlag> flags) : base("", HWJoint.Root, pos, rot, scale)
         {
             Dockpath = dockpath;
             ID = id;
