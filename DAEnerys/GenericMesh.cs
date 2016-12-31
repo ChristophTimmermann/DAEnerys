@@ -59,7 +59,8 @@ namespace DAEnerys
             {
                 base.Parent = value;
 
-                CalculateWorldMatrix();
+                Invalidate();
+
                 Renderer.InvalidateView();
                 Renderer.Invalidate();
             }

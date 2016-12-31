@@ -55,7 +55,7 @@ namespace DAEnerys
 
             for(int i = 0; i < Flames.Count - 1; i++) //1 line less than flames
             {
-                EditorLine line = new EditorLine(Flames[i].GlobalPosition, Flames[i + 1].GlobalPosition, Vector3.One, Vector3.One, null);
+                EditorLine line = new EditorLine(Flames[i].LocalPosition, Flames[i + 1].LocalPosition, Vector3.One, Vector3.One, this);
                 Lines.Add(line);
             }
         }

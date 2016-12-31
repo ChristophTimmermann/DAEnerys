@@ -19,7 +19,8 @@ namespace DAEnerys
                 if (parent != null)
                     parent.Meshes.Add(this);
 
-                CalculateWorldMatrix();
+                Invalidate();
+
                 Renderer.InvalidateView(); Renderer.Invalidate();
             }
         }
@@ -93,9 +94,38 @@ namespace DAEnerys
 
         public override void CalculateWorldMatrix()
         {
-            base.CalculateWorldMatrix();
+            invalid = false;
+
+            LocalWorldMatrix = Matrix4.CreateRotationX(LocalRotation.X) * Matrix4.CreateRotationY(LocalRotation.Y) * Matrix4.CreateRotationZ(LocalRotation.Z);
+            LocalWorldMatrix *= Matrix4.CreateScale(localScale);
+            LocalWorldMatrix *= Matrix4.CreateTranslation(localPosition);
+
+            GlobalWorldMatrix = LocalWorldMatrix;
+
+            if (Parent != null)
+            {
+                HWJoint joint = Parent as HWJoint;
+
+                if (joint == null)
+                    GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
+                else
+                    if (joint.AnimationMatrix != Matrix4.Identity)
+                    GlobalWorldMatrix *= joint.AnimationMatrix;
+                else
+                    GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
+            }
+
+            GlobalPosition = GlobalWorldMatrix.ExtractTranslation();
+            GlobalRotation = GlobalWorldMatrix.ExtractRotation();
+            GlobalScale = GlobalWorldMatrix.ExtractScale();
+
+            foreach (Element child in Children)
+                child.CalculateWorldMatrix();
 
             ModelViewProjectionMatrix = GlobalWorldMatrix * Renderer.ViewProjection;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
     }
 }

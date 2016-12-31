@@ -180,7 +180,7 @@ namespace DAEnerys
 
             Program.Camera.Update();
 
-            HWElement.UpdateInvalids();
+            Element.UpdateInvalids();
 
             int visibleNavLights = 0;
             foreach (HWNavLight navLight in HWNavLight.NavLights)
@@ -2918,6 +2918,8 @@ namespace DAEnerys
         {
             Renderer.ThrusterInterpolation = (float)trackBarThrusterStrength.Value / 100;
             HWEngineGlow.UpdateEngineStrength();
+
+            glControl_Update(this, EventArgs.Empty);
 
             Renderer.InvalidateView();
             Renderer.Invalidate();

@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -2629,7 +2629,7 @@ namespace DAEnerys
             // 
             this.buttonEngineGlowRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEngineGlowRemove.Enabled = false;
-            this.buttonEngineGlowRemove.Location = new System.Drawing.Point(132, 211);
+            this.buttonEngineGlowRemove.Location = new System.Drawing.Point(149, 211);
             this.buttonEngineGlowRemove.Name = "buttonEngineGlowRemove";
             this.buttonEngineGlowRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonEngineGlowRemove.TabIndex = 26;
@@ -2654,7 +2654,7 @@ namespace DAEnerys
             this.boxEngineGlowName.Enabled = false;
             this.boxEngineGlowName.Location = new System.Drawing.Point(56, 240);
             this.boxEngineGlowName.Name = "boxEngineGlowName";
-            this.boxEngineGlowName.Size = new System.Drawing.Size(168, 20);
+            this.boxEngineGlowName.Size = new System.Drawing.Size(185, 20);
             this.boxEngineGlowName.TabIndex = 28;
             this.boxEngineGlowName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxEngineGlowName_KeyPress);
             this.boxEngineGlowName.Leave += new System.EventHandler(this.boxEngineGlowName_Leave);
@@ -2675,7 +2675,7 @@ namespace DAEnerys
             this.listEngineGlows.FormattingEnabled = true;
             this.listEngineGlows.Location = new System.Drawing.Point(6, 6);
             this.listEngineGlows.Name = "listEngineGlows";
-            this.listEngineGlows.Size = new System.Drawing.Size(218, 199);
+            this.listEngineGlows.Size = new System.Drawing.Size(235, 199);
             this.listEngineGlows.TabIndex = 24;
             this.listEngineGlows.SelectedIndexChanged += new System.EventHandler(this.listEngineGlows_SelectedIndexChanged);
             // 
@@ -2697,7 +2697,7 @@ namespace DAEnerys
             this.comboEngineGlowParent.FormattingEnabled = true;
             this.comboEngineGlowParent.Location = new System.Drawing.Point(56, 266);
             this.comboEngineGlowParent.Name = "comboEngineGlowParent";
-            this.comboEngineGlowParent.Size = new System.Drawing.Size(168, 21);
+            this.comboEngineGlowParent.Size = new System.Drawing.Size(185, 21);
             this.comboEngineGlowParent.Sorted = true;
             this.comboEngineGlowParent.TabIndex = 22;
             this.comboEngineGlowParent.SelectedIndexChanged += new System.EventHandler(this.comboEngineGlowParent_SelectedIndexChanged);
@@ -2715,7 +2715,7 @@ namespace DAEnerys
             this.groupEngineGlowLODs.Controls.Add(this.listEngineGlowLODs);
             this.groupEngineGlowLODs.Location = new System.Drawing.Point(3, 293);
             this.groupEngineGlowLODs.Name = "groupEngineGlowLODs";
-            this.groupEngineGlowLODs.Size = new System.Drawing.Size(221, 462);
+            this.groupEngineGlowLODs.Size = new System.Drawing.Size(238, 462);
             this.groupEngineGlowLODs.TabIndex = 21;
             this.groupEngineGlowLODs.TabStop = false;
             this.groupEngineGlowLODs.Text = "Level of detail(s)";
@@ -2724,7 +2724,7 @@ namespace DAEnerys
             // 
             this.buttonEngineGlowLODImportDAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEngineGlowLODImportDAE.Enabled = false;
-            this.buttonEngineGlowLODImportDAE.Location = new System.Drawing.Point(126, 130);
+            this.buttonEngineGlowLODImportDAE.Location = new System.Drawing.Point(143, 130);
             this.buttonEngineGlowLODImportDAE.Name = "buttonEngineGlowLODImportDAE";
             this.buttonEngineGlowLODImportDAE.Size = new System.Drawing.Size(92, 23);
             this.buttonEngineGlowLODImportDAE.TabIndex = 7;
@@ -2736,7 +2736,7 @@ namespace DAEnerys
             // 
             this.buttonEngineGlowLODRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEngineGlowLODRemove.Enabled = false;
-            this.buttonEngineGlowLODRemove.Location = new System.Drawing.Point(126, 101);
+            this.buttonEngineGlowLODRemove.Location = new System.Drawing.Point(143, 101);
             this.buttonEngineGlowLODRemove.Name = "buttonEngineGlowLODRemove";
             this.buttonEngineGlowLODRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonEngineGlowLODRemove.TabIndex = 5;
@@ -2769,7 +2769,7 @@ namespace DAEnerys
             // 
             this.buttonEngineGlowLODImportOBJ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEngineGlowLODImportOBJ.Enabled = false;
-            this.buttonEngineGlowLODImportOBJ.Location = new System.Drawing.Point(126, 159);
+            this.buttonEngineGlowLODImportOBJ.Location = new System.Drawing.Point(143, 159);
             this.buttonEngineGlowLODImportOBJ.Name = "buttonEngineGlowLODImportOBJ";
             this.buttonEngineGlowLODImportOBJ.Size = new System.Drawing.Size(92, 23);
             this.buttonEngineGlowLODImportOBJ.TabIndex = 2;
@@ -2795,7 +2795,7 @@ namespace DAEnerys
             this.listEngineGlowLODs.FormattingEnabled = true;
             this.listEngineGlowLODs.Location = new System.Drawing.Point(3, 16);
             this.listEngineGlowLODs.Name = "listEngineGlowLODs";
-            this.listEngineGlowLODs.Size = new System.Drawing.Size(215, 79);
+            this.listEngineGlowLODs.Size = new System.Drawing.Size(232, 79);
             this.listEngineGlowLODs.TabIndex = 0;
             this.listEngineGlowLODs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineGlowLODs_ItemCheck);
             this.listEngineGlowLODs.SelectedIndexChanged += new System.EventHandler(this.listEngineGlowLODs_SelectedIndexChanged);
@@ -3258,9 +3258,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -3268,14 +3268,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle7;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -3284,9 +3284,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -3299,9 +3299,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle6;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
