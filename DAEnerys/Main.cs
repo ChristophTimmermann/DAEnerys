@@ -435,7 +435,7 @@ namespace DAEnerys
         public void RemoveJoint(HWJoint joint)
         {
             List<HWElement> jointChildren = new List<HWElement>();
-            foreach (HWElement child in joint.Children)
+            foreach (Element child in joint.Children)
             {
                 HWJoint childJoint = child as HWJoint;
                 if (childJoint == null)
@@ -1510,6 +1510,17 @@ namespace DAEnerys
             Vector3 eulerAngles = new Vector3(x, y, z);
 
             selectedMarker.LocalRotation = eulerAngles;
+        }
+        private void comboMarkerParent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedMarker == null)
+                return;
+
+            if (ignoreMarkerValuesChanged)
+                return;
+
+            HWJoint newParent = HWJoint.GetByName((string)comboMarkerParent.SelectedItem);
+            selectedMarker.Parent = newParent;
         }
 
         //--------------------------------- MISC ---------------------------------//

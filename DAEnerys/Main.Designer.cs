@@ -117,6 +117,29 @@ namespace DAEnerys
             this.buttonJointAdd = new System.Windows.Forms.Button();
             this.jointsTree = new System.Windows.Forms.TreeView();
             this.tabMarkers = new System.Windows.Forms.TabPage();
+            this.groupMarkerRotation = new System.Windows.Forms.GroupBox();
+            this.numericMarkerRotationZ = new System.Windows.Forms.NumericUpDown();
+            this.labelMarkerRotationZ = new System.Windows.Forms.Label();
+            this.numericMarkerRotationY = new System.Windows.Forms.NumericUpDown();
+            this.labelMarkerRotationY = new System.Windows.Forms.Label();
+            this.numericMarkerRotationX = new System.Windows.Forms.NumericUpDown();
+            this.labelMarkerRotationX = new System.Windows.Forms.Label();
+            this.groupMarkerPosition = new System.Windows.Forms.GroupBox();
+            this.numericMarkerPositionZ = new System.Windows.Forms.NumericUpDown();
+            this.labelMarkerPositionZ = new System.Windows.Forms.Label();
+            this.numericMarkerPositionY = new System.Windows.Forms.NumericUpDown();
+            this.labelMarkerPositionY = new System.Windows.Forms.Label();
+            this.numericMarkerPositionX = new System.Windows.Forms.NumericUpDown();
+            this.labelMarkerPositionX = new System.Windows.Forms.Label();
+            this.labelMarkerParent = new System.Windows.Forms.Label();
+            this.comboMarkerParent = new System.Windows.Forms.ComboBox();
+            this.boxMarkerName = new System.Windows.Forms.TextBox();
+            this.labelMarkerName = new System.Windows.Forms.Label();
+            this.buttonMarkerRemove = new System.Windows.Forms.Button();
+            this.buttonMarkerAdd = new System.Windows.Forms.Button();
+            this.groupMarkerPreview = new System.Windows.Forms.GroupBox();
+            this.checkDrawMarkers = new System.Windows.Forms.CheckBox();
+            this.listMarkers = new System.Windows.Forms.ListBox();
             this.tabDockpaths = new System.Windows.Forms.TabPage();
             this.labelDockpathAnimationIndex = new System.Windows.Forms.Label();
             this.numericDockpathAnimationIndex = new System.Windows.Forms.NumericUpDown();
@@ -244,29 +267,6 @@ namespace DAEnerys
             this.saveColladaMeshDialog = new System.Windows.Forms.SaveFileDialog();
             this.openColladaMeshDialog = new System.Windows.Forms.OpenFileDialog();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.groupMarkerPreview = new System.Windows.Forms.GroupBox();
-            this.checkDrawMarkers = new System.Windows.Forms.CheckBox();
-            this.listMarkers = new System.Windows.Forms.ListBox();
-            this.groupMarkerRotation = new System.Windows.Forms.GroupBox();
-            this.numericMarkerRotationZ = new System.Windows.Forms.NumericUpDown();
-            this.labelMarkerRotationZ = new System.Windows.Forms.Label();
-            this.numericMarkerRotationY = new System.Windows.Forms.NumericUpDown();
-            this.labelMarkerRotationY = new System.Windows.Forms.Label();
-            this.numericMarkerRotationX = new System.Windows.Forms.NumericUpDown();
-            this.labelMarkerRotationX = new System.Windows.Forms.Label();
-            this.groupMarkerPosition = new System.Windows.Forms.GroupBox();
-            this.numericMarkerPositionZ = new System.Windows.Forms.NumericUpDown();
-            this.labelMarkerPositionZ = new System.Windows.Forms.Label();
-            this.numericMarkerPositionY = new System.Windows.Forms.NumericUpDown();
-            this.labelMarkerPositionY = new System.Windows.Forms.Label();
-            this.numericMarkerPositionX = new System.Windows.Forms.NumericUpDown();
-            this.labelMarkerPositionX = new System.Windows.Forms.Label();
-            this.labelMarkerParent = new System.Windows.Forms.Label();
-            this.comboMarkerParent = new System.Windows.Forms.ComboBox();
-            this.boxMarkerName = new System.Windows.Forms.TextBox();
-            this.labelMarkerName = new System.Windows.Forms.Label();
-            this.buttonMarkerRemove = new System.Windows.Forms.Button();
-            this.buttonMarkerAdd = new System.Windows.Forms.Button();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -292,6 +292,15 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.numericJointPositionY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericJointPositionX)).BeginInit();
             this.tabMarkers.SuspendLayout();
+            this.groupMarkerRotation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationX)).BeginInit();
+            this.groupMarkerPosition.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionX)).BeginInit();
+            this.groupMarkerPreview.SuspendLayout();
             this.tabDockpaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericDockpathAnimationIndex)).BeginInit();
             this.groupDockpathFlags.SuspendLayout();
@@ -332,15 +341,6 @@ namespace DAEnerys
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).BeginInit();
-            this.groupMarkerPreview.SuspendLayout();
-            this.groupMarkerRotation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationZ)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationX)).BeginInit();
-            this.groupMarkerPosition.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionZ)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionX)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -1414,6 +1414,353 @@ namespace DAEnerys
             this.tabMarkers.TabIndex = 2;
             this.tabMarkers.Text = "Markers";
             this.tabMarkers.UseVisualStyleBackColor = true;
+            // 
+            // groupMarkerRotation
+            // 
+            this.groupMarkerRotation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupMarkerRotation.Controls.Add(this.numericMarkerRotationZ);
+            this.groupMarkerRotation.Controls.Add(this.labelMarkerRotationZ);
+            this.groupMarkerRotation.Controls.Add(this.numericMarkerRotationY);
+            this.groupMarkerRotation.Controls.Add(this.labelMarkerRotationY);
+            this.groupMarkerRotation.Controls.Add(this.numericMarkerRotationX);
+            this.groupMarkerRotation.Controls.Add(this.labelMarkerRotationX);
+            this.groupMarkerRotation.Location = new System.Drawing.Point(6, 600);
+            this.groupMarkerRotation.Name = "groupMarkerRotation";
+            this.groupMarkerRotation.Size = new System.Drawing.Size(235, 93);
+            this.groupMarkerRotation.TabIndex = 41;
+            this.groupMarkerRotation.TabStop = false;
+            this.groupMarkerRotation.Text = "Rotation";
+            // 
+            // numericMarkerRotationZ
+            // 
+            this.numericMarkerRotationZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericMarkerRotationZ.DecimalPlaces = 4;
+            this.numericMarkerRotationZ.Enabled = false;
+            this.numericMarkerRotationZ.Increment = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.numericMarkerRotationZ.Location = new System.Drawing.Point(72, 66);
+            this.numericMarkerRotationZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericMarkerRotationZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericMarkerRotationZ.Name = "numericMarkerRotationZ";
+            this.numericMarkerRotationZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericMarkerRotationZ.Size = new System.Drawing.Size(157, 20);
+            this.numericMarkerRotationZ.TabIndex = 27;
+            this.numericMarkerRotationZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericMarkerRotationZ.ValueChanged += new System.EventHandler(this.numericMarkerRotation_ValueChanged);
+            // 
+            // labelMarkerRotationZ
+            // 
+            this.labelMarkerRotationZ.AutoSize = true;
+            this.labelMarkerRotationZ.Location = new System.Drawing.Point(6, 68);
+            this.labelMarkerRotationZ.Name = "labelMarkerRotationZ";
+            this.labelMarkerRotationZ.Size = new System.Drawing.Size(17, 13);
+            this.labelMarkerRotationZ.TabIndex = 26;
+            this.labelMarkerRotationZ.Text = "Z:";
+            // 
+            // numericMarkerRotationY
+            // 
+            this.numericMarkerRotationY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericMarkerRotationY.DecimalPlaces = 4;
+            this.numericMarkerRotationY.Enabled = false;
+            this.numericMarkerRotationY.Increment = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.numericMarkerRotationY.Location = new System.Drawing.Point(72, 40);
+            this.numericMarkerRotationY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericMarkerRotationY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericMarkerRotationY.Name = "numericMarkerRotationY";
+            this.numericMarkerRotationY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericMarkerRotationY.Size = new System.Drawing.Size(157, 20);
+            this.numericMarkerRotationY.TabIndex = 25;
+            this.numericMarkerRotationY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericMarkerRotationY.ValueChanged += new System.EventHandler(this.numericMarkerRotation_ValueChanged);
+            // 
+            // labelMarkerRotationY
+            // 
+            this.labelMarkerRotationY.AutoSize = true;
+            this.labelMarkerRotationY.Location = new System.Drawing.Point(6, 42);
+            this.labelMarkerRotationY.Name = "labelMarkerRotationY";
+            this.labelMarkerRotationY.Size = new System.Drawing.Size(17, 13);
+            this.labelMarkerRotationY.TabIndex = 24;
+            this.labelMarkerRotationY.Text = "Y:";
+            // 
+            // numericMarkerRotationX
+            // 
+            this.numericMarkerRotationX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericMarkerRotationX.DecimalPlaces = 4;
+            this.numericMarkerRotationX.Enabled = false;
+            this.numericMarkerRotationX.Increment = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.numericMarkerRotationX.Location = new System.Drawing.Point(72, 14);
+            this.numericMarkerRotationX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericMarkerRotationX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericMarkerRotationX.Name = "numericMarkerRotationX";
+            this.numericMarkerRotationX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericMarkerRotationX.Size = new System.Drawing.Size(157, 20);
+            this.numericMarkerRotationX.TabIndex = 23;
+            this.numericMarkerRotationX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericMarkerRotationX.ValueChanged += new System.EventHandler(this.numericMarkerRotation_ValueChanged);
+            // 
+            // labelMarkerRotationX
+            // 
+            this.labelMarkerRotationX.AutoSize = true;
+            this.labelMarkerRotationX.Location = new System.Drawing.Point(6, 16);
+            this.labelMarkerRotationX.Name = "labelMarkerRotationX";
+            this.labelMarkerRotationX.Size = new System.Drawing.Size(17, 13);
+            this.labelMarkerRotationX.TabIndex = 22;
+            this.labelMarkerRotationX.Text = "X:";
+            // 
+            // groupMarkerPosition
+            // 
+            this.groupMarkerPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupMarkerPosition.Controls.Add(this.numericMarkerPositionZ);
+            this.groupMarkerPosition.Controls.Add(this.labelMarkerPositionZ);
+            this.groupMarkerPosition.Controls.Add(this.numericMarkerPositionY);
+            this.groupMarkerPosition.Controls.Add(this.labelMarkerPositionY);
+            this.groupMarkerPosition.Controls.Add(this.numericMarkerPositionX);
+            this.groupMarkerPosition.Controls.Add(this.labelMarkerPositionX);
+            this.groupMarkerPosition.Location = new System.Drawing.Point(6, 501);
+            this.groupMarkerPosition.Name = "groupMarkerPosition";
+            this.groupMarkerPosition.Size = new System.Drawing.Size(235, 93);
+            this.groupMarkerPosition.TabIndex = 40;
+            this.groupMarkerPosition.TabStop = false;
+            this.groupMarkerPosition.Text = "Position";
+            // 
+            // numericMarkerPositionZ
+            // 
+            this.numericMarkerPositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericMarkerPositionZ.DecimalPlaces = 4;
+            this.numericMarkerPositionZ.Enabled = false;
+            this.numericMarkerPositionZ.Location = new System.Drawing.Point(72, 66);
+            this.numericMarkerPositionZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericMarkerPositionZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericMarkerPositionZ.Name = "numericMarkerPositionZ";
+            this.numericMarkerPositionZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericMarkerPositionZ.Size = new System.Drawing.Size(157, 20);
+            this.numericMarkerPositionZ.TabIndex = 27;
+            this.numericMarkerPositionZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericMarkerPositionZ.ValueChanged += new System.EventHandler(this.numericMarkerPosition_ValueChanged);
+            // 
+            // labelMarkerPositionZ
+            // 
+            this.labelMarkerPositionZ.AutoSize = true;
+            this.labelMarkerPositionZ.Location = new System.Drawing.Point(6, 68);
+            this.labelMarkerPositionZ.Name = "labelMarkerPositionZ";
+            this.labelMarkerPositionZ.Size = new System.Drawing.Size(17, 13);
+            this.labelMarkerPositionZ.TabIndex = 26;
+            this.labelMarkerPositionZ.Text = "Z:";
+            // 
+            // numericMarkerPositionY
+            // 
+            this.numericMarkerPositionY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericMarkerPositionY.DecimalPlaces = 4;
+            this.numericMarkerPositionY.Enabled = false;
+            this.numericMarkerPositionY.Location = new System.Drawing.Point(72, 40);
+            this.numericMarkerPositionY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericMarkerPositionY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericMarkerPositionY.Name = "numericMarkerPositionY";
+            this.numericMarkerPositionY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericMarkerPositionY.Size = new System.Drawing.Size(157, 20);
+            this.numericMarkerPositionY.TabIndex = 25;
+            this.numericMarkerPositionY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericMarkerPositionY.ValueChanged += new System.EventHandler(this.numericMarkerPosition_ValueChanged);
+            // 
+            // labelMarkerPositionY
+            // 
+            this.labelMarkerPositionY.AutoSize = true;
+            this.labelMarkerPositionY.Location = new System.Drawing.Point(6, 42);
+            this.labelMarkerPositionY.Name = "labelMarkerPositionY";
+            this.labelMarkerPositionY.Size = new System.Drawing.Size(17, 13);
+            this.labelMarkerPositionY.TabIndex = 24;
+            this.labelMarkerPositionY.Text = "Y:";
+            // 
+            // numericMarkerPositionX
+            // 
+            this.numericMarkerPositionX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericMarkerPositionX.DecimalPlaces = 4;
+            this.numericMarkerPositionX.Enabled = false;
+            this.numericMarkerPositionX.Location = new System.Drawing.Point(72, 14);
+            this.numericMarkerPositionX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericMarkerPositionX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericMarkerPositionX.Name = "numericMarkerPositionX";
+            this.numericMarkerPositionX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericMarkerPositionX.Size = new System.Drawing.Size(157, 20);
+            this.numericMarkerPositionX.TabIndex = 23;
+            this.numericMarkerPositionX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericMarkerPositionX.ValueChanged += new System.EventHandler(this.numericMarkerPosition_ValueChanged);
+            // 
+            // labelMarkerPositionX
+            // 
+            this.labelMarkerPositionX.AutoSize = true;
+            this.labelMarkerPositionX.Location = new System.Drawing.Point(6, 16);
+            this.labelMarkerPositionX.Name = "labelMarkerPositionX";
+            this.labelMarkerPositionX.Size = new System.Drawing.Size(17, 13);
+            this.labelMarkerPositionX.TabIndex = 22;
+            this.labelMarkerPositionX.Text = "X:";
+            // 
+            // labelMarkerParent
+            // 
+            this.labelMarkerParent.AutoSize = true;
+            this.labelMarkerParent.Location = new System.Drawing.Point(8, 477);
+            this.labelMarkerParent.Name = "labelMarkerParent";
+            this.labelMarkerParent.Size = new System.Drawing.Size(44, 13);
+            this.labelMarkerParent.TabIndex = 39;
+            this.labelMarkerParent.Text = "Parent: ";
+            // 
+            // comboMarkerParent
+            // 
+            this.comboMarkerParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboMarkerParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboMarkerParent.Enabled = false;
+            this.comboMarkerParent.FormattingEnabled = true;
+            this.comboMarkerParent.Location = new System.Drawing.Point(56, 474);
+            this.comboMarkerParent.Name = "comboMarkerParent";
+            this.comboMarkerParent.Size = new System.Drawing.Size(185, 21);
+            this.comboMarkerParent.Sorted = true;
+            this.comboMarkerParent.TabIndex = 38;
+            this.comboMarkerParent.SelectedIndexChanged += new System.EventHandler(this.comboMarkerParent_SelectedIndexChanged);
+            // 
+            // boxMarkerName
+            // 
+            this.boxMarkerName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.boxMarkerName.Enabled = false;
+            this.boxMarkerName.Location = new System.Drawing.Point(56, 448);
+            this.boxMarkerName.Name = "boxMarkerName";
+            this.boxMarkerName.Size = new System.Drawing.Size(185, 20);
+            this.boxMarkerName.TabIndex = 37;
+            this.boxMarkerName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxMarkerName_KeyPress);
+            this.boxMarkerName.Leave += new System.EventHandler(this.boxMarkerName_Leave);
+            // 
+            // labelMarkerName
+            // 
+            this.labelMarkerName.AutoSize = true;
+            this.labelMarkerName.Location = new System.Drawing.Point(8, 451);
+            this.labelMarkerName.Name = "labelMarkerName";
+            this.labelMarkerName.Size = new System.Drawing.Size(41, 13);
+            this.labelMarkerName.TabIndex = 36;
+            this.labelMarkerName.Text = "Name: ";
+            // 
+            // buttonMarkerRemove
+            // 
+            this.buttonMarkerRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonMarkerRemove.Enabled = false;
+            this.buttonMarkerRemove.Location = new System.Drawing.Point(149, 419);
+            this.buttonMarkerRemove.Name = "buttonMarkerRemove";
+            this.buttonMarkerRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonMarkerRemove.TabIndex = 35;
+            this.buttonMarkerRemove.Text = "Remove";
+            this.buttonMarkerRemove.UseVisualStyleBackColor = true;
+            this.buttonMarkerRemove.Click += new System.EventHandler(this.buttonMarkerRemove_Click);
+            // 
+            // buttonMarkerAdd
+            // 
+            this.buttonMarkerAdd.Location = new System.Drawing.Point(6, 419);
+            this.buttonMarkerAdd.Name = "buttonMarkerAdd";
+            this.buttonMarkerAdd.Size = new System.Drawing.Size(92, 23);
+            this.buttonMarkerAdd.TabIndex = 34;
+            this.buttonMarkerAdd.Text = "Add";
+            this.buttonMarkerAdd.UseVisualStyleBackColor = true;
+            this.buttonMarkerAdd.Click += new System.EventHandler(this.buttonMarkerAdd_Click);
+            // 
+            // groupMarkerPreview
+            // 
+            this.groupMarkerPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupMarkerPreview.Controls.Add(this.checkDrawMarkers);
+            this.groupMarkerPreview.Location = new System.Drawing.Point(6, 699);
+            this.groupMarkerPreview.Name = "groupMarkerPreview";
+            this.groupMarkerPreview.Size = new System.Drawing.Size(235, 43);
+            this.groupMarkerPreview.TabIndex = 15;
+            this.groupMarkerPreview.TabStop = false;
+            this.groupMarkerPreview.Text = "Preview";
+            // 
+            // checkDrawMarkers
+            // 
+            this.checkDrawMarkers.AutoSize = true;
+            this.checkDrawMarkers.Location = new System.Drawing.Point(6, 19);
+            this.checkDrawMarkers.Name = "checkDrawMarkers";
+            this.checkDrawMarkers.Size = new System.Drawing.Size(91, 17);
+            this.checkDrawMarkers.TabIndex = 5;
+            this.checkDrawMarkers.Text = "Draw markers";
+            this.checkDrawMarkers.UseVisualStyleBackColor = true;
+            this.checkDrawMarkers.CheckedChanged += new System.EventHandler(this.checkDrawMarkers_CheckedChanged);
+            // 
+            // listMarkers
+            // 
+            this.listMarkers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listMarkers.FormattingEnabled = true;
+            this.listMarkers.Location = new System.Drawing.Point(6, 6);
+            this.listMarkers.Name = "listMarkers";
+            this.listMarkers.Size = new System.Drawing.Size(235, 407);
+            this.listMarkers.TabIndex = 3;
+            this.listMarkers.SelectedIndexChanged += new System.EventHandler(this.listMarkers_SelectedIndexChanged);
             // 
             // tabDockpaths
             // 
@@ -3036,352 +3383,6 @@ namespace DAEnerys
             this.colorDialog.FullOpen = true;
             this.colorDialog.SolidColorOnly = true;
             // 
-            // groupMarkerPreview
-            // 
-            this.groupMarkerPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupMarkerPreview.Controls.Add(this.checkDrawMarkers);
-            this.groupMarkerPreview.Location = new System.Drawing.Point(6, 699);
-            this.groupMarkerPreview.Name = "groupMarkerPreview";
-            this.groupMarkerPreview.Size = new System.Drawing.Size(235, 43);
-            this.groupMarkerPreview.TabIndex = 15;
-            this.groupMarkerPreview.TabStop = false;
-            this.groupMarkerPreview.Text = "Preview";
-            // 
-            // checkDrawMarkers
-            // 
-            this.checkDrawMarkers.AutoSize = true;
-            this.checkDrawMarkers.Location = new System.Drawing.Point(6, 19);
-            this.checkDrawMarkers.Name = "checkDrawMarkers";
-            this.checkDrawMarkers.Size = new System.Drawing.Size(91, 17);
-            this.checkDrawMarkers.TabIndex = 5;
-            this.checkDrawMarkers.Text = "Draw markers";
-            this.checkDrawMarkers.UseVisualStyleBackColor = true;
-            this.checkDrawMarkers.CheckedChanged += new System.EventHandler(this.checkDrawMarkers_CheckedChanged);
-            // 
-            // listMarkers
-            // 
-            this.listMarkers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listMarkers.FormattingEnabled = true;
-            this.listMarkers.Location = new System.Drawing.Point(6, 6);
-            this.listMarkers.Name = "listMarkers";
-            this.listMarkers.Size = new System.Drawing.Size(235, 407);
-            this.listMarkers.TabIndex = 3;
-            this.listMarkers.SelectedIndexChanged += new System.EventHandler(this.listMarkers_SelectedIndexChanged);
-            // 
-            // groupMarkerRotation
-            // 
-            this.groupMarkerRotation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupMarkerRotation.Controls.Add(this.numericMarkerRotationZ);
-            this.groupMarkerRotation.Controls.Add(this.labelMarkerRotationZ);
-            this.groupMarkerRotation.Controls.Add(this.numericMarkerRotationY);
-            this.groupMarkerRotation.Controls.Add(this.labelMarkerRotationY);
-            this.groupMarkerRotation.Controls.Add(this.numericMarkerRotationX);
-            this.groupMarkerRotation.Controls.Add(this.labelMarkerRotationX);
-            this.groupMarkerRotation.Location = new System.Drawing.Point(6, 600);
-            this.groupMarkerRotation.Name = "groupMarkerRotation";
-            this.groupMarkerRotation.Size = new System.Drawing.Size(235, 93);
-            this.groupMarkerRotation.TabIndex = 41;
-            this.groupMarkerRotation.TabStop = false;
-            this.groupMarkerRotation.Text = "Rotation";
-            // 
-            // numericMarkerRotationZ
-            // 
-            this.numericMarkerRotationZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericMarkerRotationZ.DecimalPlaces = 4;
-            this.numericMarkerRotationZ.Enabled = false;
-            this.numericMarkerRotationZ.Increment = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.numericMarkerRotationZ.Location = new System.Drawing.Point(72, 66);
-            this.numericMarkerRotationZ.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericMarkerRotationZ.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericMarkerRotationZ.Name = "numericMarkerRotationZ";
-            this.numericMarkerRotationZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericMarkerRotationZ.Size = new System.Drawing.Size(157, 20);
-            this.numericMarkerRotationZ.TabIndex = 27;
-            this.numericMarkerRotationZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericMarkerRotationZ.ValueChanged += new System.EventHandler(this.numericMarkerRotation_ValueChanged);
-            // 
-            // labelMarkerRotationZ
-            // 
-            this.labelMarkerRotationZ.AutoSize = true;
-            this.labelMarkerRotationZ.Location = new System.Drawing.Point(6, 68);
-            this.labelMarkerRotationZ.Name = "labelMarkerRotationZ";
-            this.labelMarkerRotationZ.Size = new System.Drawing.Size(17, 13);
-            this.labelMarkerRotationZ.TabIndex = 26;
-            this.labelMarkerRotationZ.Text = "Z:";
-            // 
-            // numericMarkerRotationY
-            // 
-            this.numericMarkerRotationY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericMarkerRotationY.DecimalPlaces = 4;
-            this.numericMarkerRotationY.Enabled = false;
-            this.numericMarkerRotationY.Increment = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.numericMarkerRotationY.Location = new System.Drawing.Point(72, 40);
-            this.numericMarkerRotationY.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericMarkerRotationY.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericMarkerRotationY.Name = "numericMarkerRotationY";
-            this.numericMarkerRotationY.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericMarkerRotationY.Size = new System.Drawing.Size(157, 20);
-            this.numericMarkerRotationY.TabIndex = 25;
-            this.numericMarkerRotationY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericMarkerRotationY.ValueChanged += new System.EventHandler(this.numericMarkerRotation_ValueChanged);
-            // 
-            // labelMarkerRotationY
-            // 
-            this.labelMarkerRotationY.AutoSize = true;
-            this.labelMarkerRotationY.Location = new System.Drawing.Point(6, 42);
-            this.labelMarkerRotationY.Name = "labelMarkerRotationY";
-            this.labelMarkerRotationY.Size = new System.Drawing.Size(17, 13);
-            this.labelMarkerRotationY.TabIndex = 24;
-            this.labelMarkerRotationY.Text = "Y:";
-            // 
-            // numericMarkerRotationX
-            // 
-            this.numericMarkerRotationX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericMarkerRotationX.DecimalPlaces = 4;
-            this.numericMarkerRotationX.Enabled = false;
-            this.numericMarkerRotationX.Increment = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.numericMarkerRotationX.Location = new System.Drawing.Point(72, 14);
-            this.numericMarkerRotationX.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericMarkerRotationX.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericMarkerRotationX.Name = "numericMarkerRotationX";
-            this.numericMarkerRotationX.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericMarkerRotationX.Size = new System.Drawing.Size(157, 20);
-            this.numericMarkerRotationX.TabIndex = 23;
-            this.numericMarkerRotationX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericMarkerRotationX.ValueChanged += new System.EventHandler(this.numericMarkerRotation_ValueChanged);
-            // 
-            // labelMarkerRotationX
-            // 
-            this.labelMarkerRotationX.AutoSize = true;
-            this.labelMarkerRotationX.Location = new System.Drawing.Point(6, 16);
-            this.labelMarkerRotationX.Name = "labelMarkerRotationX";
-            this.labelMarkerRotationX.Size = new System.Drawing.Size(17, 13);
-            this.labelMarkerRotationX.TabIndex = 22;
-            this.labelMarkerRotationX.Text = "X:";
-            // 
-            // groupMarkerPosition
-            // 
-            this.groupMarkerPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupMarkerPosition.Controls.Add(this.numericMarkerPositionZ);
-            this.groupMarkerPosition.Controls.Add(this.labelMarkerPositionZ);
-            this.groupMarkerPosition.Controls.Add(this.numericMarkerPositionY);
-            this.groupMarkerPosition.Controls.Add(this.labelMarkerPositionY);
-            this.groupMarkerPosition.Controls.Add(this.numericMarkerPositionX);
-            this.groupMarkerPosition.Controls.Add(this.labelMarkerPositionX);
-            this.groupMarkerPosition.Location = new System.Drawing.Point(6, 501);
-            this.groupMarkerPosition.Name = "groupMarkerPosition";
-            this.groupMarkerPosition.Size = new System.Drawing.Size(235, 93);
-            this.groupMarkerPosition.TabIndex = 40;
-            this.groupMarkerPosition.TabStop = false;
-            this.groupMarkerPosition.Text = "Position";
-            // 
-            // numericMarkerPositionZ
-            // 
-            this.numericMarkerPositionZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericMarkerPositionZ.DecimalPlaces = 4;
-            this.numericMarkerPositionZ.Enabled = false;
-            this.numericMarkerPositionZ.Location = new System.Drawing.Point(72, 66);
-            this.numericMarkerPositionZ.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericMarkerPositionZ.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericMarkerPositionZ.Name = "numericMarkerPositionZ";
-            this.numericMarkerPositionZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericMarkerPositionZ.Size = new System.Drawing.Size(157, 20);
-            this.numericMarkerPositionZ.TabIndex = 27;
-            this.numericMarkerPositionZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericMarkerPositionZ.ValueChanged += new System.EventHandler(this.numericMarkerPosition_ValueChanged);
-            // 
-            // labelMarkerPositionZ
-            // 
-            this.labelMarkerPositionZ.AutoSize = true;
-            this.labelMarkerPositionZ.Location = new System.Drawing.Point(6, 68);
-            this.labelMarkerPositionZ.Name = "labelMarkerPositionZ";
-            this.labelMarkerPositionZ.Size = new System.Drawing.Size(17, 13);
-            this.labelMarkerPositionZ.TabIndex = 26;
-            this.labelMarkerPositionZ.Text = "Z:";
-            // 
-            // numericMarkerPositionY
-            // 
-            this.numericMarkerPositionY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericMarkerPositionY.DecimalPlaces = 4;
-            this.numericMarkerPositionY.Enabled = false;
-            this.numericMarkerPositionY.Location = new System.Drawing.Point(72, 40);
-            this.numericMarkerPositionY.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericMarkerPositionY.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericMarkerPositionY.Name = "numericMarkerPositionY";
-            this.numericMarkerPositionY.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericMarkerPositionY.Size = new System.Drawing.Size(157, 20);
-            this.numericMarkerPositionY.TabIndex = 25;
-            this.numericMarkerPositionY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericMarkerPositionY.ValueChanged += new System.EventHandler(this.numericMarkerPosition_ValueChanged);
-            // 
-            // labelMarkerPositionY
-            // 
-            this.labelMarkerPositionY.AutoSize = true;
-            this.labelMarkerPositionY.Location = new System.Drawing.Point(6, 42);
-            this.labelMarkerPositionY.Name = "labelMarkerPositionY";
-            this.labelMarkerPositionY.Size = new System.Drawing.Size(17, 13);
-            this.labelMarkerPositionY.TabIndex = 24;
-            this.labelMarkerPositionY.Text = "Y:";
-            // 
-            // numericMarkerPositionX
-            // 
-            this.numericMarkerPositionX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericMarkerPositionX.DecimalPlaces = 4;
-            this.numericMarkerPositionX.Enabled = false;
-            this.numericMarkerPositionX.Location = new System.Drawing.Point(72, 14);
-            this.numericMarkerPositionX.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericMarkerPositionX.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericMarkerPositionX.Name = "numericMarkerPositionX";
-            this.numericMarkerPositionX.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericMarkerPositionX.Size = new System.Drawing.Size(157, 20);
-            this.numericMarkerPositionX.TabIndex = 23;
-            this.numericMarkerPositionX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericMarkerPositionX.ValueChanged += new System.EventHandler(this.numericMarkerPosition_ValueChanged);
-            // 
-            // labelMarkerPositionX
-            // 
-            this.labelMarkerPositionX.AutoSize = true;
-            this.labelMarkerPositionX.Location = new System.Drawing.Point(6, 16);
-            this.labelMarkerPositionX.Name = "labelMarkerPositionX";
-            this.labelMarkerPositionX.Size = new System.Drawing.Size(17, 13);
-            this.labelMarkerPositionX.TabIndex = 22;
-            this.labelMarkerPositionX.Text = "X:";
-            // 
-            // labelMarkerParent
-            // 
-            this.labelMarkerParent.AutoSize = true;
-            this.labelMarkerParent.Location = new System.Drawing.Point(8, 477);
-            this.labelMarkerParent.Name = "labelMarkerParent";
-            this.labelMarkerParent.Size = new System.Drawing.Size(44, 13);
-            this.labelMarkerParent.TabIndex = 39;
-            this.labelMarkerParent.Text = "Parent: ";
-            // 
-            // comboMarkerParent
-            // 
-            this.comboMarkerParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboMarkerParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboMarkerParent.Enabled = false;
-            this.comboMarkerParent.FormattingEnabled = true;
-            this.comboMarkerParent.Location = new System.Drawing.Point(56, 474);
-            this.comboMarkerParent.Name = "comboMarkerParent";
-            this.comboMarkerParent.Size = new System.Drawing.Size(185, 21);
-            this.comboMarkerParent.Sorted = true;
-            this.comboMarkerParent.TabIndex = 38;
-            // 
-            // boxMarkerName
-            // 
-            this.boxMarkerName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.boxMarkerName.Enabled = false;
-            this.boxMarkerName.Location = new System.Drawing.Point(56, 448);
-            this.boxMarkerName.Name = "boxMarkerName";
-            this.boxMarkerName.Size = new System.Drawing.Size(185, 20);
-            this.boxMarkerName.TabIndex = 37;
-            this.boxMarkerName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxMarkerName_KeyPress);
-            this.boxMarkerName.Leave += new System.EventHandler(this.boxMarkerName_Leave);
-            // 
-            // labelMarkerName
-            // 
-            this.labelMarkerName.AutoSize = true;
-            this.labelMarkerName.Location = new System.Drawing.Point(8, 451);
-            this.labelMarkerName.Name = "labelMarkerName";
-            this.labelMarkerName.Size = new System.Drawing.Size(41, 13);
-            this.labelMarkerName.TabIndex = 36;
-            this.labelMarkerName.Text = "Name: ";
-            // 
-            // buttonMarkerRemove
-            // 
-            this.buttonMarkerRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonMarkerRemove.Enabled = false;
-            this.buttonMarkerRemove.Location = new System.Drawing.Point(149, 419);
-            this.buttonMarkerRemove.Name = "buttonMarkerRemove";
-            this.buttonMarkerRemove.Size = new System.Drawing.Size(92, 23);
-            this.buttonMarkerRemove.TabIndex = 35;
-            this.buttonMarkerRemove.Text = "Remove";
-            this.buttonMarkerRemove.UseVisualStyleBackColor = true;
-            this.buttonMarkerRemove.Click += new System.EventHandler(this.buttonMarkerRemove_Click);
-            // 
-            // buttonMarkerAdd
-            // 
-            this.buttonMarkerAdd.Location = new System.Drawing.Point(6, 419);
-            this.buttonMarkerAdd.Name = "buttonMarkerAdd";
-            this.buttonMarkerAdd.Size = new System.Drawing.Size(92, 23);
-            this.buttonMarkerAdd.TabIndex = 34;
-            this.buttonMarkerAdd.Text = "Add";
-            this.buttonMarkerAdd.UseVisualStyleBackColor = true;
-            this.buttonMarkerAdd.Click += new System.EventHandler(this.buttonMarkerAdd_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3434,6 +3435,18 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.numericJointPositionX)).EndInit();
             this.tabMarkers.ResumeLayout(false);
             this.tabMarkers.PerformLayout();
+            this.groupMarkerRotation.ResumeLayout(false);
+            this.groupMarkerRotation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationX)).EndInit();
+            this.groupMarkerPosition.ResumeLayout(false);
+            this.groupMarkerPosition.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionX)).EndInit();
+            this.groupMarkerPreview.ResumeLayout(false);
+            this.groupMarkerPreview.PerformLayout();
             this.tabDockpaths.ResumeLayout(false);
             this.tabDockpaths.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericDockpathAnimationIndex)).EndInit();
@@ -3488,18 +3501,6 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).EndInit();
-            this.groupMarkerPreview.ResumeLayout(false);
-            this.groupMarkerPreview.PerformLayout();
-            this.groupMarkerRotation.ResumeLayout(false);
-            this.groupMarkerRotation.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationZ)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerRotationX)).EndInit();
-            this.groupMarkerPosition.ResumeLayout(false);
-            this.groupMarkerPosition.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionZ)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionX)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
