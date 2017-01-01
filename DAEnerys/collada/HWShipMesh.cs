@@ -16,7 +16,6 @@ namespace DAEnerys
                 foreach (HWShipMeshLOD mesh in Meshes)
                 {
                     mesh.Parent = value;
-                    mesh.CalculateBoundingBox();
                 }
             }
         }

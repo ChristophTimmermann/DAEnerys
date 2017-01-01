@@ -71,8 +71,8 @@ namespace DAEnerys
 
         public Matrix4 ModelViewProjectionMatrix = Matrix4.Identity;
 
-        public Vertex[] VertexList;
-        private int[] indices;
+        public Vertex[] VertexList = new Vertex[0];
+        private int[] indices = new int[0];
 
         public Vector3[] Vertices
         {

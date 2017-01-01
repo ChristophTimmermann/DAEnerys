@@ -42,7 +42,14 @@ namespace DAEnerys
 
             base.Destroy();
         }
-        
+
+        public override void CalculateWorldMatrix()
+        {
+            base.CalculateWorldMatrix();
+
+            CalculateBoundingBox();
+        }
+
         public void CalculateBoundingBox()
         {
             Vector3 min = new Vector3(float.MaxValue);
@@ -50,7 +57,7 @@ namespace DAEnerys
 
             foreach (Vector3 vertex in Vertices)
             {
-                Vector3 computedVertex = (Matrix4.CreateTranslation(vertex) * GlobalWorldMatrix).ExtractTranslation();
+                Vector3 computedVertex = (GlobalWorldMatrix * Matrix4.CreateTranslation(vertex)).ExtractTranslation();
                 //Vector3 computedVertex = Vector3.Add(vertex, Parent.AbsolutePosition);
                 min.X = Math.Min(min.X, computedVertex.X);
                 min.Y = Math.Min(min.Y, computedVertex.Y);
@@ -61,37 +68,17 @@ namespace DAEnerys
                 max.Z = Math.Max(max.Z, computedVertex.Z);
             }
 
-            if (min.X < HWScene.Min.X)
-            {
-                HWScene.Min.X = min.X;
-                HWScene.BiggestMesh = this;
-            }
-            if (min.Y < HWScene.Min.Y)
-            {
-                HWScene.Min.Y = min.Y;
-                HWScene.BiggestMesh = this;
-            }
-            if (min.Z < HWScene.Min.Z)
-            {
-                HWScene.Min.Z = min.Z;
-                HWScene.BiggestMesh = this;
-            }
+            HWScene.Min.X = Math.Min(HWScene.Min.X, min.X);
+            HWScene.Min.Y = Math.Min(HWScene.Min.Y, min.Y);
+            HWScene.Min.Z = Math.Min(HWScene.Min.Z, min.Z);
 
-            if (max.X > HWScene.Max.X)
-            {
-                HWScene.Max.X = max.X;
-                HWScene.BiggestMesh = this;
-            }
-            if (max.Y > HWScene.Max.Y)
-            {
-                HWScene.Max.Y = max.Y;
-                HWScene.BiggestMesh = this;
-            }
-            if (max.Z > HWScene.Max.Z)
-            {
-                HWScene.Max.Z = max.Z;
-                HWScene.BiggestMesh = this;
-            }
+            HWScene.Max.X = Math.Max(HWScene.Max.X, max.X);
+            HWScene.Max.Y = Math.Max(HWScene.Max.Y, max.Y);
+            HWScene.Max.Z = Math.Max(HWScene.Max.Z, max.Z);
+
+            Renderer.MinClipDistance = HWScene.Min.Z * 1.2f;
+            Renderer.MaxClipDistance = HWScene.Max.Z * 1.2f;
+            Renderer.ClipDistance = Renderer.MaxClipDistance;
         }
     }
 }

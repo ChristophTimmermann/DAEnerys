@@ -8,7 +8,6 @@ namespace DAEnerys
     {
         public static Vector3 Min = Vector3.Zero;
         public static Vector3 Max = Vector3.Zero;
-        public static HWShipMeshLOD BiggestMesh = null;
 
         public static Dictionary<string, int> RenderTextures = new Dictionary<string, int>();
 
@@ -45,20 +44,14 @@ namespace DAEnerys
             float markerSize = 1;
             float iconSize = 1;
 
-            if (BiggestMesh != null)
-            {
-                if (BiggestMesh != null)
-                {
-                    jointSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
-                    jointSize = Math.Max(jointSize, 0.3f);
+            jointSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
+            jointSize = Math.Max(jointSize, 0.3f);
 
-                    markerSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
-                    markerSize = Math.Max(markerSize, 0.01f);
+            markerSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
+            markerSize = Math.Max(markerSize, 0.01f);
 
-                    iconSize = farthest / 20 / HWJoint.Root.GlobalScale.X;
-                    iconSize = Math.Max(iconSize, 1);
-                }
-            }
+            iconSize = farthest / 20 / HWJoint.Root.GlobalScale.X;
+            iconSize = Math.Max(iconSize, 1);
 
             float farClip = farthest * 64;
             float nearClip = farthest / 32;
@@ -141,8 +134,6 @@ namespace DAEnerys
             {
                 Light.Lights.Remove(navLight.RenderLight);
             }
-
-            BiggestMesh = null;
 
             HWMesh.Meshes.Clear();
             HWShipMesh.ShipMeshes.Clear();
