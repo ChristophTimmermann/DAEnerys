@@ -452,9 +452,10 @@ namespace DAEnerys
 
             jointsTree.Sort();
         }
-        private void AddJointToCombos(HWJoint joint)
+        private void AddJointToCombos(HWJoint joint, bool addToJointParents = true)
         {
-            comboJointParent.Items.Add(joint.Name);
+            if(addToJointParents)
+                comboJointParent.Items.Add(joint.Name);
             comboShipMeshParent.Items.Add(joint.Name);
             comboCollisionMeshParent.Items.Add(joint.Name);
             comboEngineGlowParent.Items.Add(joint.Name);
@@ -499,11 +500,11 @@ namespace DAEnerys
                 HWElement hwChild = child as HWElement;
 
                 if (hwChild == null)
-                    return;
+                    continue;
 
                 HWJoint childJoint = hwChild as HWJoint;
                 if (childJoint == null)
-                    return;
+                    continue;
 
                 RemoveJointFromJointParentComboRecursive(childJoint);
             }
@@ -677,7 +678,7 @@ namespace DAEnerys
             RemoveJointFromCombos(joint);
             joint.Name = boxJointName.Text;
             joint.TreeNode.Text = joint.Name;
-            AddJointToCombos(joint);
+            AddJointToCombos(joint, false);
         }
         private void numericJointPosition_ValueChanged(object sender, EventArgs e)
         {

@@ -177,13 +177,6 @@ namespace DAEnerys
 
         public static COLLADATransform GetColladaNodeTransform(COLLADANode colladaNode)
         {
-            Vector3 axis = colladaNode.Transform.Rotation;
-            float x = MathHelper.RadiansToDegrees(axis.X);
-            float y = MathHelper.RadiansToDegrees(axis.Y);
-            float z = MathHelper.RadiansToDegrees(axis.Z);
-            axis = new Vector3(x, y, z);
-            Console.WriteLine(colladaNode.Name + " | " + axis);
-
             return colladaNode.Transform;
         }
 

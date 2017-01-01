@@ -17,7 +17,8 @@ namespace DAEnerys
             });
             logStream.Attach();
 
-            Scene obj = importer.ImportFile(path, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            //Scene obj = importer.ImportFile(path, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            Scene obj = importer.ImportFile(path, PostProcessSteps.JoinIdenticalVertices | PostProcessSteps.Triangulate | PostProcessSteps.ValidateDataStructure);
             importer.Dispose();
 
             return obj.Meshes.ToArray();
@@ -34,7 +35,8 @@ namespace DAEnerys
             });
             logStream.Attach();
 
-            Scene obj = importer.ImportFile(path, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            //Scene obj = importer.ImportFile(path, ~(PostProcessSteps.CalculateTangentSpace | PostProcessSteps.GenerateNormals) & (PostProcessPreset.TargetRealTimeFast));
+            Scene obj = importer.ImportFile(path, PostProcessSteps.JoinIdenticalVertices | PostProcessSteps.Triangulate | PostProcessSteps.ValidateDataStructure);
             importer.Dispose();
 
             return obj.Meshes[0];
