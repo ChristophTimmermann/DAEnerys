@@ -163,6 +163,9 @@ namespace DAEnerys
                     }
                 }
 
+                if(scene.MaterialCount == 0)
+                    scene.Materials.Add(new Material());
+
                 AssimpContext exporter = new AssimpContext();
                 NormalSmoothingAngleConfig config = new NormalSmoothingAngleConfig(80.0f);
                 exporter.SetConfig(config);

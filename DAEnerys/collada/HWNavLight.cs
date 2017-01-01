@@ -109,6 +109,12 @@ namespace DAEnerys
 
             Setup();
 
+            Icon = new EditorIcon(this, EditorIcon.LightbulbTexture);
+            Icon.Size = IconSize;
+            Icon.DrawAboveShip = true;
+            Icon.VertexColored = false;
+            Icon.Material.DiffuseColor = Color;
+
             NavLights.Add(this);
             Program.main.AddNavLight(this);
 
@@ -127,11 +133,6 @@ namespace DAEnerys
             {
                 RenderIcosphere.Destroy();
                 RenderIcosphere = null;
-            }
-            if (Icon != null)
-            {
-                Icon.Destroy();
-                Icon = null;
             }
 
             //If the navlight emits light
@@ -157,13 +158,6 @@ namespace DAEnerys
                 RenderSprite.NeverDrawInFront = true;
                 RenderSprite.Material.DiffuseColor = Color;*/
             }
-
-            Icon = new EditorIcon(this, EditorIcon.LightbulbTexture);
-            Icon.Visible = true;
-            Icon.Size = IconSize;
-            Icon.DrawAboveShip = true;
-            Icon.VertexColored = false;
-            Icon.Material.DiffuseColor = Color;
 
             Reset();
 
@@ -292,8 +286,6 @@ namespace DAEnerys
         {
             base.CalculateWorldMatrix();
 
-            if(Icon != null)
-                Icon.Position = GlobalPosition;
             if(RenderLight != null)
                 RenderLight.Position = new Vector4(GlobalPosition, 1);
         }
