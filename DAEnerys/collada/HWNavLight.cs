@@ -10,7 +10,7 @@ namespace DAEnerys
         //Statics
         public static List<HWNavLight> NavLights = new List<HWNavLight>();
 
-        private static float iconSize = 3;
+        private static float iconSize = 0.6f;
         public static float IconSize { get { return iconSize; } set { iconSize = value; foreach (HWNavLight navLight in HWNavLight.NavLights) { navLight.Icon.Size = value; } } }
 
         public int NavLightListItemIndex;

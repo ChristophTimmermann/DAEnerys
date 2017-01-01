@@ -373,6 +373,8 @@ namespace DAEnerys
 
             Clear();
 
+            HWScene.CalibrateSettings();
+
             this.Text = "DAEnerys";
 
             Renderer.InvalidateMeshData();

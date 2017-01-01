@@ -17,7 +17,7 @@ namespace DAEnerys
         public float FieldOfView = 0.9599f;
 
         public float MinZoom = 0.01f;
-        public float MaxZoom = 5.0f;
+        public float MaxZoom = 15.0f;
 
         private bool orthographic;
         public bool Orthographic { get { return orthographic; } set { orthographic = value; Update(true); } }
@@ -28,8 +28,8 @@ namespace DAEnerys
 
         private float lastOrthographicSize;
 
-        public float CalculatedZoom = 1;
-        public float ZoomSpeed = 5;
+        public float CalculatedZoom = 10;
+        public float ZoomSpeed = 10;
 
         public Vector3 LookAt = Vector3.Zero;
         public Vector3 Direction
@@ -40,9 +40,13 @@ namespace DAEnerys
             }
         }
 
-        private float zoom = 1;
-        public float Zoom { get { return zoom; } set { zoom = value; Update(); } }
+        public bool SmoothZooming = true;
 
+        private float oldZoomTarget = 10;
+        private float zoomTarget = 10;
+        public float ZoomTarget { get { return zoomTarget; } set { zoomTarget = value; Update(); } }
+
+        private float zoom = 10;
 
         private float lastZoom;
         private Vector2 angles = new Vector2((float)Math.PI, (float)Math.PI);
@@ -83,11 +87,11 @@ namespace DAEnerys
                 this.Orthographic = !this.Orthographic;
                 if (this.Orthographic)
                 {
-                    this.perspectiveZoom = this.Zoom;
-                    this.Zoom = CalculatedZoom;
+                    this.perspectiveZoom = this.ZoomTarget;
+                    this.ZoomTarget = CalculatedZoom;
                 }
                 else
-                    this.Zoom = perspectiveZoom;
+                    this.ZoomTarget = perspectiveZoom;
 
                 Program.main.UpdatePerspectiveOrthoCombo();
                 Renderer.InvalidateView();
@@ -158,8 +162,8 @@ namespace DAEnerys
 
                 this.Orthographic = false;
 
-                this.Zoom = CalculatedZoom;
-                this.perspectiveZoom = this.Zoom;
+                this.ZoomTarget = CalculatedZoom;
+                this.perspectiveZoom = this.ZoomTarget;
                 this.orthographicSize = 16;
 
                 UpdatePosition();
@@ -197,8 +201,8 @@ namespace DAEnerys
 
                 if (!this.Orthographic)
                 {
-                    zoom -= zoomDelta * ZoomSpeed * 0.01f;
-                    zoom = Utilities.Clamp(zoom, MinZoom, MaxZoom);
+                    zoomTarget -= zoomDelta * ZoomSpeed * 0.01f;
+                    zoomTarget = Utilities.Clamp(zoomTarget, MinZoom, MaxZoom);
                 }
                 else
                 {
@@ -207,9 +211,10 @@ namespace DAEnerys
                 }
             }
 
+            UpdateZoom();
             UpdatePosition();
 
-            if (lastZoom != zoom)
+            if (lastZoom != zoomTarget)
             {
                 Renderer.InvalidateView();
                 Renderer.Invalidate();
@@ -222,14 +227,31 @@ namespace DAEnerys
             }
 
             lastPos = position;
-            lastZoom = zoom;
+            lastZoom = zoomTarget;
             lastOrthographicSize = orthographicSize;
             lastWheelPrecise = mouse.WheelPrecise;
         }
 
+        private void UpdateZoom()
+        {
+            float diff = Math.Abs(zoom - zoomTarget);
+            if (diff < 0.001f)
+                return;
+
+            if (SmoothZooming)
+                zoom = Utilities.SmoothStepChange(zoom, oldZoomTarget, zoomTarget, (float)Program.ElapsedSeconds * 6, 2);
+            else
+                zoom = zoomTarget;
+
+            oldZoomTarget = zoomTarget;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
         private void UpdatePosition()
         {
-            Position = LookAt + Vector3.Transform(new Vector3(0, 0, Zoom), Matrix3.CreateRotationX(angles.X) * Matrix3.CreateRotationY(angles.Y));
+            Position = LookAt + Vector3.Transform(new Vector3(0, 0, zoom), Matrix3.CreateRotationX(angles.X) * Matrix3.CreateRotationY(angles.Y));
         }
 
         public Matrix4 GetViewMatrix()

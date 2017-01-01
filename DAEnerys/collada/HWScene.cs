@@ -6,8 +6,8 @@ namespace DAEnerys
 {
     static class HWScene
     {
-        public static Vector3 Min = Vector3.Zero;
-        public static Vector3 Max = Vector3.Zero;
+        public static Vector3 Min = new Vector3(-10);
+        public static Vector3 Max = new Vector3(10);
 
         public static Dictionary<string, int> RenderTextures = new Dictionary<string, int>();
 
@@ -59,9 +59,9 @@ namespace DAEnerys
             Program.Camera.MinZoom = farthest / 40;
             Program.Camera.MaxZoom = farthest * 40;
             if (setZoom)
-                Program.Camera.Zoom = farthest * 2f;
-            Program.Camera.ZoomSpeed = farthest * 10;
-            Program.Camera.CalculatedZoom = Program.Camera.Zoom;
+                Program.Camera.ZoomTarget = farthest * 2f;
+            Program.Camera.ZoomSpeed = farthest * 11;
+            Program.Camera.CalculatedZoom = Program.Camera.ZoomTarget;
 
             EditorJoint.Size = jointSize;
             EditorMarker.Size = markerSize;
@@ -127,8 +127,8 @@ namespace DAEnerys
         {
             Importer.ColladaPath = String.Empty;
 
-            Min = Vector3.Zero;
-            Max = Vector3.Zero;
+            Min = new Vector3(-1);
+            Max = new Vector3(1);
 
             foreach (HWNavLight navLight in HWNavLight.NavLights)
             {

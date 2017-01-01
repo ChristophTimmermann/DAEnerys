@@ -87,6 +87,8 @@ namespace DAEnerys
 
             numericPositionIncrement.Value = (decimal)Program.main.PositionIncrement;
             numericRotationIncrement.Value = (decimal)Program.main.RotationIncrement;
+
+            checkSmoothZooming.Checked = Program.Camera.SmoothZooming;
         }
 
         private void numericJointSize_ValueChanged(object sender, EventArgs e)
@@ -230,7 +232,8 @@ namespace DAEnerys
                 new XElement("disableLighting", Renderer.DisableLighting),
                 new XElement("checkForUpdatesOnStart", Updater.CheckForUpdatesOnStart),
                 new XElement("positionIncrement", Program.main.PositionIncrement),
-                new XElement("rotationIncrement", Program.main.RotationIncrement));
+                new XElement("rotationIncrement", Program.main.RotationIncrement),
+                new XElement("smoothZooming", Program.Camera.SmoothZooming));
 
             foreach (string dataPath in HWData.DataPaths)
             {
@@ -367,6 +370,11 @@ namespace DAEnerys
                             float.TryParse(element.Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out rotInc);
                             Program.main.RotationIncrement = rotInc;
                             break;
+                        case "smoothZooming":
+                            bool smoothZooming = true;
+                            bool.TryParse(element.Value, out smoothZooming);
+                            Program.Camera.SmoothZooming = smoothZooming;
+                            break;
                         case "dataPath":
                             HWData.DataPaths.Add(element.Value);
                             break;
@@ -501,6 +509,11 @@ namespace DAEnerys
         private void numericRotationIncrement_ValueChanged(object sender, EventArgs e)
         {
             Program.main.RotationIncrement = (float)numericRotationIncrement.Value;
+        }
+
+        private void checkSmoothZooming_CheckedChanged(object sender, EventArgs e)
+        {
+            Program.Camera.SmoothZooming = checkSmoothZooming.Checked;
         }
     }
 }

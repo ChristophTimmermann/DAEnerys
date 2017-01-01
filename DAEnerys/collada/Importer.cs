@@ -100,7 +100,7 @@ namespace DAEnerys
             //File.Delete(fixedColladaPath);
             #endregion
 
-            Program.Camera.Zoom = 0; //Set camera zoom to 0 for bounding box calculations to set it
+            Program.Camera.ZoomTarget = 0; //Set camera zoom to 0 for bounding box calculations to set it
 
             LoadMaterials();
 

@@ -10,7 +10,7 @@ namespace DAEnerys
 
         public Vector3 Position;
 
-        public float Size = 10;
+        public float Size = 1;
 
         public static HWTexture LightbulbTexture = new HWTexture(Path.Combine(Program.EXECUTABLE_PATH, @"resources/lightbulb.tga"), true, true, true);
 

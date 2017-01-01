@@ -8,7 +8,7 @@ namespace DAEnerys
     {
         public static MeshData Data;
 
-        private static float size = 10;
+        private static float size = 0.4f;
         public static float Size { get { return size; } set { size = value; foreach (HWMarker marker in HWMarker.Markers) marker.EditorMarker.LocalScale = new Vector3(value); } }
 
         private Vector3 color = new Vector3(1, 1, 0);

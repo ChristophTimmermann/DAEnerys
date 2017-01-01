@@ -114,6 +114,12 @@ namespace Extensions
             return pitchYawRoll;
         }
 
+        public static float SmoothStepChange(float x0, float y0, float yt, float t, float k)
+        {
+            float f = x0 - y0 + (yt - y0) / (k * t);
+            return yt - (yt - y0) / (k * t) + f * (float)Math.Exp(-k * t);
+        }
+
         public static Quaternion QuaternionFromEulerAngles(float yaw, float pitch, float roll)
         {
             // Heading = Yaw
