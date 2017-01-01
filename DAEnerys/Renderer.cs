@@ -488,7 +488,6 @@ namespace DAEnerys
                 0f, 0f, 0f, 0f, // Alpha/Add, Scale, 0, 0
             };
 
-            //Manifest.Globals["clipPlane"] = new float[] { 0, 0, -1, ClipDistance };   // SOB_USECLIP
             Manifest.Globals["clipPlane"] = new float[] { 0, 0, -1, ClipDistance };   // SOB_USECLIP
 
             Manifest.Globals["gammaScale"] = new float[] { 0.8625f, 0.8625f, 0.8625f, 0.95f };

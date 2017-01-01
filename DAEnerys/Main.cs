@@ -1859,7 +1859,13 @@ namespace DAEnerys
                 {
                     for (int i = newMeshes.Length - (newMeshes.Length - meshes.Count); i < newMeshes.Length; i++)
                     {
-                        HWMaterial material = HWMaterial.DefaultMaterial;
+                        HWMaterial material;
+
+                        if (HWMaterial.Materials.Count == 0)
+                            material = HWMaterial.DefaultMaterial;
+                        else
+                            material = HWMaterial.Materials[0];
+
                         if (meshes.Count - 1 >= i)
                             material = meshes[i].Material;
 
@@ -1950,7 +1956,13 @@ namespace DAEnerys
                 {
                     for (int i = newMeshes.Length - (newMeshes.Length - meshes.Count); i < newMeshes.Length; i++)
                     {
-                        HWMaterial material = HWMaterial.DefaultMaterial;
+                        HWMaterial material;
+
+                        if (HWMaterial.Materials.Count == 0)
+                            material = HWMaterial.DefaultMaterial;
+                        else
+                            material = HWMaterial.Materials[0];
+
                         if (meshes.Count - 1 >= i)
                             material = meshes[i].Material;
 
@@ -2052,7 +2064,14 @@ namespace DAEnerys
             if (lowestLOD > MAX_LEVEL_OF_DETAIL - 1)
                 return;
 
-            HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new MeshData(new Vertex[0], new int[0], 0), Vector3.Zero, Vector3.Zero, Vector3.One, HWMaterial.DefaultMaterial, selectedShipMesh, lowestLOD + 1);
+            HWMaterial material;
+
+            if (HWMaterial.Materials.Count == 0)
+                material = HWMaterial.DefaultMaterial;
+            else
+                material = HWMaterial.Materials[0];
+
+            HWShipMeshLOD newLODMesh = new HWShipMeshLOD(new MeshData(new Vertex[0], new int[0], 0), Vector3.Zero, Vector3.Zero, Vector3.One, material, selectedShipMesh, lowestLOD + 1);
 
             listShipMeshes_SelectedIndexChanged(this, EventArgs.Empty);
             listShipMeshLODs.SelectedIndex = lowestLOD + 1;
