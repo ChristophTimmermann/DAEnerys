@@ -77,10 +77,19 @@ namespace NewShaderManifest
             LoadedSurfaces.Clear();
             LoadedPrograms.Clear();
 
-            string path = GetDataPath(@"shaders\master.manifest");
-            if (!string.IsNullOrEmpty(path))
+            string[] paths = GetDataPath(@"shaders\master.manifest");
+            bool found = false;
+
+            foreach (string path in paths)
+            {
+                if (string.IsNullOrEmpty(path))
+                    continue;
+
                 Load(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
-            else
+                found = true;
+            }
+
+            if(!found)
             {
                 Log.WriteLine(@"Unable to locate shader config file: shaders\master.manifest");
                 LoadDefaultShader();
@@ -120,9 +129,14 @@ namespace NewShaderManifest
 
         private static void ParseImport(string input)
         {
-            string path = GetDataPath(@"shaders\" + input.Substring(8));
-            if (!string.IsNullOrWhiteSpace(path))
+            string[] paths = GetDataPath(@"shaders\" + input.Substring(8));
+            foreach (string path in paths)
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    continue;
+                    
                 Load(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
+            }
         }
 
         private static void ParseGlobal(string input)
@@ -158,30 +172,46 @@ namespace NewShaderManifest
         private static void ParseLoadProgram(string input)
         {
             string prog = input.Substring(13);
-            string path = GetDataPath(@"shaders\gl_prog\" + prog + ".prog");
-            if (path != "")
+            string[] paths = GetDataPath(@"shaders\gl_prog\" + prog + ".prog");
+            bool found = false;
+
+            foreach (string path in paths)
             {
+                if (path == string.Empty)
+                    continue;
+
                 if (!AvailablePrograms.Contains(prog))
                     AvailablePrograms.Add(prog);
                 else
                     Log.WriteLine("Duplicate program detected: " + prog);
+
+                found = true;
             }
-            else
+
+            if(!found)
                 Log.WriteLine("Could not locate program " + prog);
         }
 
         private static void ParseLoadSurface(string input)
         {
             string surf = input.Substring(13);
-            string path = GetDataPath(@"shaders\gl_surf\" + surf + ".surf");
-            if (path != "")
+            string[] paths = GetDataPath(@"shaders\gl_surf\" + surf + ".surf");
+            bool found = false;
+
+            foreach (string path in paths)
             {
+                if (path == string.Empty)
+                    continue;
+
                 if (!AvailableSurfaces.Contains(surf))
                     AvailableSurfaces.Add(surf);
                 else
                     Log.WriteLine("Duplicate surface detected: " + surf);
+
+                found = true;
             }
-            else
+
+            if (!found)
                 Log.WriteLine("Could not locate surface " + surf);
         }
 

@@ -89,6 +89,9 @@ namespace DAEnerys
                 if (image.ColladaName.Length == 0)
                     continue;
 
+                if (!image.Name.EndsWith("_DIFF"))
+                    continue;
+
                 while (addedImages.Contains(image.FormattedName))
                 {
                     image.Suffix++;

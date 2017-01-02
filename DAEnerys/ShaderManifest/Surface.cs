@@ -277,15 +277,24 @@ namespace NewShaderManifest
         {
             Surface = new Surface();
             string filename = @"shaders\gl_surf\" + name + ".surf";
-            string path = GetDataPath(filename);
-            if (string.IsNullOrEmpty(path))
-                Log.WriteLine(@"Unable to locate surface: " + filename);
-            else
+            string[] paths = GetDataPath(filename);
+            bool found = false;
+
+            foreach (string path in paths)
             {
+                if (string.IsNullOrEmpty(path))
+                    continue;
+
                 Parse(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
                 Surface.Useable = true;
+                found = true;
+                break;
             }
+
             Manifest.LoadedSurfaces[name] = Surface;
+
+            if (!found)
+                Log.WriteLine(@"Unable to locate surface: " + filename);
         }
 
         private static Keyword IsKeyword(string str)

@@ -68,10 +68,19 @@ namespace NewShaderManifest
 
         internal static void Load()
         {
-            string path = GetDataPath(@"shaders\dev_config.manifest");
-            if (!string.IsNullOrEmpty(path))
+            string[] paths = GetDataPath(@"shaders\dev_config.manifest");
+            bool found = false;
+
+            foreach (string path in paths)
+            {
+                if (string.IsNullOrEmpty(path))
+                    continue;
+
                 Load(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
-            else
+                found = true;
+            }
+
+            if(!found)
                 Log.WriteLine(@"Unable to locate shader config file: shaders\dev_config.manifest");
         }
 
@@ -106,9 +115,15 @@ namespace NewShaderManifest
         private static void ParseImport(string input)
         {
             string[] args = input.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            string path = GetDataPath(@"shaders\" + args[1]);
-            if (!string.IsNullOrWhiteSpace(path))
+            string[] paths = GetDataPath(@"shaders\" + args[1]);
+
+            foreach (string path in paths)
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    continue;
+
                 Load(new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)));
+            }
         }
 
         private static void ParseDef(string input)

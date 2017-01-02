@@ -161,6 +161,15 @@ namespace NewShaderManifest
         private int LoadShader(string code, ShaderType type)
         {
             int shaderID = GL.CreateShader(type);
+
+            if (code == string.Empty)
+            {
+                Log.WriteLine("Failed to compile shader:");
+                Log.WriteLine(GL.GetShaderInfoLog(shaderID));
+                GL.DeleteShader(shaderID);
+                return 0;
+            }
+
             GL.ShaderSource(shaderID, code);
             GL.CompileShader(shaderID);
 
@@ -330,26 +339,29 @@ namespace NewShaderManifest
         {
             ProcessorDefines = new Dictionary<string, string>();
 
-            string filename = GetDataPath(prog.filename);
-            Node code = Compiler.CompileSource(
-                new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
+            string[] filenames = GetDataPath(prog.filename);
+            foreach (string filename in filenames)
+            {
+                Node code = Compiler.CompileSource(
+                    new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
 
-            interpreter = new Interpreter(HandleIf);
-            interpreter.RegisterFunction("debug", DebugReload);
-            interpreter.RegisterFunction("add", AddTextScript);
-            interpreter.RegisterFunction("compile", LoaderCompile);
-            interpreter.RegisterFunction("input", Input);
-            interpreter.RegisterFunction("matrix", MapUniform);
-            interpreter.RegisterFunction("local", AddLocal);
-            interpreter.RegisterFunction("global", MapUniform);
-            interpreter.RegisterFunction("#import", Import);
-            interpreter.RegisterFunction("#def", ProcessorDefine);
-            interpreter.RegisterFunction("#undef", ProcessorUndefine);
-            interpreter.RegisterFunction("debugReload", DebugReload);
+                interpreter = new Interpreter(HandleIf);
+                interpreter.RegisterFunction("debug", DebugReload);
+                interpreter.RegisterFunction("add", AddTextScript);
+                interpreter.RegisterFunction("compile", LoaderCompile);
+                interpreter.RegisterFunction("input", Input);
+                interpreter.RegisterFunction("matrix", MapUniform);
+                interpreter.RegisterFunction("local", AddLocal);
+                interpreter.RegisterFunction("global", MapUniform);
+                interpreter.RegisterFunction("#import", Import);
+                interpreter.RegisterFunction("#def", ProcessorDefine);
+                interpreter.RegisterFunction("#undef", ProcessorUndefine);
+                interpreter.RegisterFunction("debugReload", DebugReload);
 
-            interpreter.Run(code);
+                interpreter.Run(code);
 
-            Program.Compile();
+                Program.Compile();
+            }
         }
 
 
@@ -403,9 +415,12 @@ namespace NewShaderManifest
             }
             else if (dest == "vert_script")
             {
-                string scriptfile = GetDataPath("shaders\\gl_prog\\" + source);
-                if (scriptfile != null)
+                string[] scriptfiles = GetDataPath("shaders\\gl_prog\\" + source);
+                foreach (string scriptfile in scriptfiles)
                 {
+                    if (scriptfile == null)
+                        continue;
+
                     StreamReader sr = new StreamReader(
                         new FileStream(scriptfile, FileMode.Open, FileAccess.Read, FileShare.Read));
                     Program.VertShader += sr.ReadToEnd();
@@ -415,9 +430,12 @@ namespace NewShaderManifest
             }
             else if (dest == "geom_script")
             {
-                string scriptfile = GetDataPath("shaders\\gl_prog\\" + source);
-                if (scriptfile != null)
+                string[] scriptfiles = GetDataPath("shaders\\gl_prog\\" + source);
+                foreach (string scriptfile in scriptfiles)
                 {
+                    if (scriptfile == null)
+                        continue;
+
                     StreamReader sr = new StreamReader(
                         new FileStream(scriptfile, FileMode.Open, FileAccess.Read, FileShare.Read));
                     Program.GeomShader += sr.ReadToEnd();
@@ -427,9 +445,12 @@ namespace NewShaderManifest
             }
             else if (dest == "frag_script")
             {
-                string scriptfile = GetDataPath("shaders\\gl_prog\\" + source);
-                if (scriptfile != null)
+                string[] scriptfiles = GetDataPath("shaders\\gl_prog\\" + source);
+                foreach (string scriptfile in scriptfiles)
                 {
+                    if (scriptfile == null)
+                        continue;
+
                     StreamReader sr = new StreamReader(
                         new FileStream(scriptfile, FileMode.Open, FileAccess.Read, FileShare.Read));
                     Program.FragShader += sr.ReadToEnd();
@@ -522,13 +543,20 @@ namespace NewShaderManifest
             if (nargs != 1) throw new Exception("`#import' expected 1 argument, found " + nargs);
             string impname = ((TextNode)args[0]).str;
 
-            string path = GetDataPath(@"shaders\gl_prog\" + impname);
-            if (path == null) return 0; // throw new Exception("Unable to locate file: shaders\\dev_config.manifest");
-            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            Node code = Compiler.CompileSource(fs);
-            interpreter.Run(code);
+            string[] paths = GetDataPath(@"shaders\gl_prog\" + impname);
 
-            return 0;
+            foreach (string path in paths)
+            {
+                if (path == null)
+                    continue;
+
+                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                Node code = Compiler.CompileSource(fs);
+                interpreter.Run(code);
+                break;
+            }
+
+            return 0; // throw new Exception("Unable to locate file: shaders\\dev_config.manifest");
         }
 
         private static int ProcessorDefine(int nargs, Node args)

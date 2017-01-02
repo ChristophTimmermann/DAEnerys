@@ -77,16 +77,16 @@ namespace NewShaderManifest
             }
         }
 
-        public static string GetDataPath(string filename)
+        public static string[] GetDataPath(string filename)
         {
-            string file = "";
+            List<string> files = new List<string>();
             foreach (string datapath in Manifest.DATA_PATHS)
             {
                 string datafile = Path.Combine(datapath, filename);
                 if (File.Exists(datafile))
-                    file = datafile;
+                    files.Add(datafile);
             }
-            return file;
+            return files.ToArray();
         }
 
         public static void GetGLError(string type)
