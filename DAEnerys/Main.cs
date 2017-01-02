@@ -59,7 +59,7 @@ namespace DAEnerys
         private bool animationPlaying;
         public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.Invalidate(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
 
-        const int MAX_MATERIALS_ON_MESH = 16;
+        const int MAX_MATERIALS_ON_MESH = 64;
         const int MAX_LEVEL_OF_DETAIL = 3;
 
         private float positionIncrement = 1;
