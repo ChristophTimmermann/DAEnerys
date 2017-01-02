@@ -22,9 +22,12 @@ namespace DAEnerys
         private bool orthographic;
         public bool Orthographic { get { return orthographic; } set { orthographic = value; Update(true); } }
 
-        private float orthographicSize = 16;
-        public float OrthographicSize { get { return orthographicSize; } set { orthographicSize = value; Update(); } }
+        private float orthographicSizeTarget = 2;
+        private float oldOrthographicSizeTarget = 2;
         private float perspectiveZoom = 1;
+
+        private float orthographicSize = 2;
+        public float OrthographicSize { get { return orthographicSize; } }
 
         private float lastOrthographicSize;
 
@@ -164,7 +167,7 @@ namespace DAEnerys
 
                 this.ZoomTarget = CalculatedZoom;
                 this.perspectiveZoom = this.ZoomTarget;
-                this.orthographicSize = 16;
+                this.orthographicSizeTarget = 16;
 
                 UpdatePosition();
                 Renderer.InvalidateView();
@@ -206,12 +209,13 @@ namespace DAEnerys
                 }
                 else
                 {
-                    orthographicSize += zoomDelta * (orthographicSize / 30);
-                    orthographicSize = Utilities.Clamp(orthographicSize, 0.0001f, 500);
+                    orthographicSizeTarget += zoomDelta * (orthographicSizeTarget / 30);
+                    orthographicSizeTarget = Utilities.Clamp(orthographicSizeTarget, 0.0001f, 500);
                 }
             }
 
             UpdateZoom();
+            UpdateOrthographicSize();
             UpdatePosition();
 
             if (lastZoom != zoomTarget)
@@ -220,7 +224,7 @@ namespace DAEnerys
                 Renderer.Invalidate();
             }
 
-            if (lastOrthographicSize != orthographicSize)
+            if (lastOrthographicSize != orthographicSizeTarget)
             {
                 Renderer.InvalidateView();
                 Renderer.Invalidate();
@@ -228,7 +232,7 @@ namespace DAEnerys
 
             lastPos = position;
             lastZoom = zoomTarget;
-            lastOrthographicSize = orthographicSize;
+            lastOrthographicSize = orthographicSizeTarget;
             lastWheelPrecise = mouse.WheelPrecise;
         }
 
@@ -244,6 +248,23 @@ namespace DAEnerys
                 zoom = zoomTarget;
 
             oldZoomTarget = zoomTarget;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
+
+        private void UpdateOrthographicSize()
+        {
+            float diff = Math.Abs(orthographicSize - orthographicSizeTarget);
+            if (diff < 0.001f)
+                return;
+
+            if (SmoothZooming)
+                orthographicSize = Utilities.SmoothStepChange(orthographicSize, oldOrthographicSizeTarget, orthographicSizeTarget, (float)Program.ElapsedSeconds * 6, 2);
+            else
+                orthographicSize = orthographicSizeTarget;
+
+            oldOrthographicSizeTarget = orthographicSizeTarget;
 
             Renderer.InvalidateView();
             Renderer.Invalidate();
