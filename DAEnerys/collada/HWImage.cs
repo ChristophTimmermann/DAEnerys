@@ -17,10 +17,14 @@ namespace DAEnerys
         {
             get
             {
+                string format = Format.ToString();
+                if (Format == ImageFormat.UNCOMPRESSED)
+                    format = "8888";
+
                 if(Suffix <= 1)
-                    return "IMG[" + Name + "]_FMT[" + Format + "]";
+                    return "IMG[" + Name + "]_FMT[" + format + "]";
                 else
-                    return "IMG[" + Name + "]_FMT[" + Format + "]_" + Suffix;
+                    return "IMG[" + Name + "]_FMT[" + format + "]_" + Suffix;
             }
         }
 
