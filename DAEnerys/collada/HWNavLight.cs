@@ -252,7 +252,7 @@ namespace DAEnerys
             return null;
         }
 
-        public void Reset()
+        public static void Reset()
         {
             foreach (HWNavLight navLight in HWNavLight.NavLights)
             {

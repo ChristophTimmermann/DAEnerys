@@ -205,7 +205,12 @@ namespace DAEnerys
 
             //Only update render if it is needed
             if (visibleNavLights > 0/* || visibleEffects > 0*/)
+            {
+                if (Program.ElapsedSeconds > 1)
+                    HWNavLight.Reset(); //Prevents death-flickering on navlights
+
                 Renderer.Invalidate();
+            }
             /*if (visibleEffects > 0)
                 Renderer.InvalidateMeshData();*/
 
