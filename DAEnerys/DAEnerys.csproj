@@ -148,6 +148,12 @@
     <Compile Include="Hotkeys.Designer.cs">
       <DependentUpon>Hotkeys.cs</DependentUpon>
     </Compile>
+    <Compile Include="JointTemplateWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JointTemplateWindow.Designer.cs">
+      <DependentUpon>JointTemplateWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="LabeledNumericUpDown.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -212,6 +218,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Hotkeys.resx">
       <DependentUpon>Hotkeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JointTemplateWindow.resx">
+      <DependentUpon>JointTemplateWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LabeledNumericUpDown.resx">
       <DependentUpon>LabeledNumericUpDown.cs</DependentUpon>
@@ -319,7 +328,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
+      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

@@ -1108,7 +1108,7 @@ namespace DAEnerys
             {
                 foreach(AddedMesh mesh in AddedMeshes)
                 {
-                    if (mesh.Name == name)
+                    if (mesh.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                         return mesh;
                 }
 

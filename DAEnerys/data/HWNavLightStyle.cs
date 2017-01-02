@@ -1,4 +1,6 @@
-﻿namespace DAEnerys
+﻿using System;
+
+namespace DAEnerys
 {
     public class HWNavLightStyle
     {
@@ -50,7 +52,7 @@
         public static HWNavLightStyle GetByName(string name)
         {
             foreach (HWNavLightStyle style in HWData.NavLightStyles)
-                if (style.Name == name)
+                if (style.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                     return style;
 
             return null;

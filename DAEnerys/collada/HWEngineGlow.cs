@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 
 namespace DAEnerys
@@ -56,6 +57,14 @@ namespace DAEnerys
                         lodMesh.LocalScale = new Vector3(1, 1, Renderer.ThrusterInterpolation);
         }
 
+        public static HWEngineGlow GetByName(string name)
+        {
+            foreach (HWEngineGlow engineGlow in EngineGlows)
+                if (engineGlow.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    return engineGlow;
+
+            return null;
+        }
         public void Destroy()
         {
             EngineGlows.Remove(this);

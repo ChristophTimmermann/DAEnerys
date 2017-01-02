@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DAEnerys
 {
@@ -31,8 +32,6 @@ namespace DAEnerys
         public List<HWShipMeshLOD> Meshes = new List<HWShipMeshLOD>();
         public List<HWShipMeshLOD>[] LODMeshes = new List<HWShipMeshLOD>[4];
 
-        public object ListItem;
-
         public HWShipMesh(HWJoint parent, string name, List<ShipMeshTag> tags)
         {
             for(int i = 0; i < LODMeshes.Length; i++)
@@ -51,6 +50,15 @@ namespace DAEnerys
             Meshes.Add(lodMesh);
 
             LODMeshes[lodMesh.LOD].Add(lodMesh);
+        }
+
+        public static HWShipMesh GetByName(string name)
+        {
+            foreach (HWShipMesh shipMesh in ShipMeshes)
+                if (shipMesh.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    return shipMesh;
+
+            return null;
         }
 
         public void Destroy()

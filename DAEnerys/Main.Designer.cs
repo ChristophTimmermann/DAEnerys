@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -95,6 +95,7 @@ namespace DAEnerys
             this.labelCollisionMeshParent = new System.Windows.Forms.Label();
             this.comboCollisionMeshParent = new System.Windows.Forms.ComboBox();
             this.tabJoints = new System.Windows.Forms.TabPage();
+            this.buttonJointAddTemplate = new System.Windows.Forms.Button();
             this.groupJointRotation = new System.Windows.Forms.GroupBox();
             this.numericJointRotationZ = new System.Windows.Forms.NumericUpDown();
             this.labelJointRotationZ = new System.Windows.Forms.Label();
@@ -267,6 +268,7 @@ namespace DAEnerys
             this.saveColladaMeshDialog = new System.Windows.Forms.SaveFileDialog();
             this.openColladaMeshDialog = new System.Windows.Forms.OpenFileDialog();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.buttonJointRemoveAll = new System.Windows.Forms.Button();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -1050,6 +1052,8 @@ namespace DAEnerys
             // tabJoints
             // 
             this.tabJoints.AutoScroll = true;
+            this.tabJoints.Controls.Add(this.buttonJointRemoveAll);
+            this.tabJoints.Controls.Add(this.buttonJointAddTemplate);
             this.tabJoints.Controls.Add(this.groupJointRotation);
             this.tabJoints.Controls.Add(this.groupJointPosition);
             this.tabJoints.Controls.Add(this.labelJointParent);
@@ -1067,6 +1071,16 @@ namespace DAEnerys
             this.tabJoints.Text = "Joints";
             this.tabJoints.UseVisualStyleBackColor = true;
             // 
+            // buttonJointAddTemplate
+            // 
+            this.buttonJointAddTemplate.Location = new System.Drawing.Point(6, 447);
+            this.buttonJointAddTemplate.Name = "buttonJointAddTemplate";
+            this.buttonJointAddTemplate.Size = new System.Drawing.Size(92, 23);
+            this.buttonJointAddTemplate.TabIndex = 34;
+            this.buttonJointAddTemplate.Text = "Add template";
+            this.buttonJointAddTemplate.UseVisualStyleBackColor = true;
+            this.buttonJointAddTemplate.Click += new System.EventHandler(this.buttonJointAddTemplate_Click);
+            // 
             // groupJointRotation
             // 
             this.groupJointRotation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1077,7 +1091,7 @@ namespace DAEnerys
             this.groupJointRotation.Controls.Add(this.labelJointRotationY);
             this.groupJointRotation.Controls.Add(this.numericJointRotationX);
             this.groupJointRotation.Controls.Add(this.labelJointRotationX);
-            this.groupJointRotation.Location = new System.Drawing.Point(6, 599);
+            this.groupJointRotation.Location = new System.Drawing.Point(6, 628);
             this.groupJointRotation.Name = "groupJointRotation";
             this.groupJointRotation.Size = new System.Drawing.Size(235, 93);
             this.groupJointRotation.TabIndex = 33;
@@ -1208,7 +1222,7 @@ namespace DAEnerys
             this.groupJointPosition.Controls.Add(this.labelJointPositionY);
             this.groupJointPosition.Controls.Add(this.numericJointPositionX);
             this.groupJointPosition.Controls.Add(this.labelJointPositionX);
-            this.groupJointPosition.Location = new System.Drawing.Point(6, 500);
+            this.groupJointPosition.Location = new System.Drawing.Point(6, 529);
             this.groupJointPosition.Name = "groupJointPosition";
             this.groupJointPosition.Size = new System.Drawing.Size(235, 93);
             this.groupJointPosition.TabIndex = 32;
@@ -1317,7 +1331,7 @@ namespace DAEnerys
             // labelJointParent
             // 
             this.labelJointParent.AutoSize = true;
-            this.labelJointParent.Location = new System.Drawing.Point(8, 476);
+            this.labelJointParent.Location = new System.Drawing.Point(8, 505);
             this.labelJointParent.Name = "labelJointParent";
             this.labelJointParent.Size = new System.Drawing.Size(44, 13);
             this.labelJointParent.TabIndex = 31;
@@ -1330,7 +1344,7 @@ namespace DAEnerys
             this.comboJointParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboJointParent.Enabled = false;
             this.comboJointParent.FormattingEnabled = true;
-            this.comboJointParent.Location = new System.Drawing.Point(56, 473);
+            this.comboJointParent.Location = new System.Drawing.Point(56, 502);
             this.comboJointParent.Name = "comboJointParent";
             this.comboJointParent.Size = new System.Drawing.Size(185, 21);
             this.comboJointParent.Sorted = true;
@@ -1342,7 +1356,7 @@ namespace DAEnerys
             this.boxJointName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxJointName.Enabled = false;
-            this.boxJointName.Location = new System.Drawing.Point(56, 447);
+            this.boxJointName.Location = new System.Drawing.Point(56, 476);
             this.boxJointName.Name = "boxJointName";
             this.boxJointName.Size = new System.Drawing.Size(185, 20);
             this.boxJointName.TabIndex = 29;
@@ -1352,7 +1366,7 @@ namespace DAEnerys
             // labelJointName
             // 
             this.labelJointName.AutoSize = true;
-            this.labelJointName.Location = new System.Drawing.Point(8, 450);
+            this.labelJointName.Location = new System.Drawing.Point(8, 479);
             this.labelJointName.Name = "labelJointName";
             this.labelJointName.Size = new System.Drawing.Size(41, 13);
             this.labelJointName.TabIndex = 28;
@@ -3259,9 +3273,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -3269,14 +3283,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle7;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -3285,9 +3299,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -3300,9 +3314,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle6;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -3383,6 +3397,18 @@ namespace DAEnerys
             this.colorDialog.Color = System.Drawing.Color.Gray;
             this.colorDialog.FullOpen = true;
             this.colorDialog.SolidColorOnly = true;
+            // 
+            // buttonJointRemoveAll
+            // 
+            this.buttonJointRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonJointRemoveAll.Enabled = false;
+            this.buttonJointRemoveAll.Location = new System.Drawing.Point(149, 447);
+            this.buttonJointRemoveAll.Name = "buttonJointRemoveAll";
+            this.buttonJointRemoveAll.Size = new System.Drawing.Size(92, 23);
+            this.buttonJointRemoveAll.TabIndex = 35;
+            this.buttonJointRemoveAll.Text = "Remove all";
+            this.buttonJointRemoveAll.UseVisualStyleBackColor = true;
+            this.buttonJointRemoveAll.Click += new System.EventHandler(this.buttonJointRemoveAll_Click);
             // 
             // Main
             // 
@@ -3523,7 +3549,6 @@ namespace DAEnerys
         private System.Windows.Forms.TabPage tabMaterials;
         private System.Windows.Forms.TabPage tabCollisionMeshes;
         private System.Windows.Forms.TabPage tabJoints;
-        private System.Windows.Forms.TreeView jointsTree;
         private System.Windows.Forms.TabPage tabMarkers;
         private System.Windows.Forms.TabPage tabDockpaths;
         private System.Windows.Forms.GroupBox groupDockpathFlags;
@@ -3740,6 +3765,9 @@ namespace DAEnerys
         private System.Windows.Forms.Button buttonMarkerRemove;
         private System.Windows.Forms.Button buttonMarkerAdd;
         private System.Windows.Forms.ListBox listMarkers;
+        private System.Windows.Forms.Button buttonJointAddTemplate;
+        public System.Windows.Forms.TreeView jointsTree;
+        private System.Windows.Forms.Button buttonJointRemoveAll;
     }
 }
 

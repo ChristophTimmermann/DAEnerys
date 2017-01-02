@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -356,6 +357,15 @@ namespace DAEnerys
                 if (needle == straw) return true;
             }
             return false;
+        }
+
+        public static HWMaterial GetByName(string name)
+        {
+            foreach (HWMaterial material in Materials)
+                if (material.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    return material;
+
+            return null;
         }
     }
 

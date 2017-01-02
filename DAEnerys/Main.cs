@@ -16,8 +16,10 @@ namespace DAEnerys
         public int BUILD = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Build;
         public string OpenedFile = "";
 
+        JointTemplateWindow jointTemplateWindow = new JointTemplateWindow();
+
         public bool Loaded = false;
-        HWJoint selectedJoint;
+        public HWJoint SelectedJoint;
         HWCollisionMesh selectedCollisionMesh;
         HWDockpath selectedDockpath;
         HWNavLight selectedNavLight;
@@ -25,18 +27,15 @@ namespace DAEnerys
         HWEngineGlow selectedEngineGlow;
         HWMaterial selectedMaterial;
         HWMarker selectedMarker;
-        public HWAnimation selectedAnimation;
+        public HWAnimation SelectedAnimation;
 
-        public Dictionary<object, HWShipMesh> ShipMeshListItems = new Dictionary<object, HWShipMesh>();
         private Label[] ShipMeshLODMaterialLabels = new Label[MAX_MATERIALS_ON_MESH];
         private ComboBox[] ShipMeshLODMaterialComboBoxes = new ComboBox[MAX_MATERIALS_ON_MESH];
         private HWShipMesh selectedShipMesh;
         private int selectedShipMeshLOD;
 
-        public Dictionary<object, HWEngineGlow> EngineGlowListItems = new Dictionary<object, HWEngineGlow>();
         private int selectedEngineGlowLOD;
 
-        public Dictionary<string, HWMaterial> MaterialNames = new Dictionary<string, HWMaterial>();
         public Dictionary<string, HWAnimation> AnimationNames = new Dictionary<string, HWAnimation>();
 
         public bool DrawNavLightRadius;
@@ -57,7 +56,7 @@ namespace DAEnerys
         private bool ignoreMarkerValuesChanged;
 
         private bool animationPlaying;
-        public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.Invalidate(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = selectedAnimation.StartTime; } }
+        public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.Invalidate(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = SelectedAnimation.StartTime; } }
 
         const int MAX_MATERIALS_ON_MESH = 64;
         const int MAX_LEVEL_OF_DETAIL = 3;
@@ -246,7 +245,6 @@ namespace DAEnerys
             comboShipMeshParent.Items.Clear();
             checkShipMeshDoScar.Checked = false;
             listShipMeshLODs.Items.Clear();
-            ShipMeshListItems.Clear();
             boxShipMeshName.Clear();
             boxShipMeshName.Enabled = false;
             selectedShipMesh = null;
@@ -262,7 +260,6 @@ namespace DAEnerys
 
             listEngineGlows.Items.Clear();
             comboEngineGlowParent.Items.Clear();
-            EngineGlowListItems.Clear();
             selectedEngineGlow = null;
 
             listCollisionMeshes.Items.Clear();
@@ -273,7 +270,6 @@ namespace DAEnerys
             comboEngineShapeParent.Items.Clear();
 
             listMaterials.Items.Clear();
-            MaterialNames.Clear();
             listMaterialTextures.Items.Clear();
             comboMaterialFormat.Items.Clear();
             boxMaterialName.Enabled = false;
@@ -326,7 +322,7 @@ namespace DAEnerys
             //Animations
             AnimationNames.Clear();
             listAnimations.Items.Clear();
-            selectedAnimation = null;
+            SelectedAnimation = null;
             AnimationPlaying = false;
             listAnimations_SelectedIndexChanged(this, EventArgs.Empty);
 
@@ -542,10 +538,11 @@ namespace DAEnerys
 
             comboJointParent.Items.Clear();
 
-            selectedJoint = null;
+            SelectedJoint = null;
 
             ignoreJointValuesChanged = true;
 
+            buttonJointRemoveAll.Enabled = false;
             buttonJointRemove.Enabled = false;
             boxJointName.Clear();
             boxJointName.Enabled = false;
@@ -570,48 +567,49 @@ namespace DAEnerys
             {
                 if (joint.TreeNode == e.Node)
                 {
-                    selectedJoint = joint;
+                    SelectedJoint = joint;
                     break;
                 }
             }
 
             ignoreJointValuesChanged = false;
 
-            if (selectedJoint == null)
+            if (SelectedJoint == null)
                 return;
 
             ignoreJointValuesChanged = true;
 
-            if (selectedJoint != HWJoint.Root)
+            if (SelectedJoint != HWJoint.Root)
             {
+                buttonJointRemoveAll.Enabled = true;
                 buttonJointRemove.Enabled = true;
                 boxJointName.Enabled = true;
                 comboJointParent.Enabled = true;
             }
 
-            boxJointName.Text = selectedJoint.Name;
+            boxJointName.Text = SelectedJoint.Name;
             
             foreach(HWJoint joint in HWJoint.Joints)
             {
                 comboJointParent.Items.Add(joint.Name);
             }
 
-            RemoveJointFromJointParentComboRecursive(selectedJoint);
+            RemoveJointFromJointParentComboRecursive(SelectedJoint);
 
-            if (selectedJoint.Parent != null)
+            if (SelectedJoint.Parent != null)
             {
-                HWJoint parentJoint = selectedJoint.Parent as HWJoint;
+                HWJoint parentJoint = SelectedJoint.Parent as HWJoint;
                 comboJointParent.SelectedItem = parentJoint.Name;
             }
 
             numericJointPositionX.Enabled = true;
-            numericJointPositionX.Value = (decimal)selectedJoint.LocalPosition.X;
+            numericJointPositionX.Value = (decimal)SelectedJoint.LocalPosition.X;
             numericJointPositionY.Enabled = true;
-            numericJointPositionY.Value = (decimal)selectedJoint.LocalPosition.Y;
+            numericJointPositionY.Value = (decimal)SelectedJoint.LocalPosition.Y;
             numericJointPositionZ.Enabled = true;
-            numericJointPositionZ.Value = (decimal)selectedJoint.LocalPosition.Z;
+            numericJointPositionZ.Value = (decimal)SelectedJoint.LocalPosition.Z;
 
-            Vector3 eulerAngles = selectedJoint.LocalRotation;
+            Vector3 eulerAngles = SelectedJoint.LocalRotation;
             numericJointRotationX.Enabled = true;
             numericJointRotationX.Value = (decimal)MathHelper.RadiansToDegrees(eulerAngles.X);
             numericJointRotationY.Enabled = true;
@@ -623,15 +621,22 @@ namespace DAEnerys
         }
         private void buttonJointRemove_Click(object sender, EventArgs e)
         {
-            if (selectedJoint == null)
+            if (SelectedJoint == null)
                 return;
 
-            selectedJoint.Destroy();
+            SelectedJoint.Destroy();
+        }
+        private void buttonJointRemoveAll_Click(object sender, EventArgs e)
+        {
+            if (SelectedJoint == null)
+                return;
+
+            SelectedJoint.Destroy(true);
         }
         private void buttonJointAdd_Click(object sender, EventArgs e)
         {
-            HWJoint parent = selectedJoint;
-            if (selectedJoint == null)
+            HWJoint parent = SelectedJoint;
+            if (SelectedJoint == null)
                 parent = HWJoint.Root;
 
             int indexOffset = 1;
@@ -649,20 +654,20 @@ namespace DAEnerys
         }
         private void boxJointName_Leave(object sender, EventArgs e)
         {
-            if (selectedJoint == null)
+            if (SelectedJoint == null)
                 return;
 
-            UpdateJointName(selectedJoint, boxJointName.Text);
+            UpdateJointName(SelectedJoint, boxJointName.Text);
         }
         private void boxJointName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
             if (e.KeyChar != (char)Keys.Return)
                 return;
 
-            if (selectedJoint == null)
+            if (SelectedJoint == null)
                 return;
 
-            UpdateJointName(selectedJoint, boxJointName.Text);
+            UpdateJointName(SelectedJoint, boxJointName.Text);
         }
         private void UpdateJointName(HWJoint joint, string newName)
         {
@@ -689,17 +694,17 @@ namespace DAEnerys
         }
         private void numericJointPosition_ValueChanged(object sender, EventArgs e)
         {
-            if (selectedJoint == null)
+            if (SelectedJoint == null)
                 return;
 
             if (ignoreJointValuesChanged)
                 return;
 
-            selectedJoint.LocalPosition = new Vector3((float)numericJointPositionX.Value, (float)numericJointPositionY.Value, (float)numericJointPositionZ.Value);
+            SelectedJoint.LocalPosition = new Vector3((float)numericJointPositionX.Value, (float)numericJointPositionY.Value, (float)numericJointPositionZ.Value);
         }
         private void numericJointRotation_ValueChanged(object sender, EventArgs e)
         {
-            if (selectedJoint == null)
+            if (SelectedJoint == null)
                 return;
 
             if (ignoreJointValuesChanged)
@@ -710,11 +715,11 @@ namespace DAEnerys
             float z = MathHelper.DegreesToRadians((float)numericJointRotationZ.Value);
             Vector3 eulerAngles = new Vector3(x, y, z);
 
-            selectedJoint.LocalRotation = eulerAngles;
+            SelectedJoint.LocalRotation = eulerAngles;
         }
         private void comboJointParent_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (selectedJoint == null)
+            if (SelectedJoint == null)
                 return;
 
             if (ignoreJointValuesChanged)
@@ -724,13 +729,13 @@ namespace DAEnerys
 
             HWJoint newParent = HWJoint.GetByName((string)comboJointParent.SelectedItem);
 
-            selectedJoint.Parent = newParent;
-            SetJointParent(selectedJoint, newParent);
+            SelectedJoint.Parent = newParent;
+            SetJointParent(SelectedJoint, newParent);
 
             ignoreJointSelection = false;
 
-            jointsTree.SelectedNode = selectedJoint.TreeNode;
-            selectedJoint.TreeNode.EnsureVisible();
+            jointsTree.SelectedNode = SelectedJoint.TreeNode;
+            SelectedJoint.TreeNode.EnsureVisible();
             jointsTree.Focus();
         }
         private bool IsJointDescendantOf(HWJoint joint, HWJoint parent)
@@ -797,6 +802,81 @@ namespace DAEnerys
                 draggedJoint.TreeNode.EnsureVisible();
                 jointsTree.Focus();
             }
+        }
+        private void buttonJointAddTemplate_Click(object sender, EventArgs e)
+        {
+            jointTemplateWindow.Show(this);
+        }
+        public bool AddJointTemplate(JointType type, string name, HWJoint parent)
+        {
+            List<HWJoint> addedJoints = new List<HWJoint>();
+            List<string> addedNames = new List<string>();
+
+            switch (type)
+            {
+                case JointType.WEAPON:
+                    addedNames.Add("Weapon_" + name + "_Position");
+                    addedNames.Add("Weapon_" + name + "_Direction");
+                    addedNames.Add("Weapon_" + name + "_Muzzle");
+                    addedNames.Add("Weapon_" + name + "_Rest");
+                    break;
+                case JointType.TURRET:
+                    addedNames.Add("Weapon_" + name + "_Position");
+                    addedNames.Add("Weapon_" + name + "_Direction");
+                    addedNames.Add("Weapon_" + name + "_Latitude");
+                    addedNames.Add("Weapon_" + name + "_Muzzle");
+                    addedNames.Add("Weapon_" + name + "_Rest");
+                    break;
+                case JointType.HARDPOINT:
+                    addedNames.Add("Hardpoint" + name + "_Position");
+                    addedNames.Add("Hardpoint" + name + "_Direction");
+                    addedNames.Add("Hardpoint" + name + "_Rest");
+                    break;
+                case JointType.CAPTUREPOINT: case JointType.REPAIRPOINT: case JointType.SALVAGEPOINT:
+                    addedNames.Add(name);
+                    addedNames.Add(name + "Heading");
+                    addedNames.Add(name + "Left");
+                    addedNames.Add(name + "Up");
+                    break;
+            }
+
+            foreach(string addedName in addedNames)
+                if (HWJoint.GetByName(addedName) != null)
+                    return false;
+
+            switch (type)
+            {
+                case JointType.WEAPON:
+                    addedJoints.Add(new HWJoint(addedNames[0], parent));
+                    addedJoints.Add(new HWJoint(addedNames[1], addedJoints[0], new Vector3(0, HWScene.JointOffset, 0)));
+                    addedJoints.Add(new HWJoint(addedNames[2], addedJoints[0], new Vector3(0, 0, HWScene.JointOffset / 2)));
+                    addedJoints.Add(new HWJoint(addedNames[3], addedJoints[0], new Vector3(0, 0, HWScene.JointOffset)));
+                    break;
+                case JointType.TURRET:
+                    addedJoints.Add(new HWJoint(addedNames[0], parent));
+                    addedJoints.Add(new HWJoint(addedNames[1], addedJoints[0], new Vector3(0, HWScene.JointOffset, 0))); //Direction
+                    addedJoints.Add(new HWJoint(addedNames[2], addedJoints[0], new Vector3(0, HWScene.JointOffset / 4, 0))); //Latitude
+                    addedJoints.Add(new HWJoint(addedNames[3], addedJoints[2], new Vector3(0, 0, HWScene.JointOffset / 2))); //Muzzle
+                    addedJoints.Add(new HWJoint(addedNames[4], addedJoints[0], new Vector3(0, 0, HWScene.JointOffset))); //Rest
+                    break;
+                case JointType.HARDPOINT:
+                    addedJoints.Add(new HWJoint(addedNames[0], parent));
+                    addedJoints.Add(new HWJoint(addedNames[1], addedJoints[0], new Vector3(0, HWScene.JointOffset, 0)));
+                    addedJoints.Add(new HWJoint(addedNames[2], addedJoints[0], new Vector3(0, 0, HWScene.JointOffset)));
+                    break;
+                case JointType.CAPTUREPOINT: case JointType.REPAIRPOINT: case JointType.SALVAGEPOINT:
+                    addedJoints.Add(new HWJoint(addedNames[0], parent));
+                    addedJoints.Add(new HWJoint(addedNames[1], addedJoints[0], new Vector3(0, 0, HWScene.JointOffset)));
+                    addedJoints.Add(new HWJoint(addedNames[2], addedJoints[0], new Vector3(HWScene.JointOffset, 0, 0)));
+                    addedJoints.Add(new HWJoint(addedNames[3], addedJoints[0], new Vector3(0, HWScene.JointOffset, 0)));
+                    break;
+            }
+
+            jointsTree.SelectedNode = addedJoints[0].TreeNode;
+            addedJoints[0].TreeNode.EnsureVisible();
+            jointsTree.Focus();
+
+            return true;
         }
 
         //--------------------------------- DOCKPATHS ---------------------------------//
@@ -1607,7 +1687,7 @@ namespace DAEnerys
 
             if (listShipMeshes.SelectedItem != null)
             {
-                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+                selectedShipMesh = HWShipMesh.GetByName((string)listShipMeshes.SelectedItem);
             }
             else
                 return;
@@ -1648,15 +1728,11 @@ namespace DAEnerys
         }
         public void AddShipMesh(HWShipMesh mesh)
         {
-            object item = mesh.Name;
-            listShipMeshes.Items.Add(item);
-            mesh.ListItem = item;
-            ShipMeshListItems.Add(item, mesh);
+            listShipMeshes.Items.Add(mesh.Name);
         }
         public void RemoveShipMesh(HWShipMesh mesh)
         {
-            listShipMeshes.Items.Remove(mesh.ListItem);
-            ShipMeshListItems.Remove(mesh.ListItem);
+            listShipMeshes.Items.Remove(mesh.Name);
         }
         private void listShipMeshLODs_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -1698,9 +1774,9 @@ namespace DAEnerys
                 return;
 
             //Ship mesh with this name already exists
-            if (ShipMeshListItems.ContainsKey(newName))
+            HWShipMesh existingShipMesh = HWShipMesh.GetByName(newName);
+            if (existingShipMesh != null)
             {
-                HWShipMesh existingShipMesh = ShipMeshListItems[newName];
                 if (existingShipMesh != shipMesh)
                 {
                     MessageBox.Show("A ship mesh with this name already exists.", "Error while changing ship mesh name", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1711,15 +1787,11 @@ namespace DAEnerys
             }
 
             ignoreShipMeshListSelectedIndexChanged = true;
-            int index = listShipMeshes.Items.IndexOf(selectedShipMesh.ListItem);
-            ShipMeshListItems.Remove(selectedShipMesh.ListItem);
-            listShipMeshes.Items.Remove(selectedShipMesh.ListItem);
+            int index = listShipMeshes.Items.IndexOf(selectedShipMesh.Name);
+            listShipMeshes.Items.Remove(selectedShipMesh.Name);
             selectedShipMesh.Name = boxShipMeshName.Text;
-            object item = selectedShipMesh.Name;
-            selectedShipMesh.ListItem = item;
-            listShipMeshes.Items.Insert(index, item);
-            ShipMeshListItems.Add(item, selectedShipMesh);
-            listShipMeshes.SelectedItem = item;
+            listShipMeshes.Items.Insert(index, selectedShipMesh.Name);
+            listShipMeshes.SelectedItem = selectedShipMesh.Name;
             ignoreShipMeshListSelectedIndexChanged = false;
         }
         private void comboShipMeshParent_SelectedIndexChanged(object sender, EventArgs e)
@@ -1739,7 +1811,7 @@ namespace DAEnerys
             HWShipMesh selectedShipMesh = null;
             if (listShipMeshes.SelectedItem != null)
             {
-                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+                selectedShipMesh = HWShipMesh.GetByName((string)listShipMeshes.SelectedItem);
             }
 
             if (selectedShipMesh == null)
@@ -1816,7 +1888,7 @@ namespace DAEnerys
             int selectedIndex = ShipMeshLODMaterialComboBoxes[materialIndex].SelectedIndex;
 
             if (selectedIndex != -1)
-                lodMeshes[materialIndex].Material = MaterialNames[(string)ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem];
+                lodMeshes[materialIndex].Material = HWMaterial.GetByName((string)ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem);
             else
                 ShipMeshLODMaterialComboBoxes[materialIndex].SelectedItem = lodMeshes[materialIndex].Material.Name;
         }
@@ -1824,7 +1896,7 @@ namespace DAEnerys
         {
             HWShipMesh selectedShipMesh = null;
             if (listShipMeshes.SelectedItem != null)
-                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+                selectedShipMesh = HWShipMesh.GetByName((string)listShipMeshes.SelectedItem);
 
             if (listShipMeshLODs.SelectedIndex < 0)
                 return;
@@ -1847,7 +1919,7 @@ namespace DAEnerys
         {
             HWShipMesh selectedShipMesh = null;
             if (listShipMeshes.SelectedItem != null)
-                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+                selectedShipMesh = HWShipMesh.GetByName((string)listShipMeshes.SelectedItem);
 
             if (listShipMeshLODs.SelectedIndex < 0)
                 return;
@@ -1906,7 +1978,7 @@ namespace DAEnerys
         {
             HWShipMesh selectedShipMesh = null;
             if (listShipMeshes.SelectedItem != null)
-                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+                selectedShipMesh = HWShipMesh.GetByName((string)listShipMeshes.SelectedItem);
 
             if (listShipMeshLODs.SelectedIndex < 0)
                 return;
@@ -1944,7 +2016,7 @@ namespace DAEnerys
         {
             HWShipMesh selectedShipMesh = null;
             if (listShipMeshes.SelectedItem != null)
-                selectedShipMesh = ShipMeshListItems[listShipMeshes.SelectedItem];
+                selectedShipMesh = HWShipMesh.GetByName((string)listShipMeshes.SelectedItem);
 
             if (listShipMeshLODs.SelectedIndex < 0)
                 return;
@@ -2024,7 +2096,7 @@ namespace DAEnerys
             tags.Add(ShipMeshTag.DoScar);
             HWShipMesh newShipMesh = new HWShipMesh(HWJoint.Root, newName, tags);
 
-            listShipMeshes.SelectedItem = newShipMesh.ListItem;
+            listShipMeshes.SelectedItem = newShipMesh.Name;
         }
         private void buttonShipMeshLODRemove_Click(object sender, EventArgs e)
         {
@@ -2104,7 +2176,7 @@ namespace DAEnerys
 
             if (listEngineGlows.SelectedItem != null)
             {
-                selectedEngineGlow = EngineGlowListItems[listEngineGlows.SelectedItem];
+                selectedEngineGlow = HWEngineGlow.GetByName((string)listEngineGlows.SelectedItem);
             }
 
             if (selectedEngineGlow != null)
@@ -2135,14 +2207,11 @@ namespace DAEnerys
         }
         public void AddEngineGlow(HWEngineGlow glow)
         {
-            object item = glow.Name;
-            listEngineGlows.Items.Add(item);
-            EngineGlowListItems.Add(item, glow);
+            listEngineGlows.Items.Add(glow.Name);
         }
         public void RemoveEngineGlow(HWEngineGlow glow)
         {
             listEngineGlows.Items.Remove(glow.Name);
-            EngineGlowListItems.Remove(glow.Name);
         }
         private void listEngineGlowLODs_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -2205,9 +2274,9 @@ namespace DAEnerys
                 return;
 
             //Engine glow with this name already exists
-            if (EngineGlowListItems.ContainsKey(newName))
+            HWEngineGlow existingEngineGlow = HWEngineGlow.GetByName(newName);
+            if (existingEngineGlow != null)
             {
-                HWEngineGlow existingEngineGlow = EngineGlowListItems[newName];
                 if (existingEngineGlow != glowMesh)
                 {
                     MessageBox.Show("An engine glow with this name already exists.", "Error while changing engine glow name", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2219,11 +2288,9 @@ namespace DAEnerys
 
             ignoreEngineGlowListSelectedIndexChanged = true;
             int index = listEngineGlows.Items.IndexOf(selectedEngineGlow.Name);
-            EngineGlowListItems.Remove(selectedEngineGlow.Name);
             listEngineGlows.Items.Remove(selectedEngineGlow.Name);
             selectedEngineGlow.Name = boxEngineGlowName.Text;
             listEngineGlows.Items.Insert(index, selectedEngineGlow.Name);
-            EngineGlowListItems.Add(selectedEngineGlow.Name, selectedEngineGlow);
             listEngineGlows.SelectedItem = selectedEngineGlow.Name;
             ignoreEngineGlowListSelectedIndexChanged = false;
         }
@@ -2256,9 +2323,8 @@ namespace DAEnerys
         }
         private void buttonEngineGlowLODExportDAE_Click(object sender, EventArgs e)
         {
-            HWEngineGlow selectedEngineGlow = null;
-            if (listEngineGlows.SelectedItem != null)
-                selectedEngineGlow = EngineGlowListItems[listEngineGlows.SelectedItem];
+            if (selectedEngineGlow == null)
+                return;
 
             if (listEngineGlowLODs.SelectedIndex < 0)
                 return;
@@ -2291,9 +2357,8 @@ namespace DAEnerys
         }
         private void buttonEngineGlowLODExportOBJ_Click(object sender, EventArgs e)
         {
-            HWEngineGlow selectedEngineGlow = null;
-            if (listEngineGlows.SelectedItem != null)
-                selectedEngineGlow = EngineGlowListItems[listEngineGlows.SelectedItem];
+            if (selectedEngineGlow == null)
+                return;
 
             if (listEngineGlowLODs.SelectedIndex < 0)
                 return;
@@ -2698,7 +2763,7 @@ namespace DAEnerys
             boxAnimationName.Clear();
             buttonAnimationPlay.Enabled = false;
             AnimationPlaying = false;
-            selectedAnimation = null;
+            SelectedAnimation = null;
 
             numericAnimationStartTime.Value = 0;
             numericAnimationEndTime.Value = 0;
@@ -2709,27 +2774,27 @@ namespace DAEnerys
                 return;
 
             if (AnimationNames.ContainsKey((string)listAnimations.SelectedItem))
-                selectedAnimation = AnimationNames[(string)listAnimations.SelectedItem];
+                SelectedAnimation = AnimationNames[(string)listAnimations.SelectedItem];
 
-            if (selectedAnimation == null)
+            if (SelectedAnimation == null)
                 return;
 
-            boxAnimationName.Text = selectedAnimation.Name;
+            boxAnimationName.Text = SelectedAnimation.Name;
             buttonAnimationPlay.Enabled = true;
 
-            numericAnimationStartTime.Value = (decimal)selectedAnimation.StartTime;
-            numericAnimationEndTime.Value = (decimal)selectedAnimation.EndTime;
-            numericAnimationLoopStartTime.Value = (decimal)selectedAnimation.LoopStartTime;
-            numericAnimationLoopEndTime.Value = (decimal)selectedAnimation.LoopEndTime;
+            numericAnimationStartTime.Value = (decimal)SelectedAnimation.StartTime;
+            numericAnimationEndTime.Value = (decimal)SelectedAnimation.EndTime;
+            numericAnimationLoopStartTime.Value = (decimal)SelectedAnimation.LoopStartTime;
+            numericAnimationLoopEndTime.Value = (decimal)SelectedAnimation.LoopEndTime;
 
-            foreach (HWJoint joint in selectedAnimation.AnimatedJoints)
+            foreach (HWJoint joint in SelectedAnimation.AnimatedJoints)
             {
                 listAnimationJoints.Items.Add(joint.Name);
             }
         }
         private void buttonAnimationPlay_Click(object sender, EventArgs e)
         {
-            if (selectedAnimation == null)
+            if (SelectedAnimation == null)
                 return;
 
             if (AnimationPlaying)
@@ -2755,7 +2820,7 @@ namespace DAEnerys
             if (listMaterials.SelectedItem == null)
                 return;
 
-            selectedMaterial = MaterialNames[(string)listMaterials.SelectedItem];
+            selectedMaterial = HWMaterial.GetByName((string)listMaterials.SelectedItem);
 
             //Set shader combo
             ignoreMaterialShaderChanged = true;
@@ -2787,14 +2852,11 @@ namespace DAEnerys
 
                 foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
                     comboBox.Items.Add(item);
-
-                MaterialNames.Add(material.Name, material);
             }
         }
         public void RemoveMaterial(HWMaterial material)
         {
             listMaterials.Items.Remove(material.Name);
-            MaterialNames.Remove(material.Name);
             foreach (ComboBox comboBox in ShipMeshLODMaterialComboBoxes)
                 comboBox.Items.Remove(material.Name);
         }
@@ -2850,9 +2912,9 @@ namespace DAEnerys
         private void UpdateMaterialName(HWMaterial material, string newName)
         {
             //Material with this name already exists
-            if (MaterialNames.ContainsKey(newName))
+            HWMaterial existingMaterial = HWMaterial.GetByName(newName);
+            if (existingMaterial != null)
             {
-                HWMaterial existingMaterial = MaterialNames[newName];
                 if (existingMaterial != material)
                 {
                     MessageBox.Show("A material with this name already exists.", "Error while changing material name", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2873,11 +2935,9 @@ namespace DAEnerys
                 comboMaterial.Items.Remove(selectedMaterial.Name);
 
             ignoreMaterialListSelectedIndexChanged = true;
-            MaterialNames.Remove(selectedMaterial.Name);
             listMaterials.Items.Remove(selectedMaterial.Name);
             selectedMaterial.Name = boxMaterialName.Text;
             listMaterials.Items.Insert(index, selectedMaterial.Name);
-            MaterialNames.Add(selectedMaterial.Name, selectedMaterial);
             listMaterials.SelectedItem = selectedMaterial.Name;
             ignoreMaterialListSelectedIndexChanged = false;
 

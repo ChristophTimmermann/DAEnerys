@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -38,7 +39,7 @@ namespace DAEnerys
         public static HWMarker GetByName(string name)
         {
             foreach (HWMarker marker in Markers)
-                if (marker.Name == name)
+                if (marker.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                     return marker;
 
             return null;

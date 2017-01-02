@@ -92,7 +92,7 @@ namespace DAEnerys
 
         public static void Update()
         {
-            AnimationTime = Math.Min(AnimationTime, Program.main.selectedAnimation.EndTime);
+            AnimationTime = Math.Min(AnimationTime, Program.main.SelectedAnimation.EndTime);
 
             foreach(HWJoint joint in HWJoint.Joints)
             {
@@ -106,7 +106,7 @@ namespace DAEnerys
 
             AnimationTime += (float)Program.ElapsedSeconds;
 
-            if (AnimationTime > Program.main.selectedAnimation.EndTime)
+            if (AnimationTime > Program.main.SelectedAnimation.EndTime)
             {
                 Program.main.AnimationPlaying = false;
                 foreach (HWJoint joint in HWJoint.Joints)

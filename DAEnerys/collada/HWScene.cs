@@ -9,6 +9,8 @@ namespace DAEnerys
         public static Vector3 Min = new Vector3(-10);
         public static Vector3 Max = new Vector3(10);
 
+        public static float JointOffset = 5;
+
         public static Dictionary<string, int> RenderTextures = new Dictionary<string, int>();
 
         public static void FindBiggestMesh()
@@ -52,6 +54,8 @@ namespace DAEnerys
 
             iconSize = farthest / 20 / HWJoint.Root.GlobalScale.X;
             iconSize = Math.Max(iconSize, 1);
+
+            JointOffset = farthest / 3;
 
             float farClip = farthest * 64;
             float nearClip = farthest / 32;

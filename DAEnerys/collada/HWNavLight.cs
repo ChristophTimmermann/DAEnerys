@@ -246,7 +246,7 @@ namespace DAEnerys
         public static HWNavLight GetByName(string name)
         {
             foreach (HWNavLight light in NavLights)
-                if (light.Name == name)
+                if (light.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                     return light;
 
             return null;

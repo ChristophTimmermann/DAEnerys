@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -32,6 +33,10 @@ namespace DAEnerys
         {
 
         }
+        public HWJoint(string name, HWJoint parent, Vector3 pos) : this(name, parent, pos, Vector3.Zero, Vector3.One)
+        {
+
+        }
         public HWJoint(string name, HWJoint parent, Vector3 pos, Vector3 rot, Vector3 scale) : base(name, parent, pos, rot, scale)
         {
             Joints.Add(this);
@@ -44,13 +49,28 @@ namespace DAEnerys
 
         public override void Destroy()
         {
+            Destroy(false);   
+        }
+        public void Destroy(bool withChildren)
+        {
             Program.main.RemoveJoint(this);
             Joints.Remove(this);
             EditorJoint.Destroy();
             EditorJoint = null;
 
+            if (withChildren)
+            {
+                Element[] children = Children.ToArray();
+                foreach (Element child in children)
+                {
+                    HWJoint childJoint = child as HWJoint;
+                    if (childJoint != null)
+                        childJoint.Destroy(true);
+                }
+            }
+
             HWMesh[] meshes = Meshes.ToArray();
-            foreach(HWMesh mesh in meshes)
+            foreach (HWMesh mesh in meshes)
             {
                 HWShipMeshLOD shipMeshLOD = mesh as HWShipMeshLOD;
                 HWEngineGlowLOD engineGlowLOD = mesh as HWEngineGlowLOD;
@@ -67,7 +87,7 @@ namespace DAEnerys
                 else
                     mesh.Parent = newParent;
             }
-            
+
             Meshes.Clear();
 
             base.Destroy();
@@ -76,7 +96,7 @@ namespace DAEnerys
         public static HWJoint GetByName(string name)
         {
             foreach(HWJoint joint in Joints)
-                if (joint.Name == name)
+                if (joint.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                     return joint;
 
             return null;
@@ -110,5 +130,16 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
+    }
+
+    public enum JointType
+    {
+        GENERIC,
+        WEAPON,
+        TURRET,
+        HARDPOINT,
+        CAPTUREPOINT,
+        REPAIRPOINT,
+        SALVAGEPOINT,
     }
 }
