@@ -917,8 +917,9 @@ namespace DAEnerys
             checkDockpathAjar.Checked = false;
 
             trackBarDockpathSegments.Enabled = true;
-            trackBarDockpathSegments.Value = 0;
+            trackBarDockpathSegments.Minimum = 0;
             trackBarDockpathSegments.Maximum = 1;
+            trackBarDockpathSegments.Value = 0;
             boxDockpathSegmentTolerance.Clear();
             boxDockpathSegmentSpeed.Clear();
             boxDockpathName.Clear();
@@ -1003,6 +1004,9 @@ namespace DAEnerys
                 line.StartColor = new Vector3(1, 0, 0);
                 line.EndColor = new Vector3(1, 0, 0);
             }
+
+            if (selectedDockpath.Segments.Count == 0)
+                return;
 
             HWDockSegment selectedSegment = selectedDockpath.Segments[trackBarDockpathSegments.Value];
 

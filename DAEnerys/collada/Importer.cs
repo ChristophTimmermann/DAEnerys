@@ -1516,9 +1516,21 @@ namespace DAEnerys
 
                         int lastSlash = channel.Target.LastIndexOf('/');
                         int lastDot = channel.Target.LastIndexOf('.');
-                        string jointTarget = channel.Target.Substring(0, lastSlash);
-                        string channelTarget = channel.Target.Substring(lastSlash + 1, lastDot - lastSlash - 1);
-                        string axisTarget = channel.Target.Substring(lastDot + 1);
+                        string jointTarget = "";
+                        string channelTarget = "";
+                        string axisTarget = "";
+
+                        jointTarget = channel.Target.Substring(0, lastSlash);
+
+                        if (lastDot != -1)
+                        {
+                            channelTarget = channel.Target.Substring(lastSlash + 1, lastDot - lastSlash - 1);
+                            axisTarget = channel.Target.Substring(lastDot + 1);
+                        }
+                        else //Matrix
+                        {
+                            channelTarget = channel.Target.Substring(lastSlash + 1);
+                        }
 
                         COLLADAJointAnimation jointAnimation = null;
 
@@ -1561,8 +1573,45 @@ namespace DAEnerys
                             case "rotateZ":
                                 jointAnimation.Rotation[2] = animation;
                                 break;
+                            case "matrix":
 
-                                //TODO: Scaling
+                                for (int i = 0; i < 3; i++)
+                                {
+                                    jointAnimation.Translation[i] = new COLLADAAnimation();
+                                    jointAnimation.Translation[i].Times = animation.Times;
+                                    jointAnimation.Translation[i].InTangents = animation.InTangents;
+                                    jointAnimation.Translation[i].OutTangents = animation.OutTangents;
+                                    jointAnimation.Translation[i].Interpolations = animation.Interpolations;
+
+                                    jointAnimation.Rotation[i] = new COLLADAAnimation();
+                                    jointAnimation.Rotation[i].Times = animation.Times;
+                                    jointAnimation.Rotation[i].InTangents = animation.InTangents;
+                                    jointAnimation.Rotation[i].OutTangents = animation.OutTangents;
+                                    jointAnimation.Rotation[i].Interpolations = animation.Interpolations;
+                                }
+
+                                List<Matrix4> matrices = new List<Matrix4>();
+                                for (int i = 0; i < animation.Values.Count; i += 4 * 4)
+                                {
+                                    if (animation.Values.Count - 1 < i + 15)
+                                        break;
+
+                                    Matrix4 matrix = new Matrix4(animation.Values[i], animation.Values[i + 1], animation.Values[i + 2], animation.Values[i + 3], animation.Values[i + 4], animation.Values[i + 5], animation.Values[i + 6], animation.Values[i + 7], animation.Values[i + 8], animation.Values[i + 9], animation.Values[i + 10], animation.Values[i + 11], animation.Values[i + 12], animation.Values[i + 13], animation.Values[i + 14], animation.Values[i + 15]);
+
+                                    Vector3 pos = matrix.ExtractTranslation();
+                                    jointAnimation.Translation[0].Values.Add(pos.X);
+                                    jointAnimation.Translation[1].Values.Add(pos.Y);
+                                    jointAnimation.Translation[2].Values.Add(pos.Z);
+
+                                    OpenTK.Quaternion rot = matrix.ExtractRotation();
+                                    Vector3 axis; float angle;
+                                    rot.ToAxisAngle(out axis, out angle);
+                                    axis *= angle;
+                                    jointAnimation.Rotation[0].Values.Add(axis.X);
+                                    jointAnimation.Rotation[1].Values.Add(axis.Y);
+                                    jointAnimation.Rotation[2].Values.Add(axis.Z);
+                                }
+                                break;
                         }
                     }
                 }
@@ -1641,6 +1690,9 @@ namespace DAEnerys
             {
                 string value = translateElement.Value;
                 string[] split = value.Trim().Split(' ');
+
+
+
                 float posX = float.Parse(split[0], NumberStyles.Float, CultureInfo.InvariantCulture);
                 float posY = float.Parse(split[1], NumberStyles.Float, CultureInfo.InvariantCulture);
                 float posZ = float.Parse(split[2], NumberStyles.Float, CultureInfo.InvariantCulture);
@@ -1700,6 +1752,27 @@ namespace DAEnerys
                 }
             }
             rot = new Vector3(x, y, z);
+
+            XElement matrixElement = nodeElement.Element(ns + "matrix");
+            if (matrixElement != null)
+            {
+                string value = matrixElement.Value;
+                string[] split = value.Trim().Split(' ');
+                float[] values = new float[split.Length];
+                for(int i = 0; i < split.Length; i++)
+                    values[i] = float.Parse(split[i], NumberStyles.Float, CultureInfo.InvariantCulture);
+
+                Matrix4 matrix = new Matrix4(values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8], values[9], values[10], values[11], values[12], values[13], values[14], values[15]);
+
+                pos = matrix.ExtractTranslation();
+
+                OpenTK.Quaternion quat = matrix.ExtractRotation();
+                Vector3 axis;
+                float angle;
+                quat.ToAxisAngle(out axis, out angle);
+                axis *= angle;
+                rot = axis;
+            }
 
             XElement scaleElement = nodeElement.Element(ns + "scale");
             if (scaleElement != null)
