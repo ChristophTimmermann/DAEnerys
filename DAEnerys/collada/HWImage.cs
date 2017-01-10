@@ -44,9 +44,7 @@ namespace DAEnerys
 
         public static HWImage Parse(string name, string path)
         {
-            string absolutePath = System.IO.Path.Combine(Importer.ColladaPath, path.Replace("file://", ""));
-
-            if (File.Exists(absolutePath))
+            if (File.Exists(path))
             {
                 if (name.StartsWith("IMG[")) //If texture is a valid homeworld texture
                 {

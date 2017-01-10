@@ -1170,7 +1170,14 @@ namespace DAEnerys
                 if (!newMaterial.Name.StartsWith("MAT["))
                     newMaterial.Valid = false;
 
-                newMaterial.DiffusePath = material.TextureDiffuse.FilePath;
+                string otherPath = string.Empty;
+                if(material.TextureDiffuse.FilePath != null)
+                    otherPath = material.TextureDiffuse.FilePath;
+                otherPath = otherPath.Replace("file://", "");
+                otherPath = otherPath.TrimStart(new char[] { '\\', '/' });
+                string absolutePath = System.IO.Path.Combine(Importer.ColladaPath, otherPath);
+                absolutePath = System.IO.Path.GetFullPath(absolutePath);
+                newMaterial.DiffusePath = absolutePath;
 
                 newMaterial.Parse();
             }
@@ -1291,6 +1298,13 @@ namespace DAEnerys
                                 {
                                     reader.MoveToElement();
                                     path = reader.ReadElementContentAsString();
+
+                                    string otherPath = path.Replace("file://", "");
+                                    otherPath = otherPath.TrimStart(new char[] { '\\', '/' });
+                                    string absolutePath = System.IO.Path.Combine(Importer.ColladaPath, otherPath);
+                                    absolutePath = System.IO.Path.GetFullPath(absolutePath);
+                                    path = absolutePath;
+
                                     break;
                                 }
                             }
@@ -1876,7 +1890,7 @@ namespace DAEnerys
             foreach (XElement element in doc.Descendants())
             {
                 if (element.Name == ns + "color")
-                    element.SetValue(element.Value + "1.0");
+                    element.SetValue(element.Value + " 1.0");
             }
 
             File.WriteAllText("colladaBlenderFix.dae", doc.ToString());
