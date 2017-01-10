@@ -6,7 +6,8 @@
     }
     class SurfaceGlow
     {
-        public float Power = 1f, Fren = 0.25f;
+        //public float Power = 1f, Fren = 0.25f;
+        public float Power = 2f, Fren = 0.25f;
     }
     class SurfaceSpec
     {
