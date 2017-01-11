@@ -147,7 +147,7 @@ namespace DAEnerys
 
             foreach (HWImage image in HWImage.Images)
             {
-                if (image.Path.Replace("file://", "") == DiffusePath)
+                if (image.Path == DiffusePath)
                 {
                     Format = image.Format;
                     Images.Add(image);

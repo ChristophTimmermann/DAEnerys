@@ -57,7 +57,7 @@ namespace DAEnerys
 
             foreach (Vector3 vertex in Vertices)
             {
-                Vector3 computedVertex = (GlobalWorldMatrix * Matrix4.CreateTranslation(vertex)).ExtractTranslation();
+                Vector3 computedVertex = Vector3.TransformPosition(vertex, GlobalWorldMatrix);
                 //Vector3 computedVertex = Vector3.Add(vertex, Parent.AbsolutePosition);
                 min.X = Math.Min(min.X, computedVertex.X);
                 min.Y = Math.Min(min.Y, computedVertex.Y);
