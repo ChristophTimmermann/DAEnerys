@@ -766,6 +766,8 @@ namespace DAEnerys
             AddNode(rootInfo, "UVSets[" + uvSets + "]");
             #endregion
 
+            float rootPositionOffset = Math.Max(100f, HWScene.Max.X * 3f);
+
             #region ROOT_LOD[X]
             for (int lod = 0; lod < lodRootElements.Length; lod++)
             {
@@ -783,7 +785,7 @@ namespace DAEnerys
                 if (lodExists || lod == 0)
                 {
                     //Offset the LOD roots so they are clean when importing with 3d software
-                    Vector3 pos = new Vector3(100 * lod, 0, 0);
+                    Vector3 pos = new Vector3(rootPositionOffset * lod, 0, 0);
                     lodRootElements[lod] = AddNode(visualScene, "ROOT_LOD[" + lod + "]", pos, Vector3.Zero, Vector3.One);
                 }
             }
@@ -890,7 +892,7 @@ namespace DAEnerys
             if (HWCollisionMesh.CollisionMeshes.Count > 0)
             {
                 //Offset the COL root so it's clean when importing with 3d software
-                Vector3 pos = new Vector3(-100, 0, 0);
+                Vector3 pos = new Vector3(-rootPositionOffset, 0, 0);
 
                 XElement rootCol = AddNode(visualScene, "ROOT_COL", pos, Vector3.Zero, Vector3.One);
                 foreach (HWCollisionMesh collisionMesh in HWCollisionMesh.CollisionMeshes)
