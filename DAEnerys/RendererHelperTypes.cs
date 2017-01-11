@@ -19,7 +19,8 @@
     }
     class SurfaceRefl
     {
-        public float Power = 0.15f, Fren = 0.35f, AddMix = 0.65f;
+        //public float Power = 0.15f, Fren = 0.35f, AddMix = 0.65f;
+        public float Power = 0.30f, Fren = 0.35f, AddMix = 0.65f;
     }
     class SurfaceFren
     {

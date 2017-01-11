@@ -158,6 +158,8 @@ namespace DAEnerys
             if (Program.OPEN_PATH != null)
                 if (File.Exists(Program.OPEN_PATH))
                 {
+                    Log.WriteLine("Opening file \"" + Program.OPEN_PATH + "\" from arguments...");
+
                     Importer.ImportFromFile(Program.OPEN_PATH);
                     this.Text = Program.OPEN_PATH + " - DAEnerys";
                     OpenedFile = Path.GetFileNameWithoutExtension(Program.OPEN_PATH);
@@ -3139,6 +3141,33 @@ namespace DAEnerys
         private void buttonCheckForUpdates_Click(object sender, EventArgs e)
         {
             Updater.CheckForUpdatesManually();
+        }
+
+        private void Main_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void Main_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            DialogResult result = MessageBox.Show("Are you sure that you want to open this file?\nAll unsaved changes will be lost forever.", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+
+            if (result == DialogResult.No)
+                return;
+
+            Clear();
+            Importer.ImportFromFile(files[0]);
+            this.Text = files[0] + " - DAEnerys";
+            OpenedFile = Path.GetFileNameWithoutExtension(files[0]);
+
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
     }
 }
