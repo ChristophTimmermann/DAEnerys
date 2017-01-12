@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using NewShaderManifest;
+using HWShaderManifest;
 
 namespace DAEnerys
 {
@@ -55,7 +55,7 @@ namespace DAEnerys
             numSpecPower.Value = (decimal)Renderer.SurfaceSpec.Power;
 
             cbxConfigOptions.Items.Clear();
-            foreach (string opt in ManifestConfig.Options.Keys)
+            foreach (string opt in ManifestConfig.GetOptions())
                 cbxConfigOptions.Items.Add(opt);
         }
 
@@ -167,20 +167,20 @@ namespace DAEnerys
             if ((string)cbxConfigOptions.SelectedItem == "CFG_Patch_AltHyper")
                 numConfigOption.Maximum = 1;
             else
-                numConfigOption.Maximum = ManifestConfig.Options[(string)cbxConfigOptions.SelectedItem].MaxValue;
-            numConfigOption.Value = ManifestConfig.Options[(string)cbxConfigOptions.SelectedItem].Value;
+                numConfigOption.Maximum = ManifestConfig.GetMaxValue((string)cbxConfigOptions.SelectedItem);
+            numConfigOption.Value = ManifestConfig.GetValue((string)cbxConfigOptions.SelectedItem);
             ignore = false;
         }
 
         private void numConfigOption_ValueChanged(object sender, EventArgs e)
         {
             if (!ignore)
-                ManifestConfig.Options[(string)cbxConfigOptions.SelectedItem].Value = (int)numConfigOption.Value;
+                ManifestConfig.SetValue((string)cbxConfigOptions.SelectedItem, (int)numConfigOption.Value);
         }
 
         private void btnReloadShaders_Click(object sender, EventArgs e)
         {
-            Manifest.ReloadManifest();
+            ShaderManifest.Reload();
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }

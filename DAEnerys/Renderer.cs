@@ -6,7 +6,7 @@ using System.Linq;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using NewShaderManifest;
+using HWShaderManifest;
 
 namespace DAEnerys
 {
@@ -70,11 +70,11 @@ namespace DAEnerys
         {
             get
             {
-                return ManifestConfig.Options["HACK_SpecialSauce"].Value == 1;
+                return ManifestConfig.GetValue("HACK_SpecialSauce") == 1;
             }
             set
             {
-                ManifestConfig.Options["HACK_SpecialSauce"].Value = value ? 1 : 0;
+                ManifestConfig.SetValue("HACK_SpecialSauce", value ? 1 : 0);
             }
         }
 
@@ -82,11 +82,11 @@ namespace DAEnerys
         {
             get
             {
-                return ManifestConfig.Options["HACK_AllIFeelIsPain"].Value == 1;
+                return ManifestConfig.GetValue("HACK_AllIFeelIsPain") == 1;
             }
             set
             {
-                ManifestConfig.Options["HACK_AllIFeelIsPain"].Value = value ? 1 : 0;
+                ManifestConfig.SetValue("HACK_AllIFeelIsPain", value ? 1 : 0);
             }
         }
 
@@ -94,11 +94,11 @@ namespace DAEnerys
         {
             get
             {
-                return ManifestConfig.Options["CFG_Patch_AltHyper"].Value == 1;
+                return ManifestConfig.GetValue("CFG_Patch_AltHyper") == 1;
             }
             set
             {
-                ManifestConfig.Options["CFG_Patch_AltHyper"].Value = value ? 1 : 0;
+                ManifestConfig.SetValue("CFG_Patch_AltHyper", value ? 1 : 0);
             }
         }
 
@@ -202,7 +202,8 @@ namespace DAEnerys
             GL.GenBuffers(1, out mesh_ind_buffer);
 
             // Load shaders from file
-            Manifest.Init(HWData.DataPaths);
+            ShaderManifest.DataPaths.AddRange(HWData.DataPaths);
+            ShaderManifest.Init();
             editor_shader = new Shader("editor.vs", "editor.fs", true);
 
             //AmbientLight.Enabled = false;
@@ -237,7 +238,7 @@ namespace DAEnerys
         public static void ReloadShaders()
         {
             editor_shader.Reload();
-            Manifest.ReloadManifest();
+            ShaderManifest.Reload();
         }
 
         private static void BindBufferData(int buffer, Vector2[] data, bool normalized)
@@ -405,8 +406,6 @@ namespace DAEnerys
 
             int indiceat = 0;
 
-            UpdateManifestGlobals();
-
             foreach (HWMesh mesh in HWMesh.Meshes)
                 if (!mesh.Translucent)
                     indiceat += DrawHWMesh(mesh, indiceat);
@@ -454,43 +453,49 @@ namespace DAEnerys
             Program.GLControl.SwapBuffers();
         }
 
-        private static void UpdateManifestGlobals()
+        private static void UpdateSurface(Surface surface, HWMesh mesh)
         {
-            Manifest.Globals["timeTable"] = new float[] { Exec, ExecDelta, Sim, SimDelta };
-            Manifest.Globals["bgAddLight"] = new float[] { 0f, 0f, 0f, 0f };
-            Manifest.Globals["bgEnvParams"] = new float[] { 1f, 0f, 0f, 0f }; // Env Scale, unused x 3
-            Manifest.Globals["bgBackExps"] = new float[] { 1f, 1f, 1f, 1f };
-            Manifest.Globals["bgShipExps"] = new float[] { 1f, 1f, 1f, 1f };
+            string shader = mesh.Material.Shader;
+            if (shader == "default")
+                shader = "matte";
 
-            Manifest.Globals["sobParams"] = new float[] { SOBAlpha, SOBCloak, SOBClip, 0f };    // Alpha, Cloak, Clip, unused
-            Manifest.Globals["lifeParams"] = new float[] { LifeAlpha, DeathRatio, 0f, 0f };     // Life Alpha, Death Ratio, unused x2
+            surface.SetUniform("inTime", new float[] { Exec, ExecDelta, Sim, SimDelta });
 
-            Manifest.Globals["fogColor"] = new float[] { FogColor.R / 255f, FogColor.G / 255f, FogColor.B / 255f, FogColor.A / 255f };
-            Manifest.Globals["fogWindow"] = new float[] { 0f, 0f, 10000f, 1f }; // Near, Min, Far, Max
+            surface.SetUniform("inBGAddLight", new float[] { 0f, 0f, 0f, 0f });
+            surface.SetUniform("inBGEnvParams", new float[] { 1f, 0f, 0f, 0f }); // Env Scale, unused x 3
+            surface.SetUniform("inShipExps", new float[] { 1f, 1f, 1f, 1f }); // br, bR, Br, BR
+            surface.SetUniform("inBackExps", new float[] { 1f, 1f, 1f, 1f }); // br, bR, Br, BR
 
-            Manifest.Globals["shadowTrans"] = new float[] {
+            surface.SetUniform("inSOBParams", new float[] { SOBAlpha, SOBCloak, SOBClip, 0f });    // Alpha, Cloak, Clip, unused
+            surface.SetUniform("inLifeParams", new float[] { LifeAlpha, DeathRatio, 0f, 0f });     // Life Alpha, Death Ratio, unused x2
+            surface.SetUniform("inFogColor", FogColor);
+            surface.SetUniform("inFogWindow", new float[] { 0f, 0f, 10000f, 1f }); // Near, Min, Far, Max
+
+            surface.SetUniform("inShadowTrans", new float[] {
                 0f, 0f, 0f, 0f, // keylight Trans
                 0f, 0f, 0f, 0f, // keylight Scale
                 0f, 0f, 0f, 0f, // filllight Trans
                 0f, 0f, 0f, 0f // filllight Scale
-            };
+            });
 
-            Manifest.Globals["scarInfo"] = new float[] { 0, 0, 0, 0 };   // SOB_USECLIP
+            //Manifest.Globals["scarInfo"] = new float[] { 0, 0, 0, 0 };   // SOB_USECLIP
 
             float[] shiplights;
             int shiplight_count = GetShipLights(out shiplights);
-            Manifest.Globals["lightCounts"] = new int[] { shiplight_count, 7 };
-            Manifest.Globals["lightShip"] = shiplights;
-            Manifest.Globals["lightCore"] = GetCoreLights();
+            float[] corelights = GetCoreLights();
+            surface.SetUniform("inLightCounts", new int[] { shiplight_count, 7 });
+            surface.SetUniform("inLightShip", shiplights);
+            surface.SetUniform("inLightCore", corelights);
 
-            Manifest.Globals["fxInfo"] = new float[] {
+            float[] fxInfo = new float[] {
                 0f, 0f, 0f, 0f, // R, G, B, A
                 0f, 0f, 0f, 0f, // Alpha/Add, Scale, 0, 0
             };
+            surface.SetUniform("inFXInfo", fxInfo);
 
-            Manifest.Globals["clipPlane"] = new float[] { 0, 0, -1, ClipDistance };   // SOB_USECLIP
+            //Manifest.Globals["clipPlane"] = new float[] { 0, 0, -1, ClipDistance };   // SOB_USECLIP
 
-            Manifest.Globals["gammaScale"] = new float[] { 0.8625f, 0.8625f, 0.8625f, 0.95f };
+            surface.SetUniform("inGammaScale", new float[] { 0.8625f, 0.8625f, 0.8625f, 0.95f });
 
             //Not manifest globals, but still the same across all surfaces.
             Matrix4 camera = Program.Camera.GetViewMatrix();
@@ -500,29 +505,125 @@ namespace DAEnerys
             else
                 projection = Matrix4.CreateOrthographic((float)(Program.GLControl.Width / Program.Camera.OrthographicSize), (float)(Program.GLControl.Height / Program.Camera.OrthographicSize), Program.Camera.NearClipDistance, Program.Camera.ClipDistance);
 
-            Manifest.Globals["camera"] = camera;
-            Manifest.Globals["projection"] = projection;
-        }
+            surface.SetUniform("camera", camera);
+            surface.SetUniform("projection", projection);
 
-        private static void AttachTexture(Surface surface, string name, HWTexture tex)
-        {
-            if (tex != null)
-                surface.AssignTexture(name, tex.Path, tex.ID);
+
+            // ##### Surface uniforms #####
+
+            surface.SetUniform("modelview", mesh.GlobalWorldMatrix);
+
+
+            if (ManifestConfig.GetValue("CFG_Shadow_Quality") >= 1)
+            {
+                Matrix4 mat_keylight = Matrix4.Identity;
+                surface.SetUniform("inMatKL", mat_keylight);
+
+                if (ManifestConfig.GetValue("CFG_Shadow_Quality") >= 3)
+                {
+                    Matrix4 mat_altlight = Matrix4.Identity;
+                    surface.SetUniform("inMatFL", mat_altlight);
+                }
+            }
+
+            if (SOB_BADGE(shader))
+            {
+                surface.BindTexture("inTexBadge", BadgeTexture.ID);
+            }
+
+            if (SOB_THRUSTERS(shader))
+            {
+                surface.BindTexture("inTexDiffOn", mesh.Material.DiffuseTexture.ID);
+                surface.BindTexture("inTexGlowOn", mesh.Material.GlowTexture.ID);
+                surface.BindTexture("inTexDiffOff", mesh.Material.DiffuseOffTexture.ID);
+                surface.BindTexture("inTexGlowOff", mesh.Material.GlowOffTexture.ID);
+                surface.SetUniform("inColEngine", new float[] { ThrusterInterpolation, 0, 0, 0 });
+            }
             else
-                surface.AssignTexture(name, "", 0);
-        }
+            {
+                if (shader != "fx_eng_glowbasic")
+                {
+                    surface.BindTexture("SOB_diffuse", mesh.Material.DiffuseTexture.ID);
+                    surface.BindTexture("SOB_glow", mesh.Material.GlowTexture.ID);
+                    if (SOB_GLOWRGB(shader))
+                        surface.BindTexture("inTexSpec", mesh.Material.SpecularTexture.ID);
+                }
+            }
 
-        private static void AttachTexture3D(Surface surface, string name, HWTextureCube tex)
-        {
-            if (tex != null)
-                surface.AssignTexture3D(name, tex.Path, tex.ID);
+            if (SOB_RESOURCE(shader))
+            {
+                surface.BindTexture("inTexProgress", mesh.Material.ProgressTexture.ID);
+                surface.SetUniform("inFadeInfo", new float[] { Progress, 0f });
+                surface.SetUniform("inFadeWindow", new float[] { 0.2f, 0.0f, 1.0f }); // Blend range, low progress, high progress
+                surface.SetUniform("inGlowStyle", new float[] { 1f, 0f, 0f, 0f }); // Fade Delta, Fade Burn, unused x2
+
+                if (SOB_DUALINPUT(shader)) // SOB_DUALINPUT
+                {
+                    // Grid - Scale UV for 0, Offset UV for 1
+                    surface.SetUniform("inGridDiff", new float[] { 0.5f, 1f, 0.5f, 0f });
+                    surface.SetUniform("inGridGlow", new float[] { 0.5f, 1f, 0.5f, 0f });
+                    surface.SetUniform("inGridSpec", new float[] { 0.5f, 1f, 0.5f, 0f });
+                    surface.SetUniform("inGridNorm", new float[] { 0.5f, 1f, 0.5f, 0f });
+
+                    surface.SetUniform("inMulDiff0", new float[] { 1f, 1f, 1f, 1f });
+                    surface.SetUniform("inMulDiff1", new float[] { 1f, 1f, 1f, 1f });
+                    surface.SetUniform("inMulGlow0", new float[] { 1f, 1f, 1f, 1f });
+                    surface.SetUniform("inMulGlow1", new float[] { 1f, 1f, 1f, 1f });
+                    surface.SetUniform("inMulSpec0", new float[] { 1f, 1f, 1f, 1f });
+                    surface.SetUniform("inMulSpec1", new float[] { 1f, 1f, 1f, 1f });
+                }
+
+                if (SOB_DEBRIS(shader))
+                {
+                    //uniform vec4 inFXInfo[2];
+                }
+            }
+
+            if (SOB_TEAMTEX(shader))
+            {
+                surface.BindTexture("inTexTeam", mesh.Material.TeamTexture.ID);
+            }
+
+            if (shader != "fx_eng_glowbasic")
+                surface.BindTexture("inTexNorm", mesh.Material.NormalTexture.ID);
+
+            if (!SOB_BAYLIGHT(shader))
+            {
+                surface.BindTexture("inTexEnv0", BackgroundTexture.ID);
+                surface.BindTexture("inTexEnv1", BackgroundTexture.ID);
+            }
+
+            if (SOB_TEAM(shader))
+            {
+                surface.SetUniform("inColTeam", TeamColor);
+                surface.SetUniform("inColStripe", StripeColor);
+            }
+
+            if (SOB_GLOWCOL(shader)) //For engine glows
+            {
+                surface.SetUniform("inColGlow", EngineGlowColor);
+            }
+
+            if (!SOB_DEBRIS(shader))
+                surface.SetUniform("inColEffect", new float[] { 0.5f, 0.5f, 0.5f, 0f });
+
+            surface.SetUniform("inSurfDiff", new float[] { 0f, SurfaceDiff.Fren, 0f, 0f });
+            surface.SetUniform("inSurfGlow", new float[] { SurfaceGlow.Power, SurfaceGlow.Fren, 0f, 0f });
+            surface.SetUniform("inSurfSpec", new float[] { SurfaceSpec.Power, SurfaceSpec.Fren, 0f, 0f });
+            surface.SetUniform("inSurfPaint", new float[] { SurfacePaint.Curve, SurfacePaint.Scale, SurfacePaint.Bias, SurfacePaint.Dim });
+            surface.SetUniform("inSurfGloss", new float[] { SurfaceGloss.Curve, SurfaceGloss.Scale, SurfaceGloss.Bias, 0f });
+            surface.SetUniform("inSurfRefl", new float[] { SurfaceRefl.Power, SurfaceRefl.Fren, SurfaceRefl.AddMix, 0f });
+            surface.SetUniform("inSurfFren", new float[] { SurfaceFren.Power, SurfaceFren.Bias, SurfaceFren.Curve, 0f });
+            surface.SetUniform("inSurfPeak", new float[] { SurfacePeak.Base, SurfacePeak.Paint, SurfacePeak.Fren, SurfacePeak.Scar });
+
+
+            if (HACK_AllIFeelIsPain)
+                surface.SetUniform("inPaintStyle", new float[] { 1.0f, 12.0f, 5.0f, 0f });
             else
-                surface.AssignTexture3D(name, "", 0);
-        }
+                surface.SetUniform("inPaintStyle", new float[] { PaintStyleCurve, PaintStyleScale, PaintStyleOffset, 0f });
 
-        private static void AttachTexture(Surface surface, string name, string path, int id)
-        {
-            surface.AssignTexture(name, path, id);
+            if (SOB_BAYLIGHT(shader))
+                surface.SetUniform("inBayExps", new float[] { 1f, 0.99f, 0.95f, 0.94f });
         }
 
         private static int DrawHWMesh(HWMesh mesh, int index)
@@ -537,128 +638,20 @@ namespace DAEnerys
                 if (shader == "default")
                     shader = "matte";
 
-                Surface surface = Manifest.UseSurface(shader.ToLower());
-                surface.Use();
-                
+                Surface surface = ShaderManifest.GetSurface(shader.ToLower());
+
                 //load vertex buffers
-                surface.LinkAttrib(mesh_pos_buffer, "inPos", 3, false);
-                surface.LinkAttrib(mesh_nrm_buffer, "inNorm", 3, false);
-                surface.LinkAttrib(mesh_tan_buffer, "inTan", 3, false);
-                surface.LinkAttrib(mesh_bin_buffer, "inBiNorm", 3, false);
-                surface.LinkAttrib(mesh_uv0_buffer, "inUV0", 2, false);
-                surface.LinkAttrib(mesh_uv1_buffer, "inUV1", 2, false);
+                surface.LinkAttrib("inPos", mesh_pos_buffer, 3, false);
+                surface.LinkAttrib("inNorm", mesh_nrm_buffer, 3, false);
+                surface.LinkAttrib("inTan", mesh_tan_buffer, 3, false);
+                surface.LinkAttrib("inBiNorm", mesh_bin_buffer, 3, false);
+                surface.LinkAttrib("inUV0", mesh_uv0_buffer, 2, false);
+                surface.LinkAttrib("inUV1", mesh_uv1_buffer, 2, false);
                 //surface.LinkAttrib(mesh_uv2_buffer, "inUV2", 2, false);
 
-                surface["modelview"] = mesh.GlobalWorldMatrix;
-
-                Matrix4 mat_keylight = Matrix4.Identity;
-                Matrix4 mat_altlight = Matrix4.Identity;
-                
-                if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 1)
-                {
-                    surface["keylight"] = mat_keylight;
-                    AttachTexture(surface, "inTexShadow", null);
-                }
-
-                if (ManifestConfig.Options["CFG_Shadow_Quality"].Value >= 3)
-                    surface["altlight"] = mat_altlight;
-
-                if (SOB_BADGE(shader))
-                {
-                    AttachTexture(surface, "SOB_badge", BadgeTexture);
-                }
-                
-                if (SOB_THRUSTERS(shader))
-                {
-                    AttachTexture(surface, "SOB_diffuseOn", mesh.Material.DiffuseTexture);
-                    AttachTexture(surface, "SOB_glowOn", mesh.Material.GlowTexture);
-                    AttachTexture(surface, "SOB_diffuseOff", mesh.Material.DiffuseOffTexture);
-                    AttachTexture(surface, "SOB_glowOff", mesh.Material.GlowOffTexture);
-                    surface["SOB_engine"] = new float[] { ThrusterInterpolation, 0, 0, 0 };
-                }
-                else
-                {
-                    AttachTexture(surface, "SOB_diffuse", mesh.Material.DiffuseTexture);
-                    AttachTexture(surface, "SOB_glow", mesh.Material.GlowTexture);
-                    if (SOB_GLOWRGB(shader))
-                        AttachTexture(surface, "SOB_spec", mesh.Material.SpecularTexture);
-                }
-
-                if (SOB_RESOURCE(shader))
-                {
-                    AttachTexture(surface, "SOB_progress", mesh.Material.ProgressTexture);
-                    //surface["SOB_fadeInfo"] = new float[] { 1f, 1f };
-                    surface["SOB_fadeInfo"] = new float[] { Progress, Progress };
-                    surface["SOB_fadeWindow"] = new float[] { 0.2f, 0.0f, 1.0f };
-                    surface["SOB_glowStyle"] = new float[] { 1f, 0f, 0f, 0f }; // Fade Delta Mult Glow, Fade Burn Glow?
-
-                    if (SOB_DUALINPUT(shader)) // SOB_DUALINPUT
-                    {
-                        // Grid - Scale UV for 0, Offset UV for 1
-                        surface["SOB_gridDiff"] = new float[] { 0.5f, 1f, 0.5f, 0f };
-                        surface["SOB_gridGlow"] = new float[] { 0.5f, 1f, 0.5f, 0f };
-                        surface["SOB_gridSpec"] = new float[] { 0.5f, 1f, 0.5f, 0f };
-                        surface["SOB_gridNorm"] = new float[] { 0.5f, 1f, 0.5f, 0f };
-
-                        //surface["SOB_mulDiff0"] = new float[] { 1f, 1f, 1f, 1f };
-                        //surface["SOB_mulDiff1"] = new float[] { 1f, 1f, 1f, 1f };
-                        //surface["SOB_mulGlow0"] = new float[] { 1f, 1f, 1f, 1f };
-                        //surface["SOB_mulGlow1"] = new float[] { 1f, 1f, 1f, 1f };
-                        //surface["SOB_mulSpec0"] = new float[] { 1f, 1f, 1f, 1f };
-                        //surface["SOB_mulSpec1"] = new float[] { 1f, 1f, 1f, 1f };
-                    }
-
-                    if (SOB_DEBRIS(shader))
-                    {
-                        //uniform vec4 inFXInfo[2];
-                    }
-                }
-
-                if (SOB_TEAMTEX(shader))
-                {
-                    AttachTexture(surface, "SOB_team", mesh.Material.TeamTexture);
-                }
-                
-                AttachTexture(surface, "SOB_normal", mesh.Material.NormalTexture);
-                
-                if (!SOB_BAYLIGHT(shader))
-                {
-                    AttachTexture3D(surface, "inTexEnv0", BackgroundTexture);
-                    AttachTexture3D(surface, "inTexEnv1", BackgroundTexture);
-                }
-
-                if (SOB_TEAM(shader))
-                {
-                    surface["SOB_teamCol"] = new float[] { TeamColor.R / 255f, TeamColor.G / 255f, TeamColor.B / 255f, TeamColor.A / 255f };
-                    surface["SOB_stripeCol"] = new float[] { StripeColor.R / 255f, StripeColor.G / 255f, StripeColor.B / 255f, StripeColor.A / 255f };
-                }
-
-                if (SOB_GLOWCOL(shader)) //For engine glows
-                {
-                    surface["SOB_glowCol"] = new float[] { EngineGlowColor.R / 255f, EngineGlowColor.G / 255f, EngineGlowColor.B / 255f, EngineGlowColor.A / 255f * ThrusterInterpolation };
-                }
-                
-                if (!SOB_DEBRIS(shader))
-                    surface["SOB_uieffect"] = new float[] { 0.5f, 0.5f, 0.5f, 0f };
-
-                surface["inSurfDiff"] = new float[] { 0f, SurfaceDiff.Fren, 0f, 0f };              // unused, Fren
-                surface["SOB_surfGlow"] = new float[] { SurfaceGlow.Power, SurfaceGlow.Fren, 0f, 0f };
-                surface["inSurfSpec"] = new float[] { SurfaceSpec.Power, SurfaceSpec.Fren, 0f, 0f };               // Power, Fren, Curve
-                surface["inSurfPaint"] = new float[] { SurfacePaint.Curve, SurfacePaint.Scale, SurfacePaint.Bias, SurfacePaint.Dim };      // Curve, Scale, Bias, Dim
-                surface["inSurfGloss"] = new float[] { SurfaceGloss.Curve, SurfaceGloss.Scale, SurfaceGloss.Bias, 0f };            // Curve, Scale, Bias
-                surface["inSurfRefl"] = new float[] { SurfaceRefl.Power, SurfaceRefl.Fren, SurfaceRefl.AddMix, 0f };        // Power, Fren, AddMix
-                surface["inSurfFren"] = new float[] { SurfaceFren.Power, SurfaceFren.Bias, SurfaceFren.Curve, 0f };           // Power, Bias, Curve
-                surface["inSurfPeak"] = new float[] { SurfacePeak.Base, SurfacePeak.Paint, SurfacePeak.Fren, SurfacePeak.Scar };
-
-                if (HACK_AllIFeelIsPain)
-                    surface["inPaintStyle"] = new float[] { 1.0f, 12.0f, 5.0f, 0f };
-                else
-                    surface["inPaintStyle"] = new float[] { PaintStyleCurve, PaintStyleScale, PaintStyleOffset, 0f };
-
-                if (SOB_BAYLIGHT(shader))
-                    surface["inBayExps"] = new float[] { 1f, 0.99f, 0.95f, 0.94f };
-
                 // Draw
+                UpdateSurface(surface, mesh);
+
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh_ind_buffer);
                 surface.Draw(BeginMode.Triangles, mesh.IndexCount, DrawElementsType.UnsignedInt, index * sizeof(uint));
 

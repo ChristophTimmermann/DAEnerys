@@ -8,6 +8,7 @@ using OpenTK.Graphics;
 using Assimp;
 using System.Media;
 using static Extensions.Utilities;
+using HWShaderManifest;
 
 namespace DAEnerys
 {
@@ -151,7 +152,7 @@ namespace DAEnerys
                 Updater.CheckForUpdates();
 
             //Fill shader combo box
-            foreach (string shader in NewShaderManifest.Manifest.HODAliases.Keys)
+            foreach (string shader in ShaderManifest.GetHODAliases())
                 comboMaterialShader.Items.Add(shader);
 
             //Open DAE from arguments

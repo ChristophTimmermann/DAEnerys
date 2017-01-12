@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using HWShaderManifest;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -108,10 +109,8 @@ namespace DAEnerys
 
                 if(Name == "")
                     new Problem(ProblemTypes.WARNING, "Failed to parse name of material \"" + fullName + "\".");
-
-
-
-                if (!NewShaderManifest.Manifest.HODAliases.ContainsKey(Shader.ToLower()))
+                
+                if (!ShaderManifest.ContainsHODAlias(Shader.ToLower()))
                     new Problem(ProblemTypes.WARNING, "Unknown shader \"" + Shader + "\" of material \"" + fullName + "\".");
 
                 LoadTextures();
