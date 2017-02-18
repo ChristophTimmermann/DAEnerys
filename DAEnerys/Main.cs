@@ -1841,6 +1841,9 @@ namespace DAEnerys
                 comboBox.Visible = false;
             }
 
+            groupShipMeshLODs.Size = new Size(groupShipMeshLODs.Size.Width, 281);
+            groupShipMeshLODMaterials.Size = new Size(groupShipMeshLODMaterials.Size.Width, 87);
+
             buttonShipMeshLODRemove.Enabled = false;
             buttonShipMeshLODImportOBJ.Enabled = false;
             buttonShipMeshLODExportOBJ.Enabled = false;
@@ -1874,6 +1877,9 @@ namespace DAEnerys
                 ShipMeshLODMaterialComboBoxes[i].Visible = true;
                 ShipMeshLODMaterialComboBoxes[i].SelectedItem = lodMeshes[i].Material.Name;
             }
+
+            groupShipMeshLODs.Size = new Size(groupShipMeshLODs.Size.Width, 220 + materialCount * 27);
+            groupShipMeshLODMaterials.Size = new Size(groupShipMeshLODMaterials.Size.Width, 26 + materialCount * 27);
         }
         private void OnShipMeshLODMaterialChanged(object sender, EventArgs e)
         {
