@@ -544,7 +544,8 @@ namespace DAEnerys
                 if (shader != "fx_eng_glowbasic")
                 {
                     surface.BindTexture("SOB_diffuse", mesh.Material.DiffuseTexture.ID);
-                    surface.BindTexture("SOB_glow", mesh.Material.GlowTexture.ID);
+                    if(mesh.Material.GlowTexture != null)
+                        surface.BindTexture("SOB_glow", mesh.Material.GlowTexture.ID);
                     if (SOB_GLOWRGB(shader))
                         surface.BindTexture("inTexSpec", mesh.Material.SpecularTexture.ID);
                 }
@@ -585,7 +586,8 @@ namespace DAEnerys
             }
 
             if (shader != "fx_eng_glowbasic")
-                surface.BindTexture("inTexNorm", mesh.Material.NormalTexture.ID);
+                if(mesh.Material.NormalTexture != null)
+                    surface.BindTexture("inTexNorm", mesh.Material.NormalTexture.ID);
 
             if (!SOB_BAYLIGHT(shader))
             {
