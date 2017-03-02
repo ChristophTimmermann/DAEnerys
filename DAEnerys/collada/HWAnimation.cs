@@ -63,15 +63,23 @@ namespace DAEnerys
         public HWAnimation(string name, float startTime, int startFrame, float endTime, int endFrame, float loopStartTime, int loopStartFrame, float loopEndTime, int loopEndFrame, AnimationType type) : base(name, HWJoint.Root)
         {
             StartTime = startTime;
+            StartTime = Math.Max(StartTime, 0);
+
             StartFrame = startFrame;
 
             EndTime = endTime;
+            EndTime = Math.Max(EndTime, 0);
+
             EndFrame = endFrame;
 
             LoopStartTime = loopStartTime;
+            LoopStartTime = Math.Max(LoopStartTime, 0);
+
             LoopStartFrame = loopStartFrame;
 
             LoopEndTime = loopEndTime;
+            LoopEndTime = Math.Max(LoopEndTime, 0);
+
             LoopEndFrame = loopEndFrame;
 
             Type = type;
