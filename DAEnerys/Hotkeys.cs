@@ -30,6 +30,7 @@ namespace DAEnerys
                 this.Controls.Add(actionKey.Label);
 
                 actionKey.CheckCTRL = new CheckBox();
+                actionKey.CheckCTRL.AutoSize = true;
                 actionKey.CheckCTRL.Location = new System.Drawing.Point(173, i * 35 + 9);
                 actionKey.CheckCTRL.Name = actionKey.Name;
                 actionKey.CheckCTRL.Size = new System.Drawing.Size(55, 26);
@@ -38,7 +39,8 @@ namespace DAEnerys
                 this.Controls.Add(actionKey.CheckCTRL);
 
                 actionKey.CheckALT = new CheckBox();
-                actionKey.CheckALT.Location = new System.Drawing.Point(234, i * 35 + 9);
+                actionKey.CheckALT.AutoSize = true;
+                actionKey.CheckALT.Location = new System.Drawing.Point(260, i * 35 + 9);
                 actionKey.CheckALT.Name = actionKey.Name;
                 actionKey.CheckALT.Size = new System.Drawing.Size(55, 26);
                 actionKey.CheckALT.Text = "ALT";
@@ -46,7 +48,7 @@ namespace DAEnerys
                 this.Controls.Add(actionKey.CheckALT);
 
                 actionKey.Button = new Button();
-                actionKey.Button.Location = new System.Drawing.Point(290, i * 35 + 9);
+                actionKey.Button.Location = new System.Drawing.Point(340, i * 35 + 9);
                 actionKey.Button.Name = actionKey.Name;
                 actionKey.Button.Size = new System.Drawing.Size(170, 26);
                 actionKey.Button.UseVisualStyleBackColor = true;

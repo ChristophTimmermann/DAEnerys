@@ -124,6 +124,12 @@ namespace DAEnerys
             gridProblems.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             gridProblems.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
+            splitContainer1.AutoScaleMode = AutoScaleMode.Font;
+            splitContainer2.AutoScaleMode = AutoScaleMode.Font;
+            Graphics graphics = CreateGraphics();
+            float scalingFactor = graphics.DpiX / 96;
+            splitContainer1.Panel1MinSize = 255 + (int)Math.Round(170 * (scalingFactor - 1));
+
             //Create ship mesh lod material selection
             for (int i = 0; i < MAX_MATERIALS_ON_MESH; i++)
             {
