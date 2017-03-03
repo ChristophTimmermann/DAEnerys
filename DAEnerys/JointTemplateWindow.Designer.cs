@@ -37,9 +37,11 @@
             this.radioTypeHardpoint = new System.Windows.Forms.RadioButton();
             this.radioTypeTurret = new System.Windows.Forms.RadioButton();
             this.radioTypeWeapon = new System.Windows.Forms.RadioButton();
-            this.buttonCancel = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.buttonAdd = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
             this.groupJointTemplateType.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // boxJointTemplateName
@@ -48,14 +50,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxJointTemplateName.Location = new System.Drawing.Point(56, 12);
             this.boxJointTemplateName.Name = "boxJointTemplateName";
-            this.boxJointTemplateName.Size = new System.Drawing.Size(253, 20);
+            this.boxJointTemplateName.Size = new System.Drawing.Size(293, 20);
             this.boxJointTemplateName.TabIndex = 0;
             this.boxJointTemplateName.TextChanged += new System.EventHandler(this.boxJointTemplateName_TextChanged);
             // 
             // labelJointTemplateName
             // 
             this.labelJointTemplateName.AutoSize = true;
-            this.labelJointTemplateName.Location = new System.Drawing.Point(12, 15);
+            this.labelJointTemplateName.Location = new System.Drawing.Point(12, 14);
             this.labelJointTemplateName.Name = "labelJointTemplateName";
             this.labelJointTemplateName.Size = new System.Drawing.Size(38, 13);
             this.labelJointTemplateName.TabIndex = 1;
@@ -72,9 +74,9 @@
             this.groupJointTemplateType.Controls.Add(this.radioTypeHardpoint);
             this.groupJointTemplateType.Controls.Add(this.radioTypeTurret);
             this.groupJointTemplateType.Controls.Add(this.radioTypeWeapon);
-            this.groupJointTemplateType.Location = new System.Drawing.Point(12, 40);
+            this.groupJointTemplateType.Location = new System.Drawing.Point(12, 39);
             this.groupJointTemplateType.Name = "groupJointTemplateType";
-            this.groupJointTemplateType.Size = new System.Drawing.Size(297, 179);
+            this.groupJointTemplateType.Size = new System.Drawing.Size(337, 174);
             this.groupJointTemplateType.TabIndex = 2;
             this.groupJointTemplateType.TabStop = false;
             this.groupJointTemplateType.Text = "Type";
@@ -82,7 +84,7 @@
             // radioTypeSalvagePoint
             // 
             this.radioTypeSalvagePoint.AutoSize = true;
-            this.radioTypeSalvagePoint.Location = new System.Drawing.Point(6, 141);
+            this.radioTypeSalvagePoint.Location = new System.Drawing.Point(6, 138);
             this.radioTypeSalvagePoint.Name = "radioTypeSalvagePoint";
             this.radioTypeSalvagePoint.Size = new System.Drawing.Size(90, 17);
             this.radioTypeSalvagePoint.TabIndex = 5;
@@ -94,7 +96,7 @@
             // radioTypeRepairPoint
             // 
             this.radioTypeRepairPoint.AutoSize = true;
-            this.radioTypeRepairPoint.Location = new System.Drawing.Point(6, 117);
+            this.radioTypeRepairPoint.Location = new System.Drawing.Point(6, 114);
             this.radioTypeRepairPoint.Name = "radioTypeRepairPoint";
             this.radioTypeRepairPoint.Size = new System.Drawing.Size(82, 17);
             this.radioTypeRepairPoint.TabIndex = 4;
@@ -106,7 +108,7 @@
             // radioTypeCapturePoint
             // 
             this.radioTypeCapturePoint.AutoSize = true;
-            this.radioTypeCapturePoint.Location = new System.Drawing.Point(6, 92);
+            this.radioTypeCapturePoint.Location = new System.Drawing.Point(6, 90);
             this.radioTypeCapturePoint.Name = "radioTypeCapturePoint";
             this.radioTypeCapturePoint.Size = new System.Drawing.Size(88, 17);
             this.radioTypeCapturePoint.TabIndex = 3;
@@ -118,7 +120,7 @@
             // radioTypeHardpoint
             // 
             this.radioTypeHardpoint.AutoSize = true;
-            this.radioTypeHardpoint.Location = new System.Drawing.Point(6, 69);
+            this.radioTypeHardpoint.Location = new System.Drawing.Point(6, 68);
             this.radioTypeHardpoint.Name = "radioTypeHardpoint";
             this.radioTypeHardpoint.Size = new System.Drawing.Size(71, 17);
             this.radioTypeHardpoint.TabIndex = 2;
@@ -130,7 +132,7 @@
             // radioTypeTurret
             // 
             this.radioTypeTurret.AutoSize = true;
-            this.radioTypeTurret.Location = new System.Drawing.Point(6, 44);
+            this.radioTypeTurret.Location = new System.Drawing.Point(6, 43);
             this.radioTypeTurret.Name = "radioTypeTurret";
             this.radioTypeTurret.Size = new System.Drawing.Size(53, 17);
             this.radioTypeTurret.TabIndex = 1;
@@ -143,7 +145,7 @@
             // 
             this.radioTypeWeapon.AutoSize = true;
             this.radioTypeWeapon.Checked = true;
-            this.radioTypeWeapon.Location = new System.Drawing.Point(6, 19);
+            this.radioTypeWeapon.Location = new System.Drawing.Point(6, 18);
             this.radioTypeWeapon.Name = "radioTypeWeapon";
             this.radioTypeWeapon.Size = new System.Drawing.Size(66, 17);
             this.radioTypeWeapon.TabIndex = 0;
@@ -152,37 +154,47 @@
             this.radioTypeWeapon.UseVisualStyleBackColor = true;
             this.radioTypeWeapon.CheckedChanged += new System.EventHandler(this.radioType_CheckedChanged);
             // 
-            // buttonCancel
+            // panel1
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(220, 225);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(89, 23);
-            this.buttonCancel.TabIndex = 3;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this.panel1.Controls.Add(this.buttonAdd);
+            this.panel1.Controls.Add(this.buttonCancel);
+            this.panel1.Location = new System.Drawing.Point(12, 218);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(340, 25);
+            this.panel1.TabIndex = 9;
             // 
             // buttonAdd
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAdd.Enabled = false;
-            this.buttonAdd.Location = new System.Drawing.Point(125, 225);
+            this.buttonAdd.Location = new System.Drawing.Point(153, 1);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(89, 23);
-            this.buttonAdd.TabIndex = 4;
+            this.buttonAdd.TabIndex = 14;
             this.buttonAdd.Text = "Add";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.Location = new System.Drawing.Point(248, 1);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(89, 23);
+            this.buttonCancel.TabIndex = 13;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
             // JointTemplateWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(321, 259);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(361, 255);
             this.ControlBox = false;
-            this.Controls.Add(this.buttonAdd);
-            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupJointTemplateType);
             this.Controls.Add(this.labelJointTemplateName);
             this.Controls.Add(this.boxJointTemplateName);
@@ -191,6 +203,7 @@
             this.Text = "Add joint template...";
             this.groupJointTemplateType.ResumeLayout(false);
             this.groupJointTemplateType.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -207,7 +220,8 @@
         private System.Windows.Forms.RadioButton radioTypeCapturePoint;
         private System.Windows.Forms.RadioButton radioTypeHardpoint;
         private System.Windows.Forms.RadioButton radioTypeTurret;
-        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button buttonAdd;
+        private System.Windows.Forms.Button buttonCancel;
     }
 }

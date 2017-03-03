@@ -111,7 +111,6 @@ namespace DAEnerys
             comboPerspectiveOrtho.SelectedIndex = 0;
 
             FPSCounter.LabelFPS = labelFPS;
-
             Loaded = true;
             Program.DeltaCounter.Start();
 
@@ -124,11 +123,20 @@ namespace DAEnerys
             gridProblems.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             gridProblems.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
+            #region DPI-Scaling
             splitContainer1.AutoScaleMode = AutoScaleMode.Font;
             splitContainer2.AutoScaleMode = AutoScaleMode.Font;
             Graphics graphics = CreateGraphics();
             float scalingFactor = graphics.DpiX / 96;
-            splitContainer1.Panel1MinSize = 255 + (int)Math.Round(170 * (scalingFactor - 1));
+            scalingFactor -= 1;
+            splitContainer1.Panel1MinSize = 255 + (int)Math.Round(170 * scalingFactor);
+
+            buttonProblems.Size = new Size(46 - (int)Math.Round(12 * scalingFactor), 25 - (int)Math.Round(12 * scalingFactor));
+            buttonProblems.Location = new Point(1226 + (int)Math.Round(1248 * scalingFactor), 0);
+
+            comboPerspectiveOrtho.Location = new Point(1115 + (int)Math.Round(1140 * scalingFactor), 3 - (int)Math.Round(4 * scalingFactor));
+            labelFPS.Location = new Point(1073 + (int)Math.Round(1100 * scalingFactor), 7 - (int)Math.Round(2 * scalingFactor));
+            #endregion
 
             //Create ship mesh lod material selection
             for (int i = 0; i < MAX_MATERIALS_ON_MESH; i++)
