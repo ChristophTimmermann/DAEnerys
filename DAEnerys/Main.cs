@@ -96,6 +96,9 @@ namespace DAEnerys
             }
         }
 
+        public string LastOpenLocation;
+        public string LastSaveLocation;
+
         public Main()
         {
             InitializeComponent();
@@ -401,9 +404,12 @@ namespace DAEnerys
         }
         private void buttonOpen_Click(object sender, EventArgs e)
         {
+            if(Directory.Exists(LastOpenLocation))
+                openColladaDialog.InitialDirectory = LastOpenLocation;
             DialogResult result = openColladaDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
+                LastOpenLocation = Path.GetDirectoryName(openColladaDialog.FileName);
                 Clear();
                 Importer.ImportFromFile(openColladaDialog.FileName);
                 this.Text = openColladaDialog.FileName + " - DAEnerys";
@@ -417,9 +423,12 @@ namespace DAEnerys
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
+            if (Directory.Exists(LastSaveLocation))
+                saveColladaDialog.InitialDirectory = LastSaveLocation;
             DialogResult result = saveColladaDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
+                LastSaveLocation = Path.GetDirectoryName(saveColladaDialog.FileName);
                 HWScene.SaveCollada(saveColladaDialog.FileName);
                 this.Text = saveColladaDialog.FileName + " - DAEnerys";
                 OpenedFile = Path.GetFileNameWithoutExtension(saveColladaDialog.FileName);

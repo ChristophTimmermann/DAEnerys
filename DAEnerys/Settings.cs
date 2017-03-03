@@ -233,7 +233,9 @@ namespace DAEnerys
                 new XElement("checkForUpdatesOnStart", Updater.CheckForUpdatesOnStart),
                 new XElement("positionIncrement", Program.main.PositionIncrement),
                 new XElement("rotationIncrement", Program.main.RotationIncrement),
-                new XElement("smoothZooming", Program.Camera.SmoothZooming));
+                new XElement("smoothZooming", Program.Camera.SmoothZooming),
+                new XElement("lastOpenLocation", Program.main.LastOpenLocation),
+                new XElement("lastSaveLocation", Program.main.LastSaveLocation));
 
             foreach (string dataPath in HWData.DataPaths)
             {
@@ -377,6 +379,12 @@ namespace DAEnerys
                             break;
                         case "dataPath":
                             HWData.DataPaths.Add(element.Value);
+                            break;
+                        case "lastOpenLocation":
+                            Program.main.LastOpenLocation = element.Value;
+                            break;
+                        case "lastSaveLocation":
+                            Program.main.LastSaveLocation = element.Value;
                             break;
                     }
                 }
