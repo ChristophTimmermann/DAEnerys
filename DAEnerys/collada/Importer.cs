@@ -1773,6 +1773,7 @@ namespace DAEnerys
                 quat.ToAxisAngle(out axis, out angle);
                 axis *= angle;
                 rot = axis;
+                rot = Extensions.Utilities.Matrix4ToEuler(matrix);
             }
 
             XElement scaleElement = nodeElement.Element(ns + "scale");

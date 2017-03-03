@@ -114,6 +114,28 @@ namespace Extensions
             return pitchYawRoll;
         }
 
+        public static Vector3 Matrix4ToEuler(this Matrix4 R)
+        {
+            float sy = (float)Math.Sqrt(R[0, 0] * R[0, 0] + R[1, 0] * R[1, 0]);
+
+            bool singular = sy < 1e-6; // If
+
+            float x, y, z;
+            if (!singular)
+            {
+                x = (float)Math.Atan2(R[2, 1], R[2, 2]);
+                y = (float)Math.Atan2(-R[2, 0], sy);
+                z = (float)Math.Atan2(R[1, 0], R[0, 0]);
+            }
+            else
+            {
+                x = (float)Math.Atan2(-R[1, 2], R[1, 1]);
+                y = (float)Math.Atan2(-R[2, 0], sy);
+                z = 0;
+            }
+            return new Vector3(x, y, z);
+        }
+
         public static float SmoothStepChange(float x0, float y0, float yt, float t, float k)
         {
             float f = x0 - y0 + (yt - y0) / (k * t);
