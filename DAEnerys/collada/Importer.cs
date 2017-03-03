@@ -41,6 +41,7 @@ namespace DAEnerys
         private static COLLADANode infoNode;
         private static COLLADANode holdDockNode;
         private static COLLADANode holdAnimNode;
+        private static COLLADANode holdParamsNode;
 
         private static bool goblinWarningShown;
 
@@ -70,6 +71,7 @@ namespace DAEnerys
             infoNode = null;
             holdDockNode = null;
             holdAnimNode = null;
+            holdParamsNode = null;
 
             goblinWarningShown = false;
 
@@ -337,6 +339,13 @@ namespace DAEnerys
 
                 holdAnimNode = colladaNode;
             }
+            else if (colladaNode.Name == "HOLD_PARAMS") //If node is the holder for parameters
+            {
+                if (holdParamsNode != null)
+                    new Problem(ProblemTypes.ERROR, "There are multiple \"HOLD_PARAMS\" nodes.");
+
+                holdParamsNode = colladaNode;
+            }
             else if (colladaNode.Name.StartsWith("JNT")) //If node is a joint
             {
                 if (!IsColladaNodeUnderAnyRootNode(colladaNode))
@@ -560,6 +569,72 @@ namespace DAEnerys
                     {
                         COLLADATransform transform = GetColladaNodeTransform(colladaNode);
                         new HWDockSegment(dockpath, transform.Position, transform.Rotation, transform.Scale, id, tolerance, speed, flags);
+                    }
+                }
+            }
+            #endregion
+
+            #region Parameter
+            else if (colladaNode.Name.StartsWith("MAT")) //If node is a material parameter
+            {
+                if (colladaNode.Parent != holdParamsNode)
+                {
+                    new Problem(ProblemTypes.ERROR, "The material parameter \"" + colladaNode.Name + "\" is not under the \"HOLD_PARAMS\" node.");
+                    failed = true;
+                }
+
+                if (!failed)
+                {
+                    string materialName = "";
+                    string name = "";
+                    HWParameter.ParameterType type = HWParameter.ParameterType.RGBA;
+                    float[] data = new float[0];
+
+                    bool success = false;
+                    Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "MAT", "PARAM", "Type", "Data"});
+                    foreach (KeyValuePair<string, string> pair in values.ToArray())
+                    {
+                        switch (pair.Key)
+                        {
+                            case "MAT":
+                                materialName = pair.Value;
+                                break;
+                            case "PARAM":
+                                name = pair.Value;
+                                break;
+                            case "Type":
+                                HWParameter.ParameterType newType;
+                                success = Enum.TryParse(pair.Value, true, out newType);
+
+                                //Check if type is valid
+                                if (success)
+                                    type = newType;
+                                else
+                                {
+                                    new Problem(ProblemTypes.WARNING, "Unknown material parameter type \"" + type + "\" on parameter \"" + colladaNode.Name + "\".");
+                                    failed = true;
+                                }
+                                break;
+                            case "Data":
+                                string[] dataStrings = pair.Value.Split(',');
+                                List<float> dataList = new List<float>();
+                                foreach (string dataString in dataStrings)
+                                {
+                                    if (dataString.Length > 0) //If FLAGS is not empty
+                                    {
+                                        float value = 0;
+                                        float.TryParse(dataString, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+                                        dataList.Add(value);
+                                    }
+                                }
+                                data = dataList.ToArray();
+                                break;
+                        }
+                    }
+
+                    if (!failed)
+                    {
+                        HWParameter newParameter = new HWParameter(materialName, name, type, data);
                     }
                 }
             }

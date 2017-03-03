@@ -107,6 +107,7 @@
     <Compile Include="collada\HWMarker.cs" />
     <Compile Include="collada\HWNavLight.cs" />
     <Compile Include="collada\HWEngineGlow.cs" />
+    <Compile Include="collada\HWParameter.cs" />
     <Compile Include="collada\HWShipMesh.cs" />
     <Compile Include="collada\HWEngineGlowLOD.cs" />
     <Compile Include="collada\HWShipMeshLOD.cs" />
@@ -322,7 +323,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="False" BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" BuildVersion_DetectChanges="False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\AssimpNet.3.3.1\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.1\build\AssimpNet.targets')" />

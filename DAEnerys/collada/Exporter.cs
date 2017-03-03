@@ -879,6 +879,17 @@ namespace DAEnerys
                 }
             }
 
+            //Material parameters
+            if (HWParameter.Parameters.Count > 0)
+            {
+                XElement holdParamsElement = AddNode(lodRootElements[0], "HOLD_PARAMS");
+
+                foreach (HWParameter parameter in HWParameter.Parameters)
+                {
+                    XElement paramElement = AddNode(holdParamsElement, parameter.FormattedName);
+                }
+            }
+
             //Engine burns
             foreach (HWEngineBurn engineBurn in HWEngineBurn.EngineBurns)
             {
