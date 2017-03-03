@@ -102,7 +102,7 @@ namespace DAEnerys
         {
             AnimationTime = Math.Min(AnimationTime, Program.main.SelectedAnimation.EndTime);
 
-            foreach(HWJoint joint in HWJoint.Joints)
+            foreach(HWJoint joint in Program.main.SelectedAnimation.AnimatedJoints)
             {
                 Matrix4 rotationMatrix = UpdateRotation(joint);
                 Matrix4 translationMatrix = UpdateTranslation(joint);
