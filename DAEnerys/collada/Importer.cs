@@ -1387,6 +1387,21 @@ namespace DAEnerys
 
                         if (name != null && path != null)
                         {
+                            #region Suffix checking (HODOR crash)
+                            Dictionary<string, string> values = ParseNameParameters(name, new string[] { "IMG", "FMT" });
+                            if (values.Values.Count > 0)
+                            {
+                                string textureName = values.Values.ElementAt(0);
+                                string suffix = textureName.Substring(textureName.LastIndexOf('_') + 1);
+
+                                MaterialSuffix parsedSuffix;
+                                bool success = Enum.TryParse(suffix, out parsedSuffix);
+                                success = Enum.IsDefined(typeof(MaterialSuffix), suffix);
+                                if (!success)
+                                    new Problem(ProblemTypes.ERROR, "Texture \"" + name + "\" has no (valid) suffix, this will most likely crash HODOR.");
+                            }
+                            #endregion
+
                             Log.WriteLine("Trying to parse texture \"" + name + "\".");
                             HWImage.Parse(name, path);
                         }
