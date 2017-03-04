@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using System.Collections.Generic;
+using System;
 
 namespace DAEnerys
 {
@@ -15,8 +16,6 @@ namespace DAEnerys
             }
         }
 
-        public int EngineShapeListItemIndex;
-
         public HWEngineShape(MeshData data, Vector3 pos, Vector3 rot, Vector3 scale, HWJoint parent, string name) : base(data, parent, pos, rot, scale, HWMaterial.DefaultMaterial)
         {
             Parent = parent;
@@ -24,6 +23,24 @@ namespace DAEnerys
 
             EngineShapes.Add(this);
             Program.main.AddEngineShape(this);
+        }
+
+        public static HWEngineShape GetByName(string name)
+        {
+            foreach (HWEngineShape engineShape in EngineShapes)
+                if (engineShape.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    return engineShape;
+
+            return null;
+        }
+
+        public override void Destroy()
+        {
+            Program.main.RemoveEngineShape(this);
+            EngineShapes.Remove(this);
+            Parent = null;
+
+            base.Destroy();
         }
     }
 }

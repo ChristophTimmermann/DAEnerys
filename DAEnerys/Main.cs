@@ -26,6 +26,7 @@ namespace DAEnerys
         HWNavLight selectedNavLight;
         HWEngineBurn selectedEngineBurn;
         HWEngineGlow selectedEngineGlow;
+        HWEngineShape selectedEngineShape;
         HWMaterial selectedMaterial;
         HWMarker selectedMarker;
         public HWAnimation SelectedAnimation;
@@ -49,6 +50,8 @@ namespace DAEnerys
         private bool ignoreShipMeshLODMaterialChanged;
         private bool ignoreCollisionMeshParentChanged;
         private bool ignoreEngineGlowListSelectedIndexChanged;
+        private bool ignoreEngineShapeParentChanged;
+        private bool ignoreEngineShapeListSelectedIndexChanged;
         private bool ignoreNavLightValuesChanged;
         private bool ignoreNavLightListSelectedIndexChanged;
         private bool ignoreJointValuesChanged;
@@ -288,6 +291,7 @@ namespace DAEnerys
 
             listEngineShapes.Items.Clear();
             comboEngineShapeParent.Items.Clear();
+            listEngineShapes_SelectedIndexChanged(this, EventArgs.Empty);
 
             listMaterials.Items.Clear();
             listMaterialTextures.Items.Clear();
@@ -2738,53 +2742,208 @@ namespace DAEnerys
         //--------------------------------- ENGINE SHAPES ---------------------------------//
         private void listEngineShapes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            comboEngineShapeParent.SelectedIndex = 0; //Select root joint in combo box
+            if (ignoreEngineShapeListSelectedIndexChanged)
+                return;
 
-            HWEngineShape selectedEngineShape = null;
-            //Has to be done with a loop, because of multiple engine shapes with the same name
-            foreach (HWEngineShape engineShape in HWEngineShape.EngineShapes)
-            {
-                if (engineShape.EngineShapeListItemIndex == listEngineShapes.SelectedIndex)
-                {
-                    selectedEngineShape = engineShape;
-                    break;
-                }
-            }
+            ignoreEngineShapeParentChanged = true;
+            comboEngineShapeParent.SelectedItem = null;
+            ignoreEngineShapeParentChanged = false;
+
+            comboEngineShapeParent.Enabled = false;
+            buttonEngineShapeRemove.Enabled = false;
+
+            boxEngineShapeName.Enabled = false;
+            boxEngineShapeName.Clear();
+
+            buttonEngineShapeExportDAE.Enabled = false;
+            buttonEngineShapeImportDAE.Enabled = false;
+            buttonEngineShapeImportOBJ.Enabled = false;
+            buttonEngineShapeExportOBJ.Enabled = false;
+
+            selectedEngineShape = HWEngineShape.GetByName((string)listEngineShapes.SelectedItem);
 
             if (selectedEngineShape == null)
                 return;
 
+            ignoreEngineShapeParentChanged = true;
+            comboEngineShapeParent.SelectedItem = selectedEngineShape.Parent.Name;
+            ignoreEngineShapeParentChanged = false;
+
+            comboEngineShapeParent.Enabled = true;
+            buttonEngineShapeRemove.Enabled = true;
+
+            boxEngineShapeName.Enabled = true;
+            boxEngineShapeName.Text = selectedEngineShape.Name;
+
+            buttonEngineShapeExportDAE.Enabled = true;
+            buttonEngineShapeImportDAE.Enabled = true;
+            buttonEngineShapeImportOBJ.Enabled = true;
+            buttonEngineShapeExportOBJ.Enabled = true;
             comboEngineShapeParent.SelectedItem = selectedEngineShape.Parent.Name; //Select parent joint in combo box
         }
         public void AddEngineShape(HWEngineShape mesh)
         {
-            object item = mesh.Name;
-            listEngineShapes.Items.Add(item);
-            mesh.EngineShapeListItemIndex = listEngineShapes.Items.Count - 1;
+            listEngineShapes.Items.Add(mesh.Name);
         }
         private void listEngineShapes_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (listEngineShapes.SelectedItem != null)
+            if (selectedEngineShape == null)
+                return;
+
+            bool visible = false;
+            if (e.NewValue == CheckState.Checked)
+                visible = true;
+
+            selectedEngineShape.Visible = visible;
+        }
+        public void RemoveEngineShape(HWEngineShape mesh)
+        {
+            listEngineShapes.Items.Remove(mesh.Name);
+        }
+        private void buttonEngineShapeRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineShape == null)
+                return;
+
+            selectedEngineShape.Destroy();
+            listEngineShapes.ClearSelected();
+            listEngineShapes_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void buttonEngineShapeAdd_Click(object sender, EventArgs e)
+        {
+            int indexOffset = 1;
+            string newName = "EngineShape" + (listEngineShapes.Items.Count + indexOffset);
+            while (listEngineShapes.Items.Contains(newName))
             {
-                HWEngineShape selectedEngineShape = null;
-                //Has to be done with a loop, because of multiple engine shapes with the same name
-                foreach (HWEngineShape engineShape in HWEngineShape.EngineShapes)
-                {
-                    if (engineShape.EngineShapeListItemIndex == listEngineShapes.SelectedIndex)
-                    {
-                        selectedEngineShape = engineShape;
-                        break;
-                    }
-                }
-
-                bool visible = false;
-                if (e.NewValue == CheckState.Checked)
-                    visible = true;
-
-                selectedEngineShape.Visible = visible;
-
-                Renderer.Invalidate();
+                indexOffset++;
+                newName = "EngineShape" + (listEngineShapes.Items.Count + indexOffset);
             }
+
+            HWEngineShape newEngineShape = new HWEngineShape(new MeshData(), Vector3.Zero, Vector3.Zero, Vector3.One, HWJoint.Root, newName);
+
+            listEngineShapes.SelectedItem = newEngineShape.Name;
+        }
+        private void buttonEngineShapeExportDAE_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineShape == null)
+                return;
+
+            saveColladaMeshDialog.FileName = OpenedFile + "_ETSH_" + selectedEngineShape.Name;
+            DialogResult result = saveColladaMeshDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                List<HWMesh> meshes = new List<HWMesh>();
+                meshes.Add(selectedEngineShape);
+                Exporter.ExportMeshes(saveColladaMeshDialog.FileName, meshes);
+            }
+        }
+        private void buttonEngineShapeImportDAE_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineShape == null)
+                return;
+
+            DialogResult result = openColladaMeshDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Mesh newMesh = Importer.ImportMeshFromFile(openColladaMeshDialog.FileName);
+
+                selectedEngineShape.SetData(Importer.ParseAssimpMesh(newMesh));
+                selectedEngineShape.Visible = true;
+
+                listEngineShapes.SetItemChecked(listEngineShapes.Items.IndexOf(selectedEngineShape.Name), true);
+                listEngineShapes_SelectedIndexChanged(this, EventArgs.Empty);
+            }
+        }
+        private void buttonEngineShapeExportOBJ_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineShape == null)
+                return;
+
+            saveObjDialog.FileName = OpenedFile + "_ETSH_" + selectedEngineShape.Name;
+            DialogResult result = saveObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                List<HWMesh> meshes = new List<HWMesh>();
+                meshes.Add(selectedEngineShape);
+                ObjExporter.ExportToFile(saveObjDialog.FileName, meshes);
+            }
+        }
+        private void buttonEngineShapeImportOBJ_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineShape == null)
+                return;
+
+            DialogResult result = openObjDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Mesh newMesh = ObjImporter.ImportMeshFromFile(openObjDialog.FileName);
+
+                selectedEngineShape.SetData(Importer.ParseAssimpMesh(newMesh));
+                selectedEngineShape.Visible = true;
+
+                listEngineShapes.SetItemChecked(listEngineShapes.Items.IndexOf(selectedEngineShape.Name), true);
+                listEngineShapes_SelectedIndexChanged(this, EventArgs.Empty);
+            }
+        }
+        private void comboEngineShapeParent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedEngineShape == null)
+                return;
+
+            if (ignoreEngineShapeParentChanged)
+                return;
+
+            HWJoint newParent = HWJoint.GetByName((string)comboEngineShapeParent.SelectedItem);
+            selectedEngineShape.Parent = newParent;
+        }
+        private void boxEngineShapeName_Leave(object sender, EventArgs e)
+        {
+            if (selectedEngineShape == null)
+                return;
+
+            UpdateEngineShapeName(selectedEngineShape, boxEngineShapeName.Text);
+        }
+        private void boxEngineShapeName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedEngineShape == null)
+                return;
+
+            UpdateEngineShapeName(selectedEngineShape, boxEngineShapeName.Text);
+        }
+        private void UpdateEngineShapeName(HWEngineShape engineShape, string newName)
+        {
+            if (!listEngineShapes.Items.Contains(engineShape.Name))
+                return;
+
+            //Engine shape with this name already exists
+            if (listEngineShapes.Items.Contains(newName))
+            {
+                HWEngineShape existingEngineShape = HWEngineShape.GetByName(newName);
+                if (existingEngineShape != engineShape)
+                {
+                    MessageBox.Show("An engine shape with this name already exists.", "Error while changing engine shape name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxEngineShapeName.Text = engineShape.Name;
+                    boxEngineShapeName.Focus();
+                    return;
+                }
+            }
+
+            ignoreEngineShapeListSelectedIndexChanged = true;
+            int index = listEngineShapes.Items.IndexOf(engineShape.Name);
+            listEngineShapes.Items.Remove(engineShape.Name);
+            listEngineShapes.Items.Remove(engineShape.Name);
+            engineShape.Name = boxEngineShapeName.Text;
+            listEngineShapes.Items.Insert(index, engineShape.Name);
+            listEngineShapes.SelectedItem = engineShape.Name;
+            CheckEngineShapeVisible(engineShape, engineShape.Visible);
+            ignoreEngineShapeListSelectedIndexChanged = false;
+        }
+        public void CheckEngineShapeVisible(HWEngineShape engineShape, bool visible)
+        {
+            listEngineShapes.SetItemChecked(listEngineShapes.Items.IndexOf(engineShape.Name), true);
         }
 
         //----------------------------------- ANIMATIONS ----------------------------------//

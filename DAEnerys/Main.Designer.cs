@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -265,6 +265,14 @@ namespace DAEnerys
             this.saveColladaMeshDialog = new System.Windows.Forms.SaveFileDialog();
             this.openColladaMeshDialog = new System.Windows.Forms.OpenFileDialog();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.buttonEngineShapeImportDAE = new System.Windows.Forms.Button();
+            this.buttonEngineShapeExportDAE = new System.Windows.Forms.Button();
+            this.buttonEngineShapeImportOBJ = new System.Windows.Forms.Button();
+            this.buttonEngineShapeExportOBJ = new System.Windows.Forms.Button();
+            this.buttonEngineShapeRemove = new System.Windows.Forms.Button();
+            this.buttonEngineShapeAdd = new System.Windows.Forms.Button();
+            this.boxEngineShapeName = new System.Windows.Forms.TextBox();
+            this.labelEngineShapeName = new System.Windows.Forms.Label();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -2804,6 +2812,14 @@ namespace DAEnerys
             // tabEngineShapes
             // 
             this.tabEngineShapes.AutoScroll = true;
+            this.tabEngineShapes.Controls.Add(this.boxEngineShapeName);
+            this.tabEngineShapes.Controls.Add(this.labelEngineShapeName);
+            this.tabEngineShapes.Controls.Add(this.buttonEngineShapeImportDAE);
+            this.tabEngineShapes.Controls.Add(this.buttonEngineShapeExportDAE);
+            this.tabEngineShapes.Controls.Add(this.buttonEngineShapeImportOBJ);
+            this.tabEngineShapes.Controls.Add(this.buttonEngineShapeExportOBJ);
+            this.tabEngineShapes.Controls.Add(this.buttonEngineShapeRemove);
+            this.tabEngineShapes.Controls.Add(this.buttonEngineShapeAdd);
             this.tabEngineShapes.Controls.Add(this.listEngineShapes);
             this.tabEngineShapes.Controls.Add(this.labelEngineShapeParent);
             this.tabEngineShapes.Controls.Add(this.comboEngineShapeParent);
@@ -2822,7 +2838,7 @@ namespace DAEnerys
             this.listEngineShapes.FormattingEnabled = true;
             this.listEngineShapes.Location = new System.Drawing.Point(6, 6);
             this.listEngineShapes.Name = "listEngineShapes";
-            this.listEngineShapes.Size = new System.Drawing.Size(235, 364);
+            this.listEngineShapes.Size = new System.Drawing.Size(235, 184);
             this.listEngineShapes.TabIndex = 15;
             this.listEngineShapes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineShapes_ItemCheck);
             this.listEngineShapes.SelectedIndexChanged += new System.EventHandler(this.listEngineShapes_SelectedIndexChanged);
@@ -2830,7 +2846,7 @@ namespace DAEnerys
             // labelEngineShapeParent
             // 
             this.labelEngineShapeParent.AutoSize = true;
-            this.labelEngineShapeParent.Location = new System.Drawing.Point(9, 379);
+            this.labelEngineShapeParent.Location = new System.Drawing.Point(8, 254);
             this.labelEngineShapeParent.Name = "labelEngineShapeParent";
             this.labelEngineShapeParent.Size = new System.Drawing.Size(44, 13);
             this.labelEngineShapeParent.TabIndex = 14;
@@ -2843,11 +2859,12 @@ namespace DAEnerys
             this.comboEngineShapeParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEngineShapeParent.Enabled = false;
             this.comboEngineShapeParent.FormattingEnabled = true;
-            this.comboEngineShapeParent.Location = new System.Drawing.Point(59, 376);
+            this.comboEngineShapeParent.Location = new System.Drawing.Point(56, 251);
             this.comboEngineShapeParent.Name = "comboEngineShapeParent";
-            this.comboEngineShapeParent.Size = new System.Drawing.Size(182, 21);
+            this.comboEngineShapeParent.Size = new System.Drawing.Size(185, 21);
             this.comboEngineShapeParent.Sorted = true;
             this.comboEngineShapeParent.TabIndex = 13;
+            this.comboEngineShapeParent.SelectedIndexChanged += new System.EventHandler(this.comboEngineShapeParent_SelectedIndexChanged);
             // 
             // tabEngineBurns
             // 
@@ -3240,9 +3257,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle25;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -3250,14 +3267,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle27;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -3266,9 +3283,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle28;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -3281,9 +3298,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle26;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -3366,6 +3383,95 @@ namespace DAEnerys
             this.colorDialog.Color = System.Drawing.Color.Gray;
             this.colorDialog.FullOpen = true;
             this.colorDialog.SolidColorOnly = true;
+            // 
+            // buttonEngineShapeImportDAE
+            // 
+            this.buttonEngineShapeImportDAE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEngineShapeImportDAE.Enabled = false;
+            this.buttonEngineShapeImportDAE.Location = new System.Drawing.Point(150, 278);
+            this.buttonEngineShapeImportDAE.Name = "buttonEngineShapeImportDAE";
+            this.buttonEngineShapeImportDAE.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineShapeImportDAE.TabIndex = 36;
+            this.buttonEngineShapeImportDAE.Text = "Import from DAE";
+            this.buttonEngineShapeImportDAE.UseVisualStyleBackColor = true;
+            this.buttonEngineShapeImportDAE.Click += new System.EventHandler(this.buttonEngineShapeImportDAE_Click);
+            // 
+            // buttonEngineShapeExportDAE
+            // 
+            this.buttonEngineShapeExportDAE.Enabled = false;
+            this.buttonEngineShapeExportDAE.Location = new System.Drawing.Point(6, 278);
+            this.buttonEngineShapeExportDAE.Name = "buttonEngineShapeExportDAE";
+            this.buttonEngineShapeExportDAE.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineShapeExportDAE.TabIndex = 35;
+            this.buttonEngineShapeExportDAE.Text = "Export to DAE";
+            this.buttonEngineShapeExportDAE.UseVisualStyleBackColor = true;
+            this.buttonEngineShapeExportDAE.Click += new System.EventHandler(this.buttonEngineShapeExportDAE_Click);
+            // 
+            // buttonEngineShapeImportOBJ
+            // 
+            this.buttonEngineShapeImportOBJ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEngineShapeImportOBJ.Enabled = false;
+            this.buttonEngineShapeImportOBJ.Location = new System.Drawing.Point(150, 307);
+            this.buttonEngineShapeImportOBJ.Name = "buttonEngineShapeImportOBJ";
+            this.buttonEngineShapeImportOBJ.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineShapeImportOBJ.TabIndex = 34;
+            this.buttonEngineShapeImportOBJ.Text = "Import from OBJ";
+            this.buttonEngineShapeImportOBJ.UseVisualStyleBackColor = true;
+            this.buttonEngineShapeImportOBJ.Click += new System.EventHandler(this.buttonEngineShapeImportOBJ_Click);
+            // 
+            // buttonEngineShapeExportOBJ
+            // 
+            this.buttonEngineShapeExportOBJ.Enabled = false;
+            this.buttonEngineShapeExportOBJ.Location = new System.Drawing.Point(6, 307);
+            this.buttonEngineShapeExportOBJ.Name = "buttonEngineShapeExportOBJ";
+            this.buttonEngineShapeExportOBJ.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineShapeExportOBJ.TabIndex = 33;
+            this.buttonEngineShapeExportOBJ.Text = "Export to OBJ";
+            this.buttonEngineShapeExportOBJ.UseVisualStyleBackColor = true;
+            this.buttonEngineShapeExportOBJ.Click += new System.EventHandler(this.buttonEngineShapeExportOBJ_Click);
+            // 
+            // buttonEngineShapeRemove
+            // 
+            this.buttonEngineShapeRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEngineShapeRemove.Enabled = false;
+            this.buttonEngineShapeRemove.Location = new System.Drawing.Point(150, 196);
+            this.buttonEngineShapeRemove.Name = "buttonEngineShapeRemove";
+            this.buttonEngineShapeRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineShapeRemove.TabIndex = 32;
+            this.buttonEngineShapeRemove.Text = "Remove";
+            this.buttonEngineShapeRemove.UseVisualStyleBackColor = true;
+            this.buttonEngineShapeRemove.Click += new System.EventHandler(this.buttonEngineShapeRemove_Click);
+            // 
+            // buttonEngineShapeAdd
+            // 
+            this.buttonEngineShapeAdd.Location = new System.Drawing.Point(6, 196);
+            this.buttonEngineShapeAdd.Name = "buttonEngineShapeAdd";
+            this.buttonEngineShapeAdd.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineShapeAdd.TabIndex = 31;
+            this.buttonEngineShapeAdd.Text = "Add";
+            this.buttonEngineShapeAdd.UseVisualStyleBackColor = true;
+            this.buttonEngineShapeAdd.Click += new System.EventHandler(this.buttonEngineShapeAdd_Click);
+            // 
+            // boxEngineShapeName
+            // 
+            this.boxEngineShapeName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.boxEngineShapeName.Enabled = false;
+            this.boxEngineShapeName.Location = new System.Drawing.Point(56, 225);
+            this.boxEngineShapeName.Name = "boxEngineShapeName";
+            this.boxEngineShapeName.Size = new System.Drawing.Size(185, 20);
+            this.boxEngineShapeName.TabIndex = 38;
+            this.boxEngineShapeName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxEngineShapeName_KeyPress);
+            this.boxEngineShapeName.Leave += new System.EventHandler(this.boxEngineShapeName_Leave);
+            // 
+            // labelEngineShapeName
+            // 
+            this.labelEngineShapeName.AutoSize = true;
+            this.labelEngineShapeName.Location = new System.Drawing.Point(8, 228);
+            this.labelEngineShapeName.Name = "labelEngineShapeName";
+            this.labelEngineShapeName.Size = new System.Drawing.Size(41, 13);
+            this.labelEngineShapeName.TabIndex = 37;
+            this.labelEngineShapeName.Text = "Name: ";
             // 
             // Main
             // 
@@ -3720,6 +3826,14 @@ namespace DAEnerys
         private System.Windows.Forms.ComboBox comboEngineShapeParent;
         private System.Windows.Forms.CheckedListBox listEngineBurns;
         private System.Windows.Forms.CheckedListBox dockpathList;
+        private System.Windows.Forms.Button buttonEngineShapeImportDAE;
+        private System.Windows.Forms.Button buttonEngineShapeExportDAE;
+        private System.Windows.Forms.Button buttonEngineShapeImportOBJ;
+        private System.Windows.Forms.Button buttonEngineShapeExportOBJ;
+        private System.Windows.Forms.Button buttonEngineShapeRemove;
+        private System.Windows.Forms.Button buttonEngineShapeAdd;
+        private System.Windows.Forms.TextBox boxEngineShapeName;
+        private System.Windows.Forms.Label labelEngineShapeName;
     }
 }
 
