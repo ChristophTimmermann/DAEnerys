@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -142,6 +142,7 @@ namespace DAEnerys
             this.checkDrawMarkers = new System.Windows.Forms.CheckBox();
             this.listMarkers = new System.Windows.Forms.ListBox();
             this.tabDockpaths = new System.Windows.Forms.TabPage();
+            this.dockpathList = new System.Windows.Forms.CheckedListBox();
             this.labelDockpathAnimationIndex = new System.Windows.Forms.Label();
             this.numericDockpathAnimationIndex = new System.Windows.Forms.NumericUpDown();
             this.boxDockpathName = new System.Windows.Forms.TextBox();
@@ -220,7 +221,11 @@ namespace DAEnerys
             this.buttonEngineGlowLODExportOBJ = new System.Windows.Forms.Button();
             this.listEngineGlowLODs = new System.Windows.Forms.CheckedListBox();
             this.tabEngineShapes = new System.Windows.Forms.TabPage();
+            this.listEngineShapes = new System.Windows.Forms.CheckedListBox();
+            this.labelEngineShapeParent = new System.Windows.Forms.Label();
+            this.comboEngineShapeParent = new System.Windows.Forms.ComboBox();
             this.tabEngineBurns = new System.Windows.Forms.TabPage();
+            this.listEngineBurns = new System.Windows.Forms.CheckedListBox();
             this.comboEngineBurnParent = new System.Windows.Forms.ComboBox();
             this.labelEngineBurnParent = new System.Windows.Forms.Label();
             this.boxEngineBurnName = new System.Windows.Forms.TextBox();
@@ -260,11 +265,6 @@ namespace DAEnerys
             this.saveColladaMeshDialog = new System.Windows.Forms.SaveFileDialog();
             this.openColladaMeshDialog = new System.Windows.Forms.OpenFileDialog();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.listEngineShapes = new System.Windows.Forms.CheckedListBox();
-            this.labelEngineShapeParent = new System.Windows.Forms.Label();
-            this.comboEngineShapeParent = new System.Windows.Forms.ComboBox();
-            this.listEngineBurns = new System.Windows.Forms.CheckedListBox();
-            this.dockpathList = new System.Windows.Forms.CheckedListBox();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -497,7 +497,7 @@ namespace DAEnerys
             this.tabShipMeshes.Location = new System.Drawing.Point(4, 76);
             this.tabShipMeshes.Name = "tabShipMeshes";
             this.tabShipMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabShipMeshes.Size = new System.Drawing.Size(247, 694);
+            this.tabShipMeshes.Size = new System.Drawing.Size(247, 754);
             this.tabShipMeshes.TabIndex = 0;
             this.tabShipMeshes.Text = "Ship Meshes";
             this.tabShipMeshes.UseVisualStyleBackColor = true;
@@ -723,7 +723,7 @@ namespace DAEnerys
             this.tabMaterials.Location = new System.Drawing.Point(4, 76);
             this.tabMaterials.Name = "tabMaterials";
             this.tabMaterials.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMaterials.Size = new System.Drawing.Size(247, 694);
+            this.tabMaterials.Size = new System.Drawing.Size(247, 754);
             this.tabMaterials.TabIndex = 6;
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
@@ -926,7 +926,7 @@ namespace DAEnerys
             this.tabCollisionMeshes.Location = new System.Drawing.Point(4, 76);
             this.tabCollisionMeshes.Name = "tabCollisionMeshes";
             this.tabCollisionMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCollisionMeshes.Size = new System.Drawing.Size(247, 694);
+            this.tabCollisionMeshes.Size = new System.Drawing.Size(247, 754);
             this.tabCollisionMeshes.TabIndex = 5;
             this.tabCollisionMeshes.Text = "Collision Meshes";
             this.tabCollisionMeshes.UseVisualStyleBackColor = true;
@@ -1793,6 +1793,16 @@ namespace DAEnerys
             this.tabDockpaths.Text = "Dockpaths";
             this.tabDockpaths.UseVisualStyleBackColor = true;
             // 
+            // dockpathList
+            // 
+            this.dockpathList.FormattingEnabled = true;
+            this.dockpathList.Location = new System.Drawing.Point(6, 6);
+            this.dockpathList.Name = "dockpathList";
+            this.dockpathList.Size = new System.Drawing.Size(235, 154);
+            this.dockpathList.TabIndex = 25;
+            this.dockpathList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.dockpathList_ItemCheck);
+            this.dockpathList.SelectedIndexChanged += new System.EventHandler(this.dockpathList_SelectedIndexChanged);
+            // 
             // labelDockpathAnimationIndex
             // 
             this.labelDockpathAnimationIndex.AutoSize = true;
@@ -2611,7 +2621,7 @@ namespace DAEnerys
             this.tabEngineGlows.Location = new System.Drawing.Point(4, 76);
             this.tabEngineGlows.Name = "tabEngineGlows";
             this.tabEngineGlows.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEngineGlows.Size = new System.Drawing.Size(247, 694);
+            this.tabEngineGlows.Size = new System.Drawing.Size(247, 754);
             this.tabEngineGlows.TabIndex = 8;
             this.tabEngineGlows.Text = "Engine Glows";
             this.tabEngineGlows.UseVisualStyleBackColor = true;
@@ -2800,10 +2810,44 @@ namespace DAEnerys
             this.tabEngineShapes.Location = new System.Drawing.Point(4, 76);
             this.tabEngineShapes.Name = "tabEngineShapes";
             this.tabEngineShapes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEngineShapes.Size = new System.Drawing.Size(247, 694);
+            this.tabEngineShapes.Size = new System.Drawing.Size(247, 754);
             this.tabEngineShapes.TabIndex = 9;
             this.tabEngineShapes.Text = "Engine Shapes";
             this.tabEngineShapes.UseVisualStyleBackColor = true;
+            // 
+            // listEngineShapes
+            // 
+            this.listEngineShapes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listEngineShapes.FormattingEnabled = true;
+            this.listEngineShapes.Location = new System.Drawing.Point(6, 6);
+            this.listEngineShapes.Name = "listEngineShapes";
+            this.listEngineShapes.Size = new System.Drawing.Size(235, 364);
+            this.listEngineShapes.TabIndex = 15;
+            this.listEngineShapes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineShapes_ItemCheck);
+            this.listEngineShapes.SelectedIndexChanged += new System.EventHandler(this.listEngineShapes_SelectedIndexChanged);
+            // 
+            // labelEngineShapeParent
+            // 
+            this.labelEngineShapeParent.AutoSize = true;
+            this.labelEngineShapeParent.Location = new System.Drawing.Point(9, 379);
+            this.labelEngineShapeParent.Name = "labelEngineShapeParent";
+            this.labelEngineShapeParent.Size = new System.Drawing.Size(44, 13);
+            this.labelEngineShapeParent.TabIndex = 14;
+            this.labelEngineShapeParent.Text = "Parent: ";
+            // 
+            // comboEngineShapeParent
+            // 
+            this.comboEngineShapeParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboEngineShapeParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboEngineShapeParent.Enabled = false;
+            this.comboEngineShapeParent.FormattingEnabled = true;
+            this.comboEngineShapeParent.Location = new System.Drawing.Point(59, 376);
+            this.comboEngineShapeParent.Name = "comboEngineShapeParent";
+            this.comboEngineShapeParent.Size = new System.Drawing.Size(182, 21);
+            this.comboEngineShapeParent.Sorted = true;
+            this.comboEngineShapeParent.TabIndex = 13;
             // 
             // tabEngineBurns
             // 
@@ -2816,10 +2860,22 @@ namespace DAEnerys
             this.tabEngineBurns.Controls.Add(this.groupEngineBurnFlames);
             this.tabEngineBurns.Location = new System.Drawing.Point(4, 76);
             this.tabEngineBurns.Name = "tabEngineBurns";
-            this.tabEngineBurns.Size = new System.Drawing.Size(247, 694);
+            this.tabEngineBurns.Size = new System.Drawing.Size(247, 754);
             this.tabEngineBurns.TabIndex = 10;
             this.tabEngineBurns.Text = "Engine Burns";
             this.tabEngineBurns.UseVisualStyleBackColor = true;
+            // 
+            // listEngineBurns
+            // 
+            this.listEngineBurns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listEngineBurns.FormattingEnabled = true;
+            this.listEngineBurns.Location = new System.Drawing.Point(6, 6);
+            this.listEngineBurns.Name = "listEngineBurns";
+            this.listEngineBurns.Size = new System.Drawing.Size(235, 154);
+            this.listEngineBurns.TabIndex = 16;
+            this.listEngineBurns.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineBurns_ItemCheck);
+            this.listEngineBurns.SelectedIndexChanged += new System.EventHandler(this.listEngineBurns_SelectedIndexChanged);
             // 
             // comboEngineBurnParent
             // 
@@ -2925,7 +2981,7 @@ namespace DAEnerys
             this.tabAnimations.Controls.Add(this.listAnimations);
             this.tabAnimations.Location = new System.Drawing.Point(4, 76);
             this.tabAnimations.Name = "tabAnimations";
-            this.tabAnimations.Size = new System.Drawing.Size(247, 694);
+            this.tabAnimations.Size = new System.Drawing.Size(247, 754);
             this.tabAnimations.TabIndex = 11;
             this.tabAnimations.Text = "Animations";
             this.tabAnimations.UseVisualStyleBackColor = true;
@@ -3184,9 +3240,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle21;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -3194,14 +3250,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle23;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -3210,9 +3266,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle24;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -3225,9 +3281,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle22;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -3310,56 +3366,6 @@ namespace DAEnerys
             this.colorDialog.Color = System.Drawing.Color.Gray;
             this.colorDialog.FullOpen = true;
             this.colorDialog.SolidColorOnly = true;
-            // 
-            // listEngineShapes
-            // 
-            this.listEngineShapes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listEngineShapes.FormattingEnabled = true;
-            this.listEngineShapes.Location = new System.Drawing.Point(6, 6);
-            this.listEngineShapes.Name = "listEngineShapes";
-            this.listEngineShapes.Size = new System.Drawing.Size(235, 364);
-            this.listEngineShapes.TabIndex = 15;
-            // 
-            // labelEngineShapeParent
-            // 
-            this.labelEngineShapeParent.AutoSize = true;
-            this.labelEngineShapeParent.Location = new System.Drawing.Point(9, 379);
-            this.labelEngineShapeParent.Name = "labelEngineShapeParent";
-            this.labelEngineShapeParent.Size = new System.Drawing.Size(44, 13);
-            this.labelEngineShapeParent.TabIndex = 14;
-            this.labelEngineShapeParent.Text = "Parent: ";
-            // 
-            // comboEngineShapeParent
-            // 
-            this.comboEngineShapeParent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboEngineShapeParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboEngineShapeParent.Enabled = false;
-            this.comboEngineShapeParent.FormattingEnabled = true;
-            this.comboEngineShapeParent.Location = new System.Drawing.Point(59, 376);
-            this.comboEngineShapeParent.Name = "comboEngineShapeParent";
-            this.comboEngineShapeParent.Size = new System.Drawing.Size(182, 21);
-            this.comboEngineShapeParent.Sorted = true;
-            this.comboEngineShapeParent.TabIndex = 13;
-            // 
-            // listEngineBurns
-            // 
-            this.listEngineBurns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listEngineBurns.FormattingEnabled = true;
-            this.listEngineBurns.Location = new System.Drawing.Point(6, 6);
-            this.listEngineBurns.Name = "listEngineBurns";
-            this.listEngineBurns.Size = new System.Drawing.Size(235, 154);
-            this.listEngineBurns.TabIndex = 16;
-            // 
-            // dockpathList
-            // 
-            this.dockpathList.FormattingEnabled = true;
-            this.dockpathList.Location = new System.Drawing.Point(6, 6);
-            this.dockpathList.Name = "dockpathList";
-            this.dockpathList.Size = new System.Drawing.Size(235, 154);
-            this.dockpathList.TabIndex = 25;
             // 
             // Main
             // 
