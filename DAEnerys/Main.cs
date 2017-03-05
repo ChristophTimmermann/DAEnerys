@@ -23,6 +23,9 @@ namespace DAEnerys
         public HWJoint SelectedJoint;
         HWCollisionMesh selectedCollisionMesh;
         HWDockpath selectedDockpath;
+        int selectedDockpathFamily;
+        int selectedDockpathLink;
+        int selectedDockpathSegment;
         HWNavLight selectedNavLight;
         HWEngineBurn selectedEngineBurn;
         HWEngineGlow selectedEngineGlow;
@@ -54,6 +57,12 @@ namespace DAEnerys
         private bool ignoreEngineShapeListSelectedIndexChanged;
         private bool ignoreNavLightValuesChanged;
         private bool ignoreNavLightListSelectedIndexChanged;
+        private bool ignoreDockpathListSelectedIndexChanged;
+        private bool ignoreDockpathFamilyListSelectedIndexChanged;
+        private bool ignoreDockpathLinkListSelectedIndexChanged;
+        private bool ignoreDockpathValuesChanged;
+        private bool ignoreDockpathSegmentValuesChanged;
+        private bool ignoreDockpathComboLinkChanged;
         private bool ignoreJointValuesChanged;
         private bool ignoreJointSelection;
         private bool ignoreMarkerListSelectedIndexChanged;
@@ -109,6 +118,8 @@ namespace DAEnerys
 
         private void Main_Load(object sender, EventArgs e)
         {
+            this.Size = new Size(1300, 900);
+
             HWTexture.Init();
             Renderer.Init();
             EditorScene.Init();
@@ -128,6 +139,8 @@ namespace DAEnerys
             gridProblems.RowTemplate.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             gridProblems.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             gridProblems.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            tabDockpaths.AutoScroll = true;
 
             #region DPI-Scaling
             splitContainer1.AutoScaleMode = AutoScaleMode.Font;
@@ -306,27 +319,10 @@ namespace DAEnerys
             checkDrawMarkers.Checked = false;
 
             //Dockpaths
-            dockpathList.Items.Clear();
-            listDockpathFamilies.Items.Clear();
-            listDockpathLinks.Items.Clear();
-            checkDockpathExit.Checked = false;
-            checkDockpathLatch.Checked = false;
-            checkDockpathAnim.Checked = false;
-            checkDockpathAjar.Checked = false;
-            trackBarDockpathSegments.Enabled = false;
-            trackBarDockpathSegments.Value = 0;
-            trackBarDockpathSegments.Maximum = 1;
-            boxDockpathSegmentTolerance.Clear();
-            boxDockpathSegmentSpeed.Clear();
-            checkDockpathSegmentFlagUseRot.Checked = false;
-            checkDockpathSegmentFlagPlayer.Checked = false;
-            checkDockpathSegmentFlagQueue.Checked = false;
-            checkDockpathSegmentFlagClose.Checked = false;
-            checkDockpathSegmentFlagClearRes.Checked = false;
-            checkDockpathSegmentFlagCheck.Checked = false;
-            checkDockpathSegmentFlagUnfocus.Checked = false;
-            checkDockpathSegmentFlagClip.Checked = false;
+            listDockpaths.Items.Clear();
             selectedDockpath = null;
+            trackBarDockpathSegments_Scroll(this, EventArgs.Empty);
+            listDockpaths_SelectedIndexChanged(this, EventArgs.Empty);
 
             //Navlights
             listNavLights.Items.Clear();
@@ -339,7 +335,7 @@ namespace DAEnerys
             comboEngineBurnParent.Items.Clear();
             trackBarEngineBurnFlames.Enabled = false;
             trackBarEngineBurnFlames.Value = 0;
-            trackBarEngineBurnFlames.Maximum = 1;
+            trackBarEngineBurnFlames.Maximum = 0;
             numericEngineBurnSpriteIndex.Value = 0;
             numericEngineBurnSpriteIndex.Enabled = false;
 
@@ -352,7 +348,7 @@ namespace DAEnerys
 
             foreach (HWDockSegment segment in HWDockSegment.DockSegments)
             {
-                segment.Icosphere.Color = new Vector3(1, 0, 0);
+                segment.EditorDockSegment.Color = new Vector3(1, 0, 0);
             }
 
             foreach (HWEngineFlame flame in HWEngineFlame.EngineFlames)
@@ -912,9 +908,13 @@ namespace DAEnerys
         //--------------------------------- DOCKPATHS ---------------------------------//
         public void AddDockpath(HWDockpath dockpath)
         {
-            dockpathList.Items.Add(dockpath.Name);
+            listDockpaths.Items.Add(dockpath.Name);
         }
-        private void dockpathList_ItemCheck(object sender, ItemCheckEventArgs e)
+        public void RemoveDockpath(HWDockpath dockpath)
+        {
+            listDockpaths.Items.Remove(dockpath.Name);
+        }
+        private void listDockpaths_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             bool newValue = false;
 
@@ -928,17 +928,20 @@ namespace DAEnerys
 
             foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
             {
-                if (dockpath.Name == dockpathList.Items[e.Index].ToString())
+                if (dockpath.Name == listDockpaths.Items[e.Index].ToString())
                     dockpath.Visible = newValue;
             }
 
             trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
-
-            Renderer.InvalidateView();
-            Renderer.Invalidate();
         }
-        private void dockpathList_SelectedIndexChanged(object sender, EventArgs e)
+        private void listDockpaths_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (ignoreDockpathListSelectedIndexChanged)
+                return;
+
+            selectedDockpath = null;
+            selectedDockpathSegment = -1;
+
             listDockpathFamilies.Items.Clear();
             listDockpathLinks.Items.Clear();
             checkDockpathExit.Checked = false;
@@ -946,12 +949,6 @@ namespace DAEnerys
             checkDockpathAnim.Checked = false;
             checkDockpathAjar.Checked = false;
 
-            trackBarDockpathSegments.Enabled = true;
-            trackBarDockpathSegments.Minimum = 0;
-            trackBarDockpathSegments.Maximum = 1;
-            trackBarDockpathSegments.Value = 0;
-            boxDockpathSegmentTolerance.Clear();
-            boxDockpathSegmentSpeed.Clear();
             boxDockpathName.Clear();
             numericDockpathAnimationIndex.Value = 0;
             checkDockpathSegmentFlagUseRot.Checked = false;
@@ -963,68 +960,471 @@ namespace DAEnerys
             checkDockpathSegmentFlagUnfocus.Checked = false;
             checkDockpathSegmentFlagClip.Checked = false;
 
+            buttonDockpathRemove.Enabled = false;
+            boxDockpathName.Enabled = false;
+            numericDockpathAnimationIndex.Enabled = false;
+
+            checkDockpathExit.Enabled = false;
+            checkDockpathLatch.Enabled = false;
+            checkDockpathAnim.Enabled = false;
+            checkDockpathAjar.Enabled = false;
+
+            listDockpathFamilies.Enabled = false;
+            listDockpathFamilies.ClearSelected();
+            listDockpathFamilies_SelectedIndexChanged(this, EventArgs.Empty);
+            buttonDockpathFamilyAdd.Enabled = false;
+
+            listDockpathLinks.Enabled = false;
+            listDockpathLinks.ClearSelected();
+            comboDockpathLinkPath.Items.Clear();
+            listDockpathLinks_SelectedIndexChanged(this, EventArgs.Empty);
+            buttonDockpathLinkAdd.Enabled = false;
+
+            buttonDockpathSegmentInsertBefore.Enabled = false;
+            buttonDockpathSegmentInsertAfter.Enabled = false;
+            trackBarDockpathSegments.Enabled = false;
+            trackBarDockpathSegments.Minimum = 0;
+            trackBarDockpathSegments.Maximum = 0;
+            trackBarDockpathSegments.Value = 0;
+            numericDockpathSegmentTolerance.Value = 0;
+            numericDockpathSegmentSpeed.Value = 0;
+
+            buttonDockpathSegmentRemove.Enabled = false;
+            numericDockpathSegmentTolerance.Enabled = false;
+            numericDockpathSegmentSpeed.Enabled = false;
+
+            checkDockpathSegmentFlagCheck.Enabled = false;
+            checkDockpathSegmentFlagClearRes.Enabled = false;
+            checkDockpathSegmentFlagClip.Enabled = false;
+            checkDockpathSegmentFlagClose.Enabled = false;
+            checkDockpathSegmentFlagPlayer.Enabled = false;
+            checkDockpathSegmentFlagQueue.Enabled = false;
+            checkDockpathSegmentFlagUnfocus.Enabled = false;
+            checkDockpathSegmentFlagUseRot.Enabled = false;
+
+            numericDockpathSegmentPosX.Enabled = false;
+            numericDockpathSegmentPosY.Enabled = false;
+            numericDockpathSegmentPosZ.Enabled = false;
+
+            numericDockpathSegmentRotationX.Enabled = false;
+            numericDockpathSegmentRotationY.Enabled = false;
+            numericDockpathSegmentRotationZ.Enabled = false;
+
+            numericDockpathSegmentPosX.Value = 0;
+            numericDockpathSegmentPosY.Value = 0;
+            numericDockpathSegmentPosZ.Value = 0;
+
+            numericDockpathSegmentRotationX.Value = 0;
+            numericDockpathSegmentRotationY.Value = 0;
+            numericDockpathSegmentRotationZ.Value = 0;
+
             foreach (HWDockSegment segment in HWDockSegment.DockSegments)
                 segment.ToleranceIcosphere.Visible = false;
 
-            HWDockpath dockpath = null;
-            foreach (HWDockpath path in HWDockpath.Dockpaths)
+            selectedDockpath = HWDockpath.GetByName((string)listDockpaths.SelectedItem);
+
+            if (selectedDockpath == null)
+                return;
+
+            ignoreDockpathValuesChanged = true;
+
+            foreach (string family in selectedDockpath.Families)
             {
-                if (path.Name == dockpathList.SelectedItem.ToString())
+                listDockpathFamilies.Items.Add(family);
+            }
+
+            foreach (string link in selectedDockpath.Links)
+            {
+                listDockpathLinks.Items.Add(link);
+            }
+
+            foreach (DockpathFlag flag in selectedDockpath.Flags)
+            {
+                switch (flag)
                 {
-                    dockpath = path;
-                    break;
+                    case DockpathFlag.Exit:
+                        checkDockpathExit.Checked = true;
+                        break;
+                    case DockpathFlag.Latch:
+                        checkDockpathLatch.Checked = true;
+                        break;
+                    case DockpathFlag.Anim:
+                        checkDockpathAnim.Checked = true;
+                        break;
+                    case DockpathFlag.Ajar:
+                        checkDockpathAjar.Checked = true;
+                        break;
                 }
             }
 
-            if (dockpath != null)
+            buttonDockpathRemove.Enabled = true;
+            boxDockpathName.Enabled = true;
+            numericDockpathAnimationIndex.Enabled = true;
+
+            checkDockpathExit.Enabled = true;
+            checkDockpathLatch.Enabled = true;
+            checkDockpathAnim.Enabled = true;
+            checkDockpathAjar.Enabled = true;
+
+            boxDockpathName.Text = selectedDockpath.Name;
+            numericDockpathAnimationIndex.Value = selectedDockpath.AnimationIndex;
+
+            listDockpathFamilies.Enabled = true;
+            buttonDockpathFamilyAdd.Enabled = true;
+
+            listDockpathLinks.Enabled = true;
+            buttonDockpathLinkAdd.Enabled = true;
+            foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
             {
-                foreach (string family in dockpath.Families)
-                {
-                    listDockpathFamilies.Items.Add(family);
-                }
+                if (dockpath == selectedDockpath)
+                    continue;
 
-                foreach (string link in dockpath.Links)
-                {
-                    listDockpathLinks.Items.Add(link);
-                }
+                if (selectedDockpath.Links.Contains(dockpath.Name))
+                    continue;
 
-                foreach (DockpathFlag flag in dockpath.Flags)
+                comboDockpathLinkPath.Items.Add(dockpath.Name);
+            }
+
+            buttonDockpathSegmentInsertBefore.Enabled = true;
+            buttonDockpathSegmentInsertAfter.Enabled = true;
+            trackBarDockpathSegments.Enabled = true;
+            if (selectedDockpath.Segments.Count > 1)
+                trackBarDockpathSegments.Maximum = selectedDockpath.Segments.Count - 1;
+            else
+                trackBarDockpathSegments.Maximum = 0;
+            trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
+
+            ignoreDockpathValuesChanged = false;
+        }
+        private void buttonDockpathRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            selectedDockpath.Destroy();
+            listDockpaths.ClearSelected();
+            listDockpaths_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void boxDockpathName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedDockpath == null)
+                return;
+
+            UpdateDockpathName(selectedDockpath, boxDockpathName.Text);
+        }
+        private void boxDockpathName_Leave(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            UpdateDockpathName(selectedDockpath, boxDockpathName.Text);
+        }
+        private void UpdateDockpathName(HWDockpath dockpath, string newName)
+        {
+            if (!listDockpaths.Items.Contains(dockpath.Name))
+                return;
+
+            //Dockpath with this name already exists
+            if (listDockpaths.Items.Contains(newName))
+            {
+                HWDockpath existingDockpath = HWDockpath.GetByName(newName);
+                if (existingDockpath != dockpath)
                 {
-                    switch (flag)
+                    MessageBox.Show("A dockpath with this name already exists.", "Error while changing dockpath name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxDockpathName.Text = dockpath.Name;
+                    boxDockpathName.Focus();
+                    return;
+                }
+            }
+
+            ignoreDockpathListSelectedIndexChanged = true;
+            int index = listDockpaths.Items.IndexOf(dockpath.Name);
+            listDockpaths.Items.Remove(dockpath.Name);
+            listDockpaths.Items.Remove(dockpath.Name);
+            dockpath.Name = boxDockpathName.Text;
+            listDockpaths.Items.Insert(index, dockpath.Name);
+            listDockpaths.SelectedItem = dockpath.Name;
+            CheckDockpathVisible(dockpath, dockpath.Visible);
+            ignoreDockpathListSelectedIndexChanged = false;
+        }
+        public void CheckDockpathVisible(HWDockpath dockpath, bool visible)
+        {
+            listDockpaths.SetItemChecked(listDockpaths.Items.IndexOf(dockpath.Name), visible);
+        }
+        private void numericDockpathAnimationIndex_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            if (ignoreDockpathValuesChanged)
+                return;
+
+            selectedDockpath.AnimationIndex = (int)numericDockpathAnimationIndex.Value;
+        }
+        private void buttonDockpathAdd_Click(object sender, EventArgs e)
+        {
+            int indexOffset = 1;
+            string newName = "path" + (listDockpaths.Items.Count + indexOffset);
+            while (listDockpaths.Items.Contains(newName))
+            {
+                indexOffset++;
+                newName = "path" + (listDockpaths.Items.Count + indexOffset);
+            }
+
+            HWDockpath newDockpath = new HWDockpath(newName, new string[0], new string[0], new DockpathFlag[0], 0);
+            newDockpath.Visible = true;
+
+            CheckDockpathVisible(newDockpath, true);
+            listDockpaths.SelectedItem = newDockpath.Name;
+        }
+        private void DockpathFlagsChanged(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            if (ignoreDockpathValuesChanged)
+                return;
+
+            selectedDockpath.Flags.Clear();
+            if (checkDockpathExit.Checked)
+                selectedDockpath.Flags.Add(DockpathFlag.Exit);
+            if (checkDockpathAjar.Checked)
+                selectedDockpath.Flags.Add(DockpathFlag.Ajar);
+            if (checkDockpathAnim.Checked)
+                selectedDockpath.Flags.Add(DockpathFlag.Anim);
+            if (checkDockpathLatch.Checked)
+                selectedDockpath.Flags.Add(DockpathFlag.Latch);
+        }
+        private void listDockpathFamilies_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ignoreDockpathFamilyListSelectedIndexChanged)
+                return;
+
+            selectedDockpathFamily = -1;
+
+            buttonDockpathFamilyRemove.Enabled = false;
+            boxDockpathFamilyName.Enabled = false;
+
+            boxDockpathFamilyName.Clear();
+
+            selectedDockpathFamily = listDockpathFamilies.SelectedIndex;
+
+            if (selectedDockpathFamily == -1)
+                return;
+
+            buttonDockpathFamilyRemove.Enabled = true;
+            boxDockpathFamilyName.Enabled = true;
+
+            boxDockpathFamilyName.Text = (string)listDockpathFamilies.Items[selectedDockpathFamily];
+        }
+        private void boxDockpathFamilyName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedDockpath == null)
+                return;
+            if (selectedDockpathFamily == -1)
+                return;
+
+            UpdateDockpathFamilyName(selectedDockpathFamily, boxDockpathFamilyName.Text);
+        }
+        private void boxDockpathFamilyName_Leave(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+            if (selectedDockpathFamily == -1)
+                return;
+
+            UpdateDockpathFamilyName(selectedDockpathFamily, boxDockpathFamilyName.Text);
+        }
+        private void UpdateDockpathFamilyName(int dockpathFamily, string newName)
+        {
+            if (selectedDockpath.Families.Count - 1 < dockpathFamily)
+                return;
+
+            //Dockpath family with this name already exists
+            if (selectedDockpath.Families.Contains(newName))
+            {
+                if (dockpathFamily != selectedDockpath.Families.IndexOf(newName))
+                {
+                    MessageBox.Show("This dockpath family already exists.", "Error while changing dockpath family", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxDockpathFamilyName.Text = selectedDockpath.Families[dockpathFamily];
+                    boxDockpathFamilyName.Focus();
+                    return;
+                }
+            }
+
+            ignoreDockpathFamilyListSelectedIndexChanged = true;
+            listDockpathFamilies.Items.RemoveAt(dockpathFamily);
+            selectedDockpath.Families[dockpathFamily] = boxDockpathFamilyName.Text;
+            listDockpathFamilies.Items.Insert(dockpathFamily, boxDockpathFamilyName.Text);
+            listDockpathFamilies.SelectedItem = boxDockpathFamilyName.Text;
+            ignoreDockpathFamilyListSelectedIndexChanged = false;
+        }
+        private void buttonDockpathFamilyRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            if (selectedDockpathFamily == -1)
+                return;
+
+            selectedDockpath.Families.RemoveAt(selectedDockpathFamily);
+            listDockpaths_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void buttonDockpathFamilyAdd_Click(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            int indexOffset = 1;
+            string newName = "Family" + (selectedDockpath.Families.Count + indexOffset);
+            while (selectedDockpath.Families.Contains(newName))
+            {
+                indexOffset++;
+                newName = "Family" + (selectedDockpath.Families.Count + indexOffset);
+            }
+
+            selectedDockpath.Families.Add(newName);
+            listDockpaths_SelectedIndexChanged(this, EventArgs.Empty);
+            listDockpathFamilies.SelectedItem = newName;
+        }
+        private void listDockpathLinks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ignoreDockpathLinkListSelectedIndexChanged)
+                return;
+
+            if (selectedDockpath == null)
+                return;
+
+            //Remove all string.Empty links
+            selectedDockpath.Links.RemoveAll(string.IsNullOrEmpty);
+            while (listDockpathLinks.Items.Contains(string.Empty))
+                listDockpathLinks.Items.Remove(string.Empty);
+
+            selectedDockpathLink = -1;
+
+            buttonDockpathLinkRemove.Enabled = false;
+            comboDockpathLinkPath.Enabled = false;
+
+            comboDockpathLinkPath.SelectedItem = null;
+
+            selectedDockpathLink = listDockpathLinks.SelectedIndex;
+
+            if (selectedDockpathLink == -1)
+                return;
+
+            buttonDockpathLinkRemove.Enabled = true;
+
+            comboDockpathLinkPath.Enabled = true;
+            ignoreDockpathComboLinkChanged = true;
+            comboDockpathLinkPath.Items.Add(selectedDockpath.Links[selectedDockpathLink]);
+            comboDockpathLinkPath.SelectedItem = selectedDockpath.Links[selectedDockpathLink];
+            ignoreDockpathComboLinkChanged = false;
+        }
+        private void buttonDockpathLinkRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            if (selectedDockpathLink == -1)
+                return;
+
+            ignoreDockpathLinkListSelectedIndexChanged = true;
+            listDockpathLinks.Items.Remove(selectedDockpath.Links[selectedDockpathLink]);
+            selectedDockpath.Links.Remove(selectedDockpath.Links[selectedDockpathLink]);
+            ignoreDockpathLinkListSelectedIndexChanged = false;
+            listDockpathLinks.ClearSelected();
+            ignoreDockpathComboLinkChanged = true;
+            comboDockpathLinkPath.SelectedItem = null;
+            comboDockpathLinkPath.Enabled = false;
+            ignoreDockpathComboLinkChanged = false;
+            buttonDockpathLinkRemove.Enabled = false;
+        }
+        private void buttonDockpathLinkAdd_Click(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            if (selectedDockpathLink != -1)
+                if (selectedDockpath.Links.Count - 1 >= selectedDockpathLink)
+                {
+                    if (selectedDockpath.Links[selectedDockpathLink] == string.Empty)
                     {
-                        case DockpathFlag.Exit:
-                            checkDockpathExit.Checked = true;
-                            break;
-                        case DockpathFlag.Latch:
-                            checkDockpathLatch.Checked = true;
-                            break;
-                        case DockpathFlag.Anim:
-                            checkDockpathAnim.Checked = true;
-                            break;
-                        case DockpathFlag.Ajar:
-                            checkDockpathAjar.Checked = true;
-                            break;
+                        listDockpathLinks.Items.Remove(string.Empty);
+                        selectedDockpath.Links.Remove(string.Empty);
                     }
                 }
 
-                boxDockpathName.Text = dockpath.Name;
-                numericDockpathAnimationIndex.Value = dockpath.AnimationIndex;
+            selectedDockpath.Links.Add(string.Empty);
+            listDockpathLinks.Items.Add(string.Empty);
+            ignoreDockpathLinkListSelectedIndexChanged = true;
+            listDockpathLinks.SelectedItem = string.Empty;
+            selectedDockpathLink = selectedDockpath.Links.Count - 1;
+            comboDockpathLinkPath.Items.Clear();
+            foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
+            {
+                if (dockpath == selectedDockpath)
+                    continue;
 
-                selectedDockpath = dockpath;
+                if (selectedDockpath.Links.Contains(dockpath.Name))
+                    continue;
+
+                comboDockpathLinkPath.Items.Add(dockpath.Name);
             }
+            comboDockpathLinkPath.Enabled = true;
+            buttonDockpathLinkRemove.Enabled = true;
+            ignoreDockpathLinkListSelectedIndexChanged = false;
+        }
+        private void comboDockpathLinkPath_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ignoreDockpathComboLinkChanged)
+                return;
 
-            trackBarDockpathSegments.Maximum = dockpath.Segments.Count - 1;
-            trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
+            if (selectedDockpath == null)
+                return;
+
+            if (selectedDockpathLink == -1)
+                return;
+
+            ignoreDockpathLinkListSelectedIndexChanged = true;
+            listDockpathLinks.Items.Remove(selectedDockpath.Links[selectedDockpathLink]);
+            selectedDockpath.Links[selectedDockpathLink] = (string)comboDockpathLinkPath.SelectedItem;
+            listDockpathLinks.Items.Insert(selectedDockpathLink, selectedDockpath.Links[selectedDockpathLink]);
+            listDockpathLinks.SelectedItem = selectedDockpath.Links[selectedDockpathLink];
+            ignoreDockpathLinkListSelectedIndexChanged = false;
+
+            comboDockpathLinkPath.Items.Clear();
+            foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
+            {
+                if (dockpath == selectedDockpath)
+                    continue;
+
+                if (selectedDockpath.Links.Contains(dockpath.Name))
+                    continue;
+
+                comboDockpathLinkPath.Items.Add(dockpath.Name);
+            }
+            comboDockpathLinkPath.Items.Add(selectedDockpath.Links[selectedDockpathLink]);
+            ignoreDockpathComboLinkChanged = true;
+            comboDockpathLinkPath.SelectedItem = selectedDockpath.Links[selectedDockpathLink];
+            ignoreDockpathComboLinkChanged = false;
         }
         private void trackBarDockpathSegments_Scroll(object sender, EventArgs e)
         {
             if (selectedDockpath == null)
                 return;
 
+            selectedDockpathSegment = -1;
+
             //Reset segment colors
             foreach (HWDockSegment segment in HWDockSegment.DockSegments)
             {
-                segment.Icosphere.Color = new Vector3(1, 0, 0);
+                segment.EditorDockSegment.Color = new Vector3(1, 0, 0);
                 segment.ToleranceIcosphere.Visible = false;
             }
 
@@ -1035,25 +1435,85 @@ namespace DAEnerys
                 line.EndColor = new Vector3(1, 0, 0);
             }
 
+            buttonDockpathSegmentRemove.Enabled = false;
+            numericDockpathSegmentTolerance.Enabled = false;
+            numericDockpathSegmentSpeed.Enabled = false;
+
+            checkDockpathSegmentFlagCheck.Enabled = false;
+            checkDockpathSegmentFlagClearRes.Enabled = false;
+            checkDockpathSegmentFlagClip.Enabled = false;
+            checkDockpathSegmentFlagClose.Enabled = false;
+            checkDockpathSegmentFlagPlayer.Enabled = false;
+            checkDockpathSegmentFlagQueue.Enabled = false;
+            checkDockpathSegmentFlagUnfocus.Enabled = false;
+            checkDockpathSegmentFlagUseRot.Enabled = false;
+
+            numericDockpathSegmentPosX.Enabled = false;
+            numericDockpathSegmentPosY.Enabled = false;
+            numericDockpathSegmentPosZ.Enabled = false;
+
+            numericDockpathSegmentRotationX.Enabled = false;
+            numericDockpathSegmentRotationY.Enabled = false;
+            numericDockpathSegmentRotationZ.Enabled = false;
+
+            numericDockpathSegmentPosX.Value = 0;
+            numericDockpathSegmentPosY.Value = 0;
+            numericDockpathSegmentPosZ.Value = 0;
+
+            numericDockpathSegmentRotationX.Value = 0;
+            numericDockpathSegmentRotationY.Value = 0;
+            numericDockpathSegmentRotationZ.Value = 0;
+
             if (selectedDockpath.Segments.Count == 0)
                 return;
 
-            HWDockSegment selectedSegment = selectedDockpath.Segments[trackBarDockpathSegments.Value];
+            HWDockSegment selectedSegment = null;
+            if (trackBarDockpathSegments.Value <= selectedDockpath.Segments.Count)
+                selectedSegment = selectedDockpath.Segments[trackBarDockpathSegments.Value];
+            else
+                return;
+
+            selectedDockpathSegment = trackBarDockpathSegments.Value;
 
             if (selectedDockpath.Visible)
             {
-                selectedSegment.Icosphere.Color = new Vector3(1, 1, 0);
+                selectedSegment.EditorDockSegment.Color = new Vector3(1, 1, 0);
                 selectedSegment.ToleranceIcosphere.Visible = true;
             }
 
-            /* if(selectedSegment.ID < selectedDockpath.Lines.Count)
-             selectedDockpath.Lines[selectedSegment.ID].StartColor = Color.Yellow;
+            ignoreDockpathSegmentValuesChanged = true;
+            buttonDockpathSegmentRemove.Enabled = true;
 
-             if(selectedSegment.ID > 0)
-                 selectedDockpath.Lines[selectedSegment.ID - 1].EndColor = Color.Yellow;*/
+            numericDockpathSegmentTolerance.Enabled = true;
+            numericDockpathSegmentSpeed.Enabled = true;
 
-            boxDockpathSegmentTolerance.Text = selectedSegment.Tolerance.ToString();
-            boxDockpathSegmentSpeed.Text = selectedSegment.Speed.ToString();
+            numericDockpathSegmentTolerance.Value = (decimal)selectedSegment.Tolerance;
+            numericDockpathSegmentSpeed.Value = (decimal)selectedSegment.Speed;
+
+            numericDockpathSegmentPosX.Enabled = true;
+            numericDockpathSegmentPosY.Enabled = true;
+            numericDockpathSegmentPosZ.Enabled = true;
+
+            numericDockpathSegmentRotationX.Enabled = true;
+            numericDockpathSegmentRotationY.Enabled = true;
+            numericDockpathSegmentRotationZ.Enabled = true;
+
+            numericDockpathSegmentPosX.Value = (decimal)selectedSegment.LocalPosition.X;
+            numericDockpathSegmentPosY.Value = (decimal)selectedSegment.LocalPosition.Y;
+            numericDockpathSegmentPosZ.Value = (decimal)selectedSegment.LocalPosition.Z;
+
+            numericDockpathSegmentRotationX.Value = (decimal)MathHelper.RadiansToDegrees(selectedSegment.LocalRotation.X);
+            numericDockpathSegmentRotationY.Value = (decimal)MathHelper.RadiansToDegrees(selectedSegment.LocalRotation.Y);
+            numericDockpathSegmentRotationZ.Value = (decimal)MathHelper.RadiansToDegrees(selectedSegment.LocalRotation.Z);
+
+            checkDockpathSegmentFlagCheck.Enabled = true;
+            checkDockpathSegmentFlagClearRes.Enabled = true;
+            checkDockpathSegmentFlagClip.Enabled = true;
+            checkDockpathSegmentFlagClose.Enabled = true;
+            checkDockpathSegmentFlagPlayer.Enabled = true;
+            checkDockpathSegmentFlagQueue.Enabled = true;
+            checkDockpathSegmentFlagUnfocus.Enabled = true;
+            checkDockpathSegmentFlagUseRot.Enabled = true;
 
             checkDockpathSegmentFlagUseRot.Checked = false;
             checkDockpathSegmentFlagPlayer.Checked = false;
@@ -1094,10 +1554,210 @@ namespace DAEnerys
                         break;
                 }
             }
+            ignoreDockpathSegmentValuesChanged = false;
+        }
+        private void numericDockpathSegmentTolerance_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+            if (selectedDockpathSegment == -1)
+                return;
+            if (ignoreDockpathSegmentValuesChanged)
+                return;
 
-            Renderer.InvalidateMeshData();
-            Renderer.InvalidateView();
-            Renderer.Invalidate();
+            selectedDockpath.Segments[selectedDockpathSegment].Tolerance = (float)numericDockpathSegmentTolerance.Value;
+        }
+        private void numericDockpathSegmentSpeed_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+            if (selectedDockpathSegment == -1)
+                return;
+            if (ignoreDockpathSegmentValuesChanged)
+                return;
+
+            selectedDockpath.Segments[selectedDockpathSegment].Speed = (float)numericDockpathSegmentSpeed.Value;
+        }
+        private void DockpathSegmentFlagsChanged(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+            if (selectedDockpathSegment == -1)
+                return;
+            if (ignoreDockpathSegmentValuesChanged)
+                return;
+
+            selectedDockpath.Segments[selectedDockpathSegment].Flags.Clear();
+            if (checkDockpathSegmentFlagCheck.Checked)
+                selectedDockpath.Segments[selectedDockpathSegment].Flags.Add(DockSegmentFlag.Check);
+            if (checkDockpathSegmentFlagClearRes.Checked)
+                selectedDockpath.Segments[selectedDockpathSegment].Flags.Add(DockSegmentFlag.ClearRes);
+            if (checkDockpathSegmentFlagClip.Checked)
+                selectedDockpath.Segments[selectedDockpathSegment].Flags.Add(DockSegmentFlag.Clip);
+            if (checkDockpathSegmentFlagClose.Checked)
+                selectedDockpath.Segments[selectedDockpathSegment].Flags.Add(DockSegmentFlag.Close);
+            if (checkDockpathSegmentFlagPlayer.Checked)
+                selectedDockpath.Segments[selectedDockpathSegment].Flags.Add(DockSegmentFlag.Player);
+            if (checkDockpathSegmentFlagQueue.Checked)
+                selectedDockpath.Segments[selectedDockpathSegment].Flags.Add(DockSegmentFlag.Queue);
+            if (checkDockpathSegmentFlagUnfocus.Checked)
+                selectedDockpath.Segments[selectedDockpathSegment].Flags.Add(DockSegmentFlag.UnFocus);
+            if (checkDockpathSegmentFlagUseRot.Checked)
+                selectedDockpath.Segments[selectedDockpathSegment].Flags.Add(DockSegmentFlag.UseRot);
+        }
+        private void buttonDockpathSegmentRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+            if (selectedDockpathSegment == -1)
+                return;
+
+            selectedDockpath.Segments[selectedDockpathSegment].Destroy();
+            foreach (EditorLine line in selectedDockpath.Lines)
+                line.Visible = true;
+            if (selectedDockpath.Segments.Count >= 1)
+                trackBarDockpathSegments.Maximum--;
+            if (selectedDockpathSegment > 0)
+                trackBarDockpathSegments.Value = selectedDockpathSegment - 1;
+            else
+                trackBarDockpathSegments.Value = 0;
+            trackBarDockpathSegments_Scroll(this, EventArgs.Empty);
+        }
+        private void buttonDockpathSegmentInsertAfter_Click(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            HWDockSegment behindSegment = null;
+            HWDockSegment frontSegment = null;
+            if (selectedDockpathSegment != -1)
+            {
+                behindSegment = selectedDockpath.Segments[selectedDockpathSegment];
+                if (selectedDockpathSegment < selectedDockpath.Segments.Count - 1)
+                    frontSegment = selectedDockpath.Segments[selectedDockpathSegment + 1];
+            }
+
+            AddDockpathSegmentBetweenSegments(selectedDockpath, behindSegment, frontSegment, false);
+        }
+        private void buttonDockpathSegmentInsertBefore_Click(object sender, EventArgs e)
+        {
+            if (selectedDockpath == null)
+                return;
+
+            HWDockSegment behindSegment = null;
+            HWDockSegment frontSegment = null;
+            if (selectedDockpathSegment != -1)
+            {
+                frontSegment = selectedDockpath.Segments[selectedDockpathSegment];
+                if (selectedDockpathSegment > 0)
+                    behindSegment = selectedDockpath.Segments[selectedDockpathSegment - 1];
+            }
+
+            AddDockpathSegmentBetweenSegments(selectedDockpath, behindSegment, frontSegment, true);
+        }
+        private void AddDockpathSegmentBetweenSegments(HWDockpath dockpath, HWDockSegment behindSegment, HWDockSegment frontSegment, bool before)
+        {
+            Vector3 newPos = Vector3.Zero;
+            OpenTK.Quaternion newRot = OpenTK.Quaternion.Identity;
+            float newTolerance = 25;
+            float newSpeed = 10;
+
+            Vector3 behindPos = Vector3.Zero;
+            OpenTK.Quaternion behindRot = OpenTK.Quaternion.Identity;
+            float behindTolerance = 25;
+            float behindSpeed = 10;
+            if(behindSegment != null)
+            {
+                behindPos = behindSegment.LocalPosition;
+                behindRot = new OpenTK.Quaternion(behindSegment.LocalRotation);
+                behindTolerance = behindSegment.Tolerance;
+                behindSpeed = behindSegment.Speed;
+            }
+
+            Vector3 frontPos = Vector3.Zero;
+            OpenTK.Quaternion frontRot = OpenTK.Quaternion.Identity;
+            float frontTolerance = 25;
+            float frontSpeed = 10;
+            if (frontSegment != null)
+            {
+                frontPos = frontSegment.LocalPosition;
+                frontRot = new OpenTK.Quaternion(frontSegment.LocalRotation);
+                frontTolerance = frontSegment.Tolerance;
+                frontSpeed = frontSegment.Speed;
+            }
+
+            if(behindSegment == null)
+            {
+                behindPos = frontPos;
+                behindRot = frontRot;
+                behindTolerance = frontTolerance;
+                behindSpeed = frontSpeed;
+            }
+            else if(frontSegment == null)
+            {
+                frontPos = behindPos;
+                frontRot = behindRot;
+                frontTolerance = behindTolerance;
+                frontSpeed = behindSpeed;
+            }
+
+            newPos = Vector3.Lerp(behindPos, frontPos, 0.5f);
+            newRot = OpenTK.Quaternion.Slerp(behindRot, frontRot, 0.5f);
+            newTolerance = Lerp(behindTolerance, frontTolerance, 0.5f);
+            newSpeed = Lerp(behindSpeed, frontSpeed, 0.5f);
+
+            if (!before)
+            {
+                new HWDockSegment(selectedDockpath, newPos, newRot.ToEulerAngles(), selectedDockpathSegment + 1, newTolerance, newSpeed, new DockSegmentFlag[0]);
+                if (selectedDockpath.Segments.Count > 1)
+                    trackBarDockpathSegments.Maximum++;
+
+                trackBarDockpathSegments.Value = selectedDockpathSegment + 1;
+            }
+            else
+            {
+                new HWDockSegment(selectedDockpath, newPos, newRot.ToEulerAngles(), selectedDockpathSegment, newTolerance, newSpeed, new DockSegmentFlag[0]);
+                if (selectedDockpath.Segments.Count > 1)
+                    trackBarDockpathSegments.Maximum++;
+                if (selectedDockpathSegment == -1)
+                    selectedDockpathSegment = 0;
+
+                trackBarDockpathSegments.Value = selectedDockpathSegment;
+            }
+            trackBarDockpathSegments_Scroll(this, EventArgs.Empty);
+
+            foreach (EditorLine line in selectedDockpath.Lines)
+                line.Visible = true;
+            foreach (HWDockSegment segment in selectedDockpath.Segments)
+                segment.EditorDockSegment.Visible = true;
+        }
+        private void DockpathSegmentPositionChanged(object sender, EventArgs e)
+        {
+            if (ignoreDockpathSegmentValuesChanged)
+                return;
+            if (selectedDockpath == null)
+                return;
+            if (selectedDockpathSegment == -1)
+                return;
+
+            float x = (float)numericDockpathSegmentPosX.Value;
+            float y = (float)numericDockpathSegmentPosY.Value;
+            float z = (float)numericDockpathSegmentPosZ.Value;
+            selectedDockpath.Segments[selectedDockpathSegment].LocalPosition = new Vector3(x, y, z);
+        }
+        private void DockpathSegmentRotationChanged(object sender, EventArgs e)
+        {
+            if (ignoreDockpathSegmentValuesChanged)
+                return;
+            if (selectedDockpath == null)
+                return;
+            if (selectedDockpathSegment == -1)
+                return;
+
+            float x = MathHelper.DegreesToRadians((float)numericDockpathSegmentRotationX.Value);
+            float y = MathHelper.DegreesToRadians((float)numericDockpathSegmentRotationY.Value);
+            float z = MathHelper.DegreesToRadians((float)numericDockpathSegmentRotationZ.Value);
+            selectedDockpath.Segments[selectedDockpathSegment].LocalRotation = new Vector3(x, y, z);
         }
 
         //--------------------------------- NAVLIGHTS ---------------------------------//
@@ -2505,7 +3165,7 @@ namespace DAEnerys
         {
             trackBarEngineBurnFlames.Enabled = true;
             trackBarEngineBurnFlames.Value = 0;
-            trackBarEngineBurnFlames.Maximum = 1;
+            trackBarEngineBurnFlames.Maximum = 0;
             numericEngineBurnSpriteIndex.Value = 0;
 
             HWEngineBurn engineBurn = null;

@@ -75,6 +75,35 @@ namespace Extensions
 
             return (value % rangeZero);
         }
+        public static float LerpAngleRadians(float a, float b, float f)
+        {
+            float difference = Math.Abs(b - a);
+            if (difference > 180f / 180 * (float)Math.PI)
+            {
+                // We need to add on to one of the values.
+                if (b > a)
+                {
+                    // We'll add it on to start...
+                    a += 360f / 180 * (float)Math.PI;
+                }
+                else
+                {
+                    // Add it on to end.
+                    b += 360f / 180 * (float)Math.PI;
+                }
+            }
+
+            // Interpolate it.
+            float value = (a + ((b - a) * f));
+
+            // Wrap it..
+            float rangeZero = 360f / 180 * (float)Math.PI;
+
+            if (value >= 0 && value <= 360f / 180 * (float)Math.PI)
+                return value;
+
+            return (value % rangeZero);
+        }
 
         public static Vector3 ToEulerAngles(this Quaternion q)
         {

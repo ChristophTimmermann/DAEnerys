@@ -94,10 +94,14 @@ namespace DAEnerys
             //Check if there is a non-existent linked path
             foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
             {
-                foreach (string link in dockpath.Links)
+                string[] links = dockpath.Links.ToArray();
+                foreach (string link in links)
                 {
                     if (!dockpathNames.Contains(link))
+                    {
                         new Problem(ProblemTypes.WARNING, "The dockpath \"" + dockpath.Name + "\" is linked to the non-existent dockpath \"" + link + "\".");
+                        dockpath.Links.Remove(link);
+                    }
                 }
             }
             #endregion

@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using System.Collections.Generic;
 using System.Drawing;
+using System;
 
 namespace DAEnerys
 {
@@ -13,13 +14,13 @@ namespace DAEnerys
             get
             {
                 string fams = "";
-                if (Families.Length > 0)
+                if (Families.Count > 0)
                 {
                     fams = "_Fam[";
-                    for (int i = 0; i < Families.Length; i++)
+                    for (int i = 0; i < Families.Count; i++)
                     {
                         fams += Families[i];
-                        if (i < Families.Length - 1)
+                        if (i < Families.Count - 1)
                             fams += ", ";
                     }
                     fams += "]";
@@ -39,13 +40,16 @@ namespace DAEnerys
                 }
 
                 string links = "";
-                if (Links.Length > 0)
+                if (Links.Count > 0)
                 {
                     links = "_Link[";
-                    for (int i = 0; i < Links.Length; i++)
+                    for (int i = 0; i < Links.Count; i++)
                     {
+                        if (string.IsNullOrEmpty(Links[i]))
+                            continue;
+
                         links += Links[i];
-                        if (i < Links.Length - 1)
+                        if (i < Links.Count - 1)
                             links += ", ";
                     }
                     links += "]";
@@ -61,9 +65,9 @@ namespace DAEnerys
             }
         }
 
-        public string[] Families;
-        public string[] Links;
-        public List<DockpathFlag> Flags;
+        public List<string> Families = new List<string>();
+        public List<string> Links = new List<string>();
+        public List<DockpathFlag> Flags = new List<DockpathFlag>();
         public int AnimationIndex;
         public List<HWDockSegment> Segments = new List<HWDockSegment>();
         public List<EditorLine> Lines = new List<EditorLine>();
@@ -82,28 +86,51 @@ namespace DAEnerys
 
                 foreach(HWDockSegment segment in Segments)
                 {
-                    segment.Icosphere.Visible = value;
+                    segment.EditorDockSegment.Visible = value;
                 }
             }
         }
 
-        public HWDockpath(string name, string[] families, string[] links, List<DockpathFlag> flags, int animationIndex) : base(name, HWJoint.Root)
+        public HWDockpath(string name, string[] families, string[] links, DockpathFlag[] flags, int animationIndex) : base(name, HWJoint.Root)
         {
             Name = name;
-            Families = families;
-            Links = links;
-            Flags = flags;
+            Families.AddRange(families);
+            Links.AddRange(links);
+            Flags.AddRange(flags);
             AnimationIndex = animationIndex;
 
             Dockpaths.Add(this);
             Program.main.AddDockpath(this);
         }
 
+        public static HWDockpath GetByName(string name)
+        {
+            foreach (HWDockpath path in Dockpaths)
+                if (path.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    return path;
+
+            return null;
+        }
+
+        public override void Destroy()
+        {
+            Dockpaths.Remove(this);
+            Program.main.RemoveDockpath(this);
+            foreach (EditorLine line in Lines)
+                line.Destroy();
+            Lines.Clear();
+
+            HWDockSegment[] segments = Segments.ToArray();
+            for (int i = 0; i < segments.Length; i++)
+                segments[i].Destroy();
+
+            base.Destroy();
+        }
+
         public void SetupVisualization()
         {
             foreach (EditorLine line in Lines)
                 line.Destroy();
-
             Lines.Clear();
 
             for(int i = 0; i < Segments.Count - 1; i++) //1 line less than segments

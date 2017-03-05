@@ -43,6 +43,9 @@ namespace DAEnerys
             Scene cube = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/cube.obj"), PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorCube.Data = Importer.ParseAssimpMesh(cube.Meshes[0]);
 
+            Scene dockSegment = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/dockSegment.ply"), PostProcessPreset.TargetRealTimeMaximumQuality);
+            EditorDockSegment.Data = Importer.ParseAssimpMesh(dockSegment.Meshes[0]);
+
             importer.Dispose();
             logStream.Detach();
             #endregion

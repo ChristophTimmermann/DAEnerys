@@ -481,7 +481,7 @@ namespace DAEnerys
 
                     if (!failed)
                     {
-                        HWDockpath newDockpath = new HWDockpath(pathName, families, links, flags, animationIndex);
+                        HWDockpath newDockpath = new HWDockpath(pathName, families, links, flags.ToArray(), animationIndex);
                         nodeDockpaths.Add(colladaNode, newDockpath);
                     }
                 }
@@ -568,7 +568,7 @@ namespace DAEnerys
                     if (!failed)
                     {
                         COLLADATransform transform = GetColladaNodeTransform(colladaNode);
-                        new HWDockSegment(dockpath, transform.Position, transform.Rotation, transform.Scale, id, tolerance, speed, flags);
+                        new HWDockSegment(dockpath, transform.Position, transform.Rotation, id, tolerance, speed, flags.ToArray());
                     }
                 }
             }

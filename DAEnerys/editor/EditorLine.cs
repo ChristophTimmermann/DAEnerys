@@ -1,10 +1,13 @@
 ﻿using OpenTK;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace DAEnerys
 {
     public class EditorLine : EditorMesh
     {
+        public static List<EditorLine> EditorLines = new List<EditorLine>();
+
         private Vector3 startColor = Vector3.One;
         public Vector3 StartColor { get { return startColor; } set { startColor = value; UpdateData(); } }
         private Vector3 endColor = Vector3.One;
@@ -24,6 +27,15 @@ namespace DAEnerys
             this.End = end;
 
             this.VertexColored = true;
+
+            EditorLines.Add(this);
+        }
+
+        public override void Destroy()
+        {
+            EditorLines.Remove(this);
+
+            base.Destroy();
         }
 
         private void UpdateData()
