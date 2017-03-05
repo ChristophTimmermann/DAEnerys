@@ -28,6 +28,7 @@ namespace DAEnerys
         int selectedDockpathSegment;
         HWNavLight selectedNavLight;
         HWEngineBurn selectedEngineBurn;
+        int selectedEngineFlame;
         HWEngineGlow selectedEngineGlow;
         HWEngineShape selectedEngineShape;
         HWMaterial selectedMaterial;
@@ -67,6 +68,8 @@ namespace DAEnerys
         private bool ignoreJointSelection;
         private bool ignoreMarkerListSelectedIndexChanged;
         private bool ignoreMarkerValuesChanged;
+        private bool ignoreEngineBurnListSelectedIndexChanged;
+        private bool ignoreEngineBurnValuesChanged;
 
         private bool animationPlaying;
         public bool AnimationPlaying { get { return animationPlaying; } set { animationPlaying = value; HWAnimation.AnimationTime = 0; foreach (HWJoint joint in HWJoint.Joints) { joint.AnimationMatrix = Matrix4.Identity; joint.Invalidate(); Renderer.InvalidateView(); Renderer.Invalidate(); } string text = value ? "Stop" : "Play"; buttonAnimationPlay.Text = text; if (value) HWAnimation.AnimationTime = SelectedAnimation.StartTime; } }
@@ -90,6 +93,14 @@ namespace DAEnerys
                 numericNavLightPositionX.Increment = increment;
                 numericNavLightPositionY.Increment = increment;
                 numericNavLightPositionZ.Increment = increment;
+
+                numericDockpathSegmentPosX.Increment = increment;
+                numericDockpathSegmentPosY.Increment = increment;
+                numericDockpathSegmentPosZ.Increment = increment;
+
+                numericEngineBurnFlamePosX.Increment = increment;
+                numericEngineBurnFlamePosY.Increment = increment;
+                numericEngineBurnFlamePosZ.Increment = increment;
             }
         }
 
@@ -105,6 +116,10 @@ namespace DAEnerys
                 numericJointRotationX.Increment = increment;
                 numericJointRotationY.Increment = increment;
                 numericJointRotationZ.Increment = increment;
+
+                numericDockpathSegmentRotationX.Increment = increment;
+                numericDockpathSegmentRotationY.Increment = increment;
+                numericDockpathSegmentRotationZ.Increment = increment;
             }
         }
 
@@ -146,7 +161,7 @@ namespace DAEnerys
             Graphics graphics = CreateGraphics();
             float scalingFactor = graphics.DpiX / 96;
             scalingFactor -= 1;
-            splitContainer1.Panel1MinSize = 255 + (int)Math.Round(170 * scalingFactor);
+            splitContainer1.Panel1MinSize = 280 + (int)Math.Round(170 * scalingFactor);
 
             buttonProblems.Size = new Size(46 - (int)Math.Round(12 * scalingFactor), 25 - (int)Math.Round(12 * scalingFactor));
             buttonProblems.Location = new Point(1226 + (int)Math.Round(1248 * scalingFactor), 0);
@@ -333,13 +348,9 @@ namespace DAEnerys
 
             //Engine burns
             listEngineBurns.Items.Clear();
-            boxEngineBurnName.Clear();
             comboEngineBurnParent.Items.Clear();
-            trackBarEngineBurnFlames.Enabled = false;
-            trackBarEngineBurnFlames.Value = 0;
-            trackBarEngineBurnFlames.Maximum = 0;
-            numericEngineBurnSpriteIndex.Value = 0;
-            numericEngineBurnSpriteIndex.Enabled = false;
+            listEngineBurns_SelectedIndexChanged(this, EventArgs.Empty);
+            trackBarEngineBurnFlames_Scroll(this, EventArgs.Empty);
 
             //Animations
             AnimationNames.Clear();
@@ -3145,6 +3156,10 @@ namespace DAEnerys
         {
             listEngineBurns.Items.Add(engineBurn.Name);
         }
+        public void RemoveEngineBurn(HWEngineBurn engineBurn)
+        {
+            listEngineBurns.Items.Remove(engineBurn.Name);
+        }
         private void listEngineBurns_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             bool newValue = false;
@@ -3165,10 +3180,26 @@ namespace DAEnerys
         }
         private void listEngineBurns_SelectedIndexChanged(object sender, EventArgs e)
         {
-            trackBarEngineBurnFlames.Enabled = true;
-            trackBarEngineBurnFlames.Value = 0;
+            if (ignoreEngineBurnListSelectedIndexChanged)
+                return;
+
+            selectedEngineBurn = null;
+            selectedEngineFlame = -1;
+
+            trackBarEngineBurnFlames.Enabled = false;
             trackBarEngineBurnFlames.Maximum = 0;
-            numericEngineBurnSpriteIndex.Value = 0;
+            trackBarEngineBurnFlames.Minimum = 0;
+            trackBarEngineBurnFlames.Value = 0;
+            trackBarEngineBurnFlames_Scroll(this, EventArgs.Empty);
+            buttonEngineBurnRemove.Enabled = false;
+            buttonEngineBurnFlameAdd.Enabled = false;
+            boxEngineBurnName.Clear();
+            boxEngineBurnName.Enabled = false;
+            comboEngineBurnParent.Enabled = false;
+            comboEngineBurnParent.SelectedItem = null;
+
+            if (listEngineBurns.SelectedItem == null)
+                return;
 
             HWEngineBurn engineBurn = null;
             foreach (HWEngineBurn burn in HWEngineBurn.EngineBurns)
@@ -3180,22 +3211,45 @@ namespace DAEnerys
                 }
             }
 
-            if (engineBurn != null)
-            {
-                boxEngineBurnName.Text = engineBurn.Name;
-                HWJoint jointParent = (HWJoint)engineBurn.Parent;
+            if (engineBurn == null)
+                return;
 
-                comboEngineBurnParent.SelectedItem = jointParent.Name;
+            ignoreEngineBurnValuesChanged = true;
+            boxEngineBurnName.Text = engineBurn.Name;
+            HWJoint jointParent = (HWJoint)engineBurn.Parent;
 
-                selectedEngineBurn = engineBurn;
+            comboEngineBurnParent.Enabled = true;
+            comboEngineBurnParent.SelectedItem = jointParent.Name;
 
-                trackBarEngineBurnFlames.Maximum = engineBurn.Flames.Count - 1;
-                trackBarEngineBurnFlames_Scroll(null, EventArgs.Empty);
-            }
+            trackBarEngineBurnFlames.Enabled = true;
+            boxEngineBurnName.Enabled = true;
+            buttonEngineBurnRemove.Enabled = true;
+            buttonEngineBurnFlameAdd.Enabled = true;
+            selectedEngineBurn = engineBurn;
+
+            trackBarEngineBurnFlames.Maximum = engineBurn.Flames.Count - 1;
+            trackBarEngineBurnFlames_Scroll(null, EventArgs.Empty);
+            ignoreEngineBurnValuesChanged = false;
         }
         private void trackBarEngineBurnFlames_Scroll(object sender, EventArgs e)
         {
+            selectedEngineFlame = -1;
+
+            buttonEngineBurnFlameRemove.Enabled = false;
+            numericEngineBurnFlamePosX.Enabled = false;
+            numericEngineBurnFlamePosY.Enabled = false;
+            numericEngineBurnFlamePosZ.Enabled = false;
+            numericEngineBurnFlamePosX.Value = 0;
+            numericEngineBurnFlamePosY.Value = 0;
+            numericEngineBurnFlamePosZ.Value = 0;
+            
+            numericEngineBurnSpriteIndex.Enabled = false;
+            numericEngineBurnSpriteIndex.Value = 0;
+
             if (selectedEngineBurn == null)
+                return;
+
+            if (selectedEngineBurn.Flames.Count == 0)
                 return;
 
             //Reset flame colors
@@ -3209,11 +3263,173 @@ namespace DAEnerys
             if (selectedEngineBurn.Visible)
                 selectedFlame.Cube.Color = new Vector3(1, 0, 0);
 
-            numericEngineBurnSpriteIndex.Value = selectedFlame.SpriteIndex;
+            selectedEngineFlame = trackBarEngineBurnFlames.Value;
 
-            Renderer.InvalidateMeshData();
-            Renderer.InvalidateView();
-            Renderer.Invalidate();
+            buttonEngineBurnFlameRemove.Enabled = true;
+            numericEngineBurnFlamePosX.Enabled = true;
+            numericEngineBurnFlamePosY.Enabled = true;
+            numericEngineBurnFlamePosZ.Enabled = true;
+            ignoreEngineBurnValuesChanged = true;
+            numericEngineBurnFlamePosX.Value = (decimal)selectedFlame.LocalPosition.X;
+            numericEngineBurnFlamePosY.Value = (decimal)selectedFlame.LocalPosition.Y;
+            numericEngineBurnFlamePosZ.Value = (decimal)selectedFlame.LocalPosition.Z;
+
+            numericEngineBurnSpriteIndex.Enabled = true;
+            numericEngineBurnSpriteIndex.Value = selectedFlame.SpriteIndex;
+            ignoreEngineBurnValuesChanged = false;
+        }
+        private void buttonEngineBurnRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineBurn == null)
+                return;
+
+            selectedEngineBurn.Destroy();
+            listEngineBurns.ClearSelected();
+            listEngineBurns_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+        private void boxEngineBurnName_Leave(object sender, EventArgs e)
+        {
+            if (selectedEngineBurn == null)
+                return;
+
+            UpdateEngineBurnName(selectedEngineBurn, boxEngineBurnName.Text);
+        }
+        private void boxEngineBurnName_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)Keys.Return)
+                return;
+
+            if (selectedEngineBurn == null)
+                return;
+
+            UpdateEngineBurnName(selectedEngineBurn, boxEngineBurnName.Text);
+        }
+        public void CheckEngineBurnVisible(HWEngineBurn engineBurn, bool visible)
+        {
+            listEngineBurns.SetItemChecked(listEngineBurns.Items.IndexOf(engineBurn.Name), visible);
+        }
+        private void UpdateEngineBurnName(HWEngineBurn engineBurn, string newName)
+        {
+            if (!listEngineBurns.Items.Contains(engineBurn.Name))
+                return;
+
+            //Engine burn with this name already exists
+            if (listEngineBurns.Items.Contains(newName))
+            {
+                HWEngineBurn existingEngineBurn = HWEngineBurn.GetByName(newName);
+                if (existingEngineBurn != engineBurn)
+                {
+                    MessageBox.Show("An engine burn with this name already exists.", "Error while changing engine burn name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    boxEngineBurnName.Text = engineBurn.Name;
+                    boxEngineBurnName.Focus();
+                    return;
+                }
+            }
+
+            ignoreEngineBurnListSelectedIndexChanged = true;
+            int index = listEngineBurns.Items.IndexOf(engineBurn.Name);
+            listEngineBurns.Items.Remove(engineBurn.Name);
+            listEngineBurns.Items.Remove(engineBurn.Name);
+            engineBurn.Name = boxEngineBurnName.Text;
+            listEngineBurns.Items.Insert(index, engineBurn.Name);
+            listEngineBurns.SelectedItem = engineBurn.Name;
+            CheckEngineBurnVisible(engineBurn, engineBurn.Visible);
+            ignoreEngineBurnListSelectedIndexChanged = false;
+        }
+        private void comboEngineBurnParent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedEngineBurn == null)
+                return;
+
+            if (ignoreEngineBurnValuesChanged)
+                return;
+
+            HWJoint newParent = HWJoint.GetByName((string)comboEngineBurnParent.SelectedItem);
+            selectedEngineBurn.Parent = newParent;
+        }
+        private void buttonEngineBurnAdd_Click(object sender, EventArgs e)
+        {
+            int indexOffset = 1;
+            string newName = "EngineBurn" + (listEngineBurns.Items.Count + indexOffset);
+            while (listEngineBurns.Items.Contains(newName))
+            {
+                indexOffset++;
+                newName = "EngineBurn" + (listEngineBurns.Items.Count + indexOffset);
+            }
+
+            HWEngineBurn newEngineBurn = new HWEngineBurn(newName, HWJoint.Root, Vector3.Zero, Vector3.Zero, Vector3.One);
+            for (int i = 0; i < 5; i++)
+                new HWEngineFlame(newEngineBurn, new Vector3(0, 0, HWScene.JointOffset * i), Vector3.Zero, Vector3.One, i, 0);
+            newEngineBurn.Visible = true;
+
+            CheckEngineBurnVisible(newEngineBurn, true);
+            listEngineBurns.SelectedItem = newEngineBurn.Name;
+        }
+        private void buttonEngineBurnFlameRemove_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineBurn == null)
+                return;
+            if (selectedEngineFlame == -1)
+                return;
+
+            selectedEngineBurn.Flames[selectedEngineFlame].Destroy();
+            selectedEngineBurn.Visible = true;
+            CheckEngineBurnVisible(selectedEngineBurn, true);
+
+            if (selectedEngineFlame > 0)
+                trackBarEngineBurnFlames.Value--;
+            if(selectedEngineBurn.Flames.Count > 1)
+                trackBarEngineBurnFlames.Maximum = selectedEngineBurn.Flames.Count - 1;
+            else
+                trackBarEngineBurnFlames.Maximum = 0;
+            trackBarEngineBurnFlames_Scroll(this, EventArgs.Empty);
+        }
+        private void buttonEngineBurnFlameAdd_Click(object sender, EventArgs e)
+        {
+            if (selectedEngineBurn == null)
+                return;
+
+            Vector3 newPos = Vector3.Zero;
+            if (selectedEngineBurn.Flames.Count > 0)
+                newPos = selectedEngineBurn.Flames[selectedEngineBurn.Flames.Count - 1].LocalPosition + new Vector3(0, 0, HWScene.JointOffset);
+
+            new HWEngineFlame(selectedEngineBurn, newPos, Vector3.Zero, Vector3.One, selectedEngineBurn.Flames.Count - 1, 0);
+            if (selectedEngineBurn.Flames.Count > 1)
+                trackBarEngineBurnFlames.Maximum = selectedEngineBurn.Flames.Count - 1;
+            else
+                trackBarEngineBurnFlames.Maximum = 0;
+            trackBarEngineBurnFlames.Value = trackBarEngineBurnFlames.Maximum;
+            trackBarEngineBurnFlames_Scroll(this, EventArgs.Empty);
+            selectedEngineBurn.Visible = true;
+            CheckEngineBurnVisible(selectedEngineBurn, true);
+        }
+        private void EngineBurnFlamePositionChanged(object sender, EventArgs e)
+        {
+            if (ignoreEngineBurnValuesChanged)
+                return;
+            if (selectedEngineBurn == null)
+                return;
+            if (selectedEngineFlame == -1)
+                return;
+
+            float x = (float)numericEngineBurnFlamePosX.Value;
+            float y = (float)numericEngineBurnFlamePosY.Value;
+            float z = (float)numericEngineBurnFlamePosZ.Value;
+            selectedEngineBurn.Flames[selectedEngineFlame].LocalPosition = new Vector3(x, y, z);
+            selectedEngineBurn.SetupVisualization();
+            selectedEngineBurn.Visible = true;
+            CheckEngineBurnVisible(selectedEngineBurn, true);
+        }
+        private void numericEngineBurnSpriteIndex_ValueChanged(object sender, EventArgs e)
+        {
+            if (ignoreEngineBurnValuesChanged)
+                return;
+            if (selectedEngineBurn == null)
+                return;
+            if (selectedEngineFlame == -1)
+                return;
+
+            selectedEngineBurn.Flames[selectedEngineFlame].SpriteIndex = (int)numericEngineBurnSpriteIndex.Value;
         }
 
         //--------------------------------- COLLISION MESHES ---------------------------------//

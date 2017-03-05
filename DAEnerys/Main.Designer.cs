@@ -31,10 +31,10 @@ namespace DAEnerys
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -155,6 +155,20 @@ namespace DAEnerys
             this.checkDockpathAnim = new System.Windows.Forms.CheckBox();
             this.checkDockpathExit = new System.Windows.Forms.CheckBox();
             this.groupDockpathSegments = new System.Windows.Forms.GroupBox();
+            this.groupDockpathSegmentRotation = new System.Windows.Forms.GroupBox();
+            this.numericDockpathSegmentRotationZ = new System.Windows.Forms.NumericUpDown();
+            this.labelDockpathSegmentRotationZ = new System.Windows.Forms.Label();
+            this.numericDockpathSegmentRotationY = new System.Windows.Forms.NumericUpDown();
+            this.labelDockpathSegmentRotationY = new System.Windows.Forms.Label();
+            this.numericDockpathSegmentRotationX = new System.Windows.Forms.NumericUpDown();
+            this.labelDockpathSegmentRotationX = new System.Windows.Forms.Label();
+            this.groupDockpathSegmentPosition = new System.Windows.Forms.GroupBox();
+            this.numericDockpathSegmentPosZ = new System.Windows.Forms.NumericUpDown();
+            this.labelDockpathSegmentPosZ = new System.Windows.Forms.Label();
+            this.numericDockpathSegmentPosY = new System.Windows.Forms.NumericUpDown();
+            this.labelDockpathSegmentPosY = new System.Windows.Forms.Label();
+            this.numericDockpathSegmentPosX = new System.Windows.Forms.NumericUpDown();
+            this.labelDockpathSegmentPosX = new System.Windows.Forms.Label();
             this.buttonDockpathSegmentInsertBefore = new System.Windows.Forms.Button();
             this.numericDockpathSegmentSpeed = new System.Windows.Forms.NumericUpDown();
             this.numericDockpathSegmentTolerance = new System.Windows.Forms.NumericUpDown();
@@ -246,12 +260,23 @@ namespace DAEnerys
             this.labelEngineShapeParent = new System.Windows.Forms.Label();
             this.comboEngineShapeParent = new System.Windows.Forms.ComboBox();
             this.tabEngineBurns = new System.Windows.Forms.TabPage();
+            this.buttonEngineBurnRemove = new System.Windows.Forms.Button();
+            this.buttonEngineBurnAdd = new System.Windows.Forms.Button();
             this.listEngineBurns = new System.Windows.Forms.CheckedListBox();
             this.comboEngineBurnParent = new System.Windows.Forms.ComboBox();
             this.labelEngineBurnParent = new System.Windows.Forms.Label();
             this.boxEngineBurnName = new System.Windows.Forms.TextBox();
             this.labelEngineBurnName = new System.Windows.Forms.Label();
             this.groupEngineBurnFlames = new System.Windows.Forms.GroupBox();
+            this.groupEngineBurnFlamePosition = new System.Windows.Forms.GroupBox();
+            this.numericEngineBurnFlamePosZ = new System.Windows.Forms.NumericUpDown();
+            this.labelEngineBurnFlamePosZ = new System.Windows.Forms.Label();
+            this.numericEngineBurnFlamePosY = new System.Windows.Forms.NumericUpDown();
+            this.labelEngineBurnFlamePosY = new System.Windows.Forms.Label();
+            this.numericEngineBurnFlamePosX = new System.Windows.Forms.NumericUpDown();
+            this.labelEngineBurnFlamePosX = new System.Windows.Forms.Label();
+            this.buttonEngineBurnFlameRemove = new System.Windows.Forms.Button();
+            this.buttonEngineBurnFlameAdd = new System.Windows.Forms.Button();
             this.numericEngineBurnSpriteIndex = new System.Windows.Forms.NumericUpDown();
             this.labelEngineBurnFlameSpriteIndex = new System.Windows.Forms.Label();
             this.trackBarEngineBurnFlames = new System.Windows.Forms.TrackBar();
@@ -286,20 +311,6 @@ namespace DAEnerys
             this.saveColladaMeshDialog = new System.Windows.Forms.SaveFileDialog();
             this.openColladaMeshDialog = new System.Windows.Forms.OpenFileDialog();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.groupDockpathSegmentPosition = new System.Windows.Forms.GroupBox();
-            this.numericDockpathSegmentPosX = new System.Windows.Forms.NumericUpDown();
-            this.labelDockpathSegmentPosX = new System.Windows.Forms.Label();
-            this.numericDockpathSegmentPosY = new System.Windows.Forms.NumericUpDown();
-            this.labelDockpathSegmentPosY = new System.Windows.Forms.Label();
-            this.numericDockpathSegmentPosZ = new System.Windows.Forms.NumericUpDown();
-            this.labelDockpathSegmentPosZ = new System.Windows.Forms.Label();
-            this.groupDockpathSegmentRotation = new System.Windows.Forms.GroupBox();
-            this.numericDockpathSegmentRotationZ = new System.Windows.Forms.NumericUpDown();
-            this.labelDockpathSegmentRotationZ = new System.Windows.Forms.Label();
-            this.numericDockpathSegmentRotationY = new System.Windows.Forms.NumericUpDown();
-            this.labelDockpathSegmentRotationY = new System.Windows.Forms.Label();
-            this.numericDockpathSegmentRotationX = new System.Windows.Forms.NumericUpDown();
-            this.labelDockpathSegmentRotationX = new System.Windows.Forms.Label();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -338,6 +349,14 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.numericDockpathAnimationIndex)).BeginInit();
             this.groupDockpathFlags.SuspendLayout();
             this.groupDockpathSegments.SuspendLayout();
+            this.groupDockpathSegmentRotation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationX)).BeginInit();
+            this.groupDockpathSegmentPosition.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentTolerance)).BeginInit();
             this.groupDockpathSegmentFlags.SuspendLayout();
@@ -361,6 +380,10 @@ namespace DAEnerys
             this.tabEngineShapes.SuspendLayout();
             this.tabEngineBurns.SuspendLayout();
             this.groupEngineBurnFlames.SuspendLayout();
+            this.groupEngineBurnFlamePosition.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnFlamePosZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnFlamePosY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnFlamePosX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnSpriteIndex)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarEngineBurnFlames)).BeginInit();
             this.tabAnimations.SuspendLayout();
@@ -373,14 +396,6 @@ namespace DAEnerys
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).BeginInit();
-            this.groupDockpathSegmentPosition.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosZ)).BeginInit();
-            this.groupDockpathSegmentRotation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationZ)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationX)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -1826,6 +1841,7 @@ namespace DAEnerys
             // 
             // tabDockpaths
             // 
+            this.tabDockpaths.AutoScroll = true;
             this.tabDockpaths.AutoScrollMinSize = new System.Drawing.Size(241, 923);
             this.tabDockpaths.Controls.Add(this.buttonDockpathRemove);
             this.tabDockpaths.Controls.Add(this.buttonDockpathAdd);
@@ -1849,7 +1865,7 @@ namespace DAEnerys
             // 
             this.buttonDockpathRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDockpathRemove.Enabled = false;
-            this.buttonDockpathRemove.Location = new System.Drawing.Point(174, 166);
+            this.buttonDockpathRemove.Location = new System.Drawing.Point(157, 166);
             this.buttonDockpathRemove.Name = "buttonDockpathRemove";
             this.buttonDockpathRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonDockpathRemove.TabIndex = 27;
@@ -1874,7 +1890,7 @@ namespace DAEnerys
             this.listDockpaths.FormattingEnabled = true;
             this.listDockpaths.Location = new System.Drawing.Point(6, 6);
             this.listDockpaths.Name = "listDockpaths";
-            this.listDockpaths.Size = new System.Drawing.Size(260, 154);
+            this.listDockpaths.Size = new System.Drawing.Size(243, 154);
             this.listDockpaths.TabIndex = 25;
             this.listDockpaths.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listDockpaths_ItemCheck);
             this.listDockpaths.SelectedIndexChanged += new System.EventHandler(this.listDockpaths_SelectedIndexChanged);
@@ -1904,7 +1920,7 @@ namespace DAEnerys
             this.boxDockpathName.Enabled = false;
             this.boxDockpathName.Location = new System.Drawing.Point(49, 195);
             this.boxDockpathName.Name = "boxDockpathName";
-            this.boxDockpathName.Size = new System.Drawing.Size(217, 20);
+            this.boxDockpathName.Size = new System.Drawing.Size(200, 20);
             this.boxDockpathName.TabIndex = 22;
             this.boxDockpathName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxDockpathName_KeyPress);
             this.boxDockpathName.Leave += new System.EventHandler(this.boxDockpathName_Leave);
@@ -1928,7 +1944,7 @@ namespace DAEnerys
             this.groupDockpathFlags.Controls.Add(this.checkDockpathExit);
             this.groupDockpathFlags.Location = new System.Drawing.Point(6, 247);
             this.groupDockpathFlags.Name = "groupDockpathFlags";
-            this.groupDockpathFlags.Size = new System.Drawing.Size(260, 64);
+            this.groupDockpathFlags.Size = new System.Drawing.Size(243, 64);
             this.groupDockpathFlags.TabIndex = 12;
             this.groupDockpathFlags.TabStop = false;
             this.groupDockpathFlags.Text = "Flags";
@@ -1938,7 +1954,7 @@ namespace DAEnerys
             this.checkDockpathAjar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathAjar.AutoSize = true;
             this.checkDockpathAjar.Enabled = false;
-            this.checkDockpathAjar.Location = new System.Drawing.Point(201, 42);
+            this.checkDockpathAjar.Location = new System.Drawing.Point(184, 42);
             this.checkDockpathAjar.Name = "checkDockpathAjar";
             this.checkDockpathAjar.Size = new System.Drawing.Size(44, 17);
             this.checkDockpathAjar.TabIndex = 11;
@@ -1952,7 +1968,7 @@ namespace DAEnerys
             this.checkDockpathLatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathLatch.AutoSize = true;
             this.checkDockpathLatch.Enabled = false;
-            this.checkDockpathLatch.Location = new System.Drawing.Point(201, 19);
+            this.checkDockpathLatch.Location = new System.Drawing.Point(184, 19);
             this.checkDockpathLatch.Name = "checkDockpathLatch";
             this.checkDockpathLatch.Size = new System.Drawing.Size(53, 17);
             this.checkDockpathLatch.TabIndex = 10;
@@ -2004,10 +2020,242 @@ namespace DAEnerys
             this.groupDockpathSegments.Controls.Add(this.trackBarDockpathSegments);
             this.groupDockpathSegments.Location = new System.Drawing.Point(6, 653);
             this.groupDockpathSegments.Name = "groupDockpathSegments";
-            this.groupDockpathSegments.Size = new System.Drawing.Size(260, 468);
+            this.groupDockpathSegments.Size = new System.Drawing.Size(243, 468);
             this.groupDockpathSegments.TabIndex = 3;
             this.groupDockpathSegments.TabStop = false;
             this.groupDockpathSegments.Text = "Segments";
+            // 
+            // groupDockpathSegmentRotation
+            // 
+            this.groupDockpathSegmentRotation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupDockpathSegmentRotation.Controls.Add(this.numericDockpathSegmentRotationZ);
+            this.groupDockpathSegmentRotation.Controls.Add(this.labelDockpathSegmentRotationZ);
+            this.groupDockpathSegmentRotation.Controls.Add(this.numericDockpathSegmentRotationY);
+            this.groupDockpathSegmentRotation.Controls.Add(this.labelDockpathSegmentRotationY);
+            this.groupDockpathSegmentRotation.Controls.Add(this.numericDockpathSegmentRotationX);
+            this.groupDockpathSegmentRotation.Controls.Add(this.labelDockpathSegmentRotationX);
+            this.groupDockpathSegmentRotation.Location = new System.Drawing.Point(3, 198);
+            this.groupDockpathSegmentRotation.Name = "groupDockpathSegmentRotation";
+            this.groupDockpathSegmentRotation.Size = new System.Drawing.Size(236, 96);
+            this.groupDockpathSegmentRotation.TabIndex = 43;
+            this.groupDockpathSegmentRotation.TabStop = false;
+            this.groupDockpathSegmentRotation.Text = "Rotation";
+            // 
+            // numericDockpathSegmentRotationZ
+            // 
+            this.numericDockpathSegmentRotationZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericDockpathSegmentRotationZ.DecimalPlaces = 4;
+            this.numericDockpathSegmentRotationZ.Enabled = false;
+            this.numericDockpathSegmentRotationZ.Location = new System.Drawing.Point(29, 71);
+            this.numericDockpathSegmentRotationZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericDockpathSegmentRotationZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericDockpathSegmentRotationZ.Name = "numericDockpathSegmentRotationZ";
+            this.numericDockpathSegmentRotationZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericDockpathSegmentRotationZ.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentRotationZ.TabIndex = 42;
+            this.numericDockpathSegmentRotationZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericDockpathSegmentRotationZ.ValueChanged += new System.EventHandler(this.DockpathSegmentRotationChanged);
+            // 
+            // labelDockpathSegmentRotationZ
+            // 
+            this.labelDockpathSegmentRotationZ.AutoSize = true;
+            this.labelDockpathSegmentRotationZ.Location = new System.Drawing.Point(6, 73);
+            this.labelDockpathSegmentRotationZ.Name = "labelDockpathSegmentRotationZ";
+            this.labelDockpathSegmentRotationZ.Size = new System.Drawing.Size(17, 13);
+            this.labelDockpathSegmentRotationZ.TabIndex = 41;
+            this.labelDockpathSegmentRotationZ.Text = "Z:";
+            // 
+            // numericDockpathSegmentRotationY
+            // 
+            this.numericDockpathSegmentRotationY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericDockpathSegmentRotationY.DecimalPlaces = 4;
+            this.numericDockpathSegmentRotationY.Enabled = false;
+            this.numericDockpathSegmentRotationY.Location = new System.Drawing.Point(29, 45);
+            this.numericDockpathSegmentRotationY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericDockpathSegmentRotationY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericDockpathSegmentRotationY.Name = "numericDockpathSegmentRotationY";
+            this.numericDockpathSegmentRotationY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericDockpathSegmentRotationY.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentRotationY.TabIndex = 40;
+            this.numericDockpathSegmentRotationY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericDockpathSegmentRotationY.ValueChanged += new System.EventHandler(this.DockpathSegmentRotationChanged);
+            // 
+            // labelDockpathSegmentRotationY
+            // 
+            this.labelDockpathSegmentRotationY.AutoSize = true;
+            this.labelDockpathSegmentRotationY.Location = new System.Drawing.Point(6, 47);
+            this.labelDockpathSegmentRotationY.Name = "labelDockpathSegmentRotationY";
+            this.labelDockpathSegmentRotationY.Size = new System.Drawing.Size(17, 13);
+            this.labelDockpathSegmentRotationY.TabIndex = 39;
+            this.labelDockpathSegmentRotationY.Text = "Y:";
+            // 
+            // numericDockpathSegmentRotationX
+            // 
+            this.numericDockpathSegmentRotationX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericDockpathSegmentRotationX.DecimalPlaces = 4;
+            this.numericDockpathSegmentRotationX.Enabled = false;
+            this.numericDockpathSegmentRotationX.Location = new System.Drawing.Point(29, 19);
+            this.numericDockpathSegmentRotationX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericDockpathSegmentRotationX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericDockpathSegmentRotationX.Name = "numericDockpathSegmentRotationX";
+            this.numericDockpathSegmentRotationX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericDockpathSegmentRotationX.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentRotationX.TabIndex = 38;
+            this.numericDockpathSegmentRotationX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericDockpathSegmentRotationX.ValueChanged += new System.EventHandler(this.DockpathSegmentRotationChanged);
+            // 
+            // labelDockpathSegmentRotationX
+            // 
+            this.labelDockpathSegmentRotationX.AutoSize = true;
+            this.labelDockpathSegmentRotationX.Location = new System.Drawing.Point(6, 21);
+            this.labelDockpathSegmentRotationX.Name = "labelDockpathSegmentRotationX";
+            this.labelDockpathSegmentRotationX.Size = new System.Drawing.Size(17, 13);
+            this.labelDockpathSegmentRotationX.TabIndex = 37;
+            this.labelDockpathSegmentRotationX.Text = "X:";
+            // 
+            // groupDockpathSegmentPosition
+            // 
+            this.groupDockpathSegmentPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupDockpathSegmentPosition.Controls.Add(this.numericDockpathSegmentPosZ);
+            this.groupDockpathSegmentPosition.Controls.Add(this.labelDockpathSegmentPosZ);
+            this.groupDockpathSegmentPosition.Controls.Add(this.numericDockpathSegmentPosY);
+            this.groupDockpathSegmentPosition.Controls.Add(this.labelDockpathSegmentPosY);
+            this.groupDockpathSegmentPosition.Controls.Add(this.numericDockpathSegmentPosX);
+            this.groupDockpathSegmentPosition.Controls.Add(this.labelDockpathSegmentPosX);
+            this.groupDockpathSegmentPosition.Location = new System.Drawing.Point(4, 96);
+            this.groupDockpathSegmentPosition.Name = "groupDockpathSegmentPosition";
+            this.groupDockpathSegmentPosition.Size = new System.Drawing.Size(236, 96);
+            this.groupDockpathSegmentPosition.TabIndex = 37;
+            this.groupDockpathSegmentPosition.TabStop = false;
+            this.groupDockpathSegmentPosition.Text = "Position";
+            // 
+            // numericDockpathSegmentPosZ
+            // 
+            this.numericDockpathSegmentPosZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericDockpathSegmentPosZ.DecimalPlaces = 4;
+            this.numericDockpathSegmentPosZ.Enabled = false;
+            this.numericDockpathSegmentPosZ.Location = new System.Drawing.Point(29, 71);
+            this.numericDockpathSegmentPosZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericDockpathSegmentPosZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericDockpathSegmentPosZ.Name = "numericDockpathSegmentPosZ";
+            this.numericDockpathSegmentPosZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericDockpathSegmentPosZ.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentPosZ.TabIndex = 42;
+            this.numericDockpathSegmentPosZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericDockpathSegmentPosZ.ValueChanged += new System.EventHandler(this.DockpathSegmentPositionChanged);
+            // 
+            // labelDockpathSegmentPosZ
+            // 
+            this.labelDockpathSegmentPosZ.AutoSize = true;
+            this.labelDockpathSegmentPosZ.Location = new System.Drawing.Point(6, 73);
+            this.labelDockpathSegmentPosZ.Name = "labelDockpathSegmentPosZ";
+            this.labelDockpathSegmentPosZ.Size = new System.Drawing.Size(17, 13);
+            this.labelDockpathSegmentPosZ.TabIndex = 41;
+            this.labelDockpathSegmentPosZ.Text = "Z:";
+            // 
+            // numericDockpathSegmentPosY
+            // 
+            this.numericDockpathSegmentPosY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericDockpathSegmentPosY.DecimalPlaces = 4;
+            this.numericDockpathSegmentPosY.Enabled = false;
+            this.numericDockpathSegmentPosY.Location = new System.Drawing.Point(29, 45);
+            this.numericDockpathSegmentPosY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericDockpathSegmentPosY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericDockpathSegmentPosY.Name = "numericDockpathSegmentPosY";
+            this.numericDockpathSegmentPosY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericDockpathSegmentPosY.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentPosY.TabIndex = 40;
+            this.numericDockpathSegmentPosY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericDockpathSegmentPosY.ValueChanged += new System.EventHandler(this.DockpathSegmentPositionChanged);
+            // 
+            // labelDockpathSegmentPosY
+            // 
+            this.labelDockpathSegmentPosY.AutoSize = true;
+            this.labelDockpathSegmentPosY.Location = new System.Drawing.Point(6, 47);
+            this.labelDockpathSegmentPosY.Name = "labelDockpathSegmentPosY";
+            this.labelDockpathSegmentPosY.Size = new System.Drawing.Size(17, 13);
+            this.labelDockpathSegmentPosY.TabIndex = 39;
+            this.labelDockpathSegmentPosY.Text = "Y:";
+            // 
+            // numericDockpathSegmentPosX
+            // 
+            this.numericDockpathSegmentPosX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericDockpathSegmentPosX.DecimalPlaces = 4;
+            this.numericDockpathSegmentPosX.Enabled = false;
+            this.numericDockpathSegmentPosX.Location = new System.Drawing.Point(29, 19);
+            this.numericDockpathSegmentPosX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericDockpathSegmentPosX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericDockpathSegmentPosX.Name = "numericDockpathSegmentPosX";
+            this.numericDockpathSegmentPosX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericDockpathSegmentPosX.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentPosX.TabIndex = 38;
+            this.numericDockpathSegmentPosX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericDockpathSegmentPosX.ValueChanged += new System.EventHandler(this.DockpathSegmentPositionChanged);
+            // 
+            // labelDockpathSegmentPosX
+            // 
+            this.labelDockpathSegmentPosX.AutoSize = true;
+            this.labelDockpathSegmentPosX.Location = new System.Drawing.Point(6, 21);
+            this.labelDockpathSegmentPosX.Name = "labelDockpathSegmentPosX";
+            this.labelDockpathSegmentPosX.Size = new System.Drawing.Size(17, 13);
+            this.labelDockpathSegmentPosX.TabIndex = 37;
+            this.labelDockpathSegmentPosX.Text = "X:";
             // 
             // buttonDockpathSegmentInsertBefore
             // 
@@ -2016,7 +2264,7 @@ namespace DAEnerys
             this.buttonDockpathSegmentInsertBefore.Enabled = false;
             this.buttonDockpathSegmentInsertBefore.Location = new System.Drawing.Point(82, 67);
             this.buttonDockpathSegmentInsertBefore.Name = "buttonDockpathSegmentInsertBefore";
-            this.buttonDockpathSegmentInsertBefore.Size = new System.Drawing.Size(95, 23);
+            this.buttonDockpathSegmentInsertBefore.Size = new System.Drawing.Size(78, 23);
             this.buttonDockpathSegmentInsertBefore.TabIndex = 34;
             this.buttonDockpathSegmentInsertBefore.Text = "Insert before";
             this.buttonDockpathSegmentInsertBefore.UseVisualStyleBackColor = true;
@@ -2041,7 +2289,7 @@ namespace DAEnerys
             0});
             this.numericDockpathSegmentSpeed.Name = "numericDockpathSegmentSpeed";
             this.numericDockpathSegmentSpeed.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentSpeed.Size = new System.Drawing.Size(188, 20);
+            this.numericDockpathSegmentSpeed.Size = new System.Drawing.Size(171, 20);
             this.numericDockpathSegmentSpeed.TabIndex = 33;
             this.numericDockpathSegmentSpeed.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentSpeed.ValueChanged += new System.EventHandler(this.numericDockpathSegmentSpeed_ValueChanged);
@@ -2065,7 +2313,7 @@ namespace DAEnerys
             0});
             this.numericDockpathSegmentTolerance.Name = "numericDockpathSegmentTolerance";
             this.numericDockpathSegmentTolerance.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentTolerance.Size = new System.Drawing.Size(188, 20);
+            this.numericDockpathSegmentTolerance.Size = new System.Drawing.Size(171, 20);
             this.numericDockpathSegmentTolerance.TabIndex = 32;
             this.numericDockpathSegmentTolerance.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentTolerance.ValueChanged += new System.EventHandler(this.numericDockpathSegmentTolerance_ValueChanged);
@@ -2074,7 +2322,7 @@ namespace DAEnerys
             // 
             this.buttonDockpathSegmentRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDockpathSegmentRemove.Enabled = false;
-            this.buttonDockpathSegmentRemove.Location = new System.Drawing.Point(183, 67);
+            this.buttonDockpathSegmentRemove.Location = new System.Drawing.Point(166, 67);
             this.buttonDockpathSegmentRemove.Name = "buttonDockpathSegmentRemove";
             this.buttonDockpathSegmentRemove.Size = new System.Drawing.Size(74, 23);
             this.buttonDockpathSegmentRemove.TabIndex = 31;
@@ -2107,7 +2355,7 @@ namespace DAEnerys
             this.groupDockpathSegmentFlags.Controls.Add(this.checkDockpathSegmentFlagQueue);
             this.groupDockpathSegmentFlags.Location = new System.Drawing.Point(4, 351);
             this.groupDockpathSegmentFlags.Name = "groupDockpathSegmentFlags";
-            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(253, 111);
+            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(236, 111);
             this.groupDockpathSegmentFlags.TabIndex = 11;
             this.groupDockpathSegmentFlags.TabStop = false;
             this.groupDockpathSegmentFlags.Text = "Flags";
@@ -2117,7 +2365,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagClip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClip.AutoSize = true;
             this.checkDockpathSegmentFlagClip.Enabled = false;
-            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(141, 88);
+            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(124, 88);
             this.checkDockpathSegmentFlagClip.Name = "checkDockpathSegmentFlagClip";
             this.checkDockpathSegmentFlagClip.Size = new System.Drawing.Size(72, 17);
             this.checkDockpathSegmentFlagClip.TabIndex = 27;
@@ -2144,7 +2392,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagCheck.AutoSize = true;
             this.checkDockpathSegmentFlagCheck.Enabled = false;
-            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(141, 65);
+            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(124, 65);
             this.checkDockpathSegmentFlagCheck.Name = "checkDockpathSegmentFlagCheck";
             this.checkDockpathSegmentFlagCheck.Size = new System.Drawing.Size(95, 17);
             this.checkDockpathSegmentFlagCheck.TabIndex = 25;
@@ -2171,7 +2419,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClose.AutoSize = true;
             this.checkDockpathSegmentFlagClose.Enabled = false;
-            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(141, 42);
+            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(124, 42);
             this.checkDockpathSegmentFlagClose.Name = "checkDockpathSegmentFlagClose";
             this.checkDockpathSegmentFlagClose.Size = new System.Drawing.Size(102, 17);
             this.checkDockpathSegmentFlagClose.TabIndex = 23;
@@ -2198,7 +2446,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagPlayer.AutoSize = true;
             this.checkDockpathSegmentFlagPlayer.Enabled = false;
-            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(141, 19);
+            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(124, 19);
             this.checkDockpathSegmentFlagPlayer.Name = "checkDockpathSegmentFlagPlayer";
             this.checkDockpathSegmentFlagPlayer.Size = new System.Drawing.Size(101, 17);
             this.checkDockpathSegmentFlagPlayer.TabIndex = 22;
@@ -2246,7 +2494,7 @@ namespace DAEnerys
             this.trackBarDockpathSegments.Enabled = false;
             this.trackBarDockpathSegments.Location = new System.Drawing.Point(8, 16);
             this.trackBarDockpathSegments.Name = "trackBarDockpathSegments";
-            this.trackBarDockpathSegments.Size = new System.Drawing.Size(246, 45);
+            this.trackBarDockpathSegments.Size = new System.Drawing.Size(229, 45);
             this.trackBarDockpathSegments.TabIndex = 3;
             this.trackBarDockpathSegments.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBarDockpathSegments.Scroll += new System.EventHandler(this.trackBarDockpathSegments_Scroll);
@@ -2262,7 +2510,7 @@ namespace DAEnerys
             this.groupDockpathLinks.Controls.Add(this.listDockpathLinks);
             this.groupDockpathLinks.Location = new System.Drawing.Point(6, 484);
             this.groupDockpathLinks.Name = "groupDockpathLinks";
-            this.groupDockpathLinks.Size = new System.Drawing.Size(260, 163);
+            this.groupDockpathLinks.Size = new System.Drawing.Size(243, 163);
             this.groupDockpathLinks.TabIndex = 2;
             this.groupDockpathLinks.TabStop = false;
             this.groupDockpathLinks.Text = "Links";
@@ -2276,7 +2524,7 @@ namespace DAEnerys
             this.comboDockpathLinkPath.FormattingEnabled = true;
             this.comboDockpathLinkPath.Location = new System.Drawing.Point(47, 133);
             this.comboDockpathLinkPath.Name = "comboDockpathLinkPath";
-            this.comboDockpathLinkPath.Size = new System.Drawing.Size(210, 21);
+            this.comboDockpathLinkPath.Size = new System.Drawing.Size(193, 21);
             this.comboDockpathLinkPath.Sorted = true;
             this.comboDockpathLinkPath.TabIndex = 34;
             this.comboDockpathLinkPath.SelectedIndexChanged += new System.EventHandler(this.comboDockpathLinkPath_SelectedIndexChanged);
@@ -2285,7 +2533,7 @@ namespace DAEnerys
             // 
             this.buttonDockpathLinkRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDockpathLinkRemove.Enabled = false;
-            this.buttonDockpathLinkRemove.Location = new System.Drawing.Point(165, 104);
+            this.buttonDockpathLinkRemove.Location = new System.Drawing.Point(148, 104);
             this.buttonDockpathLinkRemove.Name = "buttonDockpathLinkRemove";
             this.buttonDockpathLinkRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonDockpathLinkRemove.TabIndex = 33;
@@ -2320,7 +2568,7 @@ namespace DAEnerys
             this.listDockpathLinks.FormattingEnabled = true;
             this.listDockpathLinks.Location = new System.Drawing.Point(3, 16);
             this.listDockpathLinks.Name = "listDockpathLinks";
-            this.listDockpathLinks.Size = new System.Drawing.Size(254, 82);
+            this.listDockpathLinks.Size = new System.Drawing.Size(237, 82);
             this.listDockpathLinks.TabIndex = 11;
             this.listDockpathLinks.SelectedIndexChanged += new System.EventHandler(this.listDockpathLinks_SelectedIndexChanged);
             // 
@@ -2335,7 +2583,7 @@ namespace DAEnerys
             this.groupDockpathFamilies.Controls.Add(this.listDockpathFamilies);
             this.groupDockpathFamilies.Location = new System.Drawing.Point(6, 317);
             this.groupDockpathFamilies.Name = "groupDockpathFamilies";
-            this.groupDockpathFamilies.Size = new System.Drawing.Size(260, 161);
+            this.groupDockpathFamilies.Size = new System.Drawing.Size(243, 161);
             this.groupDockpathFamilies.TabIndex = 1;
             this.groupDockpathFamilies.TabStop = false;
             this.groupDockpathFamilies.Text = "Families";
@@ -2344,7 +2592,7 @@ namespace DAEnerys
             // 
             this.buttonDockpathFamilyRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDockpathFamilyRemove.Enabled = false;
-            this.buttonDockpathFamilyRemove.Location = new System.Drawing.Point(165, 104);
+            this.buttonDockpathFamilyRemove.Location = new System.Drawing.Point(148, 104);
             this.buttonDockpathFamilyRemove.Name = "buttonDockpathFamilyRemove";
             this.buttonDockpathFamilyRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonDockpathFamilyRemove.TabIndex = 29;
@@ -2370,7 +2618,7 @@ namespace DAEnerys
             this.boxDockpathFamilyName.Enabled = false;
             this.boxDockpathFamilyName.Location = new System.Drawing.Point(47, 133);
             this.boxDockpathFamilyName.Name = "boxDockpathFamilyName";
-            this.boxDockpathFamilyName.Size = new System.Drawing.Size(210, 20);
+            this.boxDockpathFamilyName.Size = new System.Drawing.Size(193, 20);
             this.boxDockpathFamilyName.TabIndex = 24;
             this.boxDockpathFamilyName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxDockpathFamilyName_KeyPress);
             this.boxDockpathFamilyName.Leave += new System.EventHandler(this.boxDockpathFamilyName_Leave);
@@ -2391,7 +2639,7 @@ namespace DAEnerys
             this.listDockpathFamilies.FormattingEnabled = true;
             this.listDockpathFamilies.Location = new System.Drawing.Point(3, 16);
             this.listDockpathFamilies.Name = "listDockpathFamilies";
-            this.listDockpathFamilies.Size = new System.Drawing.Size(254, 82);
+            this.listDockpathFamilies.Size = new System.Drawing.Size(237, 82);
             this.listDockpathFamilies.TabIndex = 11;
             this.listDockpathFamilies.SelectedIndexChanged += new System.EventHandler(this.listDockpathFamilies_SelectedIndexChanged);
             // 
@@ -3215,6 +3463,8 @@ namespace DAEnerys
             // 
             this.tabEngineBurns.AutoScroll = true;
             this.tabEngineBurns.AutoScrollMinSize = new System.Drawing.Size(241, 322);
+            this.tabEngineBurns.Controls.Add(this.buttonEngineBurnRemove);
+            this.tabEngineBurns.Controls.Add(this.buttonEngineBurnAdd);
             this.tabEngineBurns.Controls.Add(this.listEngineBurns);
             this.tabEngineBurns.Controls.Add(this.comboEngineBurnParent);
             this.tabEngineBurns.Controls.Add(this.labelEngineBurnParent);
@@ -3228,6 +3478,28 @@ namespace DAEnerys
             this.tabEngineBurns.Text = "Engine Burns";
             this.tabEngineBurns.UseVisualStyleBackColor = true;
             // 
+            // buttonEngineBurnRemove
+            // 
+            this.buttonEngineBurnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEngineBurnRemove.Enabled = false;
+            this.buttonEngineBurnRemove.Location = new System.Drawing.Point(174, 241);
+            this.buttonEngineBurnRemove.Name = "buttonEngineBurnRemove";
+            this.buttonEngineBurnRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineBurnRemove.TabIndex = 34;
+            this.buttonEngineBurnRemove.Text = "Remove";
+            this.buttonEngineBurnRemove.UseVisualStyleBackColor = true;
+            this.buttonEngineBurnRemove.Click += new System.EventHandler(this.buttonEngineBurnRemove_Click);
+            // 
+            // buttonEngineBurnAdd
+            // 
+            this.buttonEngineBurnAdd.Location = new System.Drawing.Point(6, 241);
+            this.buttonEngineBurnAdd.Name = "buttonEngineBurnAdd";
+            this.buttonEngineBurnAdd.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineBurnAdd.TabIndex = 33;
+            this.buttonEngineBurnAdd.Text = "Add";
+            this.buttonEngineBurnAdd.UseVisualStyleBackColor = true;
+            this.buttonEngineBurnAdd.Click += new System.EventHandler(this.buttonEngineBurnAdd_Click);
+            // 
             // listEngineBurns
             // 
             this.listEngineBurns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -3235,7 +3507,7 @@ namespace DAEnerys
             this.listEngineBurns.FormattingEnabled = true;
             this.listEngineBurns.Location = new System.Drawing.Point(6, 6);
             this.listEngineBurns.Name = "listEngineBurns";
-            this.listEngineBurns.Size = new System.Drawing.Size(260, 154);
+            this.listEngineBurns.Size = new System.Drawing.Size(260, 229);
             this.listEngineBurns.TabIndex = 16;
             this.listEngineBurns.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listEngineBurns_ItemCheck);
             this.listEngineBurns.SelectedIndexChanged += new System.EventHandler(this.listEngineBurns_SelectedIndexChanged);
@@ -3247,16 +3519,17 @@ namespace DAEnerys
             this.comboEngineBurnParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEngineBurnParent.Enabled = false;
             this.comboEngineBurnParent.FormattingEnabled = true;
-            this.comboEngineBurnParent.Location = new System.Drawing.Point(48, 192);
+            this.comboEngineBurnParent.Location = new System.Drawing.Point(48, 296);
             this.comboEngineBurnParent.Name = "comboEngineBurnParent";
             this.comboEngineBurnParent.Size = new System.Drawing.Size(218, 21);
             this.comboEngineBurnParent.Sorted = true;
             this.comboEngineBurnParent.TabIndex = 15;
+            this.comboEngineBurnParent.SelectedIndexChanged += new System.EventHandler(this.comboEngineBurnParent_SelectedIndexChanged);
             // 
             // labelEngineBurnParent
             // 
             this.labelEngineBurnParent.AutoSize = true;
-            this.labelEngineBurnParent.Location = new System.Drawing.Point(8, 195);
+            this.labelEngineBurnParent.Location = new System.Drawing.Point(8, 299);
             this.labelEngineBurnParent.Name = "labelEngineBurnParent";
             this.labelEngineBurnParent.Size = new System.Drawing.Size(41, 13);
             this.labelEngineBurnParent.TabIndex = 6;
@@ -3267,15 +3540,17 @@ namespace DAEnerys
             this.boxEngineBurnName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.boxEngineBurnName.Enabled = false;
-            this.boxEngineBurnName.Location = new System.Drawing.Point(48, 166);
+            this.boxEngineBurnName.Location = new System.Drawing.Point(48, 270);
             this.boxEngineBurnName.Name = "boxEngineBurnName";
             this.boxEngineBurnName.Size = new System.Drawing.Size(218, 20);
             this.boxEngineBurnName.TabIndex = 5;
+            this.boxEngineBurnName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxEngineBurnName_KeyPress);
+            this.boxEngineBurnName.Leave += new System.EventHandler(this.boxEngineBurnName_Leave);
             // 
             // labelEngineBurnName
             // 
             this.labelEngineBurnName.AutoSize = true;
-            this.labelEngineBurnName.Location = new System.Drawing.Point(8, 169);
+            this.labelEngineBurnName.Location = new System.Drawing.Point(8, 273);
             this.labelEngineBurnName.Name = "labelEngineBurnName";
             this.labelEngineBurnName.Size = new System.Drawing.Size(38, 13);
             this.labelEngineBurnName.TabIndex = 4;
@@ -3285,28 +3560,171 @@ namespace DAEnerys
             // 
             this.groupEngineBurnFlames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupEngineBurnFlames.Controls.Add(this.groupEngineBurnFlamePosition);
+            this.groupEngineBurnFlames.Controls.Add(this.buttonEngineBurnFlameRemove);
+            this.groupEngineBurnFlames.Controls.Add(this.buttonEngineBurnFlameAdd);
             this.groupEngineBurnFlames.Controls.Add(this.numericEngineBurnSpriteIndex);
             this.groupEngineBurnFlames.Controls.Add(this.labelEngineBurnFlameSpriteIndex);
             this.groupEngineBurnFlames.Controls.Add(this.trackBarEngineBurnFlames);
-            this.groupEngineBurnFlames.Location = new System.Drawing.Point(6, 219);
+            this.groupEngineBurnFlames.Location = new System.Drawing.Point(6, 323);
             this.groupEngineBurnFlames.Name = "groupEngineBurnFlames";
-            this.groupEngineBurnFlames.Size = new System.Drawing.Size(260, 98);
+            this.groupEngineBurnFlames.Size = new System.Drawing.Size(260, 223);
             this.groupEngineBurnFlames.TabIndex = 3;
             this.groupEngineBurnFlames.TabStop = false;
             this.groupEngineBurnFlames.Text = "Flames";
             // 
+            // groupEngineBurnFlamePosition
+            // 
+            this.groupEngineBurnFlamePosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupEngineBurnFlamePosition.Controls.Add(this.numericEngineBurnFlamePosZ);
+            this.groupEngineBurnFlamePosition.Controls.Add(this.labelEngineBurnFlamePosZ);
+            this.groupEngineBurnFlamePosition.Controls.Add(this.numericEngineBurnFlamePosY);
+            this.groupEngineBurnFlamePosition.Controls.Add(this.labelEngineBurnFlamePosY);
+            this.groupEngineBurnFlamePosition.Controls.Add(this.numericEngineBurnFlamePosX);
+            this.groupEngineBurnFlamePosition.Controls.Add(this.labelEngineBurnFlamePosX);
+            this.groupEngineBurnFlamePosition.Location = new System.Drawing.Point(6, 96);
+            this.groupEngineBurnFlamePosition.Name = "groupEngineBurnFlamePosition";
+            this.groupEngineBurnFlamePosition.Size = new System.Drawing.Size(248, 93);
+            this.groupEngineBurnFlamePosition.TabIndex = 37;
+            this.groupEngineBurnFlamePosition.TabStop = false;
+            this.groupEngineBurnFlamePosition.Text = "Position";
+            // 
+            // numericEngineBurnFlamePosZ
+            // 
+            this.numericEngineBurnFlamePosZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericEngineBurnFlamePosZ.DecimalPlaces = 4;
+            this.numericEngineBurnFlamePosZ.Enabled = false;
+            this.numericEngineBurnFlamePosZ.Location = new System.Drawing.Point(72, 66);
+            this.numericEngineBurnFlamePosZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericEngineBurnFlamePosZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericEngineBurnFlamePosZ.Name = "numericEngineBurnFlamePosZ";
+            this.numericEngineBurnFlamePosZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericEngineBurnFlamePosZ.Size = new System.Drawing.Size(170, 20);
+            this.numericEngineBurnFlamePosZ.TabIndex = 27;
+            this.numericEngineBurnFlamePosZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericEngineBurnFlamePosZ.ValueChanged += new System.EventHandler(this.EngineBurnFlamePositionChanged);
+            // 
+            // labelEngineBurnFlamePosZ
+            // 
+            this.labelEngineBurnFlamePosZ.AutoSize = true;
+            this.labelEngineBurnFlamePosZ.Location = new System.Drawing.Point(6, 68);
+            this.labelEngineBurnFlamePosZ.Name = "labelEngineBurnFlamePosZ";
+            this.labelEngineBurnFlamePosZ.Size = new System.Drawing.Size(17, 13);
+            this.labelEngineBurnFlamePosZ.TabIndex = 26;
+            this.labelEngineBurnFlamePosZ.Text = "Z:";
+            // 
+            // numericEngineBurnFlamePosY
+            // 
+            this.numericEngineBurnFlamePosY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericEngineBurnFlamePosY.DecimalPlaces = 4;
+            this.numericEngineBurnFlamePosY.Enabled = false;
+            this.numericEngineBurnFlamePosY.Location = new System.Drawing.Point(72, 40);
+            this.numericEngineBurnFlamePosY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericEngineBurnFlamePosY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericEngineBurnFlamePosY.Name = "numericEngineBurnFlamePosY";
+            this.numericEngineBurnFlamePosY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericEngineBurnFlamePosY.Size = new System.Drawing.Size(170, 20);
+            this.numericEngineBurnFlamePosY.TabIndex = 25;
+            this.numericEngineBurnFlamePosY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericEngineBurnFlamePosY.ValueChanged += new System.EventHandler(this.EngineBurnFlamePositionChanged);
+            // 
+            // labelEngineBurnFlamePosY
+            // 
+            this.labelEngineBurnFlamePosY.AutoSize = true;
+            this.labelEngineBurnFlamePosY.Location = new System.Drawing.Point(6, 42);
+            this.labelEngineBurnFlamePosY.Name = "labelEngineBurnFlamePosY";
+            this.labelEngineBurnFlamePosY.Size = new System.Drawing.Size(17, 13);
+            this.labelEngineBurnFlamePosY.TabIndex = 24;
+            this.labelEngineBurnFlamePosY.Text = "Y:";
+            // 
+            // numericEngineBurnFlamePosX
+            // 
+            this.numericEngineBurnFlamePosX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericEngineBurnFlamePosX.DecimalPlaces = 4;
+            this.numericEngineBurnFlamePosX.Enabled = false;
+            this.numericEngineBurnFlamePosX.Location = new System.Drawing.Point(72, 14);
+            this.numericEngineBurnFlamePosX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericEngineBurnFlamePosX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericEngineBurnFlamePosX.Name = "numericEngineBurnFlamePosX";
+            this.numericEngineBurnFlamePosX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericEngineBurnFlamePosX.Size = new System.Drawing.Size(170, 20);
+            this.numericEngineBurnFlamePosX.TabIndex = 23;
+            this.numericEngineBurnFlamePosX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.numericEngineBurnFlamePosX.ValueChanged += new System.EventHandler(this.EngineBurnFlamePositionChanged);
+            // 
+            // labelEngineBurnFlamePosX
+            // 
+            this.labelEngineBurnFlamePosX.AutoSize = true;
+            this.labelEngineBurnFlamePosX.Location = new System.Drawing.Point(6, 16);
+            this.labelEngineBurnFlamePosX.Name = "labelEngineBurnFlamePosX";
+            this.labelEngineBurnFlamePosX.Size = new System.Drawing.Size(17, 13);
+            this.labelEngineBurnFlamePosX.TabIndex = 22;
+            this.labelEngineBurnFlamePosX.Text = "X:";
+            // 
+            // buttonEngineBurnFlameRemove
+            // 
+            this.buttonEngineBurnFlameRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEngineBurnFlameRemove.Enabled = false;
+            this.buttonEngineBurnFlameRemove.Location = new System.Drawing.Point(162, 67);
+            this.buttonEngineBurnFlameRemove.Name = "buttonEngineBurnFlameRemove";
+            this.buttonEngineBurnFlameRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineBurnFlameRemove.TabIndex = 36;
+            this.buttonEngineBurnFlameRemove.Text = "Remove";
+            this.buttonEngineBurnFlameRemove.UseVisualStyleBackColor = true;
+            this.buttonEngineBurnFlameRemove.Click += new System.EventHandler(this.buttonEngineBurnFlameRemove_Click);
+            // 
+            // buttonEngineBurnFlameAdd
+            // 
+            this.buttonEngineBurnFlameAdd.Enabled = false;
+            this.buttonEngineBurnFlameAdd.Location = new System.Drawing.Point(6, 67);
+            this.buttonEngineBurnFlameAdd.Name = "buttonEngineBurnFlameAdd";
+            this.buttonEngineBurnFlameAdd.Size = new System.Drawing.Size(92, 23);
+            this.buttonEngineBurnFlameAdd.TabIndex = 35;
+            this.buttonEngineBurnFlameAdd.Text = "Add";
+            this.buttonEngineBurnFlameAdd.UseVisualStyleBackColor = true;
+            this.buttonEngineBurnFlameAdd.Click += new System.EventHandler(this.buttonEngineBurnFlameAdd_Click);
+            // 
             // numericEngineBurnSpriteIndex
             // 
             this.numericEngineBurnSpriteIndex.Enabled = false;
-            this.numericEngineBurnSpriteIndex.Location = new System.Drawing.Point(77, 71);
+            this.numericEngineBurnSpriteIndex.Location = new System.Drawing.Point(78, 195);
             this.numericEngineBurnSpriteIndex.Name = "numericEngineBurnSpriteIndex";
             this.numericEngineBurnSpriteIndex.Size = new System.Drawing.Size(41, 20);
             this.numericEngineBurnSpriteIndex.TabIndex = 10;
+            this.numericEngineBurnSpriteIndex.ValueChanged += new System.EventHandler(this.numericEngineBurnSpriteIndex_ValueChanged);
             // 
             // labelEngineBurnFlameSpriteIndex
             // 
             this.labelEngineBurnFlameSpriteIndex.AutoSize = true;
-            this.labelEngineBurnFlameSpriteIndex.Location = new System.Drawing.Point(6, 73);
+            this.labelEngineBurnFlameSpriteIndex.Location = new System.Drawing.Point(7, 197);
             this.labelEngineBurnFlameSpriteIndex.Name = "labelEngineBurnFlameSpriteIndex";
             this.labelEngineBurnFlameSpriteIndex.Size = new System.Drawing.Size(65, 13);
             this.labelEngineBurnFlameSpriteIndex.TabIndex = 9;
@@ -3507,7 +3925,7 @@ namespace DAEnerys
             // 
             this.buttonAnimationJointRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAnimationJointRemove.Enabled = false;
-            this.buttonAnimationJointRemove.Location = new System.Drawing.Point(156, 159);
+            this.buttonAnimationJointRemove.Location = new System.Drawing.Point(163, 159);
             this.buttonAnimationJointRemove.Name = "buttonAnimationJointRemove";
             this.buttonAnimationJointRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonAnimationJointRemove.TabIndex = 38;
@@ -3531,7 +3949,7 @@ namespace DAEnerys
             this.listAnimationJoints.FormattingEnabled = true;
             this.listAnimationJoints.Location = new System.Drawing.Point(6, 19);
             this.listAnimationJoints.Name = "listAnimationJoints";
-            this.listAnimationJoints.Size = new System.Drawing.Size(242, 134);
+            this.listAnimationJoints.Size = new System.Drawing.Size(248, 134);
             this.listAnimationJoints.TabIndex = 4;
             // 
             // boxAnimationName
@@ -3605,9 +4023,9 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -3615,14 +4033,14 @@ namespace DAEnerys
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle3;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridProblems.Location = new System.Drawing.Point(0, 0);
@@ -3631,9 +4049,9 @@ namespace DAEnerys
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
@@ -3646,9 +4064,9 @@ namespace DAEnerys
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle2;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
@@ -3732,238 +4150,6 @@ namespace DAEnerys
             this.colorDialog.FullOpen = true;
             this.colorDialog.SolidColorOnly = true;
             // 
-            // groupDockpathSegmentPosition
-            // 
-            this.groupDockpathSegmentPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupDockpathSegmentPosition.Controls.Add(this.numericDockpathSegmentPosZ);
-            this.groupDockpathSegmentPosition.Controls.Add(this.labelDockpathSegmentPosZ);
-            this.groupDockpathSegmentPosition.Controls.Add(this.numericDockpathSegmentPosY);
-            this.groupDockpathSegmentPosition.Controls.Add(this.labelDockpathSegmentPosY);
-            this.groupDockpathSegmentPosition.Controls.Add(this.numericDockpathSegmentPosX);
-            this.groupDockpathSegmentPosition.Controls.Add(this.labelDockpathSegmentPosX);
-            this.groupDockpathSegmentPosition.Location = new System.Drawing.Point(4, 96);
-            this.groupDockpathSegmentPosition.Name = "groupDockpathSegmentPosition";
-            this.groupDockpathSegmentPosition.Size = new System.Drawing.Size(253, 96);
-            this.groupDockpathSegmentPosition.TabIndex = 37;
-            this.groupDockpathSegmentPosition.TabStop = false;
-            this.groupDockpathSegmentPosition.Text = "Position";
-            // 
-            // numericDockpathSegmentPosX
-            // 
-            this.numericDockpathSegmentPosX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericDockpathSegmentPosX.DecimalPlaces = 4;
-            this.numericDockpathSegmentPosX.Enabled = false;
-            this.numericDockpathSegmentPosX.Location = new System.Drawing.Point(29, 19);
-            this.numericDockpathSegmentPosX.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericDockpathSegmentPosX.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericDockpathSegmentPosX.Name = "numericDockpathSegmentPosX";
-            this.numericDockpathSegmentPosX.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentPosX.Size = new System.Drawing.Size(218, 20);
-            this.numericDockpathSegmentPosX.TabIndex = 38;
-            this.numericDockpathSegmentPosX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericDockpathSegmentPosX.ValueChanged += new System.EventHandler(this.DockpathSegmentPositionChanged);
-            // 
-            // labelDockpathSegmentPosX
-            // 
-            this.labelDockpathSegmentPosX.AutoSize = true;
-            this.labelDockpathSegmentPosX.Location = new System.Drawing.Point(6, 21);
-            this.labelDockpathSegmentPosX.Name = "labelDockpathSegmentPosX";
-            this.labelDockpathSegmentPosX.Size = new System.Drawing.Size(17, 13);
-            this.labelDockpathSegmentPosX.TabIndex = 37;
-            this.labelDockpathSegmentPosX.Text = "X:";
-            // 
-            // numericDockpathSegmentPosY
-            // 
-            this.numericDockpathSegmentPosY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericDockpathSegmentPosY.DecimalPlaces = 4;
-            this.numericDockpathSegmentPosY.Enabled = false;
-            this.numericDockpathSegmentPosY.Location = new System.Drawing.Point(29, 45);
-            this.numericDockpathSegmentPosY.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericDockpathSegmentPosY.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericDockpathSegmentPosY.Name = "numericDockpathSegmentPosY";
-            this.numericDockpathSegmentPosY.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentPosY.Size = new System.Drawing.Size(218, 20);
-            this.numericDockpathSegmentPosY.TabIndex = 40;
-            this.numericDockpathSegmentPosY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericDockpathSegmentPosY.ValueChanged += new System.EventHandler(this.DockpathSegmentPositionChanged);
-            // 
-            // labelDockpathSegmentPosY
-            // 
-            this.labelDockpathSegmentPosY.AutoSize = true;
-            this.labelDockpathSegmentPosY.Location = new System.Drawing.Point(6, 47);
-            this.labelDockpathSegmentPosY.Name = "labelDockpathSegmentPosY";
-            this.labelDockpathSegmentPosY.Size = new System.Drawing.Size(17, 13);
-            this.labelDockpathSegmentPosY.TabIndex = 39;
-            this.labelDockpathSegmentPosY.Text = "Y:";
-            // 
-            // numericDockpathSegmentPosZ
-            // 
-            this.numericDockpathSegmentPosZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericDockpathSegmentPosZ.DecimalPlaces = 4;
-            this.numericDockpathSegmentPosZ.Enabled = false;
-            this.numericDockpathSegmentPosZ.Location = new System.Drawing.Point(29, 71);
-            this.numericDockpathSegmentPosZ.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericDockpathSegmentPosZ.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericDockpathSegmentPosZ.Name = "numericDockpathSegmentPosZ";
-            this.numericDockpathSegmentPosZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentPosZ.Size = new System.Drawing.Size(218, 20);
-            this.numericDockpathSegmentPosZ.TabIndex = 42;
-            this.numericDockpathSegmentPosZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericDockpathSegmentPosZ.ValueChanged += new System.EventHandler(this.DockpathSegmentPositionChanged);
-            // 
-            // labelDockpathSegmentPosZ
-            // 
-            this.labelDockpathSegmentPosZ.AutoSize = true;
-            this.labelDockpathSegmentPosZ.Location = new System.Drawing.Point(6, 73);
-            this.labelDockpathSegmentPosZ.Name = "labelDockpathSegmentPosZ";
-            this.labelDockpathSegmentPosZ.Size = new System.Drawing.Size(17, 13);
-            this.labelDockpathSegmentPosZ.TabIndex = 41;
-            this.labelDockpathSegmentPosZ.Text = "Z:";
-            // 
-            // groupDockpathSegmentRotation
-            // 
-            this.groupDockpathSegmentRotation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupDockpathSegmentRotation.Controls.Add(this.numericDockpathSegmentRotationZ);
-            this.groupDockpathSegmentRotation.Controls.Add(this.labelDockpathSegmentRotationZ);
-            this.groupDockpathSegmentRotation.Controls.Add(this.numericDockpathSegmentRotationY);
-            this.groupDockpathSegmentRotation.Controls.Add(this.labelDockpathSegmentRotationY);
-            this.groupDockpathSegmentRotation.Controls.Add(this.numericDockpathSegmentRotationX);
-            this.groupDockpathSegmentRotation.Controls.Add(this.labelDockpathSegmentRotationX);
-            this.groupDockpathSegmentRotation.Location = new System.Drawing.Point(3, 198);
-            this.groupDockpathSegmentRotation.Name = "groupDockpathSegmentRotation";
-            this.groupDockpathSegmentRotation.Size = new System.Drawing.Size(253, 96);
-            this.groupDockpathSegmentRotation.TabIndex = 43;
-            this.groupDockpathSegmentRotation.TabStop = false;
-            this.groupDockpathSegmentRotation.Text = "Rotation";
-            // 
-            // numericDockpathSegmentRotationZ
-            // 
-            this.numericDockpathSegmentRotationZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericDockpathSegmentRotationZ.DecimalPlaces = 4;
-            this.numericDockpathSegmentRotationZ.Enabled = false;
-            this.numericDockpathSegmentRotationZ.Location = new System.Drawing.Point(29, 71);
-            this.numericDockpathSegmentRotationZ.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericDockpathSegmentRotationZ.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericDockpathSegmentRotationZ.Name = "numericDockpathSegmentRotationZ";
-            this.numericDockpathSegmentRotationZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentRotationZ.Size = new System.Drawing.Size(218, 20);
-            this.numericDockpathSegmentRotationZ.TabIndex = 42;
-            this.numericDockpathSegmentRotationZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericDockpathSegmentRotationZ.ValueChanged += new System.EventHandler(this.DockpathSegmentRotationChanged);
-            // 
-            // labelDockpathSegmentRotationZ
-            // 
-            this.labelDockpathSegmentRotationZ.AutoSize = true;
-            this.labelDockpathSegmentRotationZ.Location = new System.Drawing.Point(6, 73);
-            this.labelDockpathSegmentRotationZ.Name = "labelDockpathSegmentRotationZ";
-            this.labelDockpathSegmentRotationZ.Size = new System.Drawing.Size(17, 13);
-            this.labelDockpathSegmentRotationZ.TabIndex = 41;
-            this.labelDockpathSegmentRotationZ.Text = "Z:";
-            // 
-            // numericDockpathSegmentRotationY
-            // 
-            this.numericDockpathSegmentRotationY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericDockpathSegmentRotationY.DecimalPlaces = 4;
-            this.numericDockpathSegmentRotationY.Enabled = false;
-            this.numericDockpathSegmentRotationY.Location = new System.Drawing.Point(29, 45);
-            this.numericDockpathSegmentRotationY.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericDockpathSegmentRotationY.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericDockpathSegmentRotationY.Name = "numericDockpathSegmentRotationY";
-            this.numericDockpathSegmentRotationY.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentRotationY.Size = new System.Drawing.Size(218, 20);
-            this.numericDockpathSegmentRotationY.TabIndex = 40;
-            this.numericDockpathSegmentRotationY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericDockpathSegmentRotationY.ValueChanged += new System.EventHandler(this.DockpathSegmentRotationChanged);
-            // 
-            // labelDockpathSegmentRotationY
-            // 
-            this.labelDockpathSegmentRotationY.AutoSize = true;
-            this.labelDockpathSegmentRotationY.Location = new System.Drawing.Point(6, 47);
-            this.labelDockpathSegmentRotationY.Name = "labelDockpathSegmentRotationY";
-            this.labelDockpathSegmentRotationY.Size = new System.Drawing.Size(17, 13);
-            this.labelDockpathSegmentRotationY.TabIndex = 39;
-            this.labelDockpathSegmentRotationY.Text = "Y:";
-            // 
-            // numericDockpathSegmentRotationX
-            // 
-            this.numericDockpathSegmentRotationX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericDockpathSegmentRotationX.DecimalPlaces = 4;
-            this.numericDockpathSegmentRotationX.Enabled = false;
-            this.numericDockpathSegmentRotationX.Location = new System.Drawing.Point(29, 19);
-            this.numericDockpathSegmentRotationX.Maximum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            0});
-            this.numericDockpathSegmentRotationX.Minimum = new decimal(new int[] {
-            -1530494977,
-            232830,
-            0,
-            -2147483648});
-            this.numericDockpathSegmentRotationX.Name = "numericDockpathSegmentRotationX";
-            this.numericDockpathSegmentRotationX.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentRotationX.Size = new System.Drawing.Size(218, 20);
-            this.numericDockpathSegmentRotationX.TabIndex = 38;
-            this.numericDockpathSegmentRotationX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.numericDockpathSegmentRotationX.ValueChanged += new System.EventHandler(this.DockpathSegmentRotationChanged);
-            // 
-            // labelDockpathSegmentRotationX
-            // 
-            this.labelDockpathSegmentRotationX.AutoSize = true;
-            this.labelDockpathSegmentRotationX.Location = new System.Drawing.Point(6, 21);
-            this.labelDockpathSegmentRotationX.Name = "labelDockpathSegmentRotationX";
-            this.labelDockpathSegmentRotationX.Size = new System.Drawing.Size(17, 13);
-            this.labelDockpathSegmentRotationX.TabIndex = 37;
-            this.labelDockpathSegmentRotationX.Text = "X:";
-            // 
             // Main
             // 
             this.AllowDrop = true;
@@ -4037,6 +4223,16 @@ namespace DAEnerys
             this.groupDockpathFlags.PerformLayout();
             this.groupDockpathSegments.ResumeLayout(false);
             this.groupDockpathSegments.PerformLayout();
+            this.groupDockpathSegmentRotation.ResumeLayout(false);
+            this.groupDockpathSegmentRotation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationX)).EndInit();
+            this.groupDockpathSegmentPosition.ResumeLayout(false);
+            this.groupDockpathSegmentPosition.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentTolerance)).EndInit();
             this.groupDockpathSegmentFlags.ResumeLayout(false);
@@ -4072,6 +4268,11 @@ namespace DAEnerys
             this.tabEngineBurns.PerformLayout();
             this.groupEngineBurnFlames.ResumeLayout(false);
             this.groupEngineBurnFlames.PerformLayout();
+            this.groupEngineBurnFlamePosition.ResumeLayout(false);
+            this.groupEngineBurnFlamePosition.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnFlamePosZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnFlamePosY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnFlamePosX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEngineBurnSpriteIndex)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarEngineBurnFlames)).EndInit();
             this.tabAnimations.ResumeLayout(false);
@@ -4085,16 +4286,6 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).EndInit();
-            this.groupDockpathSegmentPosition.ResumeLayout(false);
-            this.groupDockpathSegmentPosition.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentPosZ)).EndInit();
-            this.groupDockpathSegmentRotation.ResumeLayout(false);
-            this.groupDockpathSegmentRotation.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationZ)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSegmentRotationX)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4366,6 +4557,17 @@ namespace DAEnerys
         private System.Windows.Forms.Label labelDockpathSegmentRotationY;
         private System.Windows.Forms.NumericUpDown numericDockpathSegmentRotationX;
         private System.Windows.Forms.Label labelDockpathSegmentRotationX;
+        private System.Windows.Forms.Button buttonEngineBurnRemove;
+        private System.Windows.Forms.Button buttonEngineBurnAdd;
+        private System.Windows.Forms.Button buttonEngineBurnFlameRemove;
+        private System.Windows.Forms.Button buttonEngineBurnFlameAdd;
+        private System.Windows.Forms.GroupBox groupEngineBurnFlamePosition;
+        private System.Windows.Forms.NumericUpDown numericEngineBurnFlamePosZ;
+        private System.Windows.Forms.Label labelEngineBurnFlamePosZ;
+        private System.Windows.Forms.NumericUpDown numericEngineBurnFlamePosY;
+        private System.Windows.Forms.Label labelEngineBurnFlamePosY;
+        private System.Windows.Forms.NumericUpDown numericEngineBurnFlamePosX;
+        private System.Windows.Forms.Label labelEngineBurnFlamePosX;
     }
 }
 

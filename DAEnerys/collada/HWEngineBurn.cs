@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using System.Collections.Generic;
 using System.Drawing;
+using System;
 
 namespace DAEnerys
 {
@@ -59,6 +60,34 @@ namespace DAEnerys
                 Lines.Add(line);
             }
         }
+
+        public static HWEngineBurn GetByName(string name)
+        {
+            foreach (HWEngineBurn burn in EngineBurns)
+                if (burn.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    return burn;
+
+            return null;
+        }
+
+        public override void Destroy()
+        {
+            foreach (EditorLine line in Lines)
+                line.Destroy();
+
+            Lines.Clear();
+
+            HWEngineFlame[] flames = Flames.ToArray();
+            foreach (HWEngineFlame flame in flames)
+                flame.Destroy();
+
+            Flames.Clear();
+
+            EngineBurns.Remove(this);
+            Program.main.RemoveEngineBurn(this);
+
+            base.Destroy();
+        }
     }
 
     public class HWEngineFlame : HWElement
@@ -93,6 +122,17 @@ namespace DAEnerys
             EngineFlames.Add(this);
 
             EngineBurn.SetupVisualization();
+        }
+
+        public override void Destroy()
+        {
+            EngineFlames.Remove(this);
+            EngineBurn.Flames.Remove(this);
+            EngineBurn.SetupVisualization();
+            EngineBurn = null;
+            Cube.Destroy();
+
+            base.Destroy();
         }
     }
 }
