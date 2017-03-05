@@ -118,8 +118,6 @@ namespace DAEnerys
 
         private void Main_Load(object sender, EventArgs e)
         {
-            this.Size = new Size(1300, 900);
-
             HWTexture.Init();
             Renderer.Init();
             EditorScene.Init();
@@ -178,6 +176,10 @@ namespace DAEnerys
                 ShipMeshLODMaterialComboBoxes[i].SelectedIndexChanged += new EventHandler(OnShipMeshLODMaterialChanged);
                 ShipMeshLODMaterialComboBoxes[i].Visible = false;
             }
+
+            this.WindowState = Settings.LastWindowState;
+            this.Location = Settings.LastWindowLocation;
+            this.Size = Settings.LastWindowSize;
 
             Clear();
 

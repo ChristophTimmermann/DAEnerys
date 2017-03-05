@@ -10,6 +10,10 @@ namespace DAEnerys
 {
     public partial class Settings : Form
     {
+        public static Point LastWindowLocation = new Point(100, 100);
+        public static Size LastWindowSize = new Size(1300, 900);
+        public static FormWindowState LastWindowState = FormWindowState.Normal;
+
         private int oldComboFSAAIndex;
         private bool hideFSAAMessage;
 
@@ -236,7 +240,12 @@ namespace DAEnerys
                 new XElement("rotationIncrement", Program.main.RotationIncrement),
                 new XElement("smoothZooming", Program.Camera.SmoothZooming),
                 new XElement("lastOpenLocation", Program.main.LastOpenLocation),
-                new XElement("lastSaveLocation", Program.main.LastSaveLocation));
+                new XElement("lastSaveLocation", Program.main.LastSaveLocation),
+                new XElement("lastWindowLocationX", Program.main.Location.X),
+                new XElement("lastWindowLocationY", Program.main.Location.Y),
+                new XElement("lastWindowSizeX", Program.main.Size.Width),
+                new XElement("lastWindowSizeY", Program.main.Size.Height),
+                new XElement("lastWindowState", Program.main.WindowState));
 
             foreach (string dataPath in HWData.DataPaths)
             {
@@ -291,6 +300,12 @@ namespace DAEnerys
             {
                 string file = File.ReadAllText(Path.Combine(Program.EXECUTABLE_PATH, "settings.xml"));
                 XElement settings = XElement.Parse(file);
+
+                int lastWindowLocationX = 100;
+                int lastWindowLocationY = 100;
+
+                int lastWindowSizeX = 1300;
+                int lastWindowSizeY = 900;
 
                 foreach (XElement element in settings.Elements())
                 {
@@ -387,8 +402,36 @@ namespace DAEnerys
                         case "lastSaveLocation":
                             Program.main.LastSaveLocation = element.Value;
                             break;
+                        case "lastWindowLocationX":
+                            int value = 100;
+                            int.TryParse(element.Value, out value);
+                            lastWindowLocationX = value;
+                            break;
+                        case "lastWindowLocationY":
+                            value = 100;
+                            int.TryParse(element.Value, out value);
+                            lastWindowLocationY = value;
+                            break;
+                        case "lastWindowSizeX":
+                            value = 1300;
+                            int.TryParse(element.Value, out value);
+                            lastWindowSizeX = value;
+                            break;
+                        case "lastWindowSizeY":
+                            value = 900;
+                            int.TryParse(element.Value, out value);
+                            lastWindowSizeY = value;
+                            break;
+                        case "lastWindowState":
+                            FormWindowState state = FormWindowState.Normal;
+                            Enum.TryParse(element.Value, out state);
+                            LastWindowState = state;
+                            break;
                     }
                 }
+
+                LastWindowLocation = new Point(lastWindowLocationX, lastWindowLocationY);
+                LastWindowSize = new Size(lastWindowSizeX, lastWindowSizeY);
             }
             catch
             {
