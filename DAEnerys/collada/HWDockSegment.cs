@@ -56,7 +56,6 @@ namespace DAEnerys
                 Dockpath.Segments.Insert(id, this);
 
             EditorDockSegment = new EditorDockSegment(this, new Vector3(1, 0, 0));
-            EditorDockSegment.LocalScale = new Vector3(5);
 
             ToleranceIcosphere = new EditorIcosphere(this, new Vector3(1, 1, 0));
             Tolerance = tolerance;

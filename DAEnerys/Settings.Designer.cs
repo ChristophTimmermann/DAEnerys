@@ -36,6 +36,7 @@ namespace DAEnerys
             this.numericFarClip = new System.Windows.Forms.NumericUpDown();
             this.numericZoomSpeed = new System.Windows.Forms.NumericUpDown();
             this.groupCamera = new System.Windows.Forms.GroupBox();
+            this.checkSmoothZooming = new System.Windows.Forms.CheckBox();
             this.labelFOV = new System.Windows.Forms.Label();
             this.numericFOV = new System.Windows.Forms.NumericUpDown();
             this.labelNearClip = new System.Windows.Forms.Label();
@@ -111,7 +112,8 @@ namespace DAEnerys
             this.groupUpdates = new System.Windows.Forms.GroupBox();
             this.checkCheckForUpdates = new System.Windows.Forms.CheckBox();
             this.colorDialogAlpha = new Opulos.Core.UI.AlphaColorDialog();
-            this.checkSmoothZooming = new System.Windows.Forms.CheckBox();
+            this.labelDockpathSize = new System.Windows.Forms.Label();
+            this.numericDockpathSize = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericFarClip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericZoomSpeed)).BeginInit();
             this.groupCamera.SuspendLayout();
@@ -127,6 +129,7 @@ namespace DAEnerys
             this.groupRendering.SuspendLayout();
             this.groupRace.SuspendLayout();
             this.groupUpdates.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSize)).BeginInit();
             this.SuspendLayout();
             // 
             // labelJointSize
@@ -238,6 +241,19 @@ namespace DAEnerys
             this.groupCamera.TabStop = false;
             this.groupCamera.Text = "Camera";
             // 
+            // checkSmoothZooming
+            // 
+            this.checkSmoothZooming.AutoSize = true;
+            this.checkSmoothZooming.Checked = true;
+            this.checkSmoothZooming.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkSmoothZooming.Location = new System.Drawing.Point(11, 124);
+            this.checkSmoothZooming.Name = "checkSmoothZooming";
+            this.checkSmoothZooming.Size = new System.Drawing.Size(104, 17);
+            this.checkSmoothZooming.TabIndex = 26;
+            this.checkSmoothZooming.Text = "Smooth zooming";
+            this.checkSmoothZooming.UseVisualStyleBackColor = true;
+            this.checkSmoothZooming.CheckedChanged += new System.EventHandler(this.checkSmoothZooming_CheckedChanged);
+            // 
             // labelFOV
             // 
             this.labelFOV.AutoSize = true;
@@ -312,6 +328,8 @@ namespace DAEnerys
             // 
             this.groupEditor.AutoSize = true;
             this.groupEditor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupEditor.Controls.Add(this.labelDockpathSize);
+            this.groupEditor.Controls.Add(this.numericDockpathSize);
             this.groupEditor.Controls.Add(this.labelRotationIncrement);
             this.groupEditor.Controls.Add(this.numericRotationIncrement);
             this.groupEditor.Controls.Add(this.labelPositionIncrement);
@@ -324,7 +342,7 @@ namespace DAEnerys
             this.groupEditor.Controls.Add(this.labelJointSize);
             this.groupEditor.Location = new System.Drawing.Point(8, 180);
             this.groupEditor.Name = "groupEditor";
-            this.groupEditor.Size = new System.Drawing.Size(329, 162);
+            this.groupEditor.Size = new System.Drawing.Size(329, 206);
             this.groupEditor.TabIndex = 16;
             this.groupEditor.TabStop = false;
             this.groupEditor.Text = "Editor";
@@ -332,7 +350,7 @@ namespace DAEnerys
             // labelRotationIncrement
             // 
             this.labelRotationIncrement.AutoSize = true;
-            this.labelRotationIncrement.Location = new System.Drawing.Point(8, 125);
+            this.labelRotationIncrement.Location = new System.Drawing.Point(8, 169);
             this.labelRotationIncrement.Name = "labelRotationIncrement";
             this.labelRotationIncrement.Size = new System.Drawing.Size(96, 13);
             this.labelRotationIncrement.TabIndex = 25;
@@ -346,7 +364,7 @@ namespace DAEnerys
             0,
             0,
             65536});
-            this.numericRotationIncrement.Location = new System.Drawing.Point(105, 123);
+            this.numericRotationIncrement.Location = new System.Drawing.Point(105, 167);
             this.numericRotationIncrement.Maximum = new decimal(new int[] {
             658067456,
             1164,
@@ -370,7 +388,7 @@ namespace DAEnerys
             // labelPositionIncrement
             // 
             this.labelPositionIncrement.AutoSize = true;
-            this.labelPositionIncrement.Location = new System.Drawing.Point(8, 99);
+            this.labelPositionIncrement.Location = new System.Drawing.Point(8, 143);
             this.labelPositionIncrement.Name = "labelPositionIncrement";
             this.labelPositionIncrement.Size = new System.Drawing.Size(93, 13);
             this.labelPositionIncrement.TabIndex = 21;
@@ -384,7 +402,7 @@ namespace DAEnerys
             0,
             0,
             65536});
-            this.numericPositionIncrement.Location = new System.Drawing.Point(105, 97);
+            this.numericPositionIncrement.Location = new System.Drawing.Point(105, 141);
             this.numericPositionIncrement.Maximum = new decimal(new int[] {
             658067456,
             1164,
@@ -534,7 +552,7 @@ namespace DAEnerys
             this.groupDataPaths.Controls.Add(this.buttonRemoveDataPath);
             this.groupDataPaths.Controls.Add(this.buttonAddDataPath);
             this.groupDataPaths.Controls.Add(this.listDataPaths);
-            this.groupDataPaths.Location = new System.Drawing.Point(8, 362);
+            this.groupDataPaths.Location = new System.Drawing.Point(8, 392);
             this.groupDataPaths.Name = "groupDataPaths";
             this.groupDataPaths.Size = new System.Drawing.Size(329, 188);
             this.groupDataPaths.TabIndex = 19;
@@ -1244,18 +1262,38 @@ namespace DAEnerys
             this.colorDialogAlpha.Color = System.Drawing.Color.Gray;
             this.colorDialogAlpha.FullOpen = true;
             // 
-            // checkSmoothZooming
+            // labelDockpathSize
             // 
-            this.checkSmoothZooming.AutoSize = true;
-            this.checkSmoothZooming.Checked = true;
-            this.checkSmoothZooming.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkSmoothZooming.Location = new System.Drawing.Point(11, 124);
-            this.checkSmoothZooming.Name = "checkSmoothZooming";
-            this.checkSmoothZooming.Size = new System.Drawing.Size(104, 17);
-            this.checkSmoothZooming.TabIndex = 26;
-            this.checkSmoothZooming.Text = "Smooth zooming";
-            this.checkSmoothZooming.UseVisualStyleBackColor = true;
-            this.checkSmoothZooming.CheckedChanged += new System.EventHandler(this.checkSmoothZooming_CheckedChanged);
+            this.labelDockpathSize.AutoSize = true;
+            this.labelDockpathSize.Location = new System.Drawing.Point(8, 99);
+            this.labelDockpathSize.Name = "labelDockpathSize";
+            this.labelDockpathSize.Size = new System.Drawing.Size(75, 13);
+            this.labelDockpathSize.TabIndex = 27;
+            this.labelDockpathSize.Text = "Dockpath size";
+            // 
+            // numericDockpathSize
+            // 
+            this.numericDockpathSize.DecimalPlaces = 3;
+            this.numericDockpathSize.Location = new System.Drawing.Point(105, 97);
+            this.numericDockpathSize.Maximum = new decimal(new int[] {
+            658067456,
+            1164,
+            0,
+            0});
+            this.numericDockpathSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericDockpathSize.Name = "numericDockpathSize";
+            this.numericDockpathSize.Size = new System.Drawing.Size(218, 20);
+            this.numericDockpathSize.TabIndex = 26;
+            this.numericDockpathSize.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.numericDockpathSize.ValueChanged += new System.EventHandler(this.numericDockpathSize_ValueChanged);
             // 
             // Settings
             // 
@@ -1296,6 +1334,7 @@ namespace DAEnerys
             this.groupRace.PerformLayout();
             this.groupUpdates.ResumeLayout(false);
             this.groupUpdates.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDockpathSize)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1386,5 +1425,7 @@ namespace DAEnerys
         private System.Windows.Forms.Label labelPositionIncrement;
         private System.Windows.Forms.NumericUpDown numericPositionIncrement;
         private System.Windows.Forms.CheckBox checkSmoothZooming;
+        private System.Windows.Forms.Label labelDockpathSize;
+        private System.Windows.Forms.NumericUpDown numericDockpathSize;
     }
 }

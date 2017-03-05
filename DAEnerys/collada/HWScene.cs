@@ -43,11 +43,15 @@ namespace DAEnerys
             farthest = Math.Max(0.01f, farthest);
 
             float jointSize = 1;
+            float dockpathSegmentSize = 5;
             float markerSize = 1;
             float iconSize = 1;
 
             jointSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
             jointSize = Math.Max(jointSize, 0.3f);
+
+            dockpathSegmentSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
+            dockpathSegmentSize = Math.Max(dockpathSegmentSize, 0.3f);
 
             markerSize = farthest / 60 / HWJoint.Root.GlobalScale.X;
             markerSize = Math.Max(markerSize, 0.01f);
@@ -68,6 +72,7 @@ namespace DAEnerys
             Program.Camera.CalculatedZoom = Program.Camera.ZoomTarget;
 
             EditorJoint.Size = jointSize;
+            EditorDockSegment.Size = dockpathSegmentSize;
             EditorMarker.Size = markerSize;
             HWNavLight.IconSize = farthest / 55;
             Program.Camera.ClipDistance = farClip;

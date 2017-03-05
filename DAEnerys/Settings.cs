@@ -22,6 +22,7 @@ namespace DAEnerys
         {
             numericJointSize.Value = (decimal)EditorJoint.Size;
             numericMarkerSize.Value = (decimal)EditorMarker.Size;
+            numericDockpathSize.Value = (decimal)EditorDockSegment.Size;
             numericZoomSpeed.Value = (decimal)Program.Camera.ZoomSpeed;
             numericFarClip.Value = (decimal)Program.Camera.ClipDistance;
             numericNearClip.Value = (decimal)Program.Camera.NearClipDistance;
@@ -522,6 +523,11 @@ namespace DAEnerys
         private void checkSmoothZooming_CheckedChanged(object sender, EventArgs e)
         {
             Program.Camera.SmoothZooming = checkSmoothZooming.Checked;
+        }
+
+        private void numericDockpathSize_ValueChanged(object sender, EventArgs e)
+        {
+            EditorDockSegment.Size = (float)numericDockpathSize.Value;
         }
     }
 }
