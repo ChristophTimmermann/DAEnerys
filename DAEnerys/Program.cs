@@ -62,10 +62,10 @@ namespace DAEnerys
             GLControl.TabIndex = 0;
             GLControl.VSync = true;
             GLControl.Paint += new System.Windows.Forms.PaintEventHandler(main.glControl_Render);
-            GLControl.Enter += new System.EventHandler(main.glControl_Enter);
+            GLControl.MouseEnter += new System.EventHandler(main.glControl_MouseEnter);
             GLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(main.glControl_KeyDown);
             GLControl.KeyUp += new System.Windows.Forms.KeyEventHandler(main.glControl_KeyUp);
-            GLControl.Leave += new System.EventHandler(main.glControl_Leave);
+            GLControl.MouseLeave += new System.EventHandler(main.glControl_MouseLeave);
             GLControl.MouseDown += new System.Windows.Forms.MouseEventHandler(main.glControl_MouseDown);
             GLControl.MouseUp += new System.Windows.Forms.MouseEventHandler(main.glControl_MouseUp);
             GLControl.Resize += new System.EventHandler(main.glControl_Resize);

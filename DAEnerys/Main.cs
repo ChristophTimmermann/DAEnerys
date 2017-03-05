@@ -2340,13 +2340,13 @@ namespace DAEnerys
             Program.hotkeys.Visible = true;
             Program.hotkeys.Init();
         }
-        public void glControl_Enter(object sender, EventArgs e)
+        public void glControl_MouseEnter(object sender, EventArgs e)
         {
             Program.GLControl.Focus();
         }
-        public void glControl_Leave(object sender, EventArgs e)
+        public void glControl_MouseLeave(object sender, EventArgs e)
         {
-            this.Focus();
+            tabControl.Focus();
         }
 
         //--------------------------------- SHIP MESHES ---------------------------------//
