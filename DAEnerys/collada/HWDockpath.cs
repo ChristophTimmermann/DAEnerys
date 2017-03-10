@@ -2,12 +2,87 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System;
+using Extensions;
 
 namespace DAEnerys
 {
     public class HWDockpath : HWElement
     {
         public static List<HWDockpath> Dockpaths = new List<HWDockpath>();
+
+        public static bool PreviewPlaying;
+        private static int previewSegment;
+        private static float previewBlend;
+        private static float segmentDistance;
+        private static float segmentTime;
+        private static float timePassed;
+        private static HWDockpath previewDockpath;
+        private static EditorDockpathPreviewElement previewElement;
+        private static EditorDockpathPreviewModel previewMesh;
+
+        private const float thrusterMaxSpeed = 348;
+        private const float mainEngineMaxSpeed = 348;
+
+        public static void InitPreview()
+        {
+            previewElement = new EditorDockpathPreviewElement(HWJoint.Root);
+            previewMesh = new EditorDockpathPreviewModel(null);
+        }
+        public static void StartPreview(HWDockpath dockpath)
+        {
+            previewDockpath = dockpath;
+            previewSegment = -1;
+            previewBlend = 0;
+            segmentDistance = 0;
+            timePassed = 0;
+            previewElement.Parent = dockpath;
+            previewMesh.Parent = dockpath;
+            previewMesh.Visible = true;
+            PreviewPlaying = true;
+        }
+
+        public static void UpdatePreview()
+        {
+            if(previewSegment == -1)
+            {
+                previewSegment = 0;
+                segmentDistance = (previewDockpath.Segments[previewSegment].LocalPosition - previewDockpath.Segments[previewSegment + 1].LocalPosition).Length;
+                float speed = Math.Max(previewDockpath.Segments[previewSegment].Speed, 20);
+                segmentTime = segmentDistance / speed;
+            }
+
+            if(previewBlend >= 1)
+            {
+                if (previewSegment >= previewDockpath.Segments.Count - 2)
+                {
+                    previewSegment = 0;
+                    timePassed = 0;
+                    segmentDistance = (previewDockpath.Segments[previewSegment].LocalPosition - previewDockpath.Segments[previewSegment + 1].LocalPosition).Length;
+                    float speed = Math.Max(previewDockpath.Segments[previewSegment].Speed, 20);
+                    segmentTime = segmentDistance / speed;
+                }
+                else
+                {
+                    previewSegment++;
+                    timePassed = 0;
+                    segmentDistance = (previewDockpath.Segments[previewSegment].LocalPosition - previewDockpath.Segments[previewSegment + 1].LocalPosition).Length;
+                    float speed = Math.Max(previewDockpath.Segments[previewSegment].Speed, 20);
+                    segmentTime = segmentDistance / speed;
+                }
+            }
+
+            previewBlend = timePassed / segmentTime;
+            Vector3 pos = Vector3.Lerp(previewDockpath.Segments[previewSegment].LocalPosition, previewDockpath.Segments[previewSegment + 1].LocalPosition, previewBlend);
+            Vector3 rot = Quaternion.Slerp(new Quaternion(previewDockpath.Segments[previewSegment].LocalRotation), new Quaternion(previewDockpath.Segments[previewSegment + 1].LocalRotation), previewBlend).ToEulerAngles();
+
+            previewMesh.LocalPosition = pos;
+            previewMesh.LocalRotation = rot;
+
+            timePassed += (float)Program.ElapsedSeconds;
+
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
+        }
 
         public override string FormattedName
         {

@@ -116,9 +116,11 @@
     <Compile Include="data\HWBadge.cs" />
     <Compile Include="data\HWNavLightStyle.cs" />
     <Compile Include="Dump.cs" />
+    <Compile Include="editor\EditorDockpathPreviewElement.cs" />
     <Compile Include="editor\EditorEffect.cs" />
     <Compile Include="editor\EditorIcon.cs" />
     <Compile Include="editor\EditorCube.cs" />
+    <Compile Include="editor\EditorDockpathPreviewModel.cs" />
     <Compile Include="editor\EditorIcosphere.cs" />
     <Compile Include="editor\EditorDockSegment.cs" />
     <Compile Include="editor\EditorMarker.cs" />
@@ -259,6 +261,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\daenerys.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\dockpathPreviewModel.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\dockSegment.ply">

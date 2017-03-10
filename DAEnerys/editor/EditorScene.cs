@@ -46,6 +46,9 @@ namespace DAEnerys
             Scene dockSegment = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/dockSegment.ply"), PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorDockSegment.Data = Importer.ParseAssimpMesh(dockSegment.Meshes[0]);
 
+            Scene dockpathPreviewModel = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/dockpathPreviewModel.obj"), PostProcessPreset.TargetRealTimeMaximumQuality);
+            EditorDockpathPreviewModel.Data = Importer.ParseAssimpMesh(dockpathPreviewModel.Meshes[0]);
+
             importer.Dispose();
             logStream.Detach();
             #endregion

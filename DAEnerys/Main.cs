@@ -22,7 +22,7 @@ namespace DAEnerys
         public bool Loaded = false;
         public HWJoint SelectedJoint;
         HWCollisionMesh selectedCollisionMesh;
-        HWDockpath selectedDockpath;
+        public HWDockpath selectedDockpath;
         int selectedDockpathFamily;
         int selectedDockpathLink;
         int selectedDockpathSegment;
@@ -255,6 +255,9 @@ namespace DAEnerys
             if (animationPlaying)
                 HWAnimation.Update();
 
+            if (HWDockpath.PreviewPlaying)
+                HWDockpath.UpdatePreview();
+
             //Only update render if it is needed
             if (visibleNavLights > 0/* || visibleEffects > 0*/)
             {
@@ -371,6 +374,8 @@ namespace DAEnerys
 
             EditorScene.Clear();
             HWScene.Clear();
+
+            HWDockpath.InitPreview();
 
             comboMaterialFormat.Items.Add("DXT1");
             comboMaterialFormat.Items.Add("DXT3");
@@ -1108,6 +1113,8 @@ namespace DAEnerys
             trackBarDockpathSegments_Scroll(null, EventArgs.Empty);
 
             ignoreDockpathValuesChanged = false;
+
+            HWDockpath.StartPreview(selectedDockpath);
         }
         private void buttonDockpathRemove_Click(object sender, EventArgs e)
         {
