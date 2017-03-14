@@ -7,7 +7,7 @@ namespace DAEnerys
     {
         public static List<HWElement> HWElements = new List<HWElement>();
 
-        public string Name;
+        public virtual string Name { get; set; }
         public abstract string FormattedName { get; }
 
         public HWElement(string name, HWElement parent) : this(name, parent, Vector3.Zero, Vector3.Zero, Vector3.One)
@@ -39,17 +39,7 @@ namespace DAEnerys
             GlobalWorldMatrix = LocalWorldMatrix;
 
             if (Parent != null)
-            {
-                HWJoint joint = Parent as HWJoint;
-
-                if (joint == null)
-                    GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
-                else
-                    if(joint.AnimationMatrix != Matrix4.Identity)
-                        GlobalWorldMatrix *= joint.AnimationMatrix;
-                    else
-                        GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
-            }
+                GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
 
             GlobalPosition = GlobalWorldMatrix.ExtractTranslation();
             GlobalRotation = GlobalWorldMatrix.ExtractRotation();

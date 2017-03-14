@@ -49,6 +49,13 @@ namespace DAEnerys
             Scene dockpathPreviewModel = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/dockpathPreviewModel.obj"), PostProcessPreset.TargetRealTimeMaximumQuality);
             EditorDockpathPreviewModel.Data = Importer.ParseAssimpMesh(dockpathPreviewModel.Meshes[0]);
 
+            Scene captureMesh = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/captureMesh.ply"), PostProcessPreset.TargetRealTimeMaximumQuality);
+            HWJoint.CaptureVisualizationMeshData = Importer.ParseAssimpMesh(captureMesh.Meshes[0]);
+            Scene salvageMesh = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/salvageMesh.ply"), PostProcessPreset.TargetRealTimeMaximumQuality);
+            HWJoint.SalvageVisualizationMeshData = Importer.ParseAssimpMesh(salvageMesh.Meshes[0]);
+            Scene repairMesh = importer.ImportFile(Path.Combine(Program.EXECUTABLE_PATH, @"resources/repairMesh.ply"), PostProcessPreset.TargetRealTimeMaximumQuality);
+            HWJoint.RepairVisualizationMeshData = Importer.ParseAssimpMesh(repairMesh.Meshes[0]);
+
             importer.Dispose();
             logStream.Detach();
             #endregion

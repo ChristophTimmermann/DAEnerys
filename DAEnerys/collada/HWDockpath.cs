@@ -13,7 +13,14 @@ namespace DAEnerys
         public static bool PreviewPlaying;
         private static int previewSegment;
         private static float previewBlend;
+        private static Vector3 previewVelocity;
         private static float segmentDistance;
+        private static Vector3 segmentDirection;
+        private static float mainEngineAccelerationBlend;
+        private static float mainEngineBrakeBlend;
+        private static bool oldAccelerating;
+        private static bool accelerating;
+        private static float mainEngineSpeed;
         private static float segmentTime;
         private static float timePassed;
         private static HWDockpath previewDockpath;
@@ -22,6 +29,7 @@ namespace DAEnerys
 
         private const float thrusterMaxSpeed = 348;
         private const float mainEngineMaxSpeed = 348;
+        private const float mainEngineAccelTime = 2.3f;
 
         public static void InitPreview()
         {
@@ -33,10 +41,13 @@ namespace DAEnerys
             previewDockpath = dockpath;
             previewSegment = -1;
             previewBlend = 0;
+            previewVelocity = Vector3.Zero;
             segmentDistance = 0;
             timePassed = 0;
             previewElement.Parent = dockpath;
             previewMesh.Parent = dockpath;
+            accelerating = false;
+            oldAccelerating = false;
             previewMesh.Visible = true;
             PreviewPlaying = true;
         }
@@ -45,9 +56,11 @@ namespace DAEnerys
         {
             if(previewSegment == -1)
             {
+                accelerating = true;
                 previewSegment = 0;
                 segmentDistance = (previewDockpath.Segments[previewSegment].LocalPosition - previewDockpath.Segments[previewSegment + 1].LocalPosition).Length;
                 float speed = Math.Max(previewDockpath.Segments[previewSegment].Speed, 20);
+                previewMesh.LocalPosition = previewDockpath.Segments[previewSegment].LocalPosition;
                 segmentTime = segmentDistance / speed;
             }
 
@@ -71,14 +84,36 @@ namespace DAEnerys
                 }
             }
 
-            previewBlend = timePassed / segmentTime;
-            Vector3 pos = Vector3.Lerp(previewDockpath.Segments[previewSegment].LocalPosition, previewDockpath.Segments[previewSegment + 1].LocalPosition, previewBlend);
-            Vector3 rot = Quaternion.Slerp(new Quaternion(previewDockpath.Segments[previewSegment].LocalRotation), new Quaternion(previewDockpath.Segments[previewSegment + 1].LocalRotation), previewBlend).ToEulerAngles();
+            if(oldAccelerating != accelerating)
+            {
+                mainEngineAccelerationBlend = 0;
 
-            previewMesh.LocalPosition = pos;
+                if (!accelerating)
+                    mainEngineAccelerationBlend = mainEngineSpeed / mainEngineMaxSpeed;
+                else
+                    mainEngineBrakeBlend = 1 - mainEngineSpeed / mainEngineMaxSpeed;
+            }
+
+            if(accelerating)
+            {
+                mainEngineAccelerationBlend += (float)Program.ElapsedSeconds / mainEngineAccelTime;
+                mainEngineAccelerationBlend = Math.Min(mainEngineAccelerationBlend, 1);
+                mainEngineSpeed = Utilities.Lerp(0, mainEngineMaxSpeed, mainEngineAccelerationBlend);
+            }
+
+            segmentDirection = (previewMesh.LocalPosition - previewDockpath.Segments[previewSegment + 1].LocalPosition).Normalized();
+
+            previewBlend = timePassed / segmentTime;
+            previewVelocity = Vector3.Zero;
+            previewVelocity += previewMesh.LocalWorldMatrix.ExtractRotation() * Vector3.UnitZ * mainEngineSpeed;
+            Vector3 rot = Vector3.Zero;
+
+            previewMesh.LocalPosition += previewVelocity * (float)Program.ElapsedSeconds;
             previewMesh.LocalRotation = rot;
 
             timePassed += (float)Program.ElapsedSeconds;
+
+            oldAccelerating = accelerating;
 
             Renderer.InvalidateView();
             Renderer.Invalidate();

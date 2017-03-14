@@ -568,6 +568,8 @@ namespace DAEnerys
                 if (joint.TreeNode == e.Node)
                 {
                     joint.EditorJoint.Visible = newValue;
+                    if (joint.VisualizationMesh != null)
+                        joint.VisualizationMesh.Visible = newValue;
                     break;
                 }
             }

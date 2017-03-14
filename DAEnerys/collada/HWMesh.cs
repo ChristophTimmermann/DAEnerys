@@ -103,17 +103,7 @@ namespace DAEnerys
             GlobalWorldMatrix = LocalWorldMatrix;
 
             if (Parent != null)
-            {
-                HWJoint joint = Parent as HWJoint;
-
-                if (joint == null)
-                    GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
-                else
-                    if (joint.AnimationMatrix != Matrix4.Identity)
-                    GlobalWorldMatrix *= joint.AnimationMatrix;
-                else
-                    GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
-            }
+                GlobalWorldMatrix *= Parent.GlobalWorldMatrix;
 
             GlobalPosition = GlobalWorldMatrix.ExtractTranslation();
             GlobalRotation = GlobalWorldMatrix.ExtractRotation();

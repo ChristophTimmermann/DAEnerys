@@ -215,7 +215,7 @@ namespace DAEnerys
             for (int i = 0; i < 3; i++)
             {
                 if (joint.RotationChannel.Axes[i].Times.Count == 0)
-                return joint.LocalWorldMatrix.ClearTranslation().ClearScale();
+                    return joint.LocalWorldMatrix.ClearTranslation().ClearScale();
 
                 int keyIndex = 0;
                 for (int t = 0; t < joint.RotationChannel.Axes[i].Times.Count - 1; t++)
@@ -327,7 +327,21 @@ namespace DAEnerys
                 Exit:
                     ;
                 }
+
+                HWJoint[] animatedJoints = anim.AnimatedJoints.ToArray();
+                foreach (HWJoint joint in animatedJoints)
+                    anim.AddJointToAnimatedRecursive(joint, false);
             }
+        }
+
+        private void AddJointToAnimatedRecursive(HWJoint joint, bool addParent)
+        {
+            if(addParent)
+                AnimatedJoints.Add(joint);
+
+            foreach (Element child in joint.Children)
+                if(child is HWJoint)
+                    AddJointToAnimatedRecursive((HWJoint)child, true);
         }
     }
 

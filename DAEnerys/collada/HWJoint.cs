@@ -10,6 +10,10 @@ namespace DAEnerys
         public static List<HWJoint> Joints = new List<HWJoint>();
         public static HWJoint Root;
 
+        public static MeshData CaptureVisualizationMeshData;
+        public static MeshData SalvageVisualizationMeshData;
+        public static MeshData RepairVisualizationMeshData;
+
         public Matrix4 AnimationMatrix = Matrix4.Identity;
         public HWAnimationChannel PositionChannel = new HWAnimationChannel();
         public HWAnimationChannel RotationChannel = new HWAnimationChannel();
@@ -18,7 +22,49 @@ namespace DAEnerys
         public List<HWMesh> Meshes = new List<HWMesh>();
 
         public EditorJoint EditorJoint;
+        public EditorVisualizationMesh VisualizationMesh;
 
+        public override string Name
+        {
+            get { return base.Name; }
+            set
+            {
+                base.Name = value;
+
+                DestroyVisualization();
+
+                if (value.Length == 0)
+                    return;
+
+                //Check for capture point
+                if (value.StartsWith("CapturePoint", StringComparison.InvariantCultureIgnoreCase) && char.IsNumber(value[value.Length - 1]))
+                {
+                    VisualizationMesh = new EditorVisualizationMesh(this, CaptureVisualizationMeshData);
+                    if (EditorJoint != null)
+                        VisualizationMesh.Visible = EditorJoint.Visible;
+                }
+                //Check for salvage point
+                else if (value.StartsWith("SalvagePoint", StringComparison.InvariantCultureIgnoreCase) && char.IsNumber(value[value.Length - 1]))
+                {
+                    VisualizationMesh = new EditorVisualizationMesh(this, SalvageVisualizationMeshData);
+                }
+                //Check for repair point
+                else if (value.StartsWith("RepairPoint", StringComparison.InvariantCultureIgnoreCase) && char.IsNumber(value[value.Length - 1]))
+                {
+                    VisualizationMesh = new EditorVisualizationMesh(this, RepairVisualizationMeshData);
+                }
+                //Check for latch point
+                else if (value.StartsWith("Latch", StringComparison.InvariantCultureIgnoreCase) && char.IsNumber(value[value.Length - 1]))
+                {
+                    VisualizationMesh = new EditorVisualizationMesh(this, RepairVisualizationMeshData);
+                }
+                else
+                    return;
+
+                if (EditorJoint != null)
+                    VisualizationMesh.Visible = EditorJoint.Visible;
+            }
+        }
         public override string FormattedName
         {
             get
@@ -58,6 +104,8 @@ namespace DAEnerys
             EditorJoint.Destroy();
             EditorJoint = null;
 
+            DestroyVisualization();
+
             if (withChildren)
             {
                 Element[] children = Children.ToArray();
@@ -91,6 +139,15 @@ namespace DAEnerys
             Meshes.Clear();
 
             base.Destroy();
+        }
+
+        private void DestroyVisualization()
+        {
+            if (VisualizationMesh != null)
+            {
+                VisualizationMesh.Destroy();
+                VisualizationMesh = null;
+            }
         }
 
         public static HWJoint GetByName(string name)
