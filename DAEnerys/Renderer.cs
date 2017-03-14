@@ -603,7 +603,7 @@ namespace DAEnerys
 
             if (SOB_GLOWCOL(shader)) //For engine glows
             {
-                surface.SetUniform("inColGlow", EngineGlowColor);
+                surface.SetUniform("inColGlow", new float[] { (float)EngineGlowColor.R / 255, (float)EngineGlowColor.G / 255, (float)EngineGlowColor.B / 255, ThrusterInterpolation * ((float)EngineGlowColor.A / 255) } );
             }
 
             if (!SOB_DEBRIS(shader))

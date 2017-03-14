@@ -368,7 +368,6 @@ namespace DAEnerys
         }
     }
 
-    //Currently unused
     public enum MaterialSuffix
     {
         DIFF,
