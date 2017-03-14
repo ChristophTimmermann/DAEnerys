@@ -463,7 +463,6 @@ namespace DAEnerys
                                         else
                                         {
                                             new Problem(ProblemTypes.WARNING, "Unknown dockpath flag \"" + flag + "\" on dockpath \"" + pathName + "\".");
-                                            failed = true;
                                         }
                                     }
                                 }
@@ -473,10 +472,15 @@ namespace DAEnerys
                                 if (!success)
                                 {
                                     new Problem(ProblemTypes.WARNING, "Failed to parse MAD-index \"" + pair.Value + "\" on dockpath \"" + pathName + "\".");
-                                    failed = true;
                                 }
                                 break;
                         }
+                    }
+
+                    if (pathName == "")
+                    {
+                        new Problem(ProblemTypes.ERROR, "Failed to parse name of dockpath \"" + colladaNode.Name + "\".");
+                        failed = true;
                     }
 
                     if (!failed)
@@ -498,15 +502,15 @@ namespace DAEnerys
                 //Check if segment is child of dockpath
                 if (dockpath == null)
                 {
-                    new Problem(ProblemTypes.WARNING, "Dockpath segment \"" + colladaNode.Name + "\" is not a child of a dockpath.");
+                    new Problem(ProblemTypes.ERROR, "Dockpath segment \"" + colladaNode.Name + "\" is not a child of a dockpath.");
                     failed = true;
                 }
 
                 if (!failed)
                 {
                     int id = -1;
-                    float tolerance = -1;
-                    float speed = -1;
+                    float tolerance = 25;
+                    float speed = 10;
                     List<DockSegmentFlag> flags = new List<DockSegmentFlag>();
 
                     bool success = false;
@@ -539,7 +543,6 @@ namespace DAEnerys
                                         else
                                         {
                                             new Problem(ProblemTypes.WARNING, "Unknown flag \"" + flag + "\" in dockpath segment \"" + colladaNode.Name + "\".");
-                                            failed = true;
                                         }
                                     }
                                 }
@@ -555,14 +558,12 @@ namespace DAEnerys
 
                     if (tolerance == -1)
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse tolerance of dockpath segment \"" + colladaNode.Name + "\".");
-                        failed = true;
+                        new Problem(ProblemTypes.WARNING, "Failed to parse tolerance of dockpath segment \"" + colladaNode.Name + "\".");
                     }
 
                     if (speed == -1)
                     {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse speed of dockpath segment \"" + colladaNode.Name + "\".");
-                        failed = true;
+                        new Problem(ProblemTypes.WARNING, "Failed to parse speed of dockpath segment \"" + colladaNode.Name + "\".");
                     }
 
                     if (!failed)
@@ -611,7 +612,7 @@ namespace DAEnerys
                                     type = newType;
                                 else
                                 {
-                                    new Problem(ProblemTypes.WARNING, "Unknown material parameter type \"" + type + "\" on parameter \"" + colladaNode.Name + "\".");
+                                    new Problem(ProblemTypes.ERROR, "Unknown material parameter type \"" + type + "\" on parameter \"" + colladaNode.Name + "\".");
                                     failed = true;
                                 }
                                 break;
@@ -650,12 +651,13 @@ namespace DAEnerys
                 float size = 1;
                 float phase = 0;
                 float frequency = 1;
-                Vector3 color = new Vector3(255, 255, 255);
-                float distance = 0.001f;
+                Vector3 color = Vector3.One;
+                float distance = 5;
                 List<NavLightFlag> flags = new List<NavLightFlag>();
                 int sect = 0;
 
-                bool success = false;
+                bool colorParsedSuccessfully = false;
+
                 Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "NAVL", "Type", "Sz", "Ph", "Fr", "Col", "Dist", "Flags", "Sect" });
                 foreach (KeyValuePair<string, string> pair in values.ToArray())
                 {
@@ -668,19 +670,24 @@ namespace DAEnerys
                             type = pair.Value;
                             break;
                         case "Sz":
-                            float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out size);
+                            bool success = float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out size);
+                            if(!success)
+                                new Problem(ProblemTypes.WARNING, "Failed to parse size of navlight \"" + colladaNode.Name + "\".");
                             break;
                         case "Ph":
-                            float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out phase);
+                            success = float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out phase);
+                            if (!success)
+                                new Problem(ProblemTypes.WARNING, "Failed to parse phase of navlight \"" + colladaNode.Name + "\".");
                             break;
                         case "Fr":
-                            float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out frequency);
+                            success = float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out frequency);
+                            if (!success)
+                                new Problem(ProblemTypes.WARNING, "Failed to parse frequency of navlight \"" + colladaNode.Name + "\".");
                             break;
                         case "Col":
                             string[] channels = pair.Value.Split(',');
                             if (channels.Length < 3)
                             {
-                                failed = true;
                                 break;
                             }
 
@@ -689,9 +696,12 @@ namespace DAEnerys
                             float.TryParse(channels[1], NumberStyles.Float, CultureInfo.InvariantCulture, out green);
                             float.TryParse(channels[2], NumberStyles.Float, CultureInfo.InvariantCulture, out blue);
                             color = new Vector3(red, green, blue);
+                            colorParsedSuccessfully = true;
                             break;
                         case "Dist":
-                            float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out distance);
+                            success = float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out distance);
+                            if (!success)
+                                new Problem(ProblemTypes.WARNING, "Failed to parse distance of navlight \"" + colladaNode.Name + "\".");
                             break;
                         case "Flags":
                             string[] flagsStrings = pair.Value.Split(' ');
@@ -714,7 +724,9 @@ namespace DAEnerys
                             }
                             break;
                         case "Sect":
-                            int.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out sect);
+                            success = int.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out sect);
+                            if (!success)
+                                new Problem(ProblemTypes.WARNING, "Failed to parse section of navlight \"" + colladaNode.Name + "\".");
                             break;
                     }
                 }
@@ -730,47 +742,27 @@ namespace DAEnerys
                     }
                 }
 
-                if (navLightStyle == null)
-                {
-                    new Problem(ProblemTypes.WARNING, "Navlight style \"" + type + "\" not found. Skipping navlight \"" + lightName + "\".");
-                    failed = true;
-                }
                 if (lightName == "")
                 {
                     new Problem(ProblemTypes.ERROR, "Failed to parse name of navlight \"" + colladaNode.Name + "\". Skipping navlight.");
                     failed = true;
                 }
-                /*if (type == "")
+                if (navLightStyle == null)
                 {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse type of navlight \"" + assimpNode.Name + "\".");
-                    failed = true;
-                }
-                if (size == -1)
-                {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse size of navlight \"" + assimpNode.Name + "\".");
-                    failed = true;
-                }
-                if (phase == -1)
-                {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse phase of navlight \"" + assimpNode.Name + "\".");
-                    failed = true;
-                }
-                if (frequency == -1)
-                {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse frequency of navlight \"" + assimpNode.Name + "\".");
-                    failed = true;
-                }
-                if (color == new Vector3(168, 123, 945))
-                {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse color of navlight \"" + assimpNode.Name + "\".");
-                    failed = true;
-                }
-                if (distance == -1)
-                {
-                    new Problem(ProblemTypes.ERROR, "Failed to parse distance of navlight \"" + assimpNode.Name + "\".");
-                    failed = true;
-                }*/
+                    new Problem(ProblemTypes.WARNING, "Failed to parse style of navlight \"" + colladaNode.Name + "\".");
 
+                    if(HWData.NavLightStyles.Count > 0)
+                        navLightStyle = HWData.NavLightStyles[0];
+                }
+                if (navLightStyle == null)
+                {
+                    new Problem(ProblemTypes.ERROR, "Navlight style \"" + type + "\" not found. Skipping navlight \"" + lightName + "\".");
+                    failed = true;
+                }
+                if (!colorParsedSuccessfully)
+                {
+                    new Problem(ProblemTypes.ERROR, "Failed to parse color of navlight \"" + colladaNode.Name + "\".");
+                }
                 if (!failed)
                     new HWNavLight(lightName, parentJoint, colladaNode.Transform.Position, navLightStyle, size, phase, frequency, color, distance, flags, sect);
             }
@@ -819,13 +811,13 @@ namespace DAEnerys
                 //Check if segment is child of engine burn
                 if (engineBurn == null)
                 {
-                    new Problem(ProblemTypes.WARNING, "Engine burn flame \"" + colladaNode.Name + "\" is not a child of an engine burn.");
+                    new Problem(ProblemTypes.ERROR, "Engine burn flame \"" + colladaNode.Name + "\" is not a child of an engine burn.");
                     failed = true;
                 }
 
                 if (!failed)
                 {
-                    int spriteIndex = -1;
+                    int spriteIndex = 0;
                     int divIndex = -1;
 
                     Dictionary<string, string> values = ParseNameParameters(colladaNode.Name, new string[] { "Flame", "Div" });
@@ -834,26 +826,19 @@ namespace DAEnerys
                         switch (pair.Key)
                         {
                             case "Flame":
-                                int.TryParse(pair.Value, out spriteIndex);
+                                bool success = int.TryParse(pair.Value, out spriteIndex);
+                                if(!success)
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse sprite index of engine flame \"" + colladaNode.Name + "\".");
                                 break;
                             case "Div":
-                                int.TryParse(pair.Value, out divIndex);
+                                success = int.TryParse(pair.Value, out divIndex);
+                                if(!success)
+                                    new Problem(ProblemTypes.ERROR, "Failed to parse division index of engine flame \"" + colladaNode.Name + "\". Skipping.");
                                 break;
                         }
                     }
 
-                    if(spriteIndex == -1)
-                    {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse sprite index of engine flame \"" + colladaNode.Name + "\".");
-                        failed = true;
-                    }
-                    if (divIndex == -1)
-                    {
-                        new Problem(ProblemTypes.ERROR, "Failed to parse division index of engine flame \"" + colladaNode.Name + "\".");
-                        failed = true;
-                    }
-
-                    if (!failed)
+                    if (divIndex != -1)
                     {
                         COLLADATransform transform = GetColladaNodeTransform(colladaNode);
                         HWEngineFlame newFlame = new HWEngineFlame(engineBurn, transform.Position, transform.Rotation, transform.Scale, divIndex, spriteIndex);
@@ -928,30 +913,46 @@ namespace DAEnerys
                                 animName = pair.Value;
                                 break;
                             case "ST":
-                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out startTime);
+                                bool success = float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out startTime);
+                                if(!success)
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse start time of animation \"" + colladaNode.Name + "\".");
                                 type = AnimationType.TIME;
                                 break;
                             case "STF":
-                                int.TryParse(pair.Value, out startFrame);
+                                success = int.TryParse(pair.Value, out startFrame);
+                                if (!success)
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse start frame of animation \"" + colladaNode.Name + "\".");
                                 type = AnimationType.FRAME;
                                 break;
                             case "EN":
-                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out endTime);
+                                success = float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out endTime);
+                                if (!success)
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse end time of animation \"" + colladaNode.Name + "\".");
                                 break;
                             case "ENF":
-                                int.TryParse(pair.Value, out endFrame);
+                                success = int.TryParse(pair.Value, out endFrame);
+                                if (!success)
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse end frame of animation \"" + colladaNode.Name + "\".");
                                 break;
                             case "LS":
-                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out loopStartTime);
+                                success = float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out loopStartTime);
+                                if (!success)
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse loop start time of animation \"" + colladaNode.Name + "\".");
                                 break;
                             case "LSF":
-                                int.TryParse(pair.Value, out loopStartFrame);
+                                success = int.TryParse(pair.Value, out loopStartFrame);
+                                if (!success)
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse loop start frame of animation \"" + colladaNode.Name + "\".");
                                 break;
                             case "LE":
-                                float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out loopEndTime);
+                                success = float.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out loopEndTime);
+                                if (!success)
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse loop end time of animation \"" + colladaNode.Name + "\".");
                                 break;
                             case "LEF":
-                                int.TryParse(pair.Value, out loopEndFrame);
+                                success = int.TryParse(pair.Value, out loopEndFrame);
+                                if (!success)
+                                    new Problem(ProblemTypes.WARNING, "Failed to parse loop end frame of animation \"" + colladaNode.Name + "\".");
                                 break;
                         }
                     }
@@ -991,16 +992,20 @@ namespace DAEnerys
                     case "LOD":
                         success = int.TryParse(pair.Value, out lod);
                         if (!success)
-                        {
-                            new Problem(ProblemTypes.ERROR, "Failed to parse LOD of ship mesh \"" + assimpMesh.Name + "\".");
-                            return;
-                        }
+                            new Problem(ProblemTypes.WARNING, "Failed to parse LOD of ship mesh \"" + assimpMesh.Name + "\".");
                         break;
                     case "TAGS":
                         string[] tagsStrings = pair.Value.Split(' ');
                         foreach (string tag in tagsStrings)
                         {
-                            tags.Add((ShipMeshTag)Enum.Parse(typeof(ShipMeshTag), tag, true));
+                            ShipMeshTag newFlag;
+                            success = Enum.TryParse(tag, true, out newFlag);
+
+                            //Check if flag is valid
+                            if (success)
+                                tags.Add(newFlag);
+                            else
+                                new Problem(ProblemTypes.WARNING, "Unknown flag \"" + newFlag + "\" in ship mesh \"" + assimpMesh.Name + "\".");
                         }
                         break;
                 }
@@ -1008,13 +1013,13 @@ namespace DAEnerys
 
             if (name == "")
             {
-                new Problem(ProblemTypes.ERROR, "Failed to parse name of ship mesh \"" + assimpMesh.Name + "\".");
+                new Problem(ProblemTypes.ERROR, "Failed to parse name of ship mesh \"" + assimpMesh.Name + "\". Skipping.");
                 return;
             }
 
             if (!IsColladaNodeDescendantOf(colladaNode, lodNodes[lod]))
             {
-                new Problem(ProblemTypes.WARNING, "Ship mesh \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
+                new Problem(ProblemTypes.ERROR, "Ship mesh \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
                 return;
             }
 
@@ -1068,7 +1073,7 @@ namespace DAEnerys
             HWJoint parentJoint = HWJoint.GetByName(parent);
             if (parentJoint == null)
             {
-                new Problem(ProblemTypes.ERROR, "Parent joint \"" + parent + "\" of collision mesh  \"" + assimpMesh.Name + "\" does not exist. Resetting to root");
+                new Problem(ProblemTypes.WARNING, "Parent joint \"" + parent + "\" of collision mesh  \"" + assimpMesh.Name + "\" does not exist. Resetting to root");
                 parentJoint = HWJoint.Root;
             }
 
@@ -1077,7 +1082,7 @@ namespace DAEnerys
         private static void ParseEngineGlow(Mesh assimpMesh, COLLADANode colladaNode, HWJoint parentJoint)
         {
             string name = "";
-            int lod = -1;
+            int lod = 0;
 
             bool success = false;
             Dictionary<string, string> values = ParseNameParameters(assimpMesh.Name, new string[] { "GLOW", "LOD" });
@@ -1091,10 +1096,7 @@ namespace DAEnerys
                     case "LOD":
                         success = int.TryParse(pair.Value, out lod);
                         if (!success)
-                        {
                             new Problem(ProblemTypes.ERROR, "Failed to parse LOD of engine glow \"" + assimpMesh.Name + "\".");
-                            return;
-                        }
                         break;
                 }
             }
@@ -1107,7 +1109,7 @@ namespace DAEnerys
 
             if (!IsColladaNodeDescendantOf(colladaNode, lodNodes[lod]))
             {
-                new Problem(ProblemTypes.WARNING, "Engine glow \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
+                new Problem(ProblemTypes.ERROR, "Engine glow \"" + assimpMesh.Name + "\" is marked with LOD " + lod + ", but is not under \"ROOT_LOD[" + lod + "]\".");
                 return;
             }
 
