@@ -1116,7 +1116,7 @@ namespace DAEnerys
 
             ignoreDockpathValuesChanged = false;
 
-            HWDockpath.StartPreview(selectedDockpath);
+            //HWDockpath.StartPreview(selectedDockpath);
         }
         private void buttonDockpathRemove_Click(object sender, EventArgs e)
         {

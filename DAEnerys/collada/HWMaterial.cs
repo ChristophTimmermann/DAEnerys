@@ -110,7 +110,7 @@ namespace DAEnerys
                 if(Name == "")
                     new Problem(ProblemTypes.WARNING, "Failed to parse name of material \"" + fullName + "\".");
                 
-                if (!ShaderManifest.ContainsHODAlias(Shader.ToLower()))
+                if (!ShaderManifest.ContainsHODAlias(Shader))
                     new Problem(ProblemTypes.WARNING, "Unknown shader \"" + Shader + "\" of material \"" + fullName + "\".");
 
                 LoadTextures();

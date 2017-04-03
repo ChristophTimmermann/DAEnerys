@@ -640,7 +640,7 @@ namespace DAEnerys
                 if (shader == "default")
                     shader = "matte";
 
-                Surface surface = ShaderManifest.GetSurface(shader.ToLower());
+                Surface surface = ShaderManifest.GetSurface(shader);
 
                 //load vertex buffers
                 surface.LinkAttrib("inPos", mesh_pos_buffer, 3, false);
