@@ -824,7 +824,8 @@ namespace DAEnerys
                 if (engineGlow.Meshes.Count == 0)
                     continue;
 
-                AddNode(jointElements[engineGlow.Parent], engineGlow.LODMeshes[0][0].FormattedName, engineGlow.LODMeshes[0][0].LocalPosition, engineGlow.LODMeshes[0][0].LocalRotation, engineGlow.LODMeshes[0][0].LocalScale, engineGlow.LODMeshes[0].ToArray());
+                if(engineGlow.LODMeshes[0].Count > 0)
+                    AddNode(jointElements[engineGlow.Parent], engineGlow.LODMeshes[0][0].FormattedName, engineGlow.LODMeshes[0][0].LocalPosition, engineGlow.LODMeshes[0][0].LocalRotation, engineGlow.LODMeshes[0][0].LocalScale, engineGlow.LODMeshes[0].ToArray());
 
                 for (int lod = 1; lod <= 3; lod++)
                 {
