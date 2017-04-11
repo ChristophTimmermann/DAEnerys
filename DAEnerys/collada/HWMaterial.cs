@@ -227,7 +227,7 @@ namespace DAEnerys
             string NOIZ = paths["NOIZ"];
 
             char[] splitter = new char[] { ',' };
-            if (InArray(Shader.ToLower(), "ship,matte,matte2s,monolith,megalith,fxMatte,badge".Split(splitter)))
+            if (InArray(Shader.ToLower(), "ship,matte,matte2s,monolith,megalith,fxMatte,badge,shipanim".Split(splitter)))
             {
                 DiffuseTexture = HWTexture.MakeTexture(Name + "_DIFF", DIFF, 1, 1, 1, 1);
                 GlowTexture = HWTexture.MakeMultTexture(Name + "_GLOW", REFL, GLOW, SPEC, 0, 0, 0, 1);
@@ -313,7 +313,7 @@ namespace DAEnerys
                 if (Shader.ToLower() != "bg_cosmic_an")
                     NormalTexture = HWTexture.MakeTexture(Name + "_NORM", NORM, 5, 5, 1, 1);
             }
-            else if (InArray(Shader.ToLower(), "fx,fxSolid,fxSolidAlphaTest,fx_a,fx_s,fx_harvest,res_tendril,res_dustvein".Split(splitter)))
+            else if (InArray(Shader.ToLower(), "fx,fxsolid,fxsolidalphatest,fx_a,fx_s,fx_harvest,res_tendril,res_dustvein".Split(splitter)))
             {
                 DiffuseTexture = HWTexture.MakeTexture(Name + "_DIFF", DIFF, 1, 1, 1, 1, true);
                 if (Shader.ToLower() == "res_dustvein")
@@ -328,7 +328,7 @@ namespace DAEnerys
             {
                 DiffuseTexture = HWTexture.MakeTexture(Name + "_DIFF", DIFF, 0, 0, 0, 1);
             }
-            else if (InArray(Shader.ToLower(), "dustCloudFlash,dustCloudNebula,dustCloud".Split(splitter)))
+            else if (InArray(Shader.ToLower(), "dustcloudflash,dustcloudnebula,dustcloud".Split(splitter)))
             {
                 DiffuseTexture = HWTexture.MakeTexture(Name + "_DIFF", DIFF, 1, 1, 1, 1, true);
             }

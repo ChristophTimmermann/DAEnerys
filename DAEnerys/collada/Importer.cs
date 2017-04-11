@@ -1614,7 +1614,7 @@ namespace DAEnerys
 
                         jointTarget = channel.Target.Substring(0, lastSlash);
 
-                        if (lastDot != -1)
+                        if (!channel.Target.EndsWith("/matrix"))
                         {
                             channelTarget = channel.Target.Substring(lastSlash + 1, lastDot - lastSlash - 1);
                             axisTarget = channel.Target.Substring(lastDot + 1);

@@ -229,6 +229,8 @@ namespace DAEnerys
             Program.ElapsedMilliseconds = Program.DeltaCounter.Elapsed.TotalMilliseconds;
             Program.DeltaCounter.Reset();
             Program.DeltaCounter.Start();
+            Renderer.Exec += (float)Program.ElapsedSeconds;
+            Renderer.ExecDelta = (float)Program.ElapsedSeconds;
 
             Program.Camera.Update();
 

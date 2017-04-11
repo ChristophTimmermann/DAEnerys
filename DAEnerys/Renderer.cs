@@ -626,6 +626,11 @@ namespace DAEnerys
 
             if (SOB_BAYLIGHT(shader))
                 surface.SetUniform("inBayExps", new float[] { 1f, 0.99f, 0.95f, 0.94f });
+
+            if (shader == "shipAnim")
+            {
+                surface.SetUniform("inAnimParams", new float[] { 1f, 1f, 1f, 0f });
+            }
         }
 
         private static int DrawHWMesh(HWMesh mesh, int index)
@@ -903,14 +908,14 @@ namespace DAEnerys
             corelights[4 * 1 + 2] = keyLightVec.Z;
 
             // Key light diffuse color
-            corelights[4 * 2 + 0] = 1f;
-            corelights[4 * 2 + 1] = 1f;
-            corelights[4 * 2 + 2] = 1f;
+            corelights[4 * 2 + 0] = 100 / 255f;
+            corelights[4 * 2 + 1] = 100 / 255f;
+            corelights[4 * 2 + 2] = 100 / 255f;
 
             // Key light specular color
-            corelights[4 * 3 + 0] = 1f;
-            corelights[4 * 3 + 1] = 1f;
-            corelights[4 * 3 + 2] = 1f;
+            corelights[4 * 3 + 0] = 100 / 255f;
+            corelights[4 * 3 + 1] = 100 / 255f;
+            corelights[4 * 3 + 2] = 100 / 255f;
 
             // Fill light vector
             corelights[4 * 4 + 0] = fillLightVec.X;
@@ -918,14 +923,14 @@ namespace DAEnerys
             corelights[4 * 4 + 2] = fillLightVec.Z;
 
             // Fill light diffuse color
-            corelights[4 * 5 + 0] = 1f;
-            corelights[4 * 5 + 1] = 1f;
-            corelights[4 * 5 + 2] = 1f;
+            corelights[4 * 5 + 0] = 100 / 255f;
+            corelights[4 * 5 + 1] = 100 / 255f;
+            corelights[4 * 5 + 2] = 100 / 255f;
 
             // Fill light specular color
-            corelights[4 * 6 + 0] = 1f;
-            corelights[4 * 6 + 1] = 1f;
-            corelights[4 * 6 + 2] = 1f;
+            corelights[4 * 6 + 0] = 100 / 255f;
+            corelights[4 * 6 + 1] = 100 / 255f;
+            corelights[4 * 6 + 2] = 100 / 255f;
 
             return corelights;
         }
