@@ -187,6 +187,37 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
+
+        public void SetVisible(bool visible)
+        {
+            EditorJoint.Visible = visible;
+            TreeNode.Checked = visible;
+        }
+
+        public void SetChildrenVisible(bool visible)
+        {
+            foreach (Element child in Children)
+            {
+                if (!(child is HWJoint))
+                    continue;
+
+                HWJoint childJoint = (HWJoint)child;
+                childJoint.SetVisible(visible);
+            }
+        }
+
+        public void SetDescendantsVisible(bool visible)
+        {
+            foreach (Element child in Children)
+            {
+                if (!(child is HWJoint))
+                    continue;
+
+                HWJoint childJoint = (HWJoint)child;
+                childJoint.SetVisible(visible);
+                childJoint.SetChildrenVisible(visible);
+            }
+        }
     }
 
     public enum JointType

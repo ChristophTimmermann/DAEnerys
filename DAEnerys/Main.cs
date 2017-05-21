@@ -4247,5 +4247,76 @@ namespace DAEnerys
             Renderer.InvalidateView();
             Renderer.Invalidate();
         }
+
+        private void contextShowHideAll_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            TabPage currentPage = tabControl.SelectedTab;
+
+            bool visible = e.ClickedItem == itemShowAll ? true : false;
+
+            if (currentPage == tabCollisionMeshes)
+                foreach (HWCollisionMesh collisionMesh in HWCollisionMesh.CollisionMeshes)
+                {
+                    collisionMesh.Visible = visible;
+                    listCollisionMeshes.SetItemChecked(collisionMesh.ItemIndex, visible);
+                }
+            else if (currentPage == tabEngineShapes)
+                foreach (HWEngineShape engineShape in HWEngineShape.EngineShapes)
+                {
+                    engineShape.Visible = visible;
+                    CheckEngineShapeVisible(engineShape, visible);
+                }
+            else if (currentPage == tabEngineBurns)
+                foreach (HWEngineBurn engineBurn in HWEngineBurn.EngineBurns)
+                {
+                    engineBurn.Visible = visible;
+                    CheckEngineBurnVisible(engineBurn, visible);
+                }
+            else if (currentPage == tabDockpaths)
+                foreach (HWDockpath dockpath in HWDockpath.Dockpaths)
+                {
+                    dockpath.Visible = visible;
+                    CheckDockpathVisible(dockpath, visible);
+                }
+            else if (currentPage == tabNavLights)
+                foreach (HWNavLight navLight in HWNavLight.NavLights)
+                {
+                    navLight.Visible = visible;
+                    CheckNavLightVisible(navLight, visible);
+                }
+        }
+
+        private void jointsTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            jointsTree.SelectedNode = e.Node;
+            contextJointRightClick.Show(jointsTree, e.Location);
+        }
+
+        private void contextJointRightClick_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            HWJoint selectedJoint = null;
+            foreach (HWJoint joint in HWJoint.Joints)
+                if (jointsTree.SelectedNode == joint.TreeNode)
+                {
+                    selectedJoint = joint;
+                    break;
+                }
+
+            if(e.ClickedItem == contextJointRightClickItemShowDescendants || e.ClickedItem == contextJointRightClickItemHideDescendants)
+            {
+                bool visible = e.ClickedItem == contextJointRightClickItemShowDescendants ? true : false;
+                selectedJoint.SetVisible(visible);
+                selectedJoint.SetDescendantsVisible(visible);
+            }
+            else
+            {
+                bool visible = e.ClickedItem == contextJointRightClickItemShowAll ? true : false;
+                foreach (HWJoint joint in HWJoint.Joints)
+                    joint.SetVisible(visible);
+            }
+        }
     }
 }

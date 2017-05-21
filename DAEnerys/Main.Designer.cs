@@ -30,6 +30,7 @@ namespace DAEnerys
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -145,6 +146,9 @@ namespace DAEnerys
             this.buttonDockpathRemove = new System.Windows.Forms.Button();
             this.buttonDockpathAdd = new System.Windows.Forms.Button();
             this.listDockpaths = new System.Windows.Forms.CheckedListBox();
+            this.contextShowHideAll = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.itemShowAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.itemHideAll = new System.Windows.Forms.ToolStripMenuItem();
             this.labelDockpathAnimationIndex = new System.Windows.Forms.Label();
             this.numericDockpathAnimationIndex = new System.Windows.Forms.NumericUpDown();
             this.boxDockpathName = new System.Windows.Forms.TextBox();
@@ -311,6 +315,11 @@ namespace DAEnerys
             this.saveColladaMeshDialog = new System.Windows.Forms.SaveFileDialog();
             this.openColladaMeshDialog = new System.Windows.Forms.OpenFileDialog();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.contextJointRightClick = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextJointRightClickItemShowAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextJointRightClickItemHideAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextJointRightClickItemShowDescendants = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextJointRightClickItemHideDescendants = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -346,6 +355,7 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.numericMarkerPositionX)).BeginInit();
             this.groupMarkerPreview.SuspendLayout();
             this.tabDockpaths.SuspendLayout();
+            this.contextShowHideAll.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericDockpathAnimationIndex)).BeginInit();
             this.groupDockpathFlags.SuspendLayout();
             this.groupDockpathSegments.SuspendLayout();
@@ -396,6 +406,7 @@ namespace DAEnerys
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).BeginInit();
+            this.contextJointRightClick.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -1066,6 +1077,7 @@ namespace DAEnerys
             // 
             this.listCollisionMeshes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listCollisionMeshes.ContextMenuStrip = this.contextShowHideAll;
             this.listCollisionMeshes.FormattingEnabled = true;
             this.listCollisionMeshes.Location = new System.Drawing.Point(6, 6);
             this.listCollisionMeshes.Name = "listCollisionMeshes";
@@ -1468,6 +1480,7 @@ namespace DAEnerys
             this.jointsTree.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.jointsTree_AfterCheck);
             this.jointsTree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.jointsTree_ItemDrag);
             this.jointsTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.jointsTree_AfterSelect);
+            this.jointsTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.jointsTree_NodeMouseClick);
             this.jointsTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.jointsTree_DragDrop);
             this.jointsTree.DragEnter += new System.Windows.Forms.DragEventHandler(this.jointsTree_DragEnter);
             // 
@@ -1864,7 +1877,7 @@ namespace DAEnerys
             // 
             this.buttonDockpathRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDockpathRemove.Enabled = false;
-            this.buttonDockpathRemove.Location = new System.Drawing.Point(174, 166);
+            this.buttonDockpathRemove.Location = new System.Drawing.Point(157, 166);
             this.buttonDockpathRemove.Name = "buttonDockpathRemove";
             this.buttonDockpathRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonDockpathRemove.TabIndex = 27;
@@ -1886,6 +1899,7 @@ namespace DAEnerys
             // 
             this.listDockpaths.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listDockpaths.ContextMenuStrip = this.contextShowHideAll;
             this.listDockpaths.FormattingEnabled = true;
             this.listDockpaths.Location = new System.Drawing.Point(6, 6);
             this.listDockpaths.Name = "listDockpaths";
@@ -1893,6 +1907,28 @@ namespace DAEnerys
             this.listDockpaths.TabIndex = 25;
             this.listDockpaths.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listDockpaths_ItemCheck);
             this.listDockpaths.SelectedIndexChanged += new System.EventHandler(this.listDockpaths_SelectedIndexChanged);
+            // 
+            // contextShowHideAll
+            // 
+            this.contextShowHideAll.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.itemShowAll,
+            this.itemHideAll});
+            this.contextShowHideAll.Name = "contextShowHideAll";
+            this.contextShowHideAll.ShowImageMargin = false;
+            this.contextShowHideAll.Size = new System.Drawing.Size(94, 48);
+            this.contextShowHideAll.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextShowHideAll_ItemClicked);
+            // 
+            // itemShowAll
+            // 
+            this.itemShowAll.Name = "itemShowAll";
+            this.itemShowAll.Size = new System.Drawing.Size(93, 22);
+            this.itemShowAll.Text = "Show all";
+            // 
+            // itemHideAll
+            // 
+            this.itemHideAll.Name = "itemHideAll";
+            this.itemHideAll.Size = new System.Drawing.Size(93, 22);
+            this.itemHideAll.Text = "Hide all";
             // 
             // labelDockpathAnimationIndex
             // 
@@ -2828,6 +2864,7 @@ namespace DAEnerys
             // 
             this.listNavLights.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listNavLights.ContextMenuStrip = this.contextShowHideAll;
             this.listNavLights.FormattingEnabled = true;
             this.listNavLights.Location = new System.Drawing.Point(6, 6);
             this.listNavLights.Name = "listNavLights";
@@ -3427,6 +3464,7 @@ namespace DAEnerys
             // 
             this.listEngineShapes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listEngineShapes.ContextMenuStrip = this.contextShowHideAll;
             this.listEngineShapes.FormattingEnabled = true;
             this.listEngineShapes.Location = new System.Drawing.Point(6, 6);
             this.listEngineShapes.Name = "listEngineShapes";
@@ -3503,6 +3541,7 @@ namespace DAEnerys
             // 
             this.listEngineBurns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listEngineBurns.ContextMenuStrip = this.contextShowHideAll;
             this.listEngineBurns.FormattingEnabled = true;
             this.listEngineBurns.Location = new System.Drawing.Point(6, 6);
             this.listEngineBurns.Name = "listEngineBurns";
@@ -4149,6 +4188,42 @@ namespace DAEnerys
             this.colorDialog.FullOpen = true;
             this.colorDialog.SolidColorOnly = true;
             // 
+            // contextJointRightClick
+            // 
+            this.contextJointRightClick.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextJointRightClickItemShowDescendants,
+            this.contextJointRightClickItemHideDescendants,
+            this.contextJointRightClickItemShowAll,
+            this.contextJointRightClickItemHideAll});
+            this.contextJointRightClick.Name = "contextShowHideAll";
+            this.contextJointRightClick.ShowImageMargin = false;
+            this.contextJointRightClick.Size = new System.Drawing.Size(148, 92);
+            this.contextJointRightClick.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextJointRightClick_ItemClicked);
+            // 
+            // contextJointRightClickItemShowAll
+            // 
+            this.contextJointRightClickItemShowAll.Name = "contextJointRightClickItemShowAll";
+            this.contextJointRightClickItemShowAll.Size = new System.Drawing.Size(147, 22);
+            this.contextJointRightClickItemShowAll.Text = "Show all";
+            // 
+            // contextJointRightClickItemHideAll
+            // 
+            this.contextJointRightClickItemHideAll.Name = "contextJointRightClickItemHideAll";
+            this.contextJointRightClickItemHideAll.Size = new System.Drawing.Size(147, 22);
+            this.contextJointRightClickItemHideAll.Text = "Hide all";
+            // 
+            // contextJointRightClickItemShowDescendants
+            // 
+            this.contextJointRightClickItemShowDescendants.Name = "contextJointRightClickItemShowDescendants";
+            this.contextJointRightClickItemShowDescendants.Size = new System.Drawing.Size(147, 22);
+            this.contextJointRightClickItemShowDescendants.Text = "Show descendants";
+            // 
+            // contextJointRightClickItemHideDescendants
+            // 
+            this.contextJointRightClickItemHideDescendants.Name = "contextJointRightClickItemHideDescendants";
+            this.contextJointRightClickItemHideDescendants.Size = new System.Drawing.Size(147, 22);
+            this.contextJointRightClickItemHideDescendants.Text = "Hide descendants";
+            // 
             // Main
             // 
             this.AllowDrop = true;
@@ -4217,6 +4292,7 @@ namespace DAEnerys
             this.groupMarkerPreview.PerformLayout();
             this.tabDockpaths.ResumeLayout(false);
             this.tabDockpaths.PerformLayout();
+            this.contextShowHideAll.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericDockpathAnimationIndex)).EndInit();
             this.groupDockpathFlags.ResumeLayout(false);
             this.groupDockpathFlags.PerformLayout();
@@ -4285,6 +4361,7 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).EndInit();
+            this.contextJointRightClick.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4567,6 +4644,14 @@ namespace DAEnerys
         private System.Windows.Forms.Label labelEngineBurnFlamePosY;
         private System.Windows.Forms.NumericUpDown numericEngineBurnFlamePosX;
         private System.Windows.Forms.Label labelEngineBurnFlamePosX;
+        private System.Windows.Forms.ContextMenuStrip contextShowHideAll;
+        private System.Windows.Forms.ToolStripMenuItem itemShowAll;
+        private System.Windows.Forms.ToolStripMenuItem itemHideAll;
+        private System.Windows.Forms.ContextMenuStrip contextJointRightClick;
+        private System.Windows.Forms.ToolStripMenuItem contextJointRightClickItemShowDescendants;
+        private System.Windows.Forms.ToolStripMenuItem contextJointRightClickItemHideDescendants;
+        private System.Windows.Forms.ToolStripMenuItem contextJointRightClickItemShowAll;
+        private System.Windows.Forms.ToolStripMenuItem contextJointRightClickItemHideAll;
     }
 }
 
