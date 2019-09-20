@@ -267,11 +267,11 @@ namespace DAEnerys
                 AttributeInfo info = new AttributeInfo();
                 int length = 0;
 
-                StringBuilder name = new StringBuilder(32);
+                string name;
 
-                GL.GetActiveAttrib(ProgramID, i, 256, out length, out info.size, out info.type, name);
+                GL.GetActiveAttrib(ProgramID, i, 256, out length, out info.size, out info.type, out name);
 
-                info.name = name.ToString();
+                info.name = name;
                 info.address = GL.GetAttribLocation(ProgramID, info.name);
                 Attributes.Add(name.ToString(), info);
             }
@@ -281,11 +281,11 @@ namespace DAEnerys
                 UniformInfo info = new UniformInfo();
                 int length = 0;
 
-                StringBuilder name = new StringBuilder(128);
+                string name;
 
-                GL.GetActiveUniform(ProgramID, i, 256, out length, out info.size, out info.type, name);
+                GL.GetActiveUniform(ProgramID, i, 256, out length, out info.size, out info.type, out name);
 
-                info.name = name.ToString();
+                info.name = name;
                 info.address = GL.GetUniformLocation(ProgramID, info.name);
                 Uniforms.Add(name.ToString(), info);
             }

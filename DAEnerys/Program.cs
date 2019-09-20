@@ -60,7 +60,7 @@ namespace DAEnerys
             GLControl.Name = "glControl";
             GLControl.Size = new System.Drawing.Size(865, 758);
             GLControl.TabIndex = 0;
-            GLControl.VSync = true;
+            GLControl.Context.SwapInterval = 60;
             GLControl.Paint += new System.Windows.Forms.PaintEventHandler(main.glControl_Render);
             GLControl.MouseEnter += new System.EventHandler(main.glControl_MouseEnter);
             GLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(main.glControl_KeyDown);

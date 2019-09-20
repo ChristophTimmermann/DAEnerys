@@ -43,8 +43,8 @@ namespace DAEnerys
                     _min = float.MaxValue * Vector3.One;
                     foreach (Vector3 vertex in Vertices)
                     {
-                        _max = Vector3.Max(_max, vertex);
-                        _min = Vector3.Min(_min, vertex);
+                        _max = Vector3.MagnitudeMax(_max, vertex);
+                        _min = Vector3.MagnitudeMin(_min, vertex);
                     }
                     MinMaxSet = true;
                 }
@@ -62,8 +62,8 @@ namespace DAEnerys
                     _min = float.MaxValue * Vector3.One;
                     foreach (Vector3 vertex in Vertices)
                     {
-                        _max = Vector3.Max(_max, vertex);
-                        _min = Vector3.Min(_min, vertex);
+                        _max = Vector3.MagnitudeMax(_max, vertex);
+                        _min = Vector3.MagnitudeMin(_min, vertex);
                     }
                     MinMaxSet = true;
                 }

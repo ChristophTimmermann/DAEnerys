@@ -374,7 +374,7 @@ namespace DAEnerys
                             Renderer.DisableLighting = disableLighting;
                             break;
                         case "checkForUpdatesOnStart":
-                            bool checkForUpdatesOnStart = false;
+                            bool checkForUpdatesOnStart = true;
                             bool.TryParse(element.Value, out checkForUpdatesOnStart);
                             Updater.CheckForUpdatesOnStart = checkForUpdatesOnStart;
                             break;

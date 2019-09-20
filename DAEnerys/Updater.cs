@@ -28,6 +28,9 @@ namespace DAEnerys
 
         public static void CheckForUpdates()
         {
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             if (Checking)
                 return;
 

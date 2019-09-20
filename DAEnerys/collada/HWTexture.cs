@@ -235,7 +235,7 @@ namespace DAEnerys
                 for (int i = 0; i < height; i++)
                 {
                     Marshal.Copy(new IntPtr(ptr), row, 0, rowSize);
-                    Buffer.BlockCopy(row, 0, data, i * rowSize, rowSize);
+                    System.Buffer.BlockCopy(row, 0, data, i * rowSize, rowSize);
                     ptr += rowSize;
                 }
 

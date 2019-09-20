@@ -181,7 +181,7 @@ namespace DAEnerys
             GL.ClearColor(BackgroundColor);
 
             GL.Enable(EnableCap.DepthTest);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
             GL.Enable(EnableCap.CullFace);
             GL.AlphaFunc(AlphaFunction.Greater, 0.05f);
