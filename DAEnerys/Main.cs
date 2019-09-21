@@ -2366,7 +2366,7 @@ namespace DAEnerys
         }
         public void glControl_MouseEnter(object sender, EventArgs e)
         {
-            Program.GLControl.Focus();
+            //Program.GLControl.Focus();
         }
         public void glControl_MouseLeave(object sender, EventArgs e)
         {
@@ -2388,7 +2388,7 @@ namespace DAEnerys
             ignoreShipMeshDoScarCheck = false;
             checkShipMeshDoScar.Enabled = false; //Disable do scar checkbox
 
-            comboShipMeshParent.SelectedIndex = 0; //Reset parent combo box
+            comboShipMeshParent.SelectedItem = null; //Reset parent combo box
             comboShipMeshParent.Enabled = false; //Disable parent combo box
 
             buttonShipMeshRemove.Enabled = false; //Disable remove button
