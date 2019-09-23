@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 
 namespace DAEnerys
@@ -161,6 +162,15 @@ namespace DAEnerys
         private GenericMaterial material;
         public GenericMaterial Material { get { return material; } set { material = value; Renderer.Invalidate(); } }
 
+
+        public Vector3 BoundsMin { get { if (!boundsCalculated) CalculateBoundingBox(); return boundsMin; } }
+        private Vector3 boundsMin;
+        public Vector3 BoundsMax { get { if (!boundsCalculated) CalculateBoundingBox(); return boundsMax; } }
+        private Vector3 boundsMax;
+
+        private bool boundsCalculated = false;
+
+
         public GenericMesh(Element parent) : this(parent, Vector3.Zero, Vector3.Zero, Vector3.One)
         {
 
@@ -192,6 +202,8 @@ namespace DAEnerys
 
             if (Normals.Length == 0)
                 RecalculateNormals();
+
+            this.boundsCalculated = false;
 
             Renderer.InvalidateMeshData();
             Renderer.Invalidate();
@@ -256,6 +268,89 @@ namespace DAEnerys
             }
             for (int i = 0; i < Vertices.Length; ++i)
                 _NormaliseVertTangents(handedness[i], i);
+        }
+
+        public virtual void CalculateBoundingBox()
+        {
+            boundsMin = new Vector3(float.MaxValue);
+            boundsMax = new Vector3(-float.MaxValue);
+
+            foreach (Vector3 vertex in Vertices)
+            {
+                //Vector3 computedVertex = Vector3.TransformPosition(vertex, GlobalWorldMatrix);
+                //Vector3 computedVertex = Vector3.Add(vertex, Parent.AbsolutePosition);
+                boundsMin.X = Math.Min(boundsMin.X, vertex.X);
+                boundsMin.Y = Math.Min(boundsMin.Y, vertex.Y);
+                boundsMin.Z = Math.Min(boundsMin.Z, vertex.Z);
+
+                boundsMax.X = Math.Max(boundsMax.X, vertex.X);
+                boundsMax.Y = Math.Max(boundsMax.Y, vertex.Y);
+                boundsMax.Z = Math.Max(boundsMax.Z, vertex.Z);
+            }
+
+            boundsCalculated = true;
+        }
+
+        public MeshData GenerateBoundingCube()
+        {
+            List<Vertex> vertices = new List<Vertex>();
+
+            Vertex vertex = new Vertex();
+            vertex.Position = new Vector3(BoundsMin.X, BoundsMin.Y, BoundsMin.Z);
+            vertices.Add(vertex);
+            vertex = new Vertex();
+            vertex.Position = new Vector3(BoundsMin.X, BoundsMax.Y, BoundsMin.Z);
+            vertices.Add(vertex);
+
+            vertex = new Vertex();
+            vertex.Position = new Vector3(BoundsMax.X, BoundsMin.Y, BoundsMin.Z);
+            vertices.Add(vertex);
+            vertex = new Vertex();
+            vertex.Position = new Vector3(BoundsMax.X, BoundsMax.Y, BoundsMin.Z);
+            vertices.Add(vertex);
+
+            vertex = new Vertex();
+            vertex.Position = new Vector3(BoundsMax.X, BoundsMin.Y, BoundsMax.Z);
+            vertices.Add(vertex);
+            vertex = new Vertex();
+            vertex.Position = new Vector3(BoundsMax.X, BoundsMax.Y, BoundsMax.Z);
+            vertices.Add(vertex);
+
+            vertex = new Vertex();
+            vertex.Position = new Vector3(BoundsMin.X, BoundsMin.Y, BoundsMax.Z);
+            vertices.Add(vertex);
+            vertex = new Vertex();
+            vertex.Position = new Vector3(BoundsMin.X, BoundsMax.Y, BoundsMax.Z);
+            vertices.Add(vertex);
+
+
+
+            int[] indices =
+            {
+                0, 1, 3,
+                3, 2, 0,
+
+                5, 4, 2,
+                2, 3, 5,
+
+                7, 6, 4,
+                4, 5, 7,
+
+                1, 0, 6,
+                6, 7, 1,
+
+
+                //Top face
+                1, 7, 5,
+                5, 3, 1,
+
+                //Bottom face
+                6, 0, 2,
+                2, 4, 6,
+            };
+
+            MeshData cubeData = new MeshData(vertices.ToArray(), indices, 0);
+            return cubeData;
         }
 
         private void _CalcFaceTangents(

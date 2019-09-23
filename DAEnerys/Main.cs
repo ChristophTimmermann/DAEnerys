@@ -162,6 +162,8 @@ namespace DAEnerys
             float scalingFactor = graphics.DpiX / 96;
             scalingFactor -= 1;
             splitContainer1.Panel1MinSize = 280 + (int)Math.Round(170 * scalingFactor);
+            splitContainer1.SplitterDistance = (int)(splitContainer1.Width * 0.2);
+
 
             buttonProblems.Size = new Size(46 - (int)Math.Round(12 * scalingFactor), 25 - (int)Math.Round(12 * scalingFactor));
             buttonProblems.Location = new Point(1226 + (int)Math.Round(1248 * scalingFactor), 0);
@@ -3458,6 +3460,8 @@ namespace DAEnerys
             buttonCollisionMeshExportOBJ.Enabled = false;
             buttonCollisionMeshImportOBJ.Enabled = false;
 
+            groupCollisionMeshPreview.Enabled = false;
+
             selectedCollisionMesh = null;
 
             if (listCollisionMeshes.SelectedItem == null)
@@ -3488,6 +3492,9 @@ namespace DAEnerys
             buttonCollisionMeshExportOBJ.Enabled = true;
             buttonCollisionMeshImportOBJ.Enabled = true;
 
+            groupCollisionMeshPreview.Enabled = true;
+            checkCollisionMeshPreviewBox.Checked = selectedCollisionMesh.PreviewCube.Visible;
+            checkCollisionMeshPreviewSphere.Checked = selectedCollisionMesh.PreviewSphere.Visible;
         }
         public void AddCollisionMesh(HWCollisionMesh mesh)
         {
@@ -3626,6 +3633,22 @@ namespace DAEnerys
             selectedCollisionMesh.Parent = newParent;
 
             listCollisionMeshes.Items[selectedCollisionMesh.ItemIndex] = selectedCollisionMesh.Parent.Name;
+        }
+
+
+        private void checkCollisionMeshPreviewBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            selectedCollisionMesh.PreviewCube.Visible = checkCollisionMeshPreviewBox.Checked;
+        }
+        private void checkCollisionMeshPreviewSphere_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            selectedCollisionMesh.PreviewSphere.Visible = checkCollisionMeshPreviewSphere.Checked;
         }
 
         //--------------------------------- ENGINE SHAPES ---------------------------------//
