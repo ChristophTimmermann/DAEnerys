@@ -25,6 +25,8 @@ namespace DAEnerys
 
         public static void ParseDataPaths()
         {
+            InitLuaInterpreter();
+
             //Check if there are any data paths
             if (DataPaths.Count <= 0)
             {
@@ -52,8 +54,6 @@ namespace DAEnerys
             //Parse data
             foreach (string dataPath in DataPaths)
             {
-                lua = new Lua();
-
                 //Parse navlight styles
                 string navLightStylesPath = Path.Combine(dataPath, "scripts/navlightstyles");
 
@@ -116,6 +116,35 @@ namespace DAEnerys
                 NavLightSprite = Renderer.DefaultTexture;
                 MessageBox.Show("Could not find \"effect/textures/navlight.tga\". Be sure to add the default homeworld files to your data paths.", "Failed to find navlight sprite", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private static void InitLuaInterpreter()
+        {
+            lua = new Lua();
+            
+            Type type = typeof(HWData);
+
+            lua.RegisterFunction("StartShipConfig", null, type.GetMethod("StartShipConfig"));
+            lua.RegisterFunction("getShipNum", null, type.GetMethod("GetShipNum"));
+            lua.RegisterFunction("getShipStr", null, type.GetMethod("GetShipStr"));
+            lua.RegisterFunction("setSupplyValue", null, type.GetMethod("SetSupplyValue"));
+            lua.RegisterFunction("StartShipWeaponConfig", null, type.GetMethod("StartShipWeaponConfig"));
+            lua.RegisterFunction("setEngineBurn", null, type.GetMethod("SetEngineBurn"));
+            lua.RegisterFunction("setEngineGlow", null, type.GetMethod("SetEngineGlow"));
+            lua.RegisterFunction("setEngineTrail", null, type.GetMethod("SetEngineTrail"));
+            lua.RegisterFunction("setTargetBox", null, type.GetMethod("SetTargetBox"));
+            lua.RegisterFunction("LoadModel", null, type.GetMethod("LoadModel"));
+            lua.RegisterFunction("LoadSharedModel", null, type.GetMethod("LoadSharedModel"));
+            lua.RegisterFunction("addShield", null, type.GetMethod("AddShield"));
+            lua.RegisterFunction("AddShipAbility", null, type.GetMethod("AddShipAbility"));
+            lua.RegisterFunction("setConcurrentBuildLimit", null, type.GetMethod("SetConcurrentBuildLimit"));
+            lua.RegisterFunction("setCollisionDamageToModifier", null, type.GetMethod("SetCollisionDamageToModifier"));
+            lua.RegisterFunction("setCollisionDamageFromModifier", null, type.GetMethod("SetCollisionDamageFromModifier"));
+            lua.RegisterFunction("setSpecialDieTime", null, type.GetMethod("SetSpecialDieTime"));
+            lua.RegisterFunction("addMagneticField", null, type.GetMethod("AddMagneticField"));
+
+            LoadMathLib();
+            LoadExtraFunctions();
         }
 
         private static void ParseNavLightStyle(string path)
@@ -288,40 +317,7 @@ namespace DAEnerys
 
         private static void ParseShipType(string path)
         {
-            lua = new Lua();
             string file = File.ReadAllText(path);
-
-            Type type = typeof(HWData);
-
-            lua.RegisterFunction("StartShipConfig", null, type.GetMethod("StartShipConfig"));
-            lua.RegisterFunction("getShipNum", null, type.GetMethod("GetShipNum"));
-            lua.RegisterFunction("getShipStr", null, type.GetMethod("GetShipStr"));
-            lua.RegisterFunction("setSupplyValue", null, type.GetMethod("SetSupplyValue"));
-            lua.RegisterFunction("StartShipWeaponConfig", null, type.GetMethod("StartShipWeaponConfig"));
-            lua.RegisterFunction("setEngineBurn", null, type.GetMethod("SetEngineBurn"));
-            lua.RegisterFunction("setEngineGlow", null, type.GetMethod("SetEngineGlow"));
-            lua.RegisterFunction("setEngineTrail", null, type.GetMethod("SetEngineTrail"));
-            lua.RegisterFunction("setTargetBox", null, type.GetMethod("SetTargetBox"));
-            lua.RegisterFunction("LoadModel", null, type.GetMethod("LoadModel"));
-            lua.RegisterFunction("LoadSharedModel", null, type.GetMethod("LoadSharedModel"));
-            lua.RegisterFunction("addShield", null, type.GetMethod("AddShield"));
-            lua.RegisterFunction("AddShipAbility", null, type.GetMethod("AddShipAbility"));
-            lua.RegisterFunction("setConcurrentBuildLimit", null, type.GetMethod("SetConcurrentBuildLimit"));
-            lua.RegisterFunction("setCollisionDamageToModifier", null, type.GetMethod("SetCollisionDamageToModifier"));
-            lua.RegisterFunction("setCollisionDamageFromModifier", null, type.GetMethod("SetCollisionDamageFromModifier"));
-            lua.RegisterFunction("setSpecialDieTime", null, type.GetMethod("SetSpecialDieTime"));
-            lua.RegisterFunction("addMagneticField", null, type.GetMethod("AddMagneticField"));
-
-            file = DisableLuaFunctionInString(file, "addAbility");
-            file = DisableLuaFunctionInString(file, "addCustomCode");
-            file = DisableLuaFunctionInString(file, "SpawnSalvageOnDeath");
-            file = DisableLuaFunctionInString(file, "SpawnDustCloudOnDeath");
-            file = DisableLuaFunctionInString(file, "loadShipPatchList");
-            file = DisableLuaFunctionInString(file, "loadLatchPointList");
-            file = DisableLuaFunctionInString(file, "AddShipMultiplier");
-            file = DisableLuaFunctionInString(file, "setTacticsMults");
-            file = DisableLuaFunctionInString(file, "setSpeedvsAccuracyApplied");
-            file = DisableLuaFunctionInString(file, "StartShipHardPointConfig");
 
             string name = Path.GetFileNameWithoutExtension(path).ToLower();
 
@@ -352,6 +348,117 @@ namespace DAEnerys
             }
         }
 
+        private static void LoadMathLib()
+        {
+            Type math = typeof(Math);
+            Type[] args = new Type[] { typeof(double) };
+            lua.RegisterFunction("abs", math.GetMethod("Abs", args));
+            lua.RegisterFunction("sin", math.GetMethod("Sin"));
+            lua.RegisterFunction("cos", math.GetMethod("Cos"));
+            lua.RegisterFunction("tan", math.GetMethod("Tan"));
+            lua.RegisterFunction("asin", math.GetMethod("Asin"));
+            lua.RegisterFunction("acos", math.GetMethod("Acos"));
+            lua.RegisterFunction("acos", math.GetMethod("Acos"));
+            lua.RegisterFunction("atan", math.GetMethod("Atan"));
+            lua.RegisterFunction("atan2", math.GetMethod("Atan2"));
+            lua.RegisterFunction("ceil", math.GetMethod("Ceiling", args));
+            lua.RegisterFunction("floor", math.GetMethod("Floor", args));
+            lua.RegisterFunction("mod", math.GetMethod("IEEERemainder"));
+            lua.RegisterFunction("sqrt", math.GetMethod("Sqrt"));
+            lua.RegisterFunction("pow", math.GetMethod("Pow"));
+            lua.RegisterFunction("log", math.GetMethod("Log", args));
+            lua.RegisterFunction("log10", math.GetMethod("Log10"));
+            lua.RegisterFunction("exp", math.GetMethod("Exp"));
+            lua.RegisterFunction("deg", typeof(HWData).GetMethod("ToDegrees"));
+            lua.RegisterFunction("rad", typeof(HWData).GetMethod("ToRadians"));
+            lua.RegisterFunction("min", math.GetMethod("Min", new Type[] { typeof(double), typeof(double) }));
+            lua.RegisterFunction("max", math.GetMethod("Max", new Type[] { typeof(double), typeof(double) }));
+
+            lua.RegisterFunction("DAENERYS_random0", typeof(HWData).GetMethod("Random0"));
+            lua.RegisterFunction("DAENERYS_random1", typeof(HWData).GetMethod("Random1"));
+            lua.RegisterFunction("DAENERYS_random2", typeof(HWData).GetMethod("Random2"));
+            lua.RegisterFunction("randomseed", typeof(HWData).GetMethod("RandomSeed"));
+
+            lua.DoString(@"
+function random(a, b)
+    if (b) then
+        return DAENERYS_random2(a, b)
+    else
+        if (a) then
+            return DAENERYS_random1(a)
+        else
+            return DAENERYS_random0()
+        end
+    end
+end");
+        }
+
+        private static void LoadExtraFunctions()
+        {
+            Type type = typeof(HWData);
+
+            lua.RegisterFunction("DAENERYS_addAbility", null, type.GetMethod("AddAbility"));
+            lua.DoString(@"
+                function addAbility(entity, ability, ...)
+	                return DAENERYS_addAbility(entity, ability, {...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_addCustomCode", null, type.GetMethod("AddCustomCode"));
+            lua.DoString(@"
+                function addCustomCode(...)
+	                return DAENERYS_addCustomCode({...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_SpawnSalvageOnDeath", null, type.GetMethod("SpawnSalvageOnDeath"));
+            lua.DoString(@"
+                function SpawnSalvageOnDeath(entity, ...)
+	                return DAENERYS_SpawnSalvageOnDeath(entity, {...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_SpawnDustCloudOnDeath", null, type.GetMethod("SpawnDustCloudOnDeath"));
+            lua.DoString(@"
+                function SpawnDustCloudOnDeath(entity, ...)
+	                return DAENERYS_SpawnDustCloudOnDeath(entity, {...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_loadShipPatchList", null, type.GetMethod("LoadShipPatchList"));
+            lua.DoString(@"
+                function loadShipPatchList(entity, ...)
+	                return DAENERYS_loadShipPatchList(entity, {...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_loadLatchPointList", null, type.GetMethod("LoadLatchPointList"));
+            lua.DoString(@"
+                function loadLatchPointList(entity, ...)
+	                return DAENERYS_loadLatchPointList(entity, {...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_AddShipMultiplier", null, type.GetMethod("AddShipMultiplier"));
+            lua.DoString(@"
+                function AddShipMultiplier(entity, ...)
+	                return DAENERYS_AddShipMultiplier(entity, {...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_setTacticsMults", null, type.GetMethod("SetTacticsMults"));
+            lua.DoString(@"
+                function setTacticsMults(entity, ...)
+	                return DAENERYS_setTacticsMults(entity, {...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_setSpeedvsAccuracyApplied", null, type.GetMethod("SetSpeedvsAccuracyApplied"));
+            lua.DoString(@"
+                function setSpeedvsAccuracyApplied(entity, ...)
+	                return DAENERYS_setSpeedvsAccuracyApplied(entity, {...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_StartShipHardPointConfig", null, type.GetMethod("StartShipHardPointConfig"));
+            lua.DoString(@"
+                function StartShipHardPointConfig(entity, ...)
+	                return DAENERYS_StartShipHardPointConfig(entity, {...})
+                end");
+        }
+
+
         #region Lua-Functions
         public static LuaTable StartShipConfig()
         {
@@ -360,52 +467,45 @@ namespace DAEnerys
         }
 
 
-        private static string DisableLuaFunctionInString(string text, string function)
+        public static void AddAbility(LuaTable entity, string ability, LuaTable arguments)
         {
-            string newText = text;
-
-            int index = 0;
-            bool inFunction = false;
-            bool inString = false;
-
-            while (index <= newText.Length)
-            {
-                if (index < newText.Length)
-                {
-                    if (newText[index] == '\"' || newText[index] == '\'') //String start/end found
-                    {
-                        inString = !inString;
-                    }
-                }
-
-                if (!inFunction)
-                {
-                    if (newText.Length >= index + function.Length)
-                    {
-                        if (newText.Substring(index, function.Length) == function) //Function occurence found
-                        {
-                            newText = newText.Insert(index, "--[[");
-                            index += function.Length;
-                            inFunction = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (!inString)
-                    {
-                        if (newText[index] == ')') //Function end found
-                        {
-                            newText = newText.Insert(index + 1, "]]");
-                            inFunction = false;
-                        }
-                    }
-                }
-
-                index++;
-            }
-
-            return newText;
+            //Unused
+        }
+        public static void AddCustomCode(LuaTable arguments)
+        {
+            //Unused
+        }
+        public static void SpawnSalvageOnDeath(LuaTable entity, LuaTable arguments)
+        {
+            //Unused
+        }
+        public static void SpawnDustCloudOnDeath(LuaTable entity, LuaTable arguments)
+        {
+            //Unused
+        }
+        public static void LoadShipPatchList(LuaTable entity, LuaTable arguments)
+        {
+            //Unused
+        }
+        public static void LoadLatchPointList(LuaTable entity, LuaTable arguments)
+        {
+            //Unused
+        }
+        public static void AddShipMultiplier(LuaTable entity, LuaTable arguments)
+        {
+            //Unused
+        }
+        public static void SetTacticsMults(LuaTable entity, LuaTable arguments)
+        {
+            //Unused
+        }
+        public static void SetSpeedvsAccuracyApplied(LuaTable entity, LuaTable arguments)
+        {
+            //Unused
+        }
+        public static void StartShipHardPointConfig(LuaTable entity, LuaTable arguments)
+        {
+            //Unused
         }
 
         public static void SetCollisionDamageToModifier(LuaTable entity, string family, float modifier)
@@ -508,7 +608,40 @@ namespace DAEnerys
         {
             //Unused
         }
-#endregion
+
+        //MathLib
+        public static double ToRadians(double value)
+        {
+            return value * 180.0 / Math.PI;
+        }
+
+        public static double ToDegrees(double value)
+        {
+            return value * Math.PI / 180.0;
+        }
+
+        private static Random rng = new Random();
+
+        public static double Random0()
+        {
+            return rng.NextDouble();
+        }
+
+        public static int Random1(double u)
+        {
+            return (int)(rng.NextDouble() * u + 1);
+        }
+
+        public static int Random2(double l, double u)
+        {
+            return (int)(rng.NextDouble() * (u - l + 1) + 1);
+        }
+
+        public static void RandomSeed(int seed)
+        {
+            rng = new Random(seed);
+        }
+        #endregion
 
         public enum AvoidanceFamily
         {
