@@ -334,8 +334,8 @@ namespace DAEnerys
 
         public virtual void CalculateBoundingBox()
         {
-            boundsMin = new Vector3(float.MaxValue);
-            boundsMax = new Vector3(-float.MaxValue);
+            boundsMin = new Vector3(0);
+            boundsMax = new Vector3(0);
 
             foreach (Vector3 vertex in Vertices)
             {
