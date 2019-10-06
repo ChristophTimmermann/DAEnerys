@@ -46,6 +46,68 @@ namespace DAEnerys
             Indices = indices;
             UVCount = uvCount;
         }
+
+        public static MeshData GenerateBoundingCube(Vector3 min, Vector3 max)
+        {
+            List<Vertex> vertices = new List<Vertex>();
+
+            Vertex vertex = new Vertex();
+            vertex.Position = new Vector3(min.X, min.Y, min.Z);
+            vertices.Add(vertex);
+            vertex = new Vertex();
+            vertex.Position = new Vector3(min.X, max.Y, min.Z);
+            vertices.Add(vertex);
+
+            vertex = new Vertex();
+            vertex.Position = new Vector3(max.X, min.Y, min.Z);
+            vertices.Add(vertex);
+            vertex = new Vertex();
+            vertex.Position = new Vector3(max.X, max.Y, min.Z);
+            vertices.Add(vertex);
+
+            vertex = new Vertex();
+            vertex.Position = new Vector3(max.X, min.Y, max.Z);
+            vertices.Add(vertex);
+            vertex = new Vertex();
+            vertex.Position = new Vector3(max.X, max.Y, max.Z);
+            vertices.Add(vertex);
+
+            vertex = new Vertex();
+            vertex.Position = new Vector3(min.X, min.Y, max.Z);
+            vertices.Add(vertex);
+            vertex = new Vertex();
+            vertex.Position = new Vector3(min.X, max.Y, max.Z);
+            vertices.Add(vertex);
+
+
+
+            int[] indices =
+            {
+                0, 1, 3,
+                3, 2, 0,
+
+                5, 4, 2,
+                2, 3, 5,
+
+                7, 6, 4,
+                4, 5, 7,
+
+                1, 0, 6,
+                6, 7, 1,
+
+
+                //Top face
+                1, 7, 5,
+                5, 3, 1,
+
+                //Bottom face
+                6, 0, 2,
+                2, 4, 6,
+            };
+
+            MeshData cubeData = new MeshData(vertices.ToArray(), indices, 0);
+            return cubeData;
+        }
     }
 
     public abstract class GenericMesh : Element
@@ -290,69 +352,6 @@ namespace DAEnerys
 
             boundsCalculated = true;
         }
-
-        public MeshData GenerateBoundingCube()
-        {
-            List<Vertex> vertices = new List<Vertex>();
-
-            Vertex vertex = new Vertex();
-            vertex.Position = new Vector3(BoundsMin.X, BoundsMin.Y, BoundsMin.Z);
-            vertices.Add(vertex);
-            vertex = new Vertex();
-            vertex.Position = new Vector3(BoundsMin.X, BoundsMax.Y, BoundsMin.Z);
-            vertices.Add(vertex);
-
-            vertex = new Vertex();
-            vertex.Position = new Vector3(BoundsMax.X, BoundsMin.Y, BoundsMin.Z);
-            vertices.Add(vertex);
-            vertex = new Vertex();
-            vertex.Position = new Vector3(BoundsMax.X, BoundsMax.Y, BoundsMin.Z);
-            vertices.Add(vertex);
-
-            vertex = new Vertex();
-            vertex.Position = new Vector3(BoundsMax.X, BoundsMin.Y, BoundsMax.Z);
-            vertices.Add(vertex);
-            vertex = new Vertex();
-            vertex.Position = new Vector3(BoundsMax.X, BoundsMax.Y, BoundsMax.Z);
-            vertices.Add(vertex);
-
-            vertex = new Vertex();
-            vertex.Position = new Vector3(BoundsMin.X, BoundsMin.Y, BoundsMax.Z);
-            vertices.Add(vertex);
-            vertex = new Vertex();
-            vertex.Position = new Vector3(BoundsMin.X, BoundsMax.Y, BoundsMax.Z);
-            vertices.Add(vertex);
-
-
-
-            int[] indices =
-            {
-                0, 1, 3,
-                3, 2, 0,
-
-                5, 4, 2,
-                2, 3, 5,
-
-                7, 6, 4,
-                4, 5, 7,
-
-                1, 0, 6,
-                6, 7, 1,
-
-
-                //Top face
-                1, 7, 5,
-                5, 3, 1,
-
-                //Bottom face
-                6, 0, 2,
-                2, 4, 6,
-            };
-
-            MeshData cubeData = new MeshData(vertices.ToArray(), indices, 0);
-            return cubeData;
-        }
-
         private void _CalcFaceTangents(
             out Vector3 tangent, out Vector3 bitangent, out int hand,
             int i1, int i2, int i3)

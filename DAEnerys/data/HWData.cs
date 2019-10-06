@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using NLua;
+using OpenTK;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -12,8 +15,13 @@ namespace DAEnerys
         public static List<HWNavLightStyle> NavLightStyles = new List<HWNavLightStyle>();
         public static List<HWBadge> Badges = new List<HWBadge>();
         public static Dictionary<string, HWTextureCube> BackgroundTextures = new Dictionary<string, HWTextureCube>();
+        public static List<HWShipType> ShipTypes = new List<HWShipType>();
 
         public static HWTexture NavLightSprite;
+
+        static Lua lua;
+        static LuaTable shipConfig;
+        private static HWShipType currentShipType;
 
         public static void ParseDataPaths()
         {
@@ -44,6 +52,8 @@ namespace DAEnerys
             //Parse data
             foreach (string dataPath in DataPaths)
             {
+                lua = new Lua();
+
                 //Parse navlight styles
                 string navLightStylesPath = Path.Combine(dataPath, "scripts/navlightstyles");
 
@@ -84,6 +94,19 @@ namespace DAEnerys
                 if (Directory.Exists(backgroundsPath))
                 {
                     ParseBackground(backgroundsPath);
+                }
+
+                //Parse ship types
+                string shipTypesPath = Path.Combine(dataPath, "ship");
+
+                //Check if ship types folder exists
+                if (Directory.Exists(shipTypesPath))
+                {
+                    string[] files = Directory.GetFiles(shipTypesPath, "*.ship", SearchOption.AllDirectories);
+                    foreach (string file in files)
+                    {
+                        ParseShipType(file);
+                    }
                 }
             }
 
@@ -235,6 +258,7 @@ namespace DAEnerys
         {
             foreach (string dir in Directory.GetDirectories(path))
             {
+
                 string name = Path.GetFileName(dir);
                 // check for high-quality textures
                 string PosX = Path.Combine(dir, name + "_hq_posx.dds");
@@ -260,6 +284,246 @@ namespace DAEnerys
 
                 BackgroundTextures.Add(name, new HWTextureCube(PosX, NegX, PosY, NegY, PosZ, NegZ));
             }
+        }
+
+        private static void ParseShipType(string path)
+        {
+            lua = new Lua();
+            string file = File.ReadAllText(path);
+
+            Type type = typeof(HWData);
+
+            lua.RegisterFunction("StartShipConfig", null, type.GetMethod("StartShipConfig"));
+            lua.RegisterFunction("getShipNum", null, type.GetMethod("GetShipNum"));
+            lua.RegisterFunction("getShipStr", null, type.GetMethod("GetShipStr"));
+            lua.RegisterFunction("setSupplyValue", null, type.GetMethod("SetSupplyValue"));
+            lua.RegisterFunction("StartShipWeaponConfig", null, type.GetMethod("StartShipWeaponConfig"));
+            lua.RegisterFunction("setEngineBurn", null, type.GetMethod("SetEngineBurn"));
+            lua.RegisterFunction("setEngineGlow", null, type.GetMethod("SetEngineGlow"));
+            lua.RegisterFunction("setEngineTrail", null, type.GetMethod("SetEngineTrail"));
+            lua.RegisterFunction("setTargetBox", null, type.GetMethod("SetTargetBox"));
+            lua.RegisterFunction("LoadModel", null, type.GetMethod("LoadModel"));
+            lua.RegisterFunction("LoadSharedModel", null, type.GetMethod("LoadSharedModel"));
+            lua.RegisterFunction("addShield", null, type.GetMethod("AddShield"));
+            lua.RegisterFunction("AddShipAbility", null, type.GetMethod("AddShipAbility"));
+            lua.RegisterFunction("setConcurrentBuildLimit", null, type.GetMethod("SetConcurrentBuildLimit"));
+            lua.RegisterFunction("setCollisionDamageToModifier", null, type.GetMethod("SetCollisionDamageToModifier"));
+            lua.RegisterFunction("setCollisionDamageFromModifier", null, type.GetMethod("SetCollisionDamageFromModifier"));
+            lua.RegisterFunction("setSpecialDieTime", null, type.GetMethod("SetSpecialDieTime"));
+            lua.RegisterFunction("addMagneticField", null, type.GetMethod("AddMagneticField"));
+
+            file = DisableLuaFunctionInString(file, "addAbility");
+            file = DisableLuaFunctionInString(file, "addCustomCode");
+            file = DisableLuaFunctionInString(file, "SpawnSalvageOnDeath");
+            file = DisableLuaFunctionInString(file, "SpawnDustCloudOnDeath");
+            file = DisableLuaFunctionInString(file, "loadShipPatchList");
+            file = DisableLuaFunctionInString(file, "loadLatchPointList");
+            file = DisableLuaFunctionInString(file, "AddShipMultiplier");
+            file = DisableLuaFunctionInString(file, "setTacticsMults");
+            file = DisableLuaFunctionInString(file, "setSpeedvsAccuracyApplied");
+            file = DisableLuaFunctionInString(file, "StartShipHardPointConfig");
+
+            string name = Path.GetFileNameWithoutExtension(path).ToLower();
+
+            //Check if a type with that name already exists (because of multiple data paths)
+            if (!HWShipType.ShipTypes.ContainsKey(name))
+                //new HWShipType(name, avoidanceFamily);
+                currentShipType = new HWShipType(name, path);
+            else
+            {
+                //Overwrite existing style
+                currentShipType = HWShipType.ShipTypes[name];
+                currentShipType.Name = name;
+                //existingType.AvoidanceFamily = avoidanceFamily;
+            }
+
+            lua.DoString(file);
+            AvoidanceFamily avoidanceFamily = AvoidanceFamily.None;
+
+            foreach (KeyValuePair<object, object> de in shipConfig)
+            {
+                switch (de.Key.ToString())
+                {
+                    case "AvoidanceFamily":
+                        string family = de.Value.ToString();
+                        avoidanceFamily = (AvoidanceFamily)Enum.Parse(typeof(AvoidanceFamily), family, true);
+                        break;
+                }
+            }
+        }
+
+        #region Lua-Functions
+        public static LuaTable StartShipConfig()
+        {
+            shipConfig = (LuaTable)lua.DoString("return {}")[0];
+            return shipConfig;
+        }
+
+
+        private static string DisableLuaFunctionInString(string text, string function)
+        {
+            string newText = text;
+
+            int index = 0;
+            bool inFunction = false;
+            bool inString = false;
+
+            while (index <= newText.Length)
+            {
+                if (index < newText.Length)
+                {
+                    if (newText[index] == '\"' || newText[index] == '\'') //String start/end found
+                    {
+                        inString = !inString;
+                    }
+                }
+
+                if (!inFunction)
+                {
+                    if (newText.Length >= index + function.Length)
+                    {
+                        if (newText.Substring(index, function.Length) == function) //Function occurence found
+                        {
+                            newText = newText.Insert(index, "--[[");
+                            index += function.Length;
+                            inFunction = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!inString)
+                    {
+                        if (newText[index] == ')') //Function end found
+                        {
+                            newText = newText.Insert(index + 1, "]]");
+                            inFunction = false;
+                        }
+                    }
+                }
+
+                index++;
+            }
+
+            return newText;
+        }
+
+        public static void SetCollisionDamageToModifier(LuaTable entity, string family, float modifier)
+        {
+            //Unused
+        }
+
+        public static void SetCollisionDamageFromModifier(LuaTable entity, string family, float modifier)
+        {
+            //Unused
+        }
+
+        public static void SpawnAsteroidOnDeath(LuaTable entity, string type, int count, float x, float y, float z, float randomX, float randomY, float randomZ, float velocityX, float velocityY, float velocityZ, float unknown1, float unknown2, float unknown3, float unknown4, float unknown5, float unknown6, float unknown7)
+        {
+            //SpawnAsteroidOnDeath(NewResourceTypeAsteroid_5_piece01, "Asteroid_4_piece01", 1, 0,  0,       0,            50,           -65,             0,             -30,               0,               0,              0,              0,              8,              0,              0,             -5,              2)
+            //Unused
+        }
+
+        public static void ResourceAttackMode(LuaTable entity, LuaBase mode)
+        {
+            //Unused
+        }
+
+        public static float GetShipNum(LuaTable ship, string property, float parameter)
+        {
+            //Unused
+            return 0;
+        }
+
+        public static string GetShipStr(LuaTable ship, string property, string parameter)
+        {
+            //Unused
+            return "";
+        }
+
+        public static void SetSupplyValue(LuaTable ship, string family, float parameter)
+        {
+            //Unused
+        }
+
+        public static void StartShipWeaponConfig(LuaTable ship, string weapon, string joint, string animation)
+        {
+            //Unused
+        }
+
+        public static void SetEngineBurn(LuaTable ship, int sparkCount, float opacityLow, float opacityHigh, float sparkSize, float speedSparkSize, float flareMin, float flarePos, float flareSize)
+        {
+            //Unused
+        }
+
+        public static void SetEngineGlow(LuaTable ship, float unknown2, float unknown3, float unknown4, float unknown5, float unknown6, float unknown7, float unknown8, LuaTable color)
+        {
+            //Unused
+        }
+
+        public static void SetEngineTrail(LuaTable entity, int index, float lingerTime, string textureName, float bulgeFrequency, float textureScrollFactor, float textureScaleFactor, float diameterFactor)
+        {
+            //Unused
+        }
+
+        public static void SetTargetBox(LuaTable ship, int index, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
+        {
+            if (currentShipType == null)
+                return;
+
+            new HWShipType.TargetBox(currentShipType, index, new Vector3(minX, minY, minZ), new Vector3(maxX, maxY, maxZ));
+        }
+
+        public static void LoadModel(LuaTable entity, int enabled)
+        {
+            //Unused
+        }
+
+        public static void LoadSharedModel(LuaTable entity, string objectToShareWith)
+        {
+            //Unused
+        }
+
+        public static void AddShield(LuaTable ship, string type, float max, float rechargeTime)
+        {
+            //Unused
+        }
+
+        public static void AddShipAbility(LuaTable ship, string ability, int active, string target, float radius)
+        {
+            //Unused
+        }
+
+        public static void SetConcurrentBuildLimit(LuaTable ship, int min, int max)
+        {
+            //Unused
+        }
+
+        public static void SetSpecialDieTime(LuaTable ship, string killer, float time)
+        {
+            //Unused
+        }
+
+        public static void AddMagneticField(LuaTable entity, string type, float unknown1, float unknown2, string mesh, float unknown3, string mesh2, float unknown4, string hit, string effect)
+        {
+            //Unused
+        }
+#endregion
+
+        public enum AvoidanceFamily
+        {
+            None,
+            DontAvoid,
+            Strikecraft,
+            Utility,
+            Frigate,
+            SmallRock,
+            Capital,
+            SuperCap,
+            BattleCruiser,
+            MotherShip,
+            BigRock,
+            SuperPriority,
         }
     }
 }

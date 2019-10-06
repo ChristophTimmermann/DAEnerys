@@ -30,7 +30,10 @@ namespace DAEnerys
             this.PreviewCube = new EditorCube(this, new Vector3(1, 0, 0));
             this.PreviewSphere = new EditorIcosphere(this, new Vector3(1, 0, 0));
 
-            this.PreviewCube.SetData(GenerateBoundingCube());
+            CollisionMeshes.Add(this);
+            Program.main.AddCollisionMesh(this);
+
+            this.PreviewCube.SetData(MeshData.GenerateBoundingCube(this.BoundsMin, this.BoundsMax));
 
             float maxDistance = float.MinValue;
             maxDistance = Math.Max(maxDistance, Math.Abs(BoundsMin.X));
@@ -42,12 +45,12 @@ namespace DAEnerys
             maxDistance = Math.Max(maxDistance, Math.Abs(BoundsMax.Z));
 
             this.PreviewSphere.LocalScale = new Vector3(maxDistance);
+            this.PreviewSphere.LocalPosition = (this.BoundsMax + this.BoundsMin) / 2;
 
             this.PreviewSphere.Wireframe = true;
             this.PreviewCube.Wireframe = true;
 
-            CollisionMeshes.Add(this);
-            Program.main.AddCollisionMesh(this);
+            TargetBoxManager.InvalidateTargetBoxes();
         }
 
         public override void CalculateBoundingBox()
@@ -56,7 +59,7 @@ namespace DAEnerys
 
             if(this.PreviewCube != null)
             {
-                this.PreviewCube.SetData(GenerateBoundingCube());
+                this.PreviewCube.SetData(MeshData.GenerateBoundingCube(this.BoundsMin, this.BoundsMax));
             }
         }
 
@@ -68,6 +71,8 @@ namespace DAEnerys
 
             this.PreviewCube.Destroy();
             this.PreviewSphere.Destroy();
+
+            TargetBoxManager.InvalidateTargetBoxes();
 
             base.Destroy();
         }
