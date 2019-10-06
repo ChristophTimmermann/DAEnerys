@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Christoph (PayDay) Timmermann")]
 [assembly: AssemblyProduct("DAEnerys")]
-[assembly: AssemblyCopyright("Copyright © Christoph Timmermann 2016")]
+[assembly: AssemblyCopyright("Copyright © Christoph Timmermann 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.7330.0")]
+[assembly: AssemblyVersion("1.0.7500.0")]
 [assembly: AssemblyFileVersion("1.0.36.0")]
