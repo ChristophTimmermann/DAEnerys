@@ -46,6 +46,8 @@ namespace DAEnerys
         private static bool editorBoxesInvalid = false;
         private static HWCollisionMesh rootCollisionMesh = null;
 
+        private static Vector3 boundsCenter;
+
         private static LUACodeWindow codeWindow;
 
         public static void Init(CheckedListBox list, Button buttonAdd, Button buttonRemove, NumericUpDown numericIndex, 
@@ -208,6 +210,15 @@ namespace DAEnerys
                 }
             }
 
+            if (rootCollisionMesh != null)
+            {
+                boundsCenter = (rootCollisionMesh.BoundsMax + rootCollisionMesh.BoundsMin) / 2;
+            }
+            else
+            {
+                boundsCenter = Vector3.Zero;
+            }
+
             foreach (HWShipType.TargetBox targetBox in HWShipType.TargetBox.TargetBoxes)
             {
                 RefreshTargetBoxCube(targetBox);
@@ -241,9 +252,9 @@ namespace DAEnerys
             labelMaxY.Text = Math.Round(selectedTargetBox.CubeMax.Y, 4).ToString(CultureInfo.InvariantCulture);
             labelMaxZ.Text = Math.Round(selectedTargetBox.CubeMax.Z, 4).ToString(CultureInfo.InvariantCulture);
 
-            float width = Math.Abs(selectedTargetBox.CubeMin.X) + Math.Abs(selectedTargetBox.CubeMax.X);
-            float height = Math.Abs(selectedTargetBox.CubeMin.Y) + Math.Abs(selectedTargetBox.CubeMax.Y);
-            float length = Math.Abs(selectedTargetBox.CubeMin.Z) + Math.Abs(selectedTargetBox.CubeMax.Z);
+            float width = Math.Abs(selectedTargetBox.CubeMax.X - selectedTargetBox.CubeMin.X);
+            float height = Math.Abs(selectedTargetBox.CubeMax.Y - selectedTargetBox.CubeMin.Y);
+            float length = Math.Abs(selectedTargetBox.CubeMax.Z - selectedTargetBox.CubeMin.Z);
 
             labelWidth.Text = Math.Round(width, 4).ToString(CultureInfo.InvariantCulture);
             labelHeight.Text = Math.Round(height, 4).ToString(CultureInfo.InvariantCulture);
@@ -268,8 +279,15 @@ namespace DAEnerys
                 max = rootCollisionMesh.BoundsMax;
             }
 
-            Vector3 cubeMin = new Vector3(min.X * Math.Abs(targetBox.Min.X), min.Y * Math.Abs(targetBox.Min.Y), min.Z * Math.Abs(targetBox.Min.Z));
-            Vector3 cubeMax = new Vector3(max.X * Math.Abs(targetBox.Max.X), max.Y * Math.Abs(targetBox.Max.Y), max.Z * Math.Abs(targetBox.Max.Z));
+            Vector3 cubeMin = new Vector3(  boundsCenter.X + (Math.Abs(min.X - boundsCenter.X) * targetBox.Min.X), 
+                                            boundsCenter.Y + (Math.Abs(min.Y - boundsCenter.Y) * targetBox.Min.Y),
+                                            boundsCenter.Z + (Math.Abs(min.Z - boundsCenter.Z) * targetBox.Min.Z)
+                                        );
+            Vector3 cubeMax = new Vector3(boundsCenter.X + (Math.Abs(max.X - boundsCenter.X) * targetBox.Max.X),
+                                            boundsCenter.Y + (Math.Abs(max.Y - boundsCenter.Y) * targetBox.Max.Y),
+                                            boundsCenter.Z + (Math.Abs(max.Z - boundsCenter.Z) * targetBox.Max.Z)
+                                        );
+           
 
             MeshData meshData = MeshData.GenerateBoundingCube(cubeMin, cubeMax);
             targetBox.EditorCube.SetData(meshData);
