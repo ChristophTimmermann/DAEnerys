@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAEnerys", "DAEnerys\DAEnerys.csproj", "{F6E257FF-26A3-461B-BA2F-6E7789E31FEC}"
 EndProject
@@ -76,9 +76,10 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UseGlobalSettings = True
-		BuildVersion_StartDate = 2000/1/1
+		BuildVersion_DetectChanges = True
 		BuildVersion_AssemblyInfoFilename = DAEnerys\Properties\AssemblyInfo.cs
-		BuildVersion_DetectChanges = False
+		BuildVersion_StartDate = 2000/1/1
+		BuildVersion_UseGlobalSettings = True
+		SolutionGuid = {1DDE4D55-04DF-4037-A6AA-C37D7931340E}
 	EndGlobalSection
 EndGlobal

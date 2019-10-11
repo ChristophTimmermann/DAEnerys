@@ -50,31 +50,20 @@ namespace DAEnerys
             CalculateBoundingBox();
         }
 
-        public void CalculateBoundingBox()
+        public override void CalculateBoundingBox()
         {
-            Vector3 min = new Vector3(float.MaxValue);
-            Vector3 max = new Vector3(-float.MaxValue);
+            base.CalculateBoundingBox();
 
-            foreach (Vector3 vertex in Vertices)
-            {
-                Vector3 computedVertex = Vector3.TransformPosition(vertex, GlobalWorldMatrix);
-                //Vector3 computedVertex = Vector3.Add(vertex, Parent.AbsolutePosition);
-                min.X = Math.Min(min.X, computedVertex.X);
-                min.Y = Math.Min(min.Y, computedVertex.Y);
-                min.Z = Math.Min(min.Z, computedVertex.Z);
+            Vector3 transformedMin = Vector3.TransformPosition(BoundsMin, GlobalWorldMatrix);
+            Vector3 transformedMax = Vector3.TransformPosition(BoundsMax, GlobalWorldMatrix);
 
-                max.X = Math.Max(max.X, computedVertex.X);
-                max.Y = Math.Max(max.Y, computedVertex.Y);
-                max.Z = Math.Max(max.Z, computedVertex.Z);
-            }
+            HWScene.Min.X = Math.Min(HWScene.Min.X, transformedMin.X);
+            HWScene.Min.Y = Math.Min(HWScene.Min.Y, transformedMin.Y);
+            HWScene.Min.Z = Math.Min(HWScene.Min.Z, transformedMin.Z);
 
-            HWScene.Min.X = Math.Min(HWScene.Min.X, min.X);
-            HWScene.Min.Y = Math.Min(HWScene.Min.Y, min.Y);
-            HWScene.Min.Z = Math.Min(HWScene.Min.Z, min.Z);
-
-            HWScene.Max.X = Math.Max(HWScene.Max.X, max.X);
-            HWScene.Max.Y = Math.Max(HWScene.Max.Y, max.Y);
-            HWScene.Max.Z = Math.Max(HWScene.Max.Z, max.Z);
+            HWScene.Max.X = Math.Max(HWScene.Max.X, transformedMax.X);
+            HWScene.Max.Y = Math.Max(HWScene.Max.Y, transformedMax.Y);
+            HWScene.Max.Z = Math.Max(HWScene.Max.Z, transformedMax.Z);
 
             Renderer.MinClipDistance = HWScene.Min.Z * 1.2f;
             Renderer.MaxClipDistance = HWScene.Max.Z * 1.2f;

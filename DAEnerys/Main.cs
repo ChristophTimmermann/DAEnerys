@@ -161,10 +161,16 @@ namespace DAEnerys
             Graphics graphics = CreateGraphics();
             float scalingFactor = graphics.DpiX / 96;
             scalingFactor -= 1;
-            splitContainer1.Panel1MinSize = 280 + (int)Math.Round(170 * scalingFactor);
 
-            buttonProblems.Size = new Size(46 - (int)Math.Round(12 * scalingFactor), 25 - (int)Math.Round(12 * scalingFactor));
-            buttonProblems.Location = new Point(1226 + (int)Math.Round(1248 * scalingFactor), 0);
+            splitContainer1.Panel1MinSize = 280 + (int)Math.Round(170 * scalingFactor);
+            splitContainer1.SplitterDistance = (int)(splitContainer1.Width * 0.2);
+
+            splitContainer2.Panel2MinSize = 240 + (int)Math.Round(170 * scalingFactor);
+            splitContainer2.SplitterDistance = splitContainer2.Width - (int)(splitContainer2.Width * 0.2);
+
+
+            //buttonProblems.Size = new Size(46 - (int)Math.Round(12 * scalingFactor), 25 - (int)Math.Round(12 * scalingFactor));
+            //buttonProblems.Location = new Point(1226 + (int)Math.Round(1248 * scalingFactor), 0);
 
             comboPerspectiveOrtho.Location = new Point(1115 + (int)Math.Round(1140 * scalingFactor), 3 - (int)Math.Round(4 * scalingFactor));
             labelFPS.Location = new Point(1073 + (int)Math.Round(1100 * scalingFactor), 7 - (int)Math.Round(2 * scalingFactor));
@@ -192,6 +198,9 @@ namespace DAEnerys
                 ShipMeshLODMaterialComboBoxes[i].Visible = false;
             }
 
+            ShipTypeMapping.Init(dataGridShipTypes);
+            TargetBoxManager.Init(listTargetBoxes, buttonAddTargetBox, buttonRemoveTargetBox, numericTargetBoxIndex, numericTargetBoxMinX, numericTargetBoxMinY, numericTargetBoxMinZ, numericTargetBoxMaxX, numericTargetBoxMaxY, numericTargetBoxMaxZ, labelTargetBoxMinX, labelTargetBoxMinY, labelTargetBoxMinZ, labelTargetBoxMaxX, labelTargetBoxMaxY, labelTargetBoxMaxZ, labelTargetBoxWidth, labelTargetBoxHeight, labelTargetBoxLength, buttonTargetBoxShowCode);
+
             this.WindowState = Settings.LastWindowState;
             this.Location = Settings.LastWindowLocation;
             this.Size = Settings.LastWindowSize;
@@ -211,14 +220,26 @@ namespace DAEnerys
                 {
                     Log.WriteLine("Opening file \"" + Program.OPEN_PATH + "\" from arguments...");
 
-                    Importer.ImportFromFile(Program.OPEN_PATH);
-                    this.Text = Program.OPEN_PATH + " - DAEnerys";
-                    OpenedFile = Path.GetFileNameWithoutExtension(Program.OPEN_PATH);
-
-                    Renderer.InvalidateMeshData();
-                    Renderer.InvalidateView();
-                    Renderer.Invalidate();
+                    OpenDAEFile(Program.OPEN_PATH);
                 }
+        }
+
+        public void OpenDAEFile(string path)
+        {
+            LastOpenLocation = Path.GetDirectoryName(path);
+            Clear();
+            Importer.ImportFromFile(path);
+            this.Text = path + " - DAEnerys";
+
+            string fileName = Path.GetFileNameWithoutExtension(path);
+
+            OpenedFile = fileName;
+
+            ShipTypeMapping.AddDAEFile(fileName, fileName, true);
+
+            Renderer.InvalidateMeshData();
+            Renderer.InvalidateView();
+            Renderer.Invalidate();
         }
 
         public void glControl_Update(object sender, EventArgs e)
@@ -235,6 +256,7 @@ namespace DAEnerys
             Program.Camera.Update();
 
             Element.UpdateInvalids();
+            TargetBoxManager.Update();
 
             int visibleNavLights = 0;
             foreach (HWNavLight navLight in HWNavLight.NavLights)
@@ -377,6 +399,8 @@ namespace DAEnerys
             EditorScene.Clear();
             HWScene.Clear();
 
+            TargetBoxManager.LoadFromShipType(null);
+
             HWDockpath.InitPreview();
 
             comboMaterialFormat.Items.Add("DXT1");
@@ -385,7 +409,6 @@ namespace DAEnerys
             comboMaterialFormat.Items.Add("8888");
 
             problemsVisible = false;
-            splitContainer2.Panel2Collapsed = true;
             Problem.Problems.Clear();
             gridProblems.Rows.Clear();
 
@@ -429,15 +452,7 @@ namespace DAEnerys
             DialogResult result = openColladaDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                LastOpenLocation = Path.GetDirectoryName(openColladaDialog.FileName);
-                Clear();
-                Importer.ImportFromFile(openColladaDialog.FileName);
-                this.Text = openColladaDialog.FileName + " - DAEnerys";
-                OpenedFile = Path.GetFileNameWithoutExtension(openColladaDialog.FileName);
-
-                Renderer.InvalidateMeshData();
-                Renderer.InvalidateView();
-                Renderer.Invalidate();
+                OpenDAEFile(openColladaDialog.FileName);
             }
         }
 
@@ -462,6 +477,7 @@ namespace DAEnerys
             GraphicsContext.CurrentContext.Dispose();
             Settings.SaveSettings();
             Hotkeys.SaveHotkeys();
+            ShipTypeMapping.SaveMappings();
             Log.Close();
         }
 
@@ -3458,6 +3474,8 @@ namespace DAEnerys
             buttonCollisionMeshExportOBJ.Enabled = false;
             buttonCollisionMeshImportOBJ.Enabled = false;
 
+            groupCollisionMeshPreview.Enabled = false;
+
             selectedCollisionMesh = null;
 
             if (listCollisionMeshes.SelectedItem == null)
@@ -3488,6 +3506,9 @@ namespace DAEnerys
             buttonCollisionMeshExportOBJ.Enabled = true;
             buttonCollisionMeshImportOBJ.Enabled = true;
 
+            groupCollisionMeshPreview.Enabled = true;
+            checkCollisionMeshPreviewBox.Checked = selectedCollisionMesh.PreviewCube.Visible;
+            checkCollisionMeshPreviewSphere.Checked = selectedCollisionMesh.PreviewSphere.Visible;
         }
         public void AddCollisionMesh(HWCollisionMesh mesh)
         {
@@ -3626,6 +3647,22 @@ namespace DAEnerys
             selectedCollisionMesh.Parent = newParent;
 
             listCollisionMeshes.Items[selectedCollisionMesh.ItemIndex] = selectedCollisionMesh.Parent.Name;
+        }
+
+
+        private void checkCollisionMeshPreviewBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            selectedCollisionMesh.PreviewCube.Visible = checkCollisionMeshPreviewBox.Checked;
+        }
+        private void checkCollisionMeshPreviewSphere_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selectedCollisionMesh == null)
+                return;
+
+            selectedCollisionMesh.PreviewSphere.Visible = checkCollisionMeshPreviewSphere.Checked;
         }
 
         //--------------------------------- ENGINE SHAPES ---------------------------------//
@@ -4104,7 +4141,7 @@ namespace DAEnerys
 
         private void buttonAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(this, "DAEnerys b" + BUILD + "\n\nDeveloped by Christoph (PayDay) Timmermann and\nAnthony (radar3301) Lofthouse (aka. ajlsunrise33)\nwith help from the Gearbox forums.\n\nEditor icons made by SumoChick and Alekfix789.\n\nUses\n - OpenTK\n - Assimp\n - Assimp.NET\n - FSharp\n - DevIL\n - DevILSharp\n - AlphaColorDialog", "DAEnerys", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, "DAEnerys b" + BUILD + "\n\nDeveloped by Christoph (PayDay) Timmermann and\nAnthony (radar3301) Lofthouse (aka. ajlsunrise33)\nwith help from the Gearbox forums.\n\nEditor icons made by SumoChick and Alekfix789.\n\nUses\n - OpenTK\n - Assimp\n - Assimp.NET\n - FSharp\n - DevIL\n - DevILSharp\n - NLua\n - Scintilla\n - AlphaColorDialog", "DAEnerys", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         //Perspective-Orthographic combobox
@@ -4137,12 +4174,12 @@ namespace DAEnerys
         private void buttonProblems_Click(object sender, EventArgs e)
         {
             problemsVisible = !problemsVisible;
-            splitContainer2.Panel2Collapsed = !problemsVisible;
+            //splitContainer2.Panel2Collapsed = !problemsVisible;
 
-            if (problemsVisible)
-                buttonProblems.BackColor = Color.FromArgb(255, 178, 178, 178);
-            else
-                buttonProblems.BackColor = Color.FromArgb(255, 248, 248, 248);
+            //if (problemsVisible)
+                //buttonProblems.BackColor = Color.FromArgb(255, 178, 178, 178);
+            //else
+                //buttonProblems.BackColor = Color.FromArgb(255, 248, 248, 248);
         }
 
         public void AddProblem(Problem problem)
@@ -4172,28 +4209,28 @@ namespace DAEnerys
 
             if (warnings)
             {
-                buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagYellow;
+                //buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagYellow;
                 problemsVisible = true;
             }
 
             if (errors)
             {
-                buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagRed;
+                //buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagRed;
                 problemsVisible = true;
             }
 
             if (!warnings && !errors)
             {
                 problemsVisible = false;
-                buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagWhite;
+                //buttonProblems.Image = this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagWhite;
             }
 
-            if (problemsVisible)
-                buttonProblems.BackColor = Color.FromArgb(255, 178, 178, 178);
-            else
-                buttonProblems.BackColor = Color.FromArgb(255, 248, 248, 248);
+            //if (problemsVisible)
+                //buttonProblems.BackColor = Color.FromArgb(255, 178, 178, 178);
+            //else
+                //buttonProblems.BackColor = Color.FromArgb(255, 248, 248, 248);
 
-            splitContainer2.Panel2Collapsed = !problemsVisible;
+            //splitContainer2.Panel2Collapsed = !problemsVisible;
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -4238,14 +4275,7 @@ namespace DAEnerys
             if (result == DialogResult.No)
                 return;
 
-            Clear();
-            Importer.ImportFromFile(files[0]);
-            this.Text = files[0] + " - DAEnerys";
-            OpenedFile = Path.GetFileNameWithoutExtension(files[0]);
-
-            Renderer.InvalidateMeshData();
-            Renderer.InvalidateView();
-            Renderer.Invalidate();
+            OpenDAEFile(files[0]);
         }
 
         private void contextShowHideAll_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -4317,6 +4347,11 @@ namespace DAEnerys
                 foreach (HWJoint joint in HWJoint.Joints)
                     joint.SetVisible(visible);
             }
+        }
+
+        private void listTargetBoxes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -32,10 +32,11 @@ namespace DAEnerys
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonOpen = new System.Windows.Forms.ToolStripButton();
@@ -85,6 +86,9 @@ namespace DAEnerys
             this.listMaterials = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tabCollisionMeshes = new System.Windows.Forms.TabPage();
+            this.groupCollisionMeshPreview = new System.Windows.Forms.GroupBox();
+            this.checkCollisionMeshPreviewSphere = new System.Windows.Forms.CheckBox();
+            this.checkCollisionMeshPreviewBox = new System.Windows.Forms.CheckBox();
             this.buttonCollisionMeshImportDAE = new System.Windows.Forms.Button();
             this.buttonCollisionMeshExportDAE = new System.Windows.Forms.Button();
             this.buttonCollisionMeshImportOBJ = new System.Windows.Forms.Button();
@@ -304,11 +308,56 @@ namespace DAEnerys
             this.buttonAnimationAdd = new System.Windows.Forms.Button();
             this.listAnimations = new System.Windows.Forms.ListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.tabControlRight = new System.Windows.Forms.TabControl();
+            this.tabProblems = new System.Windows.Forms.TabPage();
             this.gridProblems = new System.Windows.Forms.DataGridView();
             this.columnProblems = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabTargetBoxes = new System.Windows.Forms.TabPage();
+            this.buttonTargetBoxShowCode = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.labelTargetBoxLength = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.labelTargetBoxHeight = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.labelTargetBoxWidth = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.labelTargetBoxMaxZ = new System.Windows.Forms.Label();
+            this.labelTargetBoxMaxY = new System.Windows.Forms.Label();
+            this.labelTargetBoxMaxX = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.labelTargetBoxMinZ = new System.Windows.Forms.Label();
+            this.labelTargetBoxMinY = new System.Windows.Forms.Label();
+            this.labelTargetBoxMinX = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.numericTargetBoxIndex = new System.Windows.Forms.NumericUpDown();
+            this.listTargetBoxes = new System.Windows.Forms.CheckedListBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numericTargetBoxMaxZ = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericTargetBoxMaxY = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericTargetBoxMaxX = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.numericTargetBoxMinZ = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.numericTargetBoxMinY = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.numericTargetBoxMinX = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
+            this.buttonRemoveTargetBox = new System.Windows.Forms.Button();
+            this.buttonAddTargetBox = new System.Windows.Forms.Button();
+            this.tabShipTypeMapping = new System.Windows.Forms.TabPage();
+            this.dataGridShipTypes = new System.Windows.Forms.DataGridView();
+            this.dataGridShipTypesColumnDAE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridShipTypesColumnSHIP = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.comboPerspectiveOrtho = new System.Windows.Forms.ComboBox();
             this.labelFPS = new System.Windows.Forms.Label();
-            this.buttonProblems = new System.Windows.Forms.Button();
             this.saveObjDialog = new System.Windows.Forms.SaveFileDialog();
             this.openObjDialog = new System.Windows.Forms.OpenFileDialog();
             this.browseMaterialTexturesDIFFDialog = new System.Windows.Forms.OpenFileDialog();
@@ -335,6 +384,7 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThrusterStrength)).BeginInit();
             this.groupMaterialTextures.SuspendLayout();
             this.tabCollisionMeshes.SuspendLayout();
+            this.groupCollisionMeshPreview.SuspendLayout();
             this.contextShowHideAll.SuspendLayout();
             this.tabJoints.SuspendLayout();
             this.groupJointRotation.SuspendLayout();
@@ -405,7 +455,22 @@ namespace DAEnerys
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.tabControlRight.SuspendLayout();
+            this.tabProblems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).BeginInit();
+            this.tabTargetBoxes.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxIndex)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMaxZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMaxY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMaxX)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMinZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMinY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMinX)).BeginInit();
+            this.tabShipTypeMapping.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridShipTypes)).BeginInit();
             this.contextJointRightClick.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -796,7 +861,7 @@ namespace DAEnerys
             this.tabMaterials.Location = new System.Drawing.Point(4, 58);
             this.tabMaterials.Name = "tabMaterials";
             this.tabMaterials.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMaterials.Size = new System.Drawing.Size(272, 966);
+            this.tabMaterials.Size = new System.Drawing.Size(272, 758);
             this.tabMaterials.TabIndex = 6;
             this.tabMaterials.Text = "Materials";
             this.tabMaterials.UseVisualStyleBackColor = true;
@@ -988,6 +1053,7 @@ namespace DAEnerys
             // 
             this.tabCollisionMeshes.AutoScroll = true;
             this.tabCollisionMeshes.AutoScrollMinSize = new System.Drawing.Size(241, 325);
+            this.tabCollisionMeshes.Controls.Add(this.groupCollisionMeshPreview);
             this.tabCollisionMeshes.Controls.Add(this.buttonCollisionMeshImportDAE);
             this.tabCollisionMeshes.Controls.Add(this.buttonCollisionMeshExportDAE);
             this.tabCollisionMeshes.Controls.Add(this.buttonCollisionMeshImportOBJ);
@@ -1000,10 +1066,44 @@ namespace DAEnerys
             this.tabCollisionMeshes.Location = new System.Drawing.Point(4, 58);
             this.tabCollisionMeshes.Name = "tabCollisionMeshes";
             this.tabCollisionMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCollisionMeshes.Size = new System.Drawing.Size(272, 966);
+            this.tabCollisionMeshes.Size = new System.Drawing.Size(272, 758);
             this.tabCollisionMeshes.TabIndex = 5;
             this.tabCollisionMeshes.Text = "Collision Meshes";
             this.tabCollisionMeshes.UseVisualStyleBackColor = true;
+            // 
+            // groupCollisionMeshPreview
+            // 
+            this.groupCollisionMeshPreview.Controls.Add(this.checkCollisionMeshPreviewSphere);
+            this.groupCollisionMeshPreview.Controls.Add(this.checkCollisionMeshPreviewBox);
+            this.groupCollisionMeshPreview.Enabled = false;
+            this.groupCollisionMeshPreview.Location = new System.Drawing.Point(6, 325);
+            this.groupCollisionMeshPreview.Name = "groupCollisionMeshPreview";
+            this.groupCollisionMeshPreview.Size = new System.Drawing.Size(260, 118);
+            this.groupCollisionMeshPreview.TabIndex = 31;
+            this.groupCollisionMeshPreview.TabStop = false;
+            this.groupCollisionMeshPreview.Text = "Preview";
+            // 
+            // checkCollisionMeshPreviewSphere
+            // 
+            this.checkCollisionMeshPreviewSphere.AutoSize = true;
+            this.checkCollisionMeshPreviewSphere.Location = new System.Drawing.Point(6, 42);
+            this.checkCollisionMeshPreviewSphere.Name = "checkCollisionMeshPreviewSphere";
+            this.checkCollisionMeshPreviewSphere.Size = new System.Drawing.Size(106, 17);
+            this.checkCollisionMeshPreviewSphere.TabIndex = 1;
+            this.checkCollisionMeshPreviewSphere.Text = "Bounding sphere";
+            this.checkCollisionMeshPreviewSphere.UseVisualStyleBackColor = true;
+            this.checkCollisionMeshPreviewSphere.CheckedChanged += new System.EventHandler(this.checkCollisionMeshPreviewSphere_CheckedChanged);
+            // 
+            // checkCollisionMeshPreviewBox
+            // 
+            this.checkCollisionMeshPreviewBox.AutoSize = true;
+            this.checkCollisionMeshPreviewBox.Location = new System.Drawing.Point(6, 19);
+            this.checkCollisionMeshPreviewBox.Name = "checkCollisionMeshPreviewBox";
+            this.checkCollisionMeshPreviewBox.Size = new System.Drawing.Size(91, 17);
+            this.checkCollisionMeshPreviewBox.TabIndex = 0;
+            this.checkCollisionMeshPreviewBox.Text = "Bounding box";
+            this.checkCollisionMeshPreviewBox.UseVisualStyleBackColor = true;
+            this.checkCollisionMeshPreviewBox.CheckedChanged += new System.EventHandler(this.checkCollisionMeshPreviewBox_CheckedChanged);
             // 
             // buttonCollisionMeshImportDAE
             // 
@@ -1149,7 +1249,7 @@ namespace DAEnerys
             this.tabJoints.Location = new System.Drawing.Point(4, 58);
             this.tabJoints.Name = "tabJoints";
             this.tabJoints.Padding = new System.Windows.Forms.Padding(3);
-            this.tabJoints.Size = new System.Drawing.Size(272, 966);
+            this.tabJoints.Size = new System.Drawing.Size(272, 758);
             this.tabJoints.TabIndex = 1;
             this.tabJoints.Text = "Joints";
             this.tabJoints.UseVisualStyleBackColor = true;
@@ -1522,7 +1622,7 @@ namespace DAEnerys
             this.tabMarkers.Controls.Add(this.listMarkers);
             this.tabMarkers.Location = new System.Drawing.Point(4, 58);
             this.tabMarkers.Name = "tabMarkers";
-            this.tabMarkers.Size = new System.Drawing.Size(272, 966);
+            this.tabMarkers.Size = new System.Drawing.Size(272, 758);
             this.tabMarkers.TabIndex = 2;
             this.tabMarkers.Text = "Markers";
             this.tabMarkers.UseVisualStyleBackColor = true;
@@ -1876,7 +1976,6 @@ namespace DAEnerys
             // 
             // tabDockpaths
             // 
-            this.tabDockpaths.AutoScroll = true;
             this.tabDockpaths.AutoScrollMinSize = new System.Drawing.Size(241, 923);
             this.tabDockpaths.Controls.Add(this.buttonDockpathRemove);
             this.tabDockpaths.Controls.Add(this.buttonDockpathAdd);
@@ -1891,7 +1990,7 @@ namespace DAEnerys
             this.tabDockpaths.Controls.Add(this.groupDockpathFamilies);
             this.tabDockpaths.Location = new System.Drawing.Point(4, 58);
             this.tabDockpaths.Name = "tabDockpaths";
-            this.tabDockpaths.Size = new System.Drawing.Size(272, 966);
+            this.tabDockpaths.Size = new System.Drawing.Size(272, 758);
             this.tabDockpaths.TabIndex = 3;
             this.tabDockpaths.Text = "Dockpaths";
             this.tabDockpaths.UseVisualStyleBackColor = true;
@@ -1900,7 +1999,7 @@ namespace DAEnerys
             // 
             this.buttonDockpathRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDockpathRemove.Enabled = false;
-            this.buttonDockpathRemove.Location = new System.Drawing.Point(140, 166);
+            this.buttonDockpathRemove.Location = new System.Drawing.Point(174, 166);
             this.buttonDockpathRemove.Name = "buttonDockpathRemove";
             this.buttonDockpathRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonDockpathRemove.TabIndex = 27;
@@ -1926,7 +2025,7 @@ namespace DAEnerys
             this.listDockpaths.FormattingEnabled = true;
             this.listDockpaths.Location = new System.Drawing.Point(6, 6);
             this.listDockpaths.Name = "listDockpaths";
-            this.listDockpaths.Size = new System.Drawing.Size(243, 154);
+            this.listDockpaths.Size = new System.Drawing.Size(260, 154);
             this.listDockpaths.TabIndex = 25;
             this.listDockpaths.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listDockpaths_ItemCheck);
             this.listDockpaths.SelectedIndexChanged += new System.EventHandler(this.listDockpaths_SelectedIndexChanged);
@@ -1956,7 +2055,7 @@ namespace DAEnerys
             this.boxDockpathName.Enabled = false;
             this.boxDockpathName.Location = new System.Drawing.Point(49, 195);
             this.boxDockpathName.Name = "boxDockpathName";
-            this.boxDockpathName.Size = new System.Drawing.Size(200, 20);
+            this.boxDockpathName.Size = new System.Drawing.Size(217, 20);
             this.boxDockpathName.TabIndex = 22;
             this.boxDockpathName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxDockpathName_KeyPress);
             this.boxDockpathName.Leave += new System.EventHandler(this.boxDockpathName_Leave);
@@ -1980,7 +2079,7 @@ namespace DAEnerys
             this.groupDockpathFlags.Controls.Add(this.checkDockpathExit);
             this.groupDockpathFlags.Location = new System.Drawing.Point(6, 247);
             this.groupDockpathFlags.Name = "groupDockpathFlags";
-            this.groupDockpathFlags.Size = new System.Drawing.Size(243, 64);
+            this.groupDockpathFlags.Size = new System.Drawing.Size(260, 64);
             this.groupDockpathFlags.TabIndex = 12;
             this.groupDockpathFlags.TabStop = false;
             this.groupDockpathFlags.Text = "Flags";
@@ -1990,7 +2089,7 @@ namespace DAEnerys
             this.checkDockpathAjar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathAjar.AutoSize = true;
             this.checkDockpathAjar.Enabled = false;
-            this.checkDockpathAjar.Location = new System.Drawing.Point(184, 42);
+            this.checkDockpathAjar.Location = new System.Drawing.Point(201, 42);
             this.checkDockpathAjar.Name = "checkDockpathAjar";
             this.checkDockpathAjar.Size = new System.Drawing.Size(44, 17);
             this.checkDockpathAjar.TabIndex = 11;
@@ -2004,7 +2103,7 @@ namespace DAEnerys
             this.checkDockpathLatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathLatch.AutoSize = true;
             this.checkDockpathLatch.Enabled = false;
-            this.checkDockpathLatch.Location = new System.Drawing.Point(184, 19);
+            this.checkDockpathLatch.Location = new System.Drawing.Point(201, 19);
             this.checkDockpathLatch.Name = "checkDockpathLatch";
             this.checkDockpathLatch.Size = new System.Drawing.Size(53, 17);
             this.checkDockpathLatch.TabIndex = 10;
@@ -2056,7 +2155,7 @@ namespace DAEnerys
             this.groupDockpathSegments.Controls.Add(this.trackBarDockpathSegments);
             this.groupDockpathSegments.Location = new System.Drawing.Point(6, 653);
             this.groupDockpathSegments.Name = "groupDockpathSegments";
-            this.groupDockpathSegments.Size = new System.Drawing.Size(243, 468);
+            this.groupDockpathSegments.Size = new System.Drawing.Size(260, 468);
             this.groupDockpathSegments.TabIndex = 3;
             this.groupDockpathSegments.TabStop = false;
             this.groupDockpathSegments.Text = "Segments";
@@ -2073,7 +2172,7 @@ namespace DAEnerys
             this.groupDockpathSegmentRotation.Controls.Add(this.labelDockpathSegmentRotationX);
             this.groupDockpathSegmentRotation.Location = new System.Drawing.Point(3, 198);
             this.groupDockpathSegmentRotation.Name = "groupDockpathSegmentRotation";
-            this.groupDockpathSegmentRotation.Size = new System.Drawing.Size(236, 96);
+            this.groupDockpathSegmentRotation.Size = new System.Drawing.Size(253, 96);
             this.groupDockpathSegmentRotation.TabIndex = 43;
             this.groupDockpathSegmentRotation.TabStop = false;
             this.groupDockpathSegmentRotation.Text = "Rotation";
@@ -2097,7 +2196,7 @@ namespace DAEnerys
             -2147483648});
             this.numericDockpathSegmentRotationZ.Name = "numericDockpathSegmentRotationZ";
             this.numericDockpathSegmentRotationZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentRotationZ.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentRotationZ.Size = new System.Drawing.Size(218, 20);
             this.numericDockpathSegmentRotationZ.TabIndex = 42;
             this.numericDockpathSegmentRotationZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentRotationZ.ValueChanged += new System.EventHandler(this.DockpathSegmentRotationChanged);
@@ -2130,7 +2229,7 @@ namespace DAEnerys
             -2147483648});
             this.numericDockpathSegmentRotationY.Name = "numericDockpathSegmentRotationY";
             this.numericDockpathSegmentRotationY.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentRotationY.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentRotationY.Size = new System.Drawing.Size(218, 20);
             this.numericDockpathSegmentRotationY.TabIndex = 40;
             this.numericDockpathSegmentRotationY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentRotationY.ValueChanged += new System.EventHandler(this.DockpathSegmentRotationChanged);
@@ -2163,7 +2262,7 @@ namespace DAEnerys
             -2147483648});
             this.numericDockpathSegmentRotationX.Name = "numericDockpathSegmentRotationX";
             this.numericDockpathSegmentRotationX.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentRotationX.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentRotationX.Size = new System.Drawing.Size(218, 20);
             this.numericDockpathSegmentRotationX.TabIndex = 38;
             this.numericDockpathSegmentRotationX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentRotationX.ValueChanged += new System.EventHandler(this.DockpathSegmentRotationChanged);
@@ -2189,7 +2288,7 @@ namespace DAEnerys
             this.groupDockpathSegmentPosition.Controls.Add(this.labelDockpathSegmentPosX);
             this.groupDockpathSegmentPosition.Location = new System.Drawing.Point(4, 96);
             this.groupDockpathSegmentPosition.Name = "groupDockpathSegmentPosition";
-            this.groupDockpathSegmentPosition.Size = new System.Drawing.Size(236, 96);
+            this.groupDockpathSegmentPosition.Size = new System.Drawing.Size(253, 96);
             this.groupDockpathSegmentPosition.TabIndex = 37;
             this.groupDockpathSegmentPosition.TabStop = false;
             this.groupDockpathSegmentPosition.Text = "Position";
@@ -2213,7 +2312,7 @@ namespace DAEnerys
             -2147483648});
             this.numericDockpathSegmentPosZ.Name = "numericDockpathSegmentPosZ";
             this.numericDockpathSegmentPosZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentPosZ.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentPosZ.Size = new System.Drawing.Size(218, 20);
             this.numericDockpathSegmentPosZ.TabIndex = 42;
             this.numericDockpathSegmentPosZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentPosZ.ValueChanged += new System.EventHandler(this.DockpathSegmentPositionChanged);
@@ -2246,7 +2345,7 @@ namespace DAEnerys
             -2147483648});
             this.numericDockpathSegmentPosY.Name = "numericDockpathSegmentPosY";
             this.numericDockpathSegmentPosY.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentPosY.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentPosY.Size = new System.Drawing.Size(218, 20);
             this.numericDockpathSegmentPosY.TabIndex = 40;
             this.numericDockpathSegmentPosY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentPosY.ValueChanged += new System.EventHandler(this.DockpathSegmentPositionChanged);
@@ -2279,7 +2378,7 @@ namespace DAEnerys
             -2147483648});
             this.numericDockpathSegmentPosX.Name = "numericDockpathSegmentPosX";
             this.numericDockpathSegmentPosX.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentPosX.Size = new System.Drawing.Size(201, 20);
+            this.numericDockpathSegmentPosX.Size = new System.Drawing.Size(218, 20);
             this.numericDockpathSegmentPosX.TabIndex = 38;
             this.numericDockpathSegmentPosX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentPosX.ValueChanged += new System.EventHandler(this.DockpathSegmentPositionChanged);
@@ -2300,7 +2399,7 @@ namespace DAEnerys
             this.buttonDockpathSegmentInsertBefore.Enabled = false;
             this.buttonDockpathSegmentInsertBefore.Location = new System.Drawing.Point(82, 67);
             this.buttonDockpathSegmentInsertBefore.Name = "buttonDockpathSegmentInsertBefore";
-            this.buttonDockpathSegmentInsertBefore.Size = new System.Drawing.Size(78, 23);
+            this.buttonDockpathSegmentInsertBefore.Size = new System.Drawing.Size(101, 23);
             this.buttonDockpathSegmentInsertBefore.TabIndex = 34;
             this.buttonDockpathSegmentInsertBefore.Text = "Insert before";
             this.buttonDockpathSegmentInsertBefore.UseVisualStyleBackColor = true;
@@ -2325,7 +2424,7 @@ namespace DAEnerys
             0});
             this.numericDockpathSegmentSpeed.Name = "numericDockpathSegmentSpeed";
             this.numericDockpathSegmentSpeed.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentSpeed.Size = new System.Drawing.Size(171, 20);
+            this.numericDockpathSegmentSpeed.Size = new System.Drawing.Size(188, 20);
             this.numericDockpathSegmentSpeed.TabIndex = 33;
             this.numericDockpathSegmentSpeed.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentSpeed.ValueChanged += new System.EventHandler(this.numericDockpathSegmentSpeed_ValueChanged);
@@ -2349,7 +2448,7 @@ namespace DAEnerys
             0});
             this.numericDockpathSegmentTolerance.Name = "numericDockpathSegmentTolerance";
             this.numericDockpathSegmentTolerance.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numericDockpathSegmentTolerance.Size = new System.Drawing.Size(171, 20);
+            this.numericDockpathSegmentTolerance.Size = new System.Drawing.Size(188, 20);
             this.numericDockpathSegmentTolerance.TabIndex = 32;
             this.numericDockpathSegmentTolerance.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.numericDockpathSegmentTolerance.ValueChanged += new System.EventHandler(this.numericDockpathSegmentTolerance_ValueChanged);
@@ -2358,7 +2457,7 @@ namespace DAEnerys
             // 
             this.buttonDockpathSegmentRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDockpathSegmentRemove.Enabled = false;
-            this.buttonDockpathSegmentRemove.Location = new System.Drawing.Point(166, 67);
+            this.buttonDockpathSegmentRemove.Location = new System.Drawing.Point(183, 67);
             this.buttonDockpathSegmentRemove.Name = "buttonDockpathSegmentRemove";
             this.buttonDockpathSegmentRemove.Size = new System.Drawing.Size(74, 23);
             this.buttonDockpathSegmentRemove.TabIndex = 31;
@@ -2391,7 +2490,7 @@ namespace DAEnerys
             this.groupDockpathSegmentFlags.Controls.Add(this.checkDockpathSegmentFlagQueue);
             this.groupDockpathSegmentFlags.Location = new System.Drawing.Point(4, 351);
             this.groupDockpathSegmentFlags.Name = "groupDockpathSegmentFlags";
-            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(236, 111);
+            this.groupDockpathSegmentFlags.Size = new System.Drawing.Size(253, 111);
             this.groupDockpathSegmentFlags.TabIndex = 11;
             this.groupDockpathSegmentFlags.TabStop = false;
             this.groupDockpathSegmentFlags.Text = "Flags";
@@ -2401,7 +2500,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagClip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClip.AutoSize = true;
             this.checkDockpathSegmentFlagClip.Enabled = false;
-            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(124, 88);
+            this.checkDockpathSegmentFlagClip.Location = new System.Drawing.Point(141, 88);
             this.checkDockpathSegmentFlagClip.Name = "checkDockpathSegmentFlagClip";
             this.checkDockpathSegmentFlagClip.Size = new System.Drawing.Size(72, 17);
             this.checkDockpathSegmentFlagClip.TabIndex = 27;
@@ -2428,7 +2527,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagCheck.AutoSize = true;
             this.checkDockpathSegmentFlagCheck.Enabled = false;
-            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(124, 65);
+            this.checkDockpathSegmentFlagCheck.Location = new System.Drawing.Point(141, 65);
             this.checkDockpathSegmentFlagCheck.Name = "checkDockpathSegmentFlagCheck";
             this.checkDockpathSegmentFlagCheck.Size = new System.Drawing.Size(95, 17);
             this.checkDockpathSegmentFlagCheck.TabIndex = 25;
@@ -2455,7 +2554,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagClose.AutoSize = true;
             this.checkDockpathSegmentFlagClose.Enabled = false;
-            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(124, 42);
+            this.checkDockpathSegmentFlagClose.Location = new System.Drawing.Point(141, 42);
             this.checkDockpathSegmentFlagClose.Name = "checkDockpathSegmentFlagClose";
             this.checkDockpathSegmentFlagClose.Size = new System.Drawing.Size(102, 17);
             this.checkDockpathSegmentFlagClose.TabIndex = 23;
@@ -2482,7 +2581,7 @@ namespace DAEnerys
             this.checkDockpathSegmentFlagPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkDockpathSegmentFlagPlayer.AutoSize = true;
             this.checkDockpathSegmentFlagPlayer.Enabled = false;
-            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(124, 19);
+            this.checkDockpathSegmentFlagPlayer.Location = new System.Drawing.Point(141, 19);
             this.checkDockpathSegmentFlagPlayer.Name = "checkDockpathSegmentFlagPlayer";
             this.checkDockpathSegmentFlagPlayer.Size = new System.Drawing.Size(101, 17);
             this.checkDockpathSegmentFlagPlayer.TabIndex = 22;
@@ -2530,7 +2629,7 @@ namespace DAEnerys
             this.trackBarDockpathSegments.Enabled = false;
             this.trackBarDockpathSegments.Location = new System.Drawing.Point(8, 16);
             this.trackBarDockpathSegments.Name = "trackBarDockpathSegments";
-            this.trackBarDockpathSegments.Size = new System.Drawing.Size(229, 45);
+            this.trackBarDockpathSegments.Size = new System.Drawing.Size(246, 45);
             this.trackBarDockpathSegments.TabIndex = 3;
             this.trackBarDockpathSegments.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBarDockpathSegments.Scroll += new System.EventHandler(this.trackBarDockpathSegments_Scroll);
@@ -2546,7 +2645,7 @@ namespace DAEnerys
             this.groupDockpathLinks.Controls.Add(this.listDockpathLinks);
             this.groupDockpathLinks.Location = new System.Drawing.Point(6, 484);
             this.groupDockpathLinks.Name = "groupDockpathLinks";
-            this.groupDockpathLinks.Size = new System.Drawing.Size(243, 163);
+            this.groupDockpathLinks.Size = new System.Drawing.Size(260, 163);
             this.groupDockpathLinks.TabIndex = 2;
             this.groupDockpathLinks.TabStop = false;
             this.groupDockpathLinks.Text = "Links";
@@ -2560,7 +2659,7 @@ namespace DAEnerys
             this.comboDockpathLinkPath.FormattingEnabled = true;
             this.comboDockpathLinkPath.Location = new System.Drawing.Point(47, 133);
             this.comboDockpathLinkPath.Name = "comboDockpathLinkPath";
-            this.comboDockpathLinkPath.Size = new System.Drawing.Size(193, 21);
+            this.comboDockpathLinkPath.Size = new System.Drawing.Size(210, 21);
             this.comboDockpathLinkPath.Sorted = true;
             this.comboDockpathLinkPath.TabIndex = 34;
             this.comboDockpathLinkPath.SelectedIndexChanged += new System.EventHandler(this.comboDockpathLinkPath_SelectedIndexChanged);
@@ -2569,7 +2668,7 @@ namespace DAEnerys
             // 
             this.buttonDockpathLinkRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDockpathLinkRemove.Enabled = false;
-            this.buttonDockpathLinkRemove.Location = new System.Drawing.Point(148, 104);
+            this.buttonDockpathLinkRemove.Location = new System.Drawing.Point(165, 104);
             this.buttonDockpathLinkRemove.Name = "buttonDockpathLinkRemove";
             this.buttonDockpathLinkRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonDockpathLinkRemove.TabIndex = 33;
@@ -2604,7 +2703,7 @@ namespace DAEnerys
             this.listDockpathLinks.FormattingEnabled = true;
             this.listDockpathLinks.Location = new System.Drawing.Point(3, 16);
             this.listDockpathLinks.Name = "listDockpathLinks";
-            this.listDockpathLinks.Size = new System.Drawing.Size(237, 82);
+            this.listDockpathLinks.Size = new System.Drawing.Size(254, 82);
             this.listDockpathLinks.TabIndex = 11;
             this.listDockpathLinks.SelectedIndexChanged += new System.EventHandler(this.listDockpathLinks_SelectedIndexChanged);
             // 
@@ -2619,7 +2718,7 @@ namespace DAEnerys
             this.groupDockpathFamilies.Controls.Add(this.listDockpathFamilies);
             this.groupDockpathFamilies.Location = new System.Drawing.Point(6, 317);
             this.groupDockpathFamilies.Name = "groupDockpathFamilies";
-            this.groupDockpathFamilies.Size = new System.Drawing.Size(243, 161);
+            this.groupDockpathFamilies.Size = new System.Drawing.Size(260, 161);
             this.groupDockpathFamilies.TabIndex = 1;
             this.groupDockpathFamilies.TabStop = false;
             this.groupDockpathFamilies.Text = "Families";
@@ -2628,7 +2727,7 @@ namespace DAEnerys
             // 
             this.buttonDockpathFamilyRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDockpathFamilyRemove.Enabled = false;
-            this.buttonDockpathFamilyRemove.Location = new System.Drawing.Point(148, 104);
+            this.buttonDockpathFamilyRemove.Location = new System.Drawing.Point(165, 104);
             this.buttonDockpathFamilyRemove.Name = "buttonDockpathFamilyRemove";
             this.buttonDockpathFamilyRemove.Size = new System.Drawing.Size(92, 23);
             this.buttonDockpathFamilyRemove.TabIndex = 29;
@@ -2654,7 +2753,7 @@ namespace DAEnerys
             this.boxDockpathFamilyName.Enabled = false;
             this.boxDockpathFamilyName.Location = new System.Drawing.Point(47, 133);
             this.boxDockpathFamilyName.Name = "boxDockpathFamilyName";
-            this.boxDockpathFamilyName.Size = new System.Drawing.Size(193, 20);
+            this.boxDockpathFamilyName.Size = new System.Drawing.Size(210, 20);
             this.boxDockpathFamilyName.TabIndex = 24;
             this.boxDockpathFamilyName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boxDockpathFamilyName_KeyPress);
             this.boxDockpathFamilyName.Leave += new System.EventHandler(this.boxDockpathFamilyName_Leave);
@@ -2675,7 +2774,7 @@ namespace DAEnerys
             this.listDockpathFamilies.FormattingEnabled = true;
             this.listDockpathFamilies.Location = new System.Drawing.Point(3, 16);
             this.listDockpathFamilies.Name = "listDockpathFamilies";
-            this.listDockpathFamilies.Size = new System.Drawing.Size(237, 82);
+            this.listDockpathFamilies.Size = new System.Drawing.Size(254, 82);
             this.listDockpathFamilies.TabIndex = 11;
             this.listDockpathFamilies.SelectedIndexChanged += new System.EventHandler(this.listDockpathFamilies_SelectedIndexChanged);
             // 
@@ -2696,7 +2795,7 @@ namespace DAEnerys
             this.tabNavLights.Controls.Add(this.groupNavLightFlags);
             this.tabNavLights.Location = new System.Drawing.Point(4, 58);
             this.tabNavLights.Name = "tabNavLights";
-            this.tabNavLights.Size = new System.Drawing.Size(272, 966);
+            this.tabNavLights.Size = new System.Drawing.Size(272, 758);
             this.tabNavLights.TabIndex = 7;
             this.tabNavLights.Text = "NavLights";
             this.tabNavLights.UseVisualStyleBackColor = true;
@@ -3169,7 +3268,7 @@ namespace DAEnerys
             this.tabEngineGlows.Location = new System.Drawing.Point(4, 58);
             this.tabEngineGlows.Name = "tabEngineGlows";
             this.tabEngineGlows.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEngineGlows.Size = new System.Drawing.Size(272, 966);
+            this.tabEngineGlows.Size = new System.Drawing.Size(272, 758);
             this.tabEngineGlows.TabIndex = 8;
             this.tabEngineGlows.Text = "Engine Glows";
             this.tabEngineGlows.UseVisualStyleBackColor = true;
@@ -3367,7 +3466,7 @@ namespace DAEnerys
             this.tabEngineShapes.Location = new System.Drawing.Point(4, 58);
             this.tabEngineShapes.Name = "tabEngineShapes";
             this.tabEngineShapes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEngineShapes.Size = new System.Drawing.Size(272, 966);
+            this.tabEngineShapes.Size = new System.Drawing.Size(272, 758);
             this.tabEngineShapes.TabIndex = 9;
             this.tabEngineShapes.Text = "Engine Shapes";
             this.tabEngineShapes.UseVisualStyleBackColor = true;
@@ -3511,7 +3610,7 @@ namespace DAEnerys
             this.tabEngineBurns.Controls.Add(this.groupEngineBurnFlames);
             this.tabEngineBurns.Location = new System.Drawing.Point(4, 58);
             this.tabEngineBurns.Name = "tabEngineBurns";
-            this.tabEngineBurns.Size = new System.Drawing.Size(272, 966);
+            this.tabEngineBurns.Size = new System.Drawing.Size(272, 758);
             this.tabEngineBurns.TabIndex = 10;
             this.tabEngineBurns.Text = "Engine Burns";
             this.tabEngineBurns.UseVisualStyleBackColor = true;
@@ -3803,7 +3902,7 @@ namespace DAEnerys
             this.tabAnimations.Controls.Add(this.listAnimations);
             this.tabAnimations.Location = new System.Drawing.Point(4, 58);
             this.tabAnimations.Name = "tabAnimations";
-            this.tabAnimations.Size = new System.Drawing.Size(272, 966);
+            this.tabAnimations.Size = new System.Drawing.Size(272, 758);
             this.tabAnimations.TabIndex = 11;
             this.tabAnimations.Text = "Animations";
             this.tabAnimations.UseVisualStyleBackColor = true;
@@ -4051,10 +4150,35 @@ namespace DAEnerys
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.gridProblems);
+            this.splitContainer2.Panel2.Controls.Add(this.tabControlRight);
             this.splitContainer2.Size = new System.Drawing.Size(1000, 820);
             this.splitContainer2.SplitterDistance = 803;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // tabControlRight
+            // 
+            this.tabControlRight.Controls.Add(this.tabProblems);
+            this.tabControlRight.Controls.Add(this.tabTargetBoxes);
+            this.tabControlRight.Controls.Add(this.tabShipTypeMapping);
+            this.tabControlRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlRight.Location = new System.Drawing.Point(0, 0);
+            this.tabControlRight.Multiline = true;
+            this.tabControlRight.Name = "tabControlRight";
+            this.tabControlRight.SelectedIndex = 0;
+            this.tabControlRight.Size = new System.Drawing.Size(193, 820);
+            this.tabControlRight.TabIndex = 1;
+            // 
+            // tabProblems
+            // 
+            this.tabProblems.BackColor = System.Drawing.Color.Transparent;
+            this.tabProblems.Controls.Add(this.gridProblems);
+            this.tabProblems.ForeColor = System.Drawing.Color.Transparent;
+            this.tabProblems.Location = new System.Drawing.Point(4, 40);
+            this.tabProblems.Name = "tabProblems";
+            this.tabProblems.Padding = new System.Windows.Forms.Padding(3);
+            this.tabProblems.Size = new System.Drawing.Size(185, 776);
+            this.tabProblems.TabIndex = 1;
+            this.tabProblems.Text = "Problems";
             // 
             // gridProblems
             // 
@@ -4062,55 +4186,638 @@ namespace DAEnerys
             this.gridProblems.AllowUserToDeleteRows = false;
             this.gridProblems.AllowUserToResizeColumns = false;
             this.gridProblems.AllowUserToResizeRows = false;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
             this.gridProblems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridProblems.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.gridProblems.BackgroundColor = System.Drawing.SystemColors.Window;
             this.gridProblems.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.gridProblems.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.gridProblems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridProblems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnProblems});
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.DefaultCellStyle = dataGridViewCellStyle8;
             this.gridProblems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridProblems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.gridProblems.Location = new System.Drawing.Point(0, 0);
+            this.gridProblems.Location = new System.Drawing.Point(3, 3);
             this.gridProblems.MultiSelect = false;
             this.gridProblems.Name = "gridProblems";
             this.gridProblems.ReadOnly = true;
             this.gridProblems.RowHeadersVisible = false;
             this.gridProblems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridProblems.RowsDefaultCellStyle = dataGridViewCellStyle9;
             this.gridProblems.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.gridProblems.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.gridProblems.RowTemplate.Height = 500;
             this.gridProblems.RowTemplate.ReadOnly = true;
             this.gridProblems.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridProblems.Size = new System.Drawing.Size(193, 820);
-            this.gridProblems.TabIndex = 0;
-            this.gridProblems.SelectionChanged += new System.EventHandler(this.gridProblems_SelectionChanged);
+            this.gridProblems.Size = new System.Drawing.Size(179, 770);
+            this.gridProblems.TabIndex = 1;
             // 
             // columnProblems
             // 
             this.columnProblems.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnProblems.DefaultCellStyle = dataGridViewCellStyle7;
             this.columnProblems.HeaderText = "Problems";
             this.columnProblems.Name = "columnProblems";
             this.columnProblems.ReadOnly = true;
             this.columnProblems.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.columnProblems.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            // 
+            // tabTargetBoxes
+            // 
+            this.tabTargetBoxes.Controls.Add(this.buttonTargetBoxShowCode);
+            this.tabTargetBoxes.Controls.Add(this.groupBox3);
+            this.tabTargetBoxes.Controls.Add(this.label10);
+            this.tabTargetBoxes.Controls.Add(this.numericTargetBoxIndex);
+            this.tabTargetBoxes.Controls.Add(this.listTargetBoxes);
+            this.tabTargetBoxes.Controls.Add(this.groupBox1);
+            this.tabTargetBoxes.Controls.Add(this.groupBox2);
+            this.tabTargetBoxes.Controls.Add(this.buttonRemoveTargetBox);
+            this.tabTargetBoxes.Controls.Add(this.buttonAddTargetBox);
+            this.tabTargetBoxes.Location = new System.Drawing.Point(4, 40);
+            this.tabTargetBoxes.Name = "tabTargetBoxes";
+            this.tabTargetBoxes.Size = new System.Drawing.Size(185, 776);
+            this.tabTargetBoxes.TabIndex = 2;
+            this.tabTargetBoxes.Text = "Target boxes";
+            this.tabTargetBoxes.UseVisualStyleBackColor = true;
+            // 
+            // buttonTargetBoxShowCode
+            // 
+            this.buttonTargetBoxShowCode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTargetBoxShowCode.Enabled = false;
+            this.buttonTargetBoxShowCode.Location = new System.Drawing.Point(3, 725);
+            this.buttonTargetBoxShowCode.Name = "buttonTargetBoxShowCode";
+            this.buttonTargetBoxShowCode.Size = new System.Drawing.Size(180, 23);
+            this.buttonTargetBoxShowCode.TabIndex = 44;
+            this.buttonTargetBoxShowCode.Text = "Show code";
+            this.buttonTargetBoxShowCode.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.labelTargetBoxLength);
+            this.groupBox3.Controls.Add(this.label20);
+            this.groupBox3.Controls.Add(this.labelTargetBoxHeight);
+            this.groupBox3.Controls.Add(this.label16);
+            this.groupBox3.Controls.Add(this.labelTargetBoxWidth);
+            this.groupBox3.Controls.Add(this.label15);
+            this.groupBox3.Controls.Add(this.labelTargetBoxMaxZ);
+            this.groupBox3.Controls.Add(this.labelTargetBoxMaxY);
+            this.groupBox3.Controls.Add(this.labelTargetBoxMaxX);
+            this.groupBox3.Controls.Add(this.label17);
+            this.groupBox3.Controls.Add(this.label18);
+            this.groupBox3.Controls.Add(this.label19);
+            this.groupBox3.Controls.Add(this.labelTargetBoxMinZ);
+            this.groupBox3.Controls.Add(this.labelTargetBoxMinY);
+            this.groupBox3.Controls.Add(this.labelTargetBoxMinX);
+            this.groupBox3.Controls.Add(this.label11);
+            this.groupBox3.Controls.Add(this.label12);
+            this.groupBox3.Controls.Add(this.label13);
+            this.groupBox3.Location = new System.Drawing.Point(3, 529);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(179, 190);
+            this.groupBox3.TabIndex = 41;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Measurements";
+            // 
+            // labelTargetBoxLength
+            // 
+            this.labelTargetBoxLength.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetBoxLength.AutoSize = true;
+            this.labelTargetBoxLength.Location = new System.Drawing.Point(71, 167);
+            this.labelTargetBoxLength.Name = "labelTargetBoxLength";
+            this.labelTargetBoxLength.Size = new System.Drawing.Size(22, 13);
+            this.labelTargetBoxLength.TabIndex = 41;
+            this.labelTargetBoxLength.Text = "0,0";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 167);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(43, 13);
+            this.label20.TabIndex = 40;
+            this.label20.Text = "Length:";
+            // 
+            // labelTargetBoxHeight
+            // 
+            this.labelTargetBoxHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetBoxHeight.AutoSize = true;
+            this.labelTargetBoxHeight.Location = new System.Drawing.Point(71, 150);
+            this.labelTargetBoxHeight.Name = "labelTargetBoxHeight";
+            this.labelTargetBoxHeight.Size = new System.Drawing.Size(22, 13);
+            this.labelTargetBoxHeight.TabIndex = 39;
+            this.labelTargetBoxHeight.Text = "0,0";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 150);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(38, 13);
+            this.label16.TabIndex = 38;
+            this.label16.Text = "Height";
+            // 
+            // labelTargetBoxWidth
+            // 
+            this.labelTargetBoxWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetBoxWidth.AutoSize = true;
+            this.labelTargetBoxWidth.Location = new System.Drawing.Point(71, 133);
+            this.labelTargetBoxWidth.Name = "labelTargetBoxWidth";
+            this.labelTargetBoxWidth.Size = new System.Drawing.Size(22, 13);
+            this.labelTargetBoxWidth.TabIndex = 37;
+            this.labelTargetBoxWidth.Text = "0,0";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 133);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(38, 13);
+            this.label15.TabIndex = 36;
+            this.label15.Text = "Width:";
+            // 
+            // labelTargetBoxMaxZ
+            // 
+            this.labelTargetBoxMaxZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetBoxMaxZ.AutoSize = true;
+            this.labelTargetBoxMaxZ.Location = new System.Drawing.Point(71, 110);
+            this.labelTargetBoxMaxZ.Name = "labelTargetBoxMaxZ";
+            this.labelTargetBoxMaxZ.Size = new System.Drawing.Size(22, 13);
+            this.labelTargetBoxMaxZ.TabIndex = 35;
+            this.labelTargetBoxMaxZ.Text = "0,0";
+            // 
+            // labelTargetBoxMaxY
+            // 
+            this.labelTargetBoxMaxY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetBoxMaxY.AutoSize = true;
+            this.labelTargetBoxMaxY.Location = new System.Drawing.Point(71, 92);
+            this.labelTargetBoxMaxY.Name = "labelTargetBoxMaxY";
+            this.labelTargetBoxMaxY.Size = new System.Drawing.Size(22, 13);
+            this.labelTargetBoxMaxY.TabIndex = 34;
+            this.labelTargetBoxMaxY.Text = "0,0";
+            // 
+            // labelTargetBoxMaxX
+            // 
+            this.labelTargetBoxMaxX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetBoxMaxX.AutoSize = true;
+            this.labelTargetBoxMaxX.Location = new System.Drawing.Point(71, 74);
+            this.labelTargetBoxMaxX.Name = "labelTargetBoxMaxX";
+            this.labelTargetBoxMaxX.Size = new System.Drawing.Size(22, 13);
+            this.labelTargetBoxMaxX.TabIndex = 33;
+            this.labelTargetBoxMaxX.Text = "0,0";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 110);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(37, 13);
+            this.label17.TabIndex = 32;
+            this.label17.Text = "MaxZ:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(6, 92);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(37, 13);
+            this.label18.TabIndex = 31;
+            this.label18.Text = "MaxY:";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(6, 74);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(37, 13);
+            this.label19.TabIndex = 30;
+            this.label19.Text = "MaxX:";
+            // 
+            // labelTargetBoxMinZ
+            // 
+            this.labelTargetBoxMinZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetBoxMinZ.AutoSize = true;
+            this.labelTargetBoxMinZ.Location = new System.Drawing.Point(71, 52);
+            this.labelTargetBoxMinZ.Name = "labelTargetBoxMinZ";
+            this.labelTargetBoxMinZ.Size = new System.Drawing.Size(22, 13);
+            this.labelTargetBoxMinZ.TabIndex = 29;
+            this.labelTargetBoxMinZ.Text = "0,0";
+            // 
+            // labelTargetBoxMinY
+            // 
+            this.labelTargetBoxMinY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetBoxMinY.AutoSize = true;
+            this.labelTargetBoxMinY.Location = new System.Drawing.Point(71, 34);
+            this.labelTargetBoxMinY.Name = "labelTargetBoxMinY";
+            this.labelTargetBoxMinY.Size = new System.Drawing.Size(22, 13);
+            this.labelTargetBoxMinY.TabIndex = 28;
+            this.labelTargetBoxMinY.Text = "0,0";
+            // 
+            // labelTargetBoxMinX
+            // 
+            this.labelTargetBoxMinX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetBoxMinX.AutoSize = true;
+            this.labelTargetBoxMinX.Location = new System.Drawing.Point(71, 16);
+            this.labelTargetBoxMinX.Name = "labelTargetBoxMinX";
+            this.labelTargetBoxMinX.Size = new System.Drawing.Size(22, 13);
+            this.labelTargetBoxMinX.TabIndex = 27;
+            this.labelTargetBoxMinX.Text = "0,0";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 52);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(34, 13);
+            this.label11.TabIndex = 26;
+            this.label11.Text = "MinZ:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 34);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(34, 13);
+            this.label12.TabIndex = 24;
+            this.label12.Text = "MinY:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 16);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(34, 13);
+            this.label13.TabIndex = 22;
+            this.label13.Text = "MinX:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(3, 307);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(36, 13);
+            this.label10.TabIndex = 43;
+            this.label10.Text = "Index:";
+            // 
+            // numericTargetBoxIndex
+            // 
+            this.numericTargetBoxIndex.Enabled = false;
+            this.numericTargetBoxIndex.Location = new System.Drawing.Point(45, 304);
+            this.numericTargetBoxIndex.Name = "numericTargetBoxIndex";
+            this.numericTargetBoxIndex.Size = new System.Drawing.Size(41, 20);
+            this.numericTargetBoxIndex.TabIndex = 42;
+            // 
+            // listTargetBoxes
+            // 
+            this.listTargetBoxes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listTargetBoxes.FormattingEnabled = true;
+            this.listTargetBoxes.Location = new System.Drawing.Point(3, 3);
+            this.listTargetBoxes.Name = "listTargetBoxes";
+            this.listTargetBoxes.Size = new System.Drawing.Size(179, 259);
+            this.listTargetBoxes.TabIndex = 41;
+            this.listTargetBoxes.SelectedIndexChanged += new System.EventHandler(this.listTargetBoxes_SelectedIndexChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.numericTargetBoxMaxZ);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.numericTargetBoxMaxY);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.numericTargetBoxMaxX);
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Location = new System.Drawing.Point(3, 430);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(179, 93);
+            this.groupBox1.TabIndex = 40;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Max";
+            // 
+            // numericTargetBoxMaxZ
+            // 
+            this.numericTargetBoxMaxZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericTargetBoxMaxZ.DecimalPlaces = 4;
+            this.numericTargetBoxMaxZ.Enabled = false;
+            this.numericTargetBoxMaxZ.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericTargetBoxMaxZ.Location = new System.Drawing.Point(72, 66);
+            this.numericTargetBoxMaxZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericTargetBoxMaxZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericTargetBoxMaxZ.Name = "numericTargetBoxMaxZ";
+            this.numericTargetBoxMaxZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericTargetBoxMaxZ.Size = new System.Drawing.Size(101, 20);
+            this.numericTargetBoxMaxZ.TabIndex = 27;
+            this.numericTargetBoxMaxZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 68);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(17, 13);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "Z:";
+            // 
+            // numericTargetBoxMaxY
+            // 
+            this.numericTargetBoxMaxY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericTargetBoxMaxY.DecimalPlaces = 4;
+            this.numericTargetBoxMaxY.Enabled = false;
+            this.numericTargetBoxMaxY.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericTargetBoxMaxY.Location = new System.Drawing.Point(72, 40);
+            this.numericTargetBoxMaxY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericTargetBoxMaxY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericTargetBoxMaxY.Name = "numericTargetBoxMaxY";
+            this.numericTargetBoxMaxY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericTargetBoxMaxY.Size = new System.Drawing.Size(101, 20);
+            this.numericTargetBoxMaxY.TabIndex = 25;
+            this.numericTargetBoxMaxY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 42);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(17, 13);
+            this.label5.TabIndex = 24;
+            this.label5.Text = "Y:";
+            // 
+            // numericTargetBoxMaxX
+            // 
+            this.numericTargetBoxMaxX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericTargetBoxMaxX.DecimalPlaces = 4;
+            this.numericTargetBoxMaxX.Enabled = false;
+            this.numericTargetBoxMaxX.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericTargetBoxMaxX.Location = new System.Drawing.Point(72, 14);
+            this.numericTargetBoxMaxX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericTargetBoxMaxX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericTargetBoxMaxX.Name = "numericTargetBoxMaxX";
+            this.numericTargetBoxMaxX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericTargetBoxMaxX.Size = new System.Drawing.Size(101, 20);
+            this.numericTargetBoxMaxX.TabIndex = 23;
+            this.numericTargetBoxMaxX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 16);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(17, 13);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "X:";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.numericTargetBoxMinZ);
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.numericTargetBoxMinY);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.numericTargetBoxMinX);
+            this.groupBox2.Controls.Add(this.label9);
+            this.groupBox2.Location = new System.Drawing.Point(3, 331);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(179, 93);
+            this.groupBox2.TabIndex = 39;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Min";
+            // 
+            // numericTargetBoxMinZ
+            // 
+            this.numericTargetBoxMinZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericTargetBoxMinZ.DecimalPlaces = 4;
+            this.numericTargetBoxMinZ.Enabled = false;
+            this.numericTargetBoxMinZ.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericTargetBoxMinZ.Location = new System.Drawing.Point(72, 66);
+            this.numericTargetBoxMinZ.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericTargetBoxMinZ.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericTargetBoxMinZ.Name = "numericTargetBoxMinZ";
+            this.numericTargetBoxMinZ.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericTargetBoxMinZ.Size = new System.Drawing.Size(101, 20);
+            this.numericTargetBoxMinZ.TabIndex = 27;
+            this.numericTargetBoxMinZ.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 68);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(17, 13);
+            this.label7.TabIndex = 26;
+            this.label7.Text = "Z:";
+            // 
+            // numericTargetBoxMinY
+            // 
+            this.numericTargetBoxMinY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericTargetBoxMinY.DecimalPlaces = 4;
+            this.numericTargetBoxMinY.Enabled = false;
+            this.numericTargetBoxMinY.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericTargetBoxMinY.Location = new System.Drawing.Point(72, 40);
+            this.numericTargetBoxMinY.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericTargetBoxMinY.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericTargetBoxMinY.Name = "numericTargetBoxMinY";
+            this.numericTargetBoxMinY.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericTargetBoxMinY.Size = new System.Drawing.Size(101, 20);
+            this.numericTargetBoxMinY.TabIndex = 25;
+            this.numericTargetBoxMinY.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 42);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(17, 13);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "Y:";
+            // 
+            // numericTargetBoxMinX
+            // 
+            this.numericTargetBoxMinX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericTargetBoxMinX.DecimalPlaces = 4;
+            this.numericTargetBoxMinX.Enabled = false;
+            this.numericTargetBoxMinX.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericTargetBoxMinX.Location = new System.Drawing.Point(72, 14);
+            this.numericTargetBoxMinX.Maximum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            0});
+            this.numericTargetBoxMinX.Minimum = new decimal(new int[] {
+            -1530494977,
+            232830,
+            0,
+            -2147483648});
+            this.numericTargetBoxMinX.Name = "numericTargetBoxMinX";
+            this.numericTargetBoxMinX.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.numericTargetBoxMinX.Size = new System.Drawing.Size(101, 20);
+            this.numericTargetBoxMinX.TabIndex = 23;
+            this.numericTargetBoxMinX.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 16);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(17, 13);
+            this.label9.TabIndex = 22;
+            this.label9.Text = "X:";
+            // 
+            // buttonRemoveTargetBox
+            // 
+            this.buttonRemoveTargetBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveTargetBox.Enabled = false;
+            this.buttonRemoveTargetBox.Location = new System.Drawing.Point(98, 273);
+            this.buttonRemoveTargetBox.Name = "buttonRemoveTargetBox";
+            this.buttonRemoveTargetBox.Size = new System.Drawing.Size(84, 23);
+            this.buttonRemoveTargetBox.TabIndex = 36;
+            this.buttonRemoveTargetBox.Text = "Remove";
+            this.buttonRemoveTargetBox.UseVisualStyleBackColor = true;
+            // 
+            // buttonAddTargetBox
+            // 
+            this.buttonAddTargetBox.Location = new System.Drawing.Point(3, 273);
+            this.buttonAddTargetBox.Name = "buttonAddTargetBox";
+            this.buttonAddTargetBox.Size = new System.Drawing.Size(89, 23);
+            this.buttonAddTargetBox.TabIndex = 35;
+            this.buttonAddTargetBox.Text = "Add";
+            this.buttonAddTargetBox.UseVisualStyleBackColor = true;
+            // 
+            // tabShipTypeMapping
+            // 
+            this.tabShipTypeMapping.Controls.Add(this.dataGridShipTypes);
+            this.tabShipTypeMapping.Location = new System.Drawing.Point(4, 40);
+            this.tabShipTypeMapping.Name = "tabShipTypeMapping";
+            this.tabShipTypeMapping.Size = new System.Drawing.Size(185, 776);
+            this.tabShipTypeMapping.TabIndex = 3;
+            this.tabShipTypeMapping.Text = "Ship type mapping";
+            this.tabShipTypeMapping.UseVisualStyleBackColor = true;
+            // 
+            // dataGridShipTypes
+            // 
+            this.dataGridShipTypes.AllowUserToAddRows = false;
+            this.dataGridShipTypes.AllowUserToResizeRows = false;
+            this.dataGridShipTypes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridShipTypes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridShipTypes.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dataGridShipTypes.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
+            this.dataGridShipTypes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridShipTypes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridShipTypesColumnDAE,
+            this.dataGridShipTypesColumnSHIP});
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridShipTypes.DefaultCellStyle = dataGridViewCellStyle10;
+            this.dataGridShipTypes.Location = new System.Drawing.Point(0, 0);
+            this.dataGridShipTypes.MultiSelect = false;
+            this.dataGridShipTypes.Name = "dataGridShipTypes";
+            this.dataGridShipTypes.RowHeadersVisible = false;
+            this.dataGridShipTypes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridShipTypes.Size = new System.Drawing.Size(185, 314);
+            this.dataGridShipTypes.TabIndex = 0;
+            // 
+            // dataGridShipTypesColumnDAE
+            // 
+            this.dataGridShipTypesColumnDAE.HeaderText = "DAE file";
+            this.dataGridShipTypesColumnDAE.Name = "dataGridShipTypesColumnDAE";
+            // 
+            // dataGridShipTypesColumnSHIP
+            // 
+            this.dataGridShipTypesColumnSHIP.HeaderText = "ship file";
+            this.dataGridShipTypesColumnSHIP.Name = "dataGridShipTypesColumnSHIP";
             // 
             // comboPerspectiveOrtho
             // 
@@ -4121,7 +4828,7 @@ namespace DAEnerys
             this.comboPerspectiveOrtho.Items.AddRange(new object[] {
             "Perspective",
             "Orthographic"});
-            this.comboPerspectiveOrtho.Location = new System.Drawing.Point(1127, 3);
+            this.comboPerspectiveOrtho.Location = new System.Drawing.Point(1175, 2);
             this.comboPerspectiveOrtho.MaxDropDownItems = 1;
             this.comboPerspectiveOrtho.Name = "comboPerspectiveOrtho";
             this.comboPerspectiveOrtho.Size = new System.Drawing.Size(105, 21);
@@ -4133,28 +4840,12 @@ namespace DAEnerys
             this.labelFPS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelFPS.AutoSize = true;
             this.labelFPS.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
-            this.labelFPS.Location = new System.Drawing.Point(1085, 7);
+            this.labelFPS.Location = new System.Drawing.Point(1133, 6);
             this.labelFPS.Name = "labelFPS";
             this.labelFPS.Size = new System.Drawing.Size(36, 13);
             this.labelFPS.TabIndex = 7;
             this.labelFPS.Text = "0 FPS";
             this.labelFPS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // buttonProblems
-            // 
-            this.buttonProblems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonProblems.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
-            this.buttonProblems.FlatAppearance.BorderSize = 0;
-            this.buttonProblems.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonProblems.Image = global::DAEnerys.Properties.Resources.flagWhite;
-            this.buttonProblems.Location = new System.Drawing.Point(1238, 0);
-            this.buttonProblems.MinimumSize = new System.Drawing.Size(37, 21);
-            this.buttonProblems.Name = "buttonProblems";
-            this.buttonProblems.Size = new System.Drawing.Size(46, 21);
-            this.buttonProblems.TabIndex = 8;
-            this.buttonProblems.UseVisualStyleBackColor = false;
-            this.buttonProblems.Click += new System.EventHandler(this.buttonProblems_Click);
             // 
             // saveObjDialog
             // 
@@ -4232,7 +4923,6 @@ namespace DAEnerys
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1284, 845);
-            this.Controls.Add(this.buttonProblems);
             this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.comboPerspectiveOrtho);
             this.Controls.Add(this.splitContainer1);
@@ -4266,6 +4956,8 @@ namespace DAEnerys
             this.groupMaterialTextures.ResumeLayout(false);
             this.tabCollisionMeshes.ResumeLayout(false);
             this.tabCollisionMeshes.PerformLayout();
+            this.groupCollisionMeshPreview.ResumeLayout(false);
+            this.groupCollisionMeshPreview.PerformLayout();
             this.contextShowHideAll.ResumeLayout(false);
             this.tabJoints.ResumeLayout(false);
             this.tabJoints.PerformLayout();
@@ -4362,7 +5054,26 @@ namespace DAEnerys
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.tabControlRight.ResumeLayout(false);
+            this.tabProblems.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridProblems)).EndInit();
+            this.tabTargetBoxes.ResumeLayout(false);
+            this.tabTargetBoxes.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxIndex)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMaxZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMaxY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMaxX)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMinZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMinY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTargetBoxMinX)).EndInit();
+            this.tabShipTypeMapping.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridShipTypes)).EndInit();
             this.contextJointRightClick.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -4431,11 +5142,8 @@ namespace DAEnerys
         private System.Windows.Forms.TabPage tabEngineGlows;
         private System.Windows.Forms.ToolStripButton buttonHotkeys;
         private System.Windows.Forms.TabPage tabEngineShapes;
-        private System.Windows.Forms.Button buttonProblems;
         public System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.DataGridView gridProblems;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnProblems;
         private System.Windows.Forms.GroupBox groupMaterialTextures;
         private System.Windows.Forms.ListBox listMaterialTextures;
         private System.Windows.Forms.Label label3;
@@ -4654,6 +5362,57 @@ namespace DAEnerys
         private System.Windows.Forms.ToolStripMenuItem contextJointRightClickItemHideDescendants;
         private System.Windows.Forms.ToolStripMenuItem contextJointRightClickItemShowAll;
         private System.Windows.Forms.ToolStripMenuItem contextJointRightClickItemHideAll;
+        private System.Windows.Forms.GroupBox groupCollisionMeshPreview;
+        private System.Windows.Forms.CheckBox checkCollisionMeshPreviewBox;
+        private System.Windows.Forms.CheckBox checkCollisionMeshPreviewSphere;
+        private System.Windows.Forms.TabControl tabControlRight;
+        private System.Windows.Forms.TabPage tabProblems;
+        private System.Windows.Forms.DataGridView gridProblems;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnProblems;
+        private System.Windows.Forms.TabPage tabTargetBoxes;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.NumericUpDown numericTargetBoxMaxZ;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numericTargetBoxMaxY;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numericTargetBoxMaxX;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.NumericUpDown numericTargetBoxMinZ;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown numericTargetBoxMinY;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown numericTargetBoxMinX;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button buttonRemoveTargetBox;
+        private System.Windows.Forms.Button buttonAddTargetBox;
+        private System.Windows.Forms.CheckedListBox listTargetBoxes;
+        private System.Windows.Forms.TabPage tabShipTypeMapping;
+        private System.Windows.Forms.DataGridView dataGridShipTypes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridShipTypesColumnDAE;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dataGridShipTypesColumnSHIP;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown numericTargetBoxIndex;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label labelTargetBoxMaxZ;
+        private System.Windows.Forms.Label labelTargetBoxMaxY;
+        private System.Windows.Forms.Label labelTargetBoxMaxX;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label labelTargetBoxMinZ;
+        private System.Windows.Forms.Label labelTargetBoxMinY;
+        private System.Windows.Forms.Label labelTargetBoxMinX;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label labelTargetBoxHeight;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label labelTargetBoxWidth;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label labelTargetBoxLength;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Button buttonTargetBoxShowCode;
     }
 }
 
