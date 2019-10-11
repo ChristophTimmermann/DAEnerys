@@ -53,13 +53,15 @@ namespace DAEnerys
 
         public static void CreateGLControl()
         {
-            GLControl = new CustomGLControl(FSAASamples);
-            GLControl.BackColor = System.Drawing.Color.Black;
-            GLControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            GLControl.Location = new System.Drawing.Point(0, 0);
-            GLControl.Name = "glControl";
-            GLControl.Size = new System.Drawing.Size(865, 758);
-            GLControl.TabIndex = 0;
+            GLControl = new CustomGLControl(FSAASamples)
+            {
+                BackColor = System.Drawing.Color.Black,
+                Dock = System.Windows.Forms.DockStyle.Fill,
+                Location = new System.Drawing.Point(0, 0),
+                Name = "glControl",
+                Size = new System.Drawing.Size(865, 758),
+                TabIndex = 0
+            };
             GLControl.Context.SwapInterval = 60;
             GLControl.Paint += new System.Windows.Forms.PaintEventHandler(main.glControl_Render);
             GLControl.MouseEnter += new System.EventHandler(main.glControl_MouseEnter);

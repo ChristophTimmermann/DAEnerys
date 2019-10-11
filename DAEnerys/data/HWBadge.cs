@@ -47,6 +47,11 @@ namespace DAEnerys
 
         public HWBadge(string name, string path)
         {
+            if(BadgeNames.ContainsKey(name))
+            {
+                return;
+            }
+
             Name = name;
             Path = path;
 
