@@ -456,6 +456,12 @@ end");
                 function StartShipHardPointConfig(entity, ...)
 	                return DAENERYS_StartShipHardPointConfig(entity, {...})
                 end");
+
+            lua.RegisterFunction("DAENERYS_addShaderProp", null, type.GetMethod("AddShaderProp"));
+            lua.DoString(@"
+                function addShaderProp(entity, ...)
+	                return DAENERYS_addShaderProp(entity, {...})
+                end");
         }
 
 
@@ -605,6 +611,11 @@ end");
         }
 
         public static void AddMagneticField(LuaTable entity, string type, float unknown1, float unknown2, string mesh, float unknown3, string mesh2, float unknown4, string hit, string effect)
+        {
+            //Unused
+        }
+
+        public static void AddShaderProp(LuaTable entity, LuaTable arguments)
         {
             //Unused
         }
