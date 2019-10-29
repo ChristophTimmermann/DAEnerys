@@ -246,6 +246,7 @@ namespace DAEnerys
             for(int i = 0; i < Segments.Count - 1; i++) //1 line less than segments
             {
                 EditorLine line = new EditorLine(Segments[i].GlobalPosition, Segments[i + 1].GlobalPosition, new Vector3(1, 0, 0), new Vector3(1, 0, 0), null);
+                line.Visible = Visible;
                 Lines.Add(line);
             }
         }
