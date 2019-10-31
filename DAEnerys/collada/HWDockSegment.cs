@@ -14,7 +14,20 @@ namespace DAEnerys
         public float Tolerance { get { return tolerance; } set { tolerance = value; ToleranceIcosphere.LocalScale = new Vector3(value); } }
         public float Speed;
         public List<DockSegmentFlag> Flags = new List<DockSegmentFlag>();
-
+        public override Vector3 LocalPosition
+        {
+            get { return localPosition; }
+            set
+            {
+                localPosition = value;
+                Invalidate();
+                if (Dockpath != null)
+                {
+                    CalculateWorldMatrix();
+                    Dockpath.SetupVisualization(); //We need to redo the lines whenever we set this.
+                }
+            }
+        }
         public override string FormattedName
         {
             get
