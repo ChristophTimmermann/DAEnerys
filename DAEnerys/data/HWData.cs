@@ -460,7 +460,13 @@ end");
             lua.RegisterFunction("DAENERYS_addShaderProp", null, type.GetMethod("AddShaderProp"));
             lua.DoString(@"
                 function addShaderProp(entity, ...)
-	                return DAENERYS_addShaderProp(entity, {...})
+	                return DAENERYS_addShaderProp(entity, shader, {...})
+                end");
+
+            lua.RegisterFunction("DAENERYS_setShaderChannels", null, type.GetMethod("SetShaderChannels"));
+            lua.DoString(@"
+                function setShaderChannels(entity, ...)
+	                return DAENERYS_setShaderChannels(entity, {...})
                 end");
         }
 
@@ -615,7 +621,11 @@ end");
             //Unused
         }
 
-        public static void AddShaderProp(LuaTable entity, LuaTable arguments)
+        public static void SetShaderChannels(LuaTable entity, LuaTable arguments)
+        {
+            //Unused
+        }
+        public static void AddShaderProp(LuaTable entity, string shader, LuaTable arguments)
         {
             //Unused
         }

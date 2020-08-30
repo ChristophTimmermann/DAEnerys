@@ -400,6 +400,9 @@ namespace DAEnerys
 
         public static void LoadFromShipType(HWShipType type)
         {
+            if (list == null)
+                return;
+
             foreach (HWShipType.TargetBox targetBox in HWShipType.TargetBox.TargetBoxes)
             {
                 if(targetBox.EditorCube != null)
