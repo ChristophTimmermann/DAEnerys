@@ -1,4 +1,1 @@
-Feel free to post pull requests.
-
-You can contact me here on BitBucket or on the Gearbox Forums.
-If you find a bug or have some idea, put it in the Issues section.
+This application is a tool for modding Homeworld Remastered. It allows to open and edit DAE files that are meant to be converted to game files.
